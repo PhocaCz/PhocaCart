@@ -165,7 +165,7 @@ class PhocacartRoute
 
 	/* Items route can be without id or with id, if id, then it is a category id
 	*/
-	public static function getItemsRoute($catid = '', $catidAlias = '', $parameter = '', $value = '')
+	public static function getItemsRoute($catid = '', $catidAlias = '', $parameter = '', $value = '', string $lang = '')
 	{
 		$app 		= Factory::getApplication();
 		$menu 		= $app->getMenu();
@@ -221,7 +221,7 @@ class PhocacartRoute
 			$link = 'index.php?option=com_phocacart&view=items';
 		}
 
-		return self::_buildLink($link, $needles);
+		return self::_buildLink($link, $needles, [$lang]);
 	}
 
 	public static function getItemRoute($id, $catid = 0, $idAlias = '', $catidAlias = '', $lang = array(), $forceView = 0)
@@ -270,7 +270,7 @@ class PhocacartRoute
 		return self::_buildLink($link, $needles, $lang);
 	}
 
-	public static function getCheckoutRoute($id = 0, $catid = 0)
+	public static function getCheckoutRoute($id = 0, $catid = 0, string $lang = '')
 	{
 		$needles = array(
 			'checkout' => '',
@@ -282,7 +282,7 @@ class PhocacartRoute
 
 		$link = 'index.php?option=com_phocacart&view=checkout';
 
-		return self::_buildLink($link, $needles);
+		return self::_buildLink($link, $needles, [$lang]);
 	}
 
 	public static function getPosRoute($ticketId = 1, $unitId = 0, $sectionId = 0, $page = '', $id = 0, $catid = 0)
@@ -315,7 +315,7 @@ class PhocacartRoute
 		return self::_buildLink($link, $needles);
 	}
 
-	public static function getAccountRoute($id = 0, $catid = 0)
+	public static function getAccountRoute($id = 0, $catid = 0, string $lang = '')
 	{
 		$needles = array(
 			'account' => '',
@@ -326,11 +326,11 @@ class PhocacartRoute
 		);
 
 		$link = 'index.php?option=com_phocacart&view=account';
-		return self::_buildLink($link, $needles);
+		return self::_buildLink($link, $needles, [$lang]);
 	}
 
 
-	public static function getComparisonRoute($id = 0, $catid = 0)
+	public static function getComparisonRoute($id = 0, $catid = 0, string $lang = '')
 	{
 		$needles = array(
 			'comparison' => '',
@@ -341,10 +341,10 @@ class PhocacartRoute
 		);
 
 		$link = 'index.php?option=com_phocacart&view=comparison';
-		return self::_buildLink($link, $needles);
+		return self::_buildLink($link, $needles, [$lang]);
 	}
 
-	public static function getWishListRoute($id = 0, $catid = 0)
+	public static function getWishListRoute($id = 0, $catid = 0, string $lang = '')
 	{
 		$needles = array(
 			'wishlist' => '',
@@ -355,10 +355,10 @@ class PhocacartRoute
 		);
 
 		$link = 'index.php?option=com_phocacart&view=wishlist';
-		return self::_buildLink($link, $needles);
+		return self::_buildLink($link, $needles, [$lang]);
 	}
 
-	public static function getPaymentRoute($id = 0, $catid = 0)
+	public static function getPaymentRoute($id = 0, $catid = 0, string $lang = '')
 	{
 		$needles = array(
 			//'payment' => '',
@@ -369,10 +369,10 @@ class PhocacartRoute
 		);
 
 		$link = 'index.php?option=com_phocacart&view=payment';
-		return self::_buildLink($link, $needles);
+		return self::_buildLink($link, $needles, [$lang]);
 	}
 
-	public static function getDownloadRoute($id = 0, $catid = 0)
+	public static function getDownloadRoute($id = 0, $catid = 0, string $lang = '')
 	{
 		$needles = array(
 			'download' => '',
@@ -383,10 +383,10 @@ class PhocacartRoute
 		);
 
 		$link = 'index.php?option=com_phocacart&view=download';
-		return self::_buildLink($link, $needles);
+		return self::_buildLink($link, $needles, [$lang]);
 	}
 
-	public static function getOrdersRoute($id = 0, $catid = 0)
+	public static function getOrdersRoute($id = 0, $catid = 0, string $lang = '')
 	{
 		$needles = array(
 			'orders' => '',
@@ -397,10 +397,10 @@ class PhocacartRoute
 		);
 
 		$link = 'index.php?option=com_phocacart&view=orders';
-		return self::_buildLink($link, $needles);
+		return self::_buildLink($link, $needles, [$lang]);
 	}
 
-	public static function getTermsRoute($id = 0, $catid = 0, $suffix = '')
+	public static function getTermsRoute($id = 0, $catid = 0, $suffix = '', string $lang = '')
 	{
 		$needles = array(
 			'terms' => '',
@@ -415,10 +415,10 @@ class PhocacartRoute
 			$link .= '&'.$suffix;
 		}
 
-		return self::_buildLink($link, $needles);
+		return self::_buildLink($link, $needles, [$lang]);
 	}
 
-	public static function getInfoRoute($id = 0, $catid = 0)
+	public static function getInfoRoute($id = 0, $catid = 0, string $lang = '')
 	{
 		$needles = array(
 			//'info' => '',
@@ -429,10 +429,10 @@ class PhocacartRoute
 		);
 
 		$link = 'index.php?option=com_phocacart&view=info';
-		return self::_buildLink($link, $needles);
+		return self::_buildLink($link, $needles, $lang);
 	}
 
-	public static function getFeedRoute($id = 0, $idAlias = '', $noSEF = 0)
+	public static function getFeedRoute($id = 0, $idAlias = '', $noSEF = 0, string $lang = '')
 	{
 		$needles = array(
 			'feed'  => (int) $id,
@@ -449,14 +449,14 @@ class PhocacartRoute
 			return $link;
 		}
 
-		$xml = self::_buildLink($link, $needles);
+		$xml = self::_buildLink($link, $needles, [$lang]);
 
 
 		return $xml;
 	}
 
 
-	public static function getQuestionRoute($id = 0, $catid = 0, $idAlias = '', $catidAlias = '', $suffix = '')
+	public static function getQuestionRoute($id = 0, $catid = 0, $idAlias = '', $catidAlias = '', $suffix = '', string $lang = '')
 	{
 		$app 			= Factory::getApplication();
 		$menu 			= $app->getMenu();
@@ -512,7 +512,7 @@ class PhocacartRoute
 			$link .= '&'.$suffix;
 		}
 
-		return self::_buildLink($link, $needles);
+		return self::_buildLink($link, $needles, [$lang]);
 	}
 
 
@@ -543,12 +543,12 @@ class PhocacartRoute
 	protected static function _findItem($needles, $notCheckId = 0, $lang = [])
 	{
 		$app = Factory::getApplication();
-		$menus    = AbstractMenu::getInstance('site');
-		$active 	= $menus->getActive();
+		$menus = AbstractMenu::getInstance('site');
+		$active = $menus->getActive();
 
-		$component 		= ComponentHelper::getComponent('com_phocacart');
-		$attributes 	= array('component_id');
-		$values     	= array($component->id);
+		$component = ComponentHelper::getComponent('com_phocacart');
+		$attributes = ['component_id'];
+		$values = [$component->id];
 
 		// Find menu items of current language
 		$items = $menus->getItems($attributes, $values);

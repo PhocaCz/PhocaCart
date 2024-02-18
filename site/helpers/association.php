@@ -55,8 +55,7 @@ abstract class PhocacartHelperAssociation
             }
 
             return $return;
-        }
-        else if ($view === 'category') {
+        } else if ($view === 'category') {
             $associations = Associations::getAssociations('com_phocacart', '#__phocacart_categories', 'com_phocacart.category', $id, 'id', 'alias', false);
 
             $return = array();
@@ -84,13 +83,48 @@ abstract class PhocacartHelperAssociation
         $view   = $view === null ? $input->get('view') : $view;
         $id     = empty($id) ? $input->getInt('id') : $id;
         $languages    = I18nHelper::getI18nLanguages();
+        $associations = [];
 
-        if ($view === 'item') {
+        if ($view === 'account') {
+            foreach ($languages as $langTag => $language) {
+                $associations[$langTag] = PhocacartRoute::getAccountRoute($id, 0, $langTag);
+            }
+        } elseif ($view === 'categories') {
+            foreach ($languages as $langTag => $language) {
+                $associations[$langTag] = PhocacartRoute::getCategoriesRoute([$langTag]);
+            }
+        } elseif ($view === 'category') {
             if (!$id) {
                 return [];
             }
 
-            $associations = [];
+            foreach ($languages as $langTag => $language) {
+                $associations[$langTag] = PhocacartRoute::getCategoryRoute($id, '', [$langTag]);
+            }
+        } else if ($view === 'checkout') {
+            foreach ($languages as $langTag => $language) {
+                $associations[$langTag] = PhocacartRoute::getCheckoutRoute($id, 0, $langTag);
+            }
+        } elseif ($view === 'comparison') {
+            foreach ($languages as $langTag => $language) {
+                $associations[$langTag] = PhocacartRoute::getComparisonRoute($id, 0, $langTag);
+            }
+        } elseif ($view === 'download') {
+            foreach ($languages as $langTag => $language) {
+                $associations[$langTag] = PhocacartRoute::getDownloadRoute($id, 0, $langTag);
+            }
+        } elseif ($view === 'feed') {
+            foreach ($languages as $langTag => $language) {
+                $associations[$langTag] = PhocacartRoute::getFeedRoute($id, '', 0, $langTag);
+            }
+        } elseif ($view === 'info') {
+            foreach ($languages as $langTag => $language) {
+                $associations[$langTag] = PhocacartRoute::getInfoRoute($id, 0, $langTag);
+            }
+        } elseif ($view === 'item') {
+            if (!$id) {
+                return [];
+            }
 
             foreach ($languages as $langTag => $language) {
                 $categories = PhocacartCategoryMultiple::getCategories($id, 3);
@@ -98,23 +132,40 @@ abstract class PhocacartHelperAssociation
 
                 $associations[$langTag] = PhocacartRoute::getItemRoute($id, $catId, '', '', [$langTag]);
             }
-
-            return $associations;
-        } elseif ($view === 'category') {
-            if (!$id) {
-                return [];
-            }
-
-            $associations = [];
-
+        } elseif ($view === 'items') {
+            $search = $input->get('search', '');
             foreach ($languages as $langTag => $language) {
-                $associations[$langTag] = PhocacartRoute::getCategoryRoute($id, '', [$langTag]);
+                $associations[$langTag] = PhocacartRoute::getItemsRoute('', '', 'search', $search, $langTag);
             }
-
-            return $associations;
+        } elseif ($view === 'payment') {
+            foreach ($languages as $langTag => $language) {
+                $associations[$langTag] = PhocacartRoute::getPaymentRoute($id, 0, $langTag);
+            }
+        } elseif ($view === 'orders') {
+            foreach ($languages as $langTag => $language) {
+                $associations[$langTag] = PhocacartRoute::getOrdersRoute($id, 0, $langTag);
+            }
+        } elseif ($view === 'pos') {
+            foreach ($languages as $langTag => $language) {
+                $associations[$langTag] = PhocacartRoute::getPosRoute($input->get('ticketid', 1), $input->get('unitid', 0), $input->get('sectionid', 0), $input->get('page', ''));
+            }
+        } elseif ($view === 'question') {
+            foreach ($languages as $langTag => $language) {
+                $associations[$langTag] = PhocacartRoute::getQuestionRoute($id, 0, '', '', '', $langTag);
+            }
+        } elseif ($view === 'terms') {
+            foreach ($languages as $langTag => $language) {
+                $associations[$langTag] = PhocacartRoute::getTermsRoute($id, 0, '', $langTag);
+            }
+        } else if ($view === 'wishlist') {
+            foreach ($languages as $langTag => $language) {
+                $associations[$langTag] = PhocacartRoute::getWishListRoute($id, 0, $langTag);
+            }
         } else {
             return self::getJoomlaAssociations($id, $view);
         }
+
+        return $associations;
     }
 
 	public static function getAssociations($id = 0, $view = null)
