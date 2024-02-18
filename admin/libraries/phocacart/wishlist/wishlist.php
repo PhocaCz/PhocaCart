@@ -244,24 +244,39 @@ class PhocacartWishlist
 
 		if ($full == 1) {
 
-			if (I18nHelper::useI18n()) {
-				$columns = 'coalesce(i18n_a.title, a.title) as title, coalesce(i18n_a.alias, a.alias) as alias, coalesce(i18n_a.description, a.description) as description';
+			/*if (I18nHelper::useI18n()) {
+				$columns = 'coalesce(i18n_a.title, a.title) as title,'
+                          .' coalesce(i18n_a.alias, a.alias) as alias,'
+                          .' coalesce(i18n_a.description, a.description) as description';
 			} else {
-				$columns = 'a.title as title, a.alias as alias, a.description';
-			}
+				$columns = 'a.title as title,'
+                          .' a.alias as alias,'
+                          .' a.description';
+			}*/
+            $columns = I18nHelper::sqlCoalesce(['title', 'alias', 'description']);
 
+            $columns .= ', a.id as id,'
+                       .' GROUP_CONCAT(DISTINCT c.id) as catid,'
+                       .' COUNT(pc.category_id) AS count_categories,'
+                       .' a.catid AS preferred_catid,';
 
-			$groupsFull		= $columns . ', a.id, a.price, a.image,'
-			.' a.stock, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.availability,'
-			.' ppg.price, pptg.points_received';
+           /* if (I18nHelper::useI18n()) {
+				$columns .= ' GROUP_CONCAT(DISTINCT coalesce(i18n_c.alias, c.alias)) as catalias,'
+                           .' GROUP_CONCAT(DISTINCT coalesce(i18n_c.title, c.title)) as cattitle';
 
-			$columns		.= ', a.id as id, a.price, a.image,'
-			.'  GROUP_CONCAT(DISTINCT c.id) as catid, GROUP_CONCAT(DISTINCT c.alias) as catalias, GROUP_CONCAT(DISTINCT c.title) as cattitle, COUNT(pc.category_id) AS count_categories, a.catid AS preferred_catid,'
-			//.' a.length, a.width, a.height, a.weight, a.volume,'
-			.' a.stock, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.availability,'
-			//.' m.title as manufacturer_title'
-			.' MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received';
+			} else {
+				$columns .= ' GROUP_CONCAT(DISTINCT c.alias) as catalias,'
+                           .' GROUP_CONCAT(DISTINCT c.title) as cattitle';
+			}*/
+            $columns .= I18nHelper::sqlCoalesce(['title', 'alias'], 'i18n', 'c', 'cat', 'groupconcatdistinct');
 
+			$columns .= ', a.price, a.image,'
+			            .' a.stock, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.availability,'
+			            .' MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received';
+
+            $groupsFull		= 'a.id, a.title, a.alias, a.description, a.price, a.image,'
+			                .' a.stock, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.availability,'
+			                .' ppg.price, pptg.points_received';
 			$groupsFast		= 'a.id';
 			$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
 
@@ -271,10 +286,10 @@ class PhocacartWishlist
 			 . I18nHelper::sqlJoin('#__phocacart_products_i18n', 'i18n_a', 'a')
 			.' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id =  a.id'
 			.' LEFT JOIN #__phocacart_categories AS c ON c.id =  pc.category_id'
+             . I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'i18n_c', 'c')
 			//.' LEFT JOIN #__phocacart_manufacturers AS m ON a.manufacturer_id = m.id'
 			. ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3'// type 3 is product
 			. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
-
 			// user is in more groups, select lowest price by best group
 			. ' LEFT JOIN #__phocacart_product_price_groups AS ppg ON a.id = ppg.product_id AND ppg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = a.id AND group_id IN ('.$userGroups.') AND type = 3)'
 			// user is in more groups, select highest points by best group
@@ -285,31 +300,49 @@ class PhocacartWishlist
 			. ' ORDER BY a.id';
 		} else {
 
-			if (I18nHelper::useI18n()) {
-				$columns = 'coalesce(i18n_a.title, a.title) as title, coalesce(i18n_a.alias, a.alias) as alias, coalesce(i18n_a.description, a.description) as description';
+			/*if (I18nHelper::useI18n()) {
+				$columns = 'coalesce(i18n_a.title, a.title) as title,'
+                          .' coalesce(i18n_a.alias, a.alias) as alias,'
+                          .' coalesce(i18n_a.description, a.description) as description';
 			} else {
-				$columns = 'a.title as title, a.alias as alias, a.description';
-			}
+				$columns = 'a.title as title,'
+                          .' a.alias as alias,'
+                          .' a.description';
+			}*/
+            $columns = I18nHelper::sqlCoalesce(['title', 'alias', 'description']);
 
-			$groupsFull		= $columns . ', a.id, a.title, a.alias';
+            $columns .= ', a.id as id,'
+                       .' GROUP_CONCAT(DISTINCT c.id) as catid,'
+                       .' COUNT(pc.category_id) AS count_categories,'
+                       .' a.catid AS preferred_catid,';
 
-			$columns		.= ', a.id as id,'
-			.' GROUP_CONCAT(DISTINCT c.id) as catid, GROUP_CONCAT(DISTINCT c.alias) as catalias, GROUP_CONCAT(DISTINCT c.title) as cattitle, COUNT(pc.category_id) AS count_categories, a.catid AS preferred_catid';
+           /* if (I18nHelper::useI18n()) {
+				$columns .= ' GROUP_CONCAT(DISTINCT coalesce(i18n_c.alias, c.alias)) as catalias,'
+                           .' GROUP_CONCAT(DISTINCT coalesce(i18n_c.title, c.title)) as cattitle';
 
+			} else {
+				$columns .= ' GROUP_CONCAT(DISTINCT c.alias) as catalias,'
+                           .' GROUP_CONCAT(DISTINCT c.title) as cattitle';
+			}*/
+            $columns .= I18nHelper::sqlCoalesce(['title', 'alias'], 'i18n', 'c', 'cat', 'groupconcatdistinct');
+
+            $groupsFull		= 'a.id, a.title, a.alias, a.catid';
 			$groupsFast		= 'a.id';
 			$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
 
+
 			$query =
 			 ' SELECT '.$columns
-			.' FROM #__phocacart_products AS a'
-			 . I18nHelper::sqlJoin('#__phocacart_products_i18n', 'i18n_a', 'a')
-			.' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id =  a.id'
-			.' LEFT JOIN #__phocacart_categories AS c ON c.id =  pc.category_id'
-			. ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3'// type 3 is product
-			. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
-			.  $where
-			. ' GROUP BY '.$groups
-			. ' ORDER BY a.id';
+			 .' FROM #__phocacart_products AS a'
+             . I18nHelper::sqlJoin('#__phocacart_products_i18n', 'i18n_a', 'a')
+			 .' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id =  a.id'
+             .' LEFT JOIN #__phocacart_categories AS c ON c.id =  pc.category_id'
+             . I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'i18n_c', 'c')
+             . ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3'// type 3 is product
+			 . ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
+			 .  $where
+			 . ' GROUP BY '.$groups
+			 . ' ORDER BY a.id';
 		}
 		return $query;
 	}
