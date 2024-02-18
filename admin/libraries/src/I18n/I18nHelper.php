@@ -208,37 +208,6 @@ abstract class I18nHelper
         return ' LEFT JOIN ' . $i18nTable . ' AS ' . $i18nAlias . ' ON ' . $i18nAlias . '.id = ' . $mainTableAlias . '.id AND ' . $i18nAlias . '.language = ' . $db->quote(self::getI18nLanguage()) . ' ';
     }
 
-    public static function query(QueryInterface $query, string $i18nTable, array $fallbackColumns, array $additionalColumns = [], string $mainTableAlias = 'a', ?string $lang = null): void
-    {
-        /** @var DatabaseInterface $db */
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
-        $i18nAlias = 'i18n_' . $mainTableAlias;
-        if (!$lang || $lang === '*') {
-            $lang = self::getI18nLanguage();
-        }
-
-        if (self::isI18n()) {
-            $query->join('LEFT', $db->quoteName($i18nTable, $i18nAlias),
-                $i18nAlias . '.id = ' . $mainTableAlias . '.id AND ' . $i18nAlias . '.language = ' . $db->quote($lang));
-
-            foreach ($fallbackColumns as $column => $alias) {
-                $query->select('coalesce(' . $i18nAlias . '.' . $column . ', ' . $mainTableAlias . '.' . $column .') AS ' . ($alias ?: $column));
-            }
-
-            foreach ($additionalColumns as $column => $alias) {
-                $query->select($i18nAlias . '.' . $column .' AS ' . ($alias ?: $column));
-            }
-        } else {
-            foreach ($fallbackColumns as $column => $alias) {
-                $query->select($mainTableAlias . '.' . $column .' AS ' . ($alias ?: $column));
-            }
-
-            foreach ($additionalColumns as $column => $alias) {
-                $query->select($mainTableAlias . '.' . $column .' AS ' . ($alias ?: $column));
-            }
-        }
-    }
-
     public static function getEditorIcon($langCode, $value): string
     {
         $defLanguage = self::getDefLanguage();
