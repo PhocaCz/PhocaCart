@@ -35,6 +35,7 @@ $layoutSZ	= new FileLayout('product_size', null, array('component' => 'com_phoca
 $layoutI	= new FileLayout('image', null, array('component' => 'com_phocacart'));
 $layoutAAQ	= new FileLayout('popup_container_iframe', null, array('component' => 'com_phocacart'));
 $layoutAl 	= new FileLayout('alert', null, array('component' => 'com_phocacart'));
+$layoutWatchdog	= new FileLayout('watchdog', null, ['component' => 'com_phocacart']);
 
 echo '<div id="ph-pc-item-box" class="pc-view pc-item-view'.$this->p->get( 'pageclass_sfx' ).'">';
 
@@ -337,6 +338,12 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 			echo $layoutPOQ->render($dPOQ);
 		}
 	}
+
+    if ($stock < 1) {
+        echo $layoutWatchdog->render([
+            'product' => $x,
+        ]);
+    }
 
 	if ((int)$this->t['item_display_delivery_date'] > 0 && $x->delivery_date != '' && $x->delivery_date != '0000-00-00 00:00:00') {
 
