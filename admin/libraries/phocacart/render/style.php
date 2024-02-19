@@ -23,6 +23,16 @@ class PhocacartRenderStyle
      * Not all classes are loaded this way, only the classes which can change for different libraries like bootstrap3, bootstrap4, etc.
      */
 
+    public static function icon(string $icon): string {
+        self::getStyles();
+        return self::$styles['i'][$icon] ?? $icon;
+    }
+
+    public static function class(string $class): string {
+        self::getStyles();
+        return self::$styles['c'][$class] ?? $class;
+    }
+
     public static function getStyles() {
 
         if (empty(self::$styles)) {
@@ -476,6 +486,7 @@ class PhocacartRenderStyle
         $s['i']['download-alt']    = $pf . 'download-alt' . $sf;
         $s['i']['quick-view']      = $pf . 'eye-open' . $sf;
         $s['i']['wish-list']       = $pf . 'heart' . $sf;
+        $s['i']['watchdog']        = $pf . 'eye-open' . $sf;
         $s['i']['ban']             = $pf . 'ban-circle' . $sf;
         $s['i']['refresh']         = $pf . 'refresh' . $sf;
         $s['i']['trash']           = $pf . 'trash' . $sf;
@@ -540,6 +551,7 @@ class PhocacartRenderStyle
                 $s['i']['download']        = $pf . 'download' . $sf;
                 $s['i']['quick-view']      = $pf . 'eye' . $sf;
                 $s['i']['wish-list']       = $pf . 'heart' . $sf;
+                $s['i']['watchdog']        = $pf . 'eye' . $sf;
                 $s['i']['ban']             = $pf . 'ban' . $sf;
                 $s['i']['refresh']         = $pf . 'refresh' . $sf;
                 $s['i']['trash']           = $pf . 'trash' . $sf;
@@ -610,6 +622,7 @@ class PhocacartRenderStyle
                 $s['i']['download']        = $pf . 'download' . $sf;
                 $s['i']['quick-view']      = $pf . 'quick-view' . $sf;
                 $s['i']['wish-list']       = $pf . 'wish-list' . $sf;
+                $s['i']['watchdog']        = $pf . 'watchdog' . $sf;
                 $s['i']['ban']             = $pf . 'ban' . $sf;
                 $s['i']['refresh']         = $pf . 'refresh' . $sf;
                 $s['i']['trash']           = $pf . 'trash' . $sf;
