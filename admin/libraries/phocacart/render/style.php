@@ -551,7 +551,7 @@ class PhocacartRenderStyle
                 $s['i']['download']        = $pf . 'download' . $sf;
                 $s['i']['quick-view']      = $pf . 'eye' . $sf;
                 $s['i']['wish-list']       = $pf . 'heart' . $sf;
-                $s['i']['watchdog']        = $pf . 'eye' . $sf;
+                $s['i']['watchdog']        = $pf . 'shield-dog' . $sf;
                 $s['i']['ban']             = $pf . 'ban' . $sf;
                 $s['i']['refresh']         = $pf . 'refresh' . $sf;
                 $s['i']['trash']           = $pf . 'trash' . $sf;
