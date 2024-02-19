@@ -12,7 +12,7 @@
 
 			<field name="category_id" type="phocacartcategory" required="true"  label="COM_PHOCACART_FIELD_CATEGORY_ID_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_ID_DESC"  />
 
-			<field name="date" type="Calendar" filter="user_utc" translateformat="true" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" />
+			<field name="date" type="calendar" default="now" showtime="true" filter="user_utc" translateformat="true" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" />
 		</fieldset>
 
 		<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >

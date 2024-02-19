@@ -1,230 +1,232 @@
 <svg aria-hidden="true" class="pc-sr-only" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <defs>
+  <defs>
+    <symbol id="pc-si-view-category" viewBox="0 0 512 512">
+      <path d="M440 432H72a40 40 0 0 1-40-40V120a40 40 0 0 1 40-40h75.89a40 40 0 0 1 22.19 6.72l27.84 18.56a40 40 0 0 0 22.19 6.72H440a40 40 0 0 1 40 40v240a40 40 0 0 1-40 40ZM32 192h448" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/>
+    </symbol>
 
-        <symbol id="pc-si-view-category" viewBox="0 0 512 512">
-            <path d="M440 432H72a40 40 0 0 1-40-40V120a40 40 0 0 1 40-40h75.89a40 40 0 0 1 22.19 6.72l27.84 18.56a40 40 0 0 0 22.19 6.72H440a40 40 0 0 1 40 40v240a40 40 0 0 1-40 40ZM32 192h448" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/>
-        </symbol>
+    <symbol id="pc-si-view-product" viewBox="0 0 512 512">
+      <path d="M221.09 64a157.09 157.09 0 1 0 157.09 157.09A157.1 157.1 0 0 0 221.09 64Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/><path style="fill:none;stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px" d="M338.29 338.29 448 448"/>
+    </symbol>
 
-        <symbol id="pc-si-view-product" viewBox="0 0 512 512">
-            <path d="M221.09 64a157.09 157.09 0 1 0 157.09 157.09A157.1 157.1 0 0 0 221.09 64Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/><path style="fill:none;stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px" d="M338.29 338.29 448 448"/>
-        </symbol>
+    <symbol id="pc-si-shopping-cart" viewBox="0 0 512 512">
+      <path fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M80 176a16 16 0 0 0-16 16v216c0 30.24 25.76 56 56 56h272c30.24 0 56-24.51 56-54.75V192a16 16 0 0 0-16-16ZM160 176v-32a96 96 0 0 1 96-96h0a96 96 0 0 1 96 96v32"/>
+    </symbol>
 
-        <symbol id="pc-si-shopping-cart" viewBox="0 0 512 512">
-            <path fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M80 176a16 16 0 0 0-16 16v216c0 30.24 25.76 56 56 56h272c30.24 0 56-24.51 56-54.75V192a16 16 0 0 0-16-16ZM160 176v-32a96 96 0 0 1 96-96h0a96 96 0 0 1 96 96v32"/>
-        </symbol>
+    <symbol id="pc-si-compare" viewBox="0 0 512 512">
+      <rect x="128" y="128" width="336" height="336" rx="57" ry="57" style="fill:none;stroke-linejoin:round;stroke-width:32px"/><path d="m383.5 128 .5-24a56.16 56.16 0 0 0-56-56H112a64.19 64.19 0 0 0-64 64v216a56.16 56.16 0 0 0 56 56h24" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/>
+    </symbol>
 
-        <symbol id="pc-si-compare" viewBox="0 0 512 512">
-            <rect x="128" y="128" width="336" height="336" rx="57" ry="57" style="fill:none;stroke-linejoin:round;stroke-width:32px"/><path d="m383.5 128 .5-24a56.16 56.16 0 0 0-56-56H112a64.19 64.19 0 0 0-64 64v216a56.16 56.16 0 0 0 56 56h24" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/>
-        </symbol>
+    <symbol id="pc-si-filter" viewBox="0 0 512 512">
+      <path d="M64 144h226.75a48 48 0 0090.5 0H448a16 16 0 000-32h-66.75a48 48 0 00-90.5 0H64a16 16 0 000 32zm384 224h-66.75a48 48 0 00-90.5 0H64a16 16 0 000 32h226.75a48 48 0 0090.5 0H448a16 16 0 000-32zm0-128H221.25a48 48 0 00-90.5 0H64a16 16 0 000 32h66.75a48 48 0 0090.5 0H448a16 16 0 000-32z"/>
+    </symbol>
 
-        <symbol id="pc-si-filter" viewBox="0 0 512 512">
-            <path d="M64 144h226.75a48 48 0 0090.5 0H448a16 16 0 000-32h-66.75a48 48 0 00-90.5 0H64a16 16 0 000 32zm384 224h-66.75a48 48 0 00-90.5 0H64a16 16 0 000 32h226.75a48 48 0 0090.5 0H448a16 16 0 000-32zm0-128H221.25a48 48 0 00-90.5 0H64a16 16 0 000 32h66.75a48 48 0 0090.5 0H448a16 16 0 000-32z"/>
-        </symbol>
+    <symbol id="pc-si-wish-list" viewBox="0 0 512 512">
+      <path d="M352.92 80C288 80 256 144 256 144s-32-64-96.92-64c-52.76 0-94.54 44.14-95.08 96.81-1.1 109.33 86.73 187.08 183 252.42a16 16 0 0 0 18 0c96.26-65.34 184.09-143.09 183-252.42-.54-52.67-42.32-96.81-95.08-96.81Z" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/>
+    </symbol>
 
-        <symbol id="pc-si-wish-list" viewBox="0 0 512 512">
-            <path d="M352.92 80C288 80 256 144 256 144s-32-64-96.92-64c-52.76 0-94.54 44.14-95.08 96.81-1.1 109.33 86.73 187.08 183 252.42a16 16 0 0 0 18 0c96.26-65.34 184.09-143.09 183-252.42-.54-52.67-42.32-96.81-95.08-96.81Z" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/>
-        </symbol>
+    <symbol id="pc-si-quick-view" viewBox="0 0 512 512">
+      <path d="M255.66 112c-77.94 0-157.89 45.11-220.83 135.33a16 16 0 0 0-.27 17.77C82.92 340.8 161.8 400 255.66 400c92.84 0 173.34-59.38 221.79-135.25a16.14 16.14 0 0 0 0-17.47C428.89 172.28 347.8 112 255.66 112Z" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/><circle cx="256" cy="256" r="80" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/>
+    </symbol>
 
-        <symbol id="pc-si-quick-view" viewBox="0 0 512 512">
-            <path d="M255.66 112c-77.94 0-157.89 45.11-220.83 135.33a16 16 0 0 0-.27 17.77C82.92 340.8 161.8 400 255.66 400c92.84 0 173.34-59.38 221.79-135.25a16.14 16.14 0 0 0 0-17.47C428.89 172.28 347.8 112 255.66 112Z" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/><circle cx="256" cy="256" r="80" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/>
-        </symbol>
+    <symbol id="pc-si-grid" viewBox="0 0 512 512">
+      <path d="m274 274v202h202v-202zm36 36h130v130h-130z" style="paint-order:stroke fill markers"/>
+      <path d="m36 274v202h202v-202zm36 36h130v130h-130z" style="paint-order:stroke fill markers"/>
+      <path d="m36 36v202h202v-202zm36 36h130v130h-130z" style="paint-order:stroke fill markers"/>
+      <path d="m274 36v202h202v-202zm36 36h130v130h-130z" style="paint-order:stroke fill markers"/>
+    </symbol>
 
-        <symbol id="pc-si-grid" viewBox="0 0 512 512">
-            <path d="m274 274v202h202v-202zm36 36h130v130h-130z" style="paint-order:stroke fill markers"/>
-            <path d="m36 274v202h202v-202zm36 36h130v130h-130z" style="paint-order:stroke fill markers"/>
-            <path d="m36 36v202h202v-202zm36 36h130v130h-130z" style="paint-order:stroke fill markers"/>
-            <path d="m274 36v202h202v-202zm36 36h130v130h-130z" style="paint-order:stroke fill markers"/>
-        </symbol>
+    <symbol id="pc-si-gridlist" viewBox="0 0 512 512">
+      <path d="m36 36v122h122v-122h-122zm36 36h50v50h-50v-50z" style="paint-order:stroke fill markers"/>
+      <path d="m36 354v122h122v-122h-122zm36 36h50v50h-50v-50z" style="paint-order:stroke fill markers"/>
+      <path d="m36 195v122h122v-122h-122zm36 36h50v50h-50v-50z" style="paint-order:stroke fill markers"/>
+      <path d="m194 36v122h281v-122h-281zm36 36h209v50h-209v-50z" style="paint-order:stroke fill markers"/>
+      <path d="m194 195v122h281v-122h-281zm36 36h209v50h-209v-50z" style="paint-order:stroke fill markers"/>
+      <path d="m194 354v122h281v-122h-281zm36 36h209v50h-209v-50z" style="paint-order:stroke fill markers"/>
+    </symbol>
 
-        <symbol id="pc-si-gridlist" viewBox="0 0 512 512">
-            <path d="m36 36v122h122v-122h-122zm36 36h50v50h-50v-50z" style="paint-order:stroke fill markers"/>
-            <path d="m36 354v122h122v-122h-122zm36 36h50v50h-50v-50z" style="paint-order:stroke fill markers"/>
-            <path d="m36 195v122h122v-122h-122zm36 36h50v50h-50v-50z" style="paint-order:stroke fill markers"/>
-            <path d="m194 36v122h281v-122h-281zm36 36h209v50h-209v-50z" style="paint-order:stroke fill markers"/>
-            <path d="m194 195v122h281v-122h-281zm36 36h209v50h-209v-50z" style="paint-order:stroke fill markers"/>
-            <path d="m194 354v122h281v-122h-281zm36 36h209v50h-209v-50z" style="paint-order:stroke fill markers"/>
-        </symbol>
+    <symbol id="pc-si-list" viewBox="0 0 512 512">
+      <path d="m36 36h440v36h-440z" style="paint-order:stroke fill markers"/>
+      <path d="m36 440h440v36h-440z" style="paint-order:stroke fill markers"/>
+      <path d="m36 305.33h440v36h-440z" style="paint-order:stroke fill markers"/>
+      <path d="m36 170.67h440v36h-440z" style="paint-order:stroke fill markers"/>
+    </symbol>
 
-        <symbol id="pc-si-list" viewBox="0 0 512 512">
-            <path d="m36 36h440v36h-440z" style="paint-order:stroke fill markers"/>
-            <path d="m36 440h440v36h-440z" style="paint-order:stroke fill markers"/>
-            <path d="m36 305.33h440v36h-440z" style="paint-order:stroke fill markers"/>
-            <path d="m36 170.67h440v36h-440z" style="paint-order:stroke fill markers"/>
-        </symbol>
+    <symbol id="pc-si-back-category" viewBox="0 0 512 512">
+      <path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M249.38 336 170 256l79.38-80M181.03 256H342"/><path d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/>
+    </symbol>
 
-        <symbol id="pc-si-back-category" viewBox="0 0 512 512">
-            <path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M249.38 336 170 256l79.38-80M181.03 256H342"/><path d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/>
-        </symbol>
+    <symbol id="pc-si-prev" viewBox="0 0 512 512">
+      <path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M249.38 336 170 256l79.38-80M181.03 256H342"/><path d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/>
+    </symbol>
 
-        <symbol id="pc-si-prev" viewBox="0 0 512 512">
-            <path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M249.38 336 170 256l79.38-80M181.03 256H342"/><path d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/>
-        </symbol>
+    <symbol id="pc-si-next" viewBox="0 0 512 512">
+      <path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M262.62 336 342 256l-79.38-80M330.97 256H170"/><path d="M256 448c106 0 192-86 192-192S362 64 256 64 64 150 64 256s86 192 192 192Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/>
+    </symbol>
 
-        <symbol id="pc-si-next" viewBox="0 0 512 512">
-            <path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M262.62 336 342 256l-79.38-80M330.97 256H170"/><path d="M256 448c106 0 192-86 192-192S362 64 256 64 64 150 64 256s86 192 192 192Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/>
-        </symbol>
+    <symbol id="pc-si-ok" viewBox="0 0 512 512">
+      <path d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/><path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M352 176 217.6 336 160 272"/>
+    </symbol>
 
-        <symbol id="pc-si-ok" viewBox="0 0 512 512">
-            <path d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/><path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M352 176 217.6 336 160 272"/>
-        </symbol>
+    <symbol id="pc-si-ok-strong" viewBox="0 0 512 512">
+      <g transform="matrix(70.621 0 0 75.852 -335.45 -322.37)" fill="#fff" stroke-width=".013663">
+        <path d="m5.75 6.75-1 1c0.75 1.0833 1.5 2.1667 2.25 3.25h1c1.3333-2 2.6667-4 4-6-0.33333-0.25-0.66667-0.5-1-0.75-1.1667 1.3333-2.3333 2.6667-3.5 4-0.58333-0.5-1.1667-1-1.75-1.5z" fill="#fff"/></g>
+    </symbol>
 
-        <symbol id="pc-si-ok-strong" viewBox="0 0 512 512">
-            <g transform="matrix(70.621 0 0 75.852 -335.45 -322.37)" fill="#fff" stroke-width=".013663">
-<path d="m5.75 6.75-1 1c0.75 1.0833 1.5 2.1667 2.25 3.25h1c1.3333-2 2.6667-4 4-6-0.33333-0.25-0.66667-0.5-1-0.75-1.1667 1.3333-2.3333 2.6667-3.5 4-0.58333-0.5-1.1667-1-1.75-1.5z" fill="#fff"/></g>
-        </symbol>
+    <symbol id="pc-si-ok-circle" viewBox="0 0 512 512">
+      <path d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/><path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M352 176 217.6 336 160 272"/>
+    </symbol>
 
-        <symbol id="pc-si-ok-circle" viewBox="0 0 512 512">
-            <path d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/><path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M352 176 217.6 336 160 272"/>
-        </symbol>
+    <symbol id="pc-si-clear" viewBox="0 0 512 512">
+      <path d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/><path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M320 320 192 192M192 320l128-128"/>
+    </symbol>
 
-        <symbol id="pc-si-clear" viewBox="0 0 512 512">
-            <path d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/><path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M320 320 192 192M192 320l128-128"/>
-        </symbol>
+    <symbol id="pc-si-not-ok" viewBox="0 0 512 512">
+      <path d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/><path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M320 320 192 192M192 320l128-128"/>
+    </symbol>
 
-        <symbol id="pc-si-not-ok" viewBox="0 0 512 512">
-            <path d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/><path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M320 320 192 192M192 320l128-128"/>
-        </symbol>
+    <symbol id="pc-si-not-ok-circle" viewBox="0 0 512 512">
+      <path d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/><path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M320 320 192 192M192 320l128-128"/>
+    </symbol>
 
-        <symbol id="pc-si-not-ok-circle" viewBox="0 0 512 512">
-            <path d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/><path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M320 320 192 192M192 320l128-128"/>
-        </symbol>
+    <symbol id="pc-si-remove" viewBox="0 0 512 512">
+      <path d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/><path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M320 320 192 192M192 320l128-128"/>
+    </symbol>
 
-        <symbol id="pc-si-remove" viewBox="0 0 512 512">
-            <path d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/><path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M320 320 192 192M192 320l128-128"/>
-        </symbol>
+    <symbol id="pc-si-remove-circle" viewBox="0 0 512 512">
+      <path d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/><path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M320 320 192 192M192 320l128-128"/>
+    </symbol>
 
-        <symbol id="pc-si-remove-circle" viewBox="0 0 512 512">
-            <path d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/><path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M320 320 192 192M192 320l128-128"/>
-        </symbol>
+    <symbol id="pc-si-edit" viewBox="0 0 512 512">
+      <path d="M384 224v184a40 40 0 0 1-40 40H104a40 40 0 0 1-40-40V168a40 40 0 0 1 40-40h167.48" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/><path d="M459.94 53.25a16.06 16.06 0 0 0-23.22-.56L424.35 65a8 8 0 0 0 0 11.31l11.34 11.32a8 8 0 0 0 11.34 0l12.06-12c6.1-6.09 6.67-16.01.85-22.38ZM399.34 90 218.82 270.2a9 9 0 0 0-2.31 3.93L208.16 299a3.91 3.91 0 0 0 4.86 4.86l24.85-8.35a9 9 0 0 0 3.93-2.31L422 112.66a9 9 0 0 0 0-12.66l-9.95-10a9 9 0 0 0-12.71 0Z"/>
+    </symbol>
 
-        <symbol id="pc-si-edit" viewBox="0 0 512 512">
-            <path d="M384 224v184a40 40 0 0 1-40 40H104a40 40 0 0 1-40-40V168a40 40 0 0 1 40-40h167.48" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/><path d="M459.94 53.25a16.06 16.06 0 0 0-23.22-.56L424.35 65a8 8 0 0 0 0 11.31l11.34 11.32a8 8 0 0 0 11.34 0l12.06-12c6.1-6.09 6.67-16.01.85-22.38ZM399.34 90 218.82 270.2a9 9 0 0 0-2.31 3.93L208.16 299a3.91 3.91 0 0 0 4.86 4.86l24.85-8.35a9 9 0 0 0 3.93-2.31L422 112.66a9 9 0 0 0 0-12.66l-9.95-10a9 9 0 0 0-12.71 0Z"/>
-        </symbol>
+    <symbol id="pc-si-chevron-up" viewBox="0 0 512 512">
+      <path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:48px" d="m112 328 144-144 144 144"/>
+    </symbol>
 
-        <symbol id="pc-si-chevron-up" viewBox="0 0 512 512">
-            <path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:48px" d="m112 328 144-144 144 144"/>
-        </symbol>
+    <symbol id="pc-si-chevron-down" viewBox="0 0 512 512">
+      <path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:48px" d="m112 184 144 144 144-144"/>
+    </symbol>
 
-        <symbol id="pc-si-chevron-down" viewBox="0 0 512 512">
-            <path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:48px" d="m112 184 144 144 144-144"/>
-        </symbol>
+    <symbol id="pc-si-plus" viewBox="0 0 512 512">
+      <path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M256 112v288M400 256H112"/>
+    </symbol>
 
-        <symbol id="pc-si-plus" viewBox="0 0 512 512">
-            <path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M256 112v288M400 256H112"/>
-        </symbol>
+    <symbol id="pc-si-minus" viewBox="0 0 512 512">
+      <path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M400 256H112"/>
+    </symbol>
 
-        <symbol id="pc-si-minus" viewBox="0 0 512 512">
-            <path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M400 256H112"/>
-        </symbol>
+    <symbol id="pc-si-question-sign" viewBox="0 0 512 512">
+      <path d="M256 80a176 176 0 1 0 176 176A176 176 0 0 0 256 80Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/><path d="M200 202.29s.84-17.5 19.57-32.57C230.68 160.77 244 158.18 256 158c10.93-.14 20.69 1.67 26.53 4.45 10 4.76 29.47 16.38 29.47 41.09 0 26-17 37.81-36.37 50.8S251 281.43 251 296" style="fill:none;stroke-linecap:round;stroke-miterlimit:10;stroke-width:28px"/><circle cx="250" cy="348" r="20"/>
+    </symbol>
 
-        <symbol id="pc-si-question-sign" viewBox="0 0 512 512">
-            <path d="M256 80a176 176 0 1 0 176 176A176 176 0 0 0 256 80Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/><path d="M200 202.29s.84-17.5 19.57-32.57C230.68 160.77 244 158.18 256 158c10.93-.14 20.69 1.67 26.53 4.45 10 4.76 29.47 16.38 29.47 41.09 0 26-17 37.81-36.37 50.8S251 281.43 251 296" style="fill:none;stroke-linecap:round;stroke-miterlimit:10;stroke-width:28px"/><circle cx="250" cy="348" r="20"/>
-        </symbol>
-
-        <symbol id="pc-si-info-sign" viewBox="0 0 512 512">
-            <path d="M248 64C146.39 64 64 146.39 64 248s82.39 184 184 184 184-82.39 184-184S349.61 64 248 64Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/><path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M220 220h32v116"/><path style="fill:none;stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px" d="M208 340h88"/><path d="M248 130a26 26 0 1 0 26 26 26 26 0 0 0-26-26Z"/>
-        </symbol>
+    <symbol id="pc-si-info-sign" viewBox="0 0 512 512">
+      <path d="M248 64C146.39 64 64 146.39 64 248s82.39 184 184 184 184-82.39 184-184S349.61 64 248 64Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/><path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M220 220h32v116"/><path style="fill:none;stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px" d="M208 340h88"/><path d="M248 130a26 26 0 1 0 26 26 26 26 0 0 0-26-26Z"/>
+    </symbol>
 
 
-        <symbol id="pc-si-ext-link" viewBox="0 0 512 512">
-            <path d="M208 352h-64a96 96 0 0 1 0-192h64M304 160h64a96 96 0 0 1 0 192h-64M163.29 256h187.42" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:36px"/>
-        </symbol>
+    <symbol id="pc-si-ext-link" viewBox="0 0 512 512">
+      <path d="M208 352h-64a96 96 0 0 1 0-192h64M304 160h64a96 96 0 0 1 0 192h-64M163.29 256h187.42" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:36px"/>
+    </symbol>
 
-        <symbol id="pc-si-int-link" viewBox="0 0 512 512">
-            <path d="M208 352h-64a96 96 0 0 1 0-192h64M304 160h64a96 96 0 0 1 0 192h-64M163.29 256h187.42" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:36px"/>
-        </symbol>
+    <symbol id="pc-si-int-link" viewBox="0 0 512 512">
+      <path d="M208 352h-64a96 96 0 0 1 0-192h64M304 160h64a96 96 0 0 1 0 192h-64M163.29 256h187.42" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:36px"/>
+    </symbol>
 
-        <symbol id="pc-si-download" viewBox="0 0 512 512">
-            <path d="M336 176h40a40 40 0 0 1 40 40v208a40 40 0 0 1-40 40H136a40 40 0 0 1-40-40V216a40 40 0 0 1 40-40h40" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/><path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="m176 272 80 80 80-80M256 48v288"/>
-        </symbol>
+    <symbol id="pc-si-download" viewBox="0 0 512 512">
+      <path d="M336 176h40a40 40 0 0 1 40 40v208a40 40 0 0 1-40 40H136a40 40 0 0 1-40-40V216a40 40 0 0 1 40-40h40" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/><path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="m176 272 80 80 80-80M256 48v288"/>
+    </symbol>
 
-        <symbol id="pc-si-ban" viewBox="0 0 512 512">
-            <circle cx="256" cy="256" r="208" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="32" d="m108.92 108.92 294.16 294.16"/>
-        </symbol>
+    <symbol id="pc-si-ban" viewBox="0 0 512 512">
+      <circle cx="256" cy="256" r="208" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="32" d="m108.92 108.92 294.16 294.16"/>
+    </symbol>
 
-        <symbol id="pc-si-refresh" viewBox="0 0 512 512">
-            <path d="M288 193s12.18-6-32-6a80 80 0 1 0 80 80" style="fill:none;stroke-linecap:round;stroke-miterlimit:10;stroke-width:28px"/><path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:28px" d="m256 149 40 40-40 40"/><path d="M256 64C150 64 64 150 64 256s86 192 192 192 192-86 192-192S362 64 256 64Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/>
-        </symbol>
+    <symbol id="pc-si-refresh" viewBox="0 0 512 512">
+      <path d="M288 193s12.18-6-32-6a80 80 0 1 0 80 80" style="fill:none;stroke-linecap:round;stroke-miterlimit:10;stroke-width:28px"/><path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:28px" d="m256 149 40 40-40 40"/><path d="M256 64C150 64 64 150 64 256s86 192 192 192 192-86 192-192S362 64 256 64Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/>
+    </symbol>
 
-        <symbol id="pc-si-trash" viewBox="0 0 512 512">
-            <path d="m112 112 20 320c.95 18.49 14.4 32 32 32h184c17.67 0 30.87-13.51 32-32l20-320" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/><path style="stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px" d="M80 112h352"/><path d="M192 112V72h0a23.93 23.93 0 0 1 24-24h80a23.93 23.93 0 0 1 24 24h0v40M256 176v224M184 176l8 224M328 176l-8 224" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/>
-        </symbol>
+    <symbol id="pc-si-trash" viewBox="0 0 512 512">
+      <path d="m112 112 20 320c.95 18.49 14.4 32 32 32h184c17.67 0 30.87-13.51 32-32l20-320" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/><path style="stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px" d="M80 112h352"/><path d="M192 112V72h0a23.93 23.93 0 0 1 24-24h80a23.93 23.93 0 0 1 24 24h0v40M256 176v224M184 176l8 224M328 176l-8 224" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/>
+    </symbol>
 
-        <symbol id="pc-si-triangle-bottom" viewBox="0 0 512 512">
-            <path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M400 256H112"/>
-        </symbol>
+    <symbol id="pc-si-triangle-bottom" viewBox="0 0 512 512">
+      <path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M400 256H112"/>
+    </symbol>
 
-        <symbol id="pc-si-triangle-right" viewBox="0 0 512 512">
-            <path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M256 112v288M400 256H112"/>
-        </symbol>
+    <symbol id="pc-si-triangle-right" viewBox="0 0 512 512">
+      <path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M256 112v288M400 256H112"/>
+    </symbol>
 
-        <symbol id="pc-si-save" viewBox="0 0 512 512">
-            <path d="M380.93 57.37A32 32 0 0 0 358.3 48H94.22A46.21 46.21 0 0 0 48 94.22v323.56A46.21 46.21 0 0 0 94.22 464h323.56A46.36 46.36 0 0 0 464 417.78V153.7a32 32 0 0 0-9.37-22.63ZM256 416a64 64 0 1 1 64-64 63.92 63.92 0 0 1-64 64Zm48-224H112a16 16 0 0 1-16-16v-64a16 16 0 0 1 16-16h192a16 16 0 0 1 16 16v64a16 16 0 0 1-16 16Z" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/>
-        </symbol>
+    <symbol id="pc-si-save" viewBox="0 0 512 512">
+      <path d="M380.93 57.37A32 32 0 0 0 358.3 48H94.22A46.21 46.21 0 0 0 48 94.22v323.56A46.21 46.21 0 0 0 94.22 464h323.56A46.36 46.36 0 0 0 464 417.78V153.7a32 32 0 0 0-9.37-22.63ZM256 416a64 64 0 1 1 64-64 63.92 63.92 0 0 1-64 64Zm48-224H112a16 16 0 0 1-16-16v-64a16 16 0 0 1 16-16h192a16 16 0 0 1 16 16v64a16 16 0 0 1-16 16Z" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/>
+    </symbol>
 
-        <symbol id="pc-si-user" viewBox="0 0 512 512">
-            <path d="M258.9 48C141.92 46.42 46.42 141.92 48 258.9c1.56 112.19 92.91 203.54 205.1 205.1 117 1.6 212.48-93.9 210.88-210.88C462.44 140.91 371.09 49.56 258.9 48Zm126.42 327.25a4 4 0 0 1-6.14-.32 124.27 124.27 0 0 0-32.35-29.59C321.37 329 289.11 320 256 320s-65.37 9-90.83 25.34a124.24 124.24 0 0 0-32.35 29.58 4 4 0 0 1-6.14.32A175.32 175.32 0 0 1 80 259c-1.63-97.31 78.22-178.76 175.57-179S432 158.81 432 256a175.32 175.32 0 0 1-46.68 119.25Z"/><path d="M256 144c-19.72 0-37.55 7.39-50.22 20.82s-19 32-17.57 51.93C191.11 256 221.52 288 256 288s64.83-32 67.79-71.24c1.48-19.74-4.8-38.14-17.68-51.82C293.39 151.44 275.59 144 256 144Z"/>
-        </symbol>
+    <symbol id="pc-si-user" viewBox="0 0 512 512">
+      <path d="M258.9 48C141.92 46.42 46.42 141.92 48 258.9c1.56 112.19 92.91 203.54 205.1 205.1 117 1.6 212.48-93.9 210.88-210.88C462.44 140.91 371.09 49.56 258.9 48Zm126.42 327.25a4 4 0 0 1-6.14-.32 124.27 124.27 0 0 0-32.35-29.59C321.37 329 289.11 320 256 320s-65.37 9-90.83 25.34a124.24 124.24 0 0 0-32.35 29.58 4 4 0 0 1-6.14.32A175.32 175.32 0 0 1 80 259c-1.63-97.31 78.22-178.76 175.57-179S432 158.81 432 256a175.32 175.32 0 0 1-46.68 119.25Z"/><path d="M256 144c-19.72 0-37.55 7.39-50.22 20.82s-19 32-17.57 51.93C191.11 256 221.52 288 256 288s64.83-32 67.79-71.24c1.48-19.74-4.8-38.14-17.68-51.82C293.39 151.44 275.59 144 256 144Z"/>
+    </symbol>
 
-        <symbol id="pc-si-submit" viewBox="0 0 512 512">
-            <path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M416 128 192 384l-96-96"/>
-        </symbol>
+    <symbol id="pc-si-submit" viewBox="0 0 512 512">
+      <path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M416 128 192 384l-96-96"/>
+    </symbol>
 
-        <symbol id="pc-si-list-alt" viewBox="0 0 512 512">
-            <path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M160 144h288M160 256h288M160 368h288"/><circle cx="80" cy="144" r="16" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/><circle cx="80" cy="256" r="16" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/><circle cx="80" cy="368" r="16" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/>
-        </symbol>
+    <symbol id="pc-si-list-alt" viewBox="0 0 512 512">
+      <path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M160 144h288M160 256h288M160 368h288"/><circle cx="80" cy="144" r="16" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/><circle cx="80" cy="256" r="16" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/><circle cx="80" cy="368" r="16" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/>
+    </symbol>
 
-        <symbol id="pc-si-order" viewBox="0 0 512 512">
-            <path d="M416 221.25V416a48 48 0 0 1-48 48H144a48 48 0 0 1-48-48V96a48 48 0 0 1 48-48h98.75a32 32 0 0 1 22.62 9.37l141.26 141.26a32 32 0 0 1 9.37 22.62Z" style="fill:none;stroke-linejoin:round;stroke-width:32px"/><path d="M256 56v120a32 32 0 0 0 32 32h120M176 288h160M176 368h160" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/>
-        </symbol>
+    <symbol id="pc-si-order" viewBox="0 0 512 512">
+      <path d="M416 221.25V416a48 48 0 0 1-48 48H144a48 48 0 0 1-48-48V96a48 48 0 0 1 48-48h98.75a32 32 0 0 1 22.62 9.37l141.26 141.26a32 32 0 0 1 9.37 22.62Z" style="fill:none;stroke-linejoin:round;stroke-width:32px"/><path d="M256 56v120a32 32 0 0 0 32 32h120M176 288h160M176 368h160" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/>
+    </symbol>
 
-        <symbol id="pc-si-del-note" viewBox="0 0 512 512">
-            <path d="M416 221.25V416a48 48 0 0 1-48 48H144a48 48 0 0 1-48-48V96a48 48 0 0 1 48-48h98.75a32 32 0 0 1 22.62 9.37l141.26 141.26a32 32 0 0 1 9.37 22.62Z" style="fill:none;stroke-linejoin:round;stroke-width:32px"/><path d="M256 56v120a32 32 0 0 0 32 32h120" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/>
-        </symbol>
+    <symbol id="pc-si-del-note" viewBox="0 0 512 512">
+      <path d="M416 221.25V416a48 48 0 0 1-48 48H144a48 48 0 0 1-48-48V96a48 48 0 0 1 48-48h98.75a32 32 0 0 1 22.62 9.37l141.26 141.26a32 32 0 0 1 9.37 22.62Z" style="fill:none;stroke-linejoin:round;stroke-width:32px"/><path d="M256 56v120a32 32 0 0 0 32 32h120" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/>
+    </symbol>
 
-        <symbol id="pc-si-invoice" viewBox="0 0 512 512">
-            <path d="M368 415.86V72a24.07 24.07 0 0 0-24-24H72a24.07 24.07 0 0 0-24 24v352a40.12 40.12 0 0 0 40 40h328" style="fill:none;stroke-linejoin:round;stroke-width:32px"/><path d="M416 464a48 48 0 0 1-48-48V128h72a24 24 0 0 1 24 24v264a48 48 0 0 1-48 48Z" style="fill:none;stroke-linejoin:round;stroke-width:32px"/><path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M240 128h64M240 192h64M112 256h192M112 320h192M112 384h192"/><path d="M176 208h-64a16 16 0 0 1-16-16v-64a16 16 0 0 1 16-16h64a16 16 0 0 1 16 16v64a16 16 0 0 1-16 16Z"/>
-        </symbol>
+    <symbol id="pc-si-invoice" viewBox="0 0 512 512">
+      <path d="M368 415.86V72a24.07 24.07 0 0 0-24-24H72a24.07 24.07 0 0 0-24 24v352a40.12 40.12 0 0 0 40 40h328" style="fill:none;stroke-linejoin:round;stroke-width:32px"/><path d="M416 464a48 48 0 0 1-48-48V128h72a24 24 0 0 1 24 24v264a48 48 0 0 1-48 48Z" style="fill:none;stroke-linejoin:round;stroke-width:32px"/><path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M240 128h64M240 192h64M112 256h192M112 320h192M112 384h192"/><path d="M176 208h-64a16 16 0 0 1-16-16v-64a16 16 0 0 1 16-16h64a16 16 0 0 1 16 16v64a16 16 0 0 1-16 16Z"/>
+    </symbol>
 
-        <symbol id="pc-si-receipt" viewBox="0 0 512 512">
-            <path style="fill:none;stroke-linejoin:round;stroke-width:32px" d="M160 336V48l32 16 32-16 31.94 16 32.37-16L320 64l31.79-16 31.93 16L416 48l32.01 16L480 48v224"/><path d="M480 272v112a80 80 0 0 1-80 80 80 80 0 0 1-80-80v-48H48a15.86 15.86 0 0 0-16 16c0 64 6.74 112 80 112h288" style="fill:none;stroke-linejoin:round;stroke-width:32px"/><path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M224 144h192M288 224h128"/>
-        </symbol>
+    <symbol id="pc-si-receipt" viewBox="0 0 512 512">
+      <path style="fill:none;stroke-linejoin:round;stroke-width:32px" d="M160 336V48l32 16 32-16 31.94 16 32.37-16L320 64l31.79-16 31.93 16L416 48l32.01 16L480 48v224"/><path d="M480 272v112a80 80 0 0 1-80 80 80 80 0 0 1-80-80v-48H48a15.86 15.86 0 0 0-16 16c0 64 6.74 112 80 112h288" style="fill:none;stroke-linejoin:round;stroke-width:32px"/><path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="M224 144h192M288 224h128"/>
+    </symbol>
 
-        <symbol id="pc-si-print" viewBox="0 0 512 512">
-            <path d="M384 368h24a40.12 40.12 0 0 0 40-40V168a40.12 40.12 0 0 0-40-40H104a40.12 40.12 0 0 0-40 40v160a40.12 40.12 0 0 0 40 40h24" style="fill:none;stroke-linejoin:round;stroke-width:32px"/><rect x="128" y="240" width="256" height="208" rx="24.32" ry="24.32" style="fill:none;stroke-linejoin:round;stroke-width:32px"/><path d="M384 128v-24a40.12 40.12 0 0 0-40-40H168a40.12 40.12 0 0 0-40 40v24" style="fill:none;stroke-linejoin:round;stroke-width:32px"/><circle cx="392" cy="184" r="24"/>
-        </symbol>
+    <symbol id="pc-si-print" viewBox="0 0 512 512">
+      <path d="M384 368h24a40.12 40.12 0 0 0 40-40V168a40.12 40.12 0 0 0-40-40H104a40.12 40.12 0 0 0-40 40v160a40.12 40.12 0 0 0 40 40h24" style="fill:none;stroke-linejoin:round;stroke-width:32px"/><rect x="128" y="240" width="256" height="208" rx="24.32" ry="24.32" style="fill:none;stroke-linejoin:round;stroke-width:32px"/><path d="M384 128v-24a40.12 40.12 0 0 0-40-40H168a40.12 40.12 0 0 0-40 40v24" style="fill:none;stroke-linejoin:round;stroke-width:32px"/><circle cx="392" cy="184" r="24"/>
+    </symbol>
 
-        <symbol id="pc-si-barcode" viewBox="0 0 512 512">
-            <path d="m384 400.33 35.13-.33A29 29 0 0 0 448 371.13V140.87A29 29 0 0 0 419.13 112l-35.13.33M128 112l-36.8.33c-15.88 0-27.2 13-27.2 28.87v230.27c0 15.87 11.32 28.86 27.2 28.86L128 400M384 192v128M320 160v192M256 176v160M192 160v192M128 192v128" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/>
-        </symbol>
+    <symbol id="pc-si-barcode" viewBox="0 0 512 512">
+      <path d="m384 400.33 35.13-.33A29 29 0 0 0 448 371.13V140.87A29 29 0 0 0 419.13 112l-35.13.33M128 112l-36.8.33c-15.88 0-27.2 13-27.2 28.87v230.27c0 15.87 11.32 28.86 27.2 28.86L128 400M384 192v128M320 160v192M256 176v160M192 160v192M128 192v128" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/>
+    </symbol>
 
-        <symbol id="pc-si-search" viewBox="0 0 512 512">
-            <path d="M221.09 64a157.09 157.09 0 1 0 157.09 157.09A157.1 157.1 0 0 0 221.09 64Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/><path style="fill:none;stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px" d="M338.29 338.29 448 448"/>
-        </symbol>
+    <symbol id="pc-si-search" viewBox="0 0 512 512">
+      <path d="M221.09 64a157.09 157.09 0 1 0 157.09 157.09A157.1 157.1 0 0 0 221.09 64Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/><path style="fill:none;stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px" d="M338.29 338.29 448 448"/>
+    </symbol>
 
-        <symbol id="pc-si-payment-method" viewBox="0 0 512 512">
-            <rect x="48" y="96" width="416" height="320" rx="56" ry="56" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/><path style="fill:none;stroke-linejoin:round;stroke-width:60px" d="M48 192h416M128 300h48v20h-48z"/>
-        </symbol>
+    <symbol id="pc-si-payment-method" viewBox="0 0 512 512">
+      <rect x="48" y="96" width="416" height="320" rx="56" ry="56" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/><path style="fill:none;stroke-linejoin:round;stroke-width:60px" d="M48 192h416M128 300h48v20h-48z"/>
+    </symbol>
 
-        <symbol id="pc-si-shipping-method" viewBox="0 0 512 512">
-            <path d="m384 400.33 35.13-.33A29 29 0 0 0 448 371.13V140.87A29 29 0 0 0 419.13 112l-35.13.33M128 112l-36.8.33c-15.88 0-27.2 13-27.2 28.87v230.27c0 15.87 11.32 28.86 27.2 28.86L128 400M384 192v128M320 160v192M256 176v160M192 160v192M128 192v128" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/>
-        </symbol>
+    <symbol id="pc-si-shipping-method" viewBox="0 0 512 512">
+      <path d="m384 400.33 35.13-.33A29 29 0 0 0 448 371.13V140.87A29 29 0 0 0 419.13 112l-35.13.33M128 112l-36.8.33c-15.88 0-27.2 13-27.2 28.87v230.27c0 15.87 11.32 28.86 27.2 28.86L128 400M384 192v128M320 160v192M256 176v160M192 160v192M128 192v128" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/>
+    </symbol>
 
-        <symbol id="pc-si-log-out" viewBox="0 0 512 512">
-            <path d="M304 336v40a40 40 0 0 1-40 40H104a40 40 0 0 1-40-40V136a40 40 0 0 1 40-40h152c22.09 0 48 17.91 48 40v40M368 336l80-80-80-80M176 256h256" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/>
-        </symbol>
+    <symbol id="pc-si-log-out" viewBox="0 0 512 512">
+      <path d="M304 336v40a40 40 0 0 1-40 40H104a40 40 0 0 1-40-40V136a40 40 0 0 1 40-40h152c22.09 0 48 17.91 48 40v40M368 336l80-80-80-80M176 256h256" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/>
+    </symbol>
 
-        <symbol id="pc-si-calendar" viewBox="0 0 512 512">
-            <rect fill="none" stroke="#000" stroke-linejoin="round" stroke-width="32" x="48" y="80" width="416" height="384" rx="48"/><circle cx="296" cy="232" r="24"/><circle cx="376" cy="232" r="24"/><circle cx="296" cy="312" r="24"/><circle cx="376" cy="312" r="24"/><circle cx="136" cy="312" r="24"/><circle cx="216" cy="312" r="24"/><circle cx="136" cy="392" r="24"/><circle cx="216" cy="392" r="24"/><circle cx="296" cy="392" r="24"/><path fill="none" stroke="#000" stroke-linejoin="round" stroke-width="32" stroke-linecap="round" d="M128 48v32M384 48v32"/><path fill="none" stroke="#000" stroke-linejoin="round" stroke-width="32" d="M464 160H48"/>
-        </symbol>
+    <symbol id="pc-si-calendar" viewBox="0 0 512 512">
+      <rect fill="none" stroke="#000" stroke-linejoin="round" stroke-width="32" x="48" y="80" width="416" height="384" rx="48"/><circle cx="296" cy="232" r="24"/><circle cx="376" cy="232" r="24"/><circle cx="296" cy="312" r="24"/><circle cx="376" cy="312" r="24"/><circle cx="136" cy="312" r="24"/><circle cx="216" cy="312" r="24"/><circle cx="136" cy="392" r="24"/><circle cx="216" cy="392" r="24"/><circle cx="296" cy="392" r="24"/><path fill="none" stroke="#000" stroke-linejoin="round" stroke-width="32" stroke-linecap="round" d="M128 48v32M384 48v32"/><path fill="none" stroke="#000" stroke-linejoin="round" stroke-width="32" d="M464 160H48"/>
+    </symbol>
 
-        <symbol id="pc-si-globe" viewBox="0 0 512 512">
-            <path d="M464 256c0-114.87-93.13-208-208-208S48 141.13 48 256s93.13 208 208 208 208-93.13 208-208Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/><path d="M445.57 172.14c-16.06.1-14.48 29.73-34.49 15.75-7.43-5.18-12-12.71-21.33-15-8.15-2-16.5.08-24.55 1.47-9.15 1.58-20 2.29-26.94 9.22-6.71 6.67-10.26 15.62-17.4 22.33-13.81 13-19.64 27.19-10.7 45.57 8.6 17.67 26.59 27.26 46 26 19.07-1.27 38.88-12.33 38.33 15.38-.2 9.8 1.85 16.6 4.86 25.71 2.79 8.4 2.6 16.54 3.24 25.21 1.18 16.2 4.16 34.36 12.2 48.67l15-21.16c1.85-2.62 5.72-6.29 6.64-9.38 1.63-5.47-1.58-14.87-1.95-21s-.19-12.34-1.13-18.47c-1.32-8.59-6.4-16.64-7.1-25.13-1.29-15.81 1.6-28.43-10.58-41.65-11.76-12.75-29-15.81-45.47-13.22-8.3 1.3-41.71 6.64-28.3-12.33 2.65-3.73 7.28-6.79 10.26-10.34 2.59-3.09 4.84-8.77 7.88-11.18s17-5.18 21-3.95 8.17 7 11.64 9.56a49.89 49.89 0 0 0 21.81 9.36c13.66 2 42.22-5.94 42-23.46-.04-8.4-7.84-20.1-10.92-27.96ZM287.45 316.3c-5.33-22.44-35.82-29.94-52.26-42.11-9.45-7-17.86-17.81-30.27-18.69-5.72-.41-10.51.83-16.18-.64-5.2-1.34-9.28-4.14-14.82-3.41-10.35 1.36-16.88 12.42-28 10.92-10.55-1.42-21.42-13.76-23.82-23.81-3.08-12.92 7.14-17.11 18.09-18.26 4.57-.48 9.7-1 14.09.67 5.78 2.15 8.51 7.81 13.7 10.67 9.73 5.33 11.7-3.19 10.21-11.83-2.23-12.94-4.83-18.22 6.71-27.12 8-6.14 14.84-10.58 13.56-21.61-.76-6.48-4.31-9.41-1-15.86 2.51-4.91 9.4-9.34 13.89-12.27 11.59-7.56 49.65-7 34.1-28.16-4.57-6.21-13-17.31-21-18.83-10-1.89-14.44 9.27-21.41 14.19-7.2 5.09-21.22 10.87-28.43 3-9.7-10.59 6.43-14.07 10-21.46s-8.27-21.36-14.61-24.9l-29.81 33.43a41.52 41.52 0 0 0 8.34 31.86c5.93 7.63 15.37 10.08 15.8 20.5.42 10-1.14 15.12-7.68 22.15-2.83 3-4.83 7.26-7.71 10.07-3.53 3.43-2.22 2.38-7.73 3.32-10.36 1.75-19.18 4.45-29.19 7.21C95.34 199.94 93.8 172.69 86.2 162l-25 20.19c-.27 3.31 4.1 9.4 5.29 13 6.83 20.57 20.61 36.48 29.51 56.16 9.37 20.84 34.53 15.06 45.64 33.32 9.86 16.2-.67 36.71 6.71 53.67 5.36 12.31 18 15 26.72 24 8.91 9.09 8.72 21.53 10.08 33.36a305.22 305.22 0 0 0 7.45 41.28c1.21 4.69 2.32 10.89 5.53 14.76 2.2 2.66 9.75 4.95 6.7 5.83 4.26.7 11.85 4.68 15.4 1.76 4.68-3.84 3.43-15.66 4.24-21 2.43-15.9 10.39-31.45 21.13-43.35 10.61-11.74 25.15-19.69 34.11-33 8.73-12.98 11.36-30.49 7.74-45.68Zm-33.39 26.32c-6 10.71-19.36 17.88-27.95 26.39-2.33 2.31-7.29 10.31-10.21 8.58-2.09-1.24-2.8-11.62-3.57-14a61.17 61.17 0 0 0-21.71-29.95c-3.13-2.37-10.89-5.45-12.68-8.7-2-3.53-.2-11.86-.13-15.7.11-5.6-2.44-14.91-1.06-20 1.6-5.87-1.48-2.33 3.77-3.49 2.77-.62 14.21 1.39 17.66 2.11 5.48 1.14 8.5 4.55 12.82 8 11.36 9.11 23.87 16.16 36.6 23.14 9.86 5.46 12.76 12.37 6.46 23.62ZM184.46 67.09c4.74 4.63 9.2 10.11 16.27 10.57 6.69.45 13-3.17 18.84 1.38 6.48 5 11.15 11.33 19.75 12.89 8.32 1.51 17.13-3.35 19.19-11.86 2-8.11-2.31-16.93-2.57-25.07 0-1.13.61-6.15-.17-7-.58-.64-5.42.08-6.16.1q-8.13.24-16.22 1.12a207.1 207.1 0 0 0-57.18 14.65c2.43 1.68 5.48 2.35 8.25 3.22ZM356.4 123.27c8.49 0 17.11-3.8 14.37-13.62-2.3-8.23-6.22-17.16-15.76-12.72-6.07 2.82-14.67 10-15.38 17.12-.81 8.08 11.11 9.22 16.77 9.22ZM349.62 166.24c8.67 5.19 21.53 2.75 28.07-4.66 5.11-5.8 8.12-15.87 17.31-15.86a15.4 15.4 0 0 1 10.82 4.41c3.8 3.93 3.05 7.62 3.86 12.54 1.81 11.05 13.66.63 16.75-3.65 2-2.79 4.71-6.93 3.8-10.56-.84-3.39-4.8-7-6.56-10.11-5.14-9-9.37-19.47-17.07-26.74-7.41-7-16.52-6.19-23.55 1.08-5.76 6-12.45 10.75-16.39 18.05-2.78 5.13-5.91 7.58-11.54 8.91-3.1.73-6.64 1-9.24 3.08-7.24 5.7-3.12 19.39 3.74 23.51Z"/>
-        </symbol>
+    <symbol id="pc-si-globe" viewBox="0 0 512 512">
+      <path d="M464 256c0-114.87-93.13-208-208-208S48 141.13 48 256s93.13 208 208 208 208-93.13 208-208Z" style="fill:none;stroke-miterlimit:10;stroke-width:32px"/><path d="M445.57 172.14c-16.06.1-14.48 29.73-34.49 15.75-7.43-5.18-12-12.71-21.33-15-8.15-2-16.5.08-24.55 1.47-9.15 1.58-20 2.29-26.94 9.22-6.71 6.67-10.26 15.62-17.4 22.33-13.81 13-19.64 27.19-10.7 45.57 8.6 17.67 26.59 27.26 46 26 19.07-1.27 38.88-12.33 38.33 15.38-.2 9.8 1.85 16.6 4.86 25.71 2.79 8.4 2.6 16.54 3.24 25.21 1.18 16.2 4.16 34.36 12.2 48.67l15-21.16c1.85-2.62 5.72-6.29 6.64-9.38 1.63-5.47-1.58-14.87-1.95-21s-.19-12.34-1.13-18.47c-1.32-8.59-6.4-16.64-7.1-25.13-1.29-15.81 1.6-28.43-10.58-41.65-11.76-12.75-29-15.81-45.47-13.22-8.3 1.3-41.71 6.64-28.3-12.33 2.65-3.73 7.28-6.79 10.26-10.34 2.59-3.09 4.84-8.77 7.88-11.18s17-5.18 21-3.95 8.17 7 11.64 9.56a49.89 49.89 0 0 0 21.81 9.36c13.66 2 42.22-5.94 42-23.46-.04-8.4-7.84-20.1-10.92-27.96ZM287.45 316.3c-5.33-22.44-35.82-29.94-52.26-42.11-9.45-7-17.86-17.81-30.27-18.69-5.72-.41-10.51.83-16.18-.64-5.2-1.34-9.28-4.14-14.82-3.41-10.35 1.36-16.88 12.42-28 10.92-10.55-1.42-21.42-13.76-23.82-23.81-3.08-12.92 7.14-17.11 18.09-18.26 4.57-.48 9.7-1 14.09.67 5.78 2.15 8.51 7.81 13.7 10.67 9.73 5.33 11.7-3.19 10.21-11.83-2.23-12.94-4.83-18.22 6.71-27.12 8-6.14 14.84-10.58 13.56-21.61-.76-6.48-4.31-9.41-1-15.86 2.51-4.91 9.4-9.34 13.89-12.27 11.59-7.56 49.65-7 34.1-28.16-4.57-6.21-13-17.31-21-18.83-10-1.89-14.44 9.27-21.41 14.19-7.2 5.09-21.22 10.87-28.43 3-9.7-10.59 6.43-14.07 10-21.46s-8.27-21.36-14.61-24.9l-29.81 33.43a41.52 41.52 0 0 0 8.34 31.86c5.93 7.63 15.37 10.08 15.8 20.5.42 10-1.14 15.12-7.68 22.15-2.83 3-4.83 7.26-7.71 10.07-3.53 3.43-2.22 2.38-7.73 3.32-10.36 1.75-19.18 4.45-29.19 7.21C95.34 199.94 93.8 172.69 86.2 162l-25 20.19c-.27 3.31 4.1 9.4 5.29 13 6.83 20.57 20.61 36.48 29.51 56.16 9.37 20.84 34.53 15.06 45.64 33.32 9.86 16.2-.67 36.71 6.71 53.67 5.36 12.31 18 15 26.72 24 8.91 9.09 8.72 21.53 10.08 33.36a305.22 305.22 0 0 0 7.45 41.28c1.21 4.69 2.32 10.89 5.53 14.76 2.2 2.66 9.75 4.95 6.7 5.83 4.26.7 11.85 4.68 15.4 1.76 4.68-3.84 3.43-15.66 4.24-21 2.43-15.9 10.39-31.45 21.13-43.35 10.61-11.74 25.15-19.69 34.11-33 8.73-12.98 11.36-30.49 7.74-45.68Zm-33.39 26.32c-6 10.71-19.36 17.88-27.95 26.39-2.33 2.31-7.29 10.31-10.21 8.58-2.09-1.24-2.8-11.62-3.57-14a61.17 61.17 0 0 0-21.71-29.95c-3.13-2.37-10.89-5.45-12.68-8.7-2-3.53-.2-11.86-.13-15.7.11-5.6-2.44-14.91-1.06-20 1.6-5.87-1.48-2.33 3.77-3.49 2.77-.62 14.21 1.39 17.66 2.11 5.48 1.14 8.5 4.55 12.82 8 11.36 9.11 23.87 16.16 36.6 23.14 9.86 5.46 12.76 12.37 6.46 23.62ZM184.46 67.09c4.74 4.63 9.2 10.11 16.27 10.57 6.69.45 13-3.17 18.84 1.38 6.48 5 11.15 11.33 19.75 12.89 8.32 1.51 17.13-3.35 19.19-11.86 2-8.11-2.31-16.93-2.57-25.07 0-1.13.61-6.15-.17-7-.58-.64-5.42.08-6.16.1q-8.13.24-16.22 1.12a207.1 207.1 0 0 0-57.18 14.65c2.43 1.68 5.48 2.35 8.25 3.22ZM356.4 123.27c8.49 0 17.11-3.8 14.37-13.62-2.3-8.23-6.22-17.16-15.76-12.72-6.07 2.82-14.67 10-15.38 17.12-.81 8.08 11.11 9.22 16.77 9.22ZM349.62 166.24c8.67 5.19 21.53 2.75 28.07-4.66 5.11-5.8 8.12-15.87 17.31-15.86a15.4 15.4 0 0 1 10.82 4.41c3.8 3.93 3.05 7.62 3.86 12.54 1.81 11.05 13.66.63 16.75-3.65 2-2.79 4.71-6.93 3.8-10.56-.84-3.39-4.8-7-6.56-10.11-5.14-9-9.37-19.47-17.07-26.74-7.41-7-16.52-6.19-23.55 1.08-5.76 6-12.45 10.75-16.39 18.05-2.78 5.13-5.91 7.58-11.54 8.91-3.1.73-6.64 1-9.24 3.08-7.24 5.7-3.12 19.39 3.74 23.51Z"/>
+    </symbol>
 
-        <symbol id="pc-si-upload" viewBox="0 0 512 512">
-            <path d="M336 336h40a40 40 0 0 0 40-40V88a40 40 0 0 0-40-40H136a40 40 0 0 0-40 40v208a40 40 0 0 0 40 40h40" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/><path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="m176 240 80-80 80 80M256 464V176"/>
-        </symbol>
+    <symbol id="pc-si-upload" viewBox="0 0 512 512">
+      <path d="M336 336h40a40 40 0 0 0 40-40V88a40 40 0 0 0-40-40H136a40 40 0 0 0-40 40v208a40 40 0 0 0 40 40h40" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/><path style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" d="m176 240 80-80 80 80M256 464V176"/>
+    </symbol>
 
-    </defs>
+    <symbol id="pc-si-watchdog" viewBox="0 0 512 512">
+      <path d="M269.4 2.9C265.2 1 260.7 0 256 0s-9.2 1-13.4 2.9L54.3 82.8c-22 9.3-38.4 31-38.3 57.2c.5 99.2 41.3 280.7 213.6 363.2c16.7 8 36.1 8 52.8 0C454.7 420.7 495.5 239.2 496 140c.1-26.2-16.3-47.9-38.3-57.2L269.4 2.9zM160.9 286.2c4.8 1.2 9.9 1.8 15.1 1.8c35.3 0 64-28.7 64-64V160h44.2c12.1 0 23.2 6.8 28.6 17.7L320 192h64c8.8 0 16 7.2 16 16v32c0 44.2-35.8 80-80 80H272v50.7c0 7.3-5.9 13.3-13.3 13.3c-1.8 0-3.6-.4-5.2-1.1l-98.7-42.3c-6.6-2.8-10.8-9.3-10.8-16.4c0-2.8 .6-5.5 1.9-8l15-30zM160 160h40 8v32 32c0 17.7-14.3 32-32 32s-32-14.3-32-32V176c0-8.8 7.2-16 16-16zm128 48a16 16 0 1 0 -32 0 16 16 0 1 0 32 0z"/>
+    </symbol>
+  </defs>
 </svg>
