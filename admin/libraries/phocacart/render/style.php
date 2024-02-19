@@ -51,7 +51,7 @@ class PhocacartRenderStyle
                 $icons = 'fa5';// only icons are now active for admin
             } else {
                 $theme = $pC->get('theme', 'bs5');
-                $icons = $pC->get('icon_type', 'fa5');
+                $icons = $pC->get('icon_type', 'svg');
             }
 
             $params = [];

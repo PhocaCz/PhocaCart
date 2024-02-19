@@ -908,10 +908,10 @@
 
             </field>
 
-            <field name="icon_type" type="list" class="btn-group btn-group-yesno" default="fa5" label="COM_PHOCACART_FIELD_ICON_TYPE_LABEL" description="COM_PHOCACART_FIELD_ICON_TYPE_DESC">
+            <field name="icon_type" type="list" class="btn-group btn-group-yesno" default="svg" label="COM_PHOCACART_FIELD_ICON_TYPE_LABEL" description="COM_PHOCACART_FIELD_ICON_TYPE_DESC">
                 <option value="bs">Bootstrap</option>
                 <option value="fa">Font Awesome</option>
-				<option value="fa5">Font Awesome 5</option>
+				        <option value="fa5">Font Awesome 5</option>
                 <option value="svg">SVG</option>
             </field>
 

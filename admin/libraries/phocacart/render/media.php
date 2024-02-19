@@ -66,12 +66,11 @@ class PhocacartRenderMedia
         $this->p['dynamic_change_id']              = $params->get('dynamic_change_id', 0);
         $this->p['dynamic_change_url_attributes']  = $params->get('dynamic_change_url_attributes', 0);
         $this->p['quantity_input_spinner']         = $params->get('quantity_input_spinner', 0);
-        $this->p['icon_type']                      = $params->get('icon_type', 'bs');
         $this->p['ajax_pagination_category']       = $params->get('ajax_pagination_category', 0);
         $this->p['ajax_searching_filtering_items'] = $params->get('ajax_searching_filtering_items', 0);
 
         $this->p['theme']                           = $params->get('theme', 'bs5');
-        $this->p['icon_type']                       = $params->get( 'icon_type', 'fa5');
+        $this->p['icon_type']                       = $params->get( 'icon_type', 'svg');
 
         $this->p['pos_focus_input_fields'] = $params->get('pos_focus_input_fields', 0);
         $this->p['pos_filter_category']    = $params->get('pos_filter_category', 1);// reload equal height
@@ -88,7 +87,7 @@ class PhocacartRenderMedia
         $this->document = Factory::getDocument();
 
         if ($this->format == 'raw' || $this->format == 'json') {
-            $this->load == false;
+            $this->load = false;
         }
 
         $this->scriptAtribute       = array('defer' => true, 'async' => true);
