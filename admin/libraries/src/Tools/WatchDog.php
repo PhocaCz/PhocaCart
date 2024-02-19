@@ -79,7 +79,6 @@ class WatchDog
             throw new WatchDogException(Text::_('COM_PHOCACART_ERROR_WATCHDOG_LOGIN'));
         }
 
-
         $wishlist = (object)[
             'product_id' => $productId,
             'category_id' => $categoryId,
