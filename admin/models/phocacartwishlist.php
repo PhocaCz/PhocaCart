@@ -90,21 +90,6 @@ class PhocaCartCpModelPhocacartWishlist extends AdminModel
         $db = $this->getDatabase();
         $limit = $params->get('watchdog_send_limit', 20);
 
-        // First find users that signed to any of products, which is on stock again
-        $query = $db->getQuery(true)
-            ->select('DISTINCT u.id, u.name, u.username, u.email, w.language')
-            ->from($db->quoteName('#__phocacart_wishlists', 'w'))
-            ->join('INNER', $db->quoteName('#__phocacart_products', 'p'), 'p.id = w.product_id')
-            ->join('INNER', $db->quoteName('#__users', 'u'), 'u.id = w.user_id')
-            ->where('w.type = ' . WishListType::WatchDog)
-            ->where('p.stock > 0')
-            ->where('u.block = 0')
-            ->order('w.id')
-            ->setLimit($limit);
-
-        $db->setQuery($query);
-        $users = $db->loadObjectList();
-
         $app   = Factory::getApplication();
         if (I18nHelper::useI18n()) {
             $defLang = I18nHelper::getDefLanguage();
@@ -113,13 +98,33 @@ class PhocaCartCpModelPhocacartWishlist extends AdminModel
         }
         $language = $app->getLanguage();
 
+        // First find users that signed to any of products, which is on stock again
+        $query = $db->getQuery(true)
+            ->select('DISTINCT u.id, u.name, u.username, u.email, w.language')
+            ->from($db->quoteName('#__phocacart_wishlists', 'w'))
+            ->join('INNER', $db->quoteName('#__phocacart_products', 'p'), 'p.id = w.product_id')
+            ->join('INNER', $db->quoteName('#__users', 'u'), 'u.id = w.user_id')
+            ->where('w.type = ' . WishListType::WatchDog)
+            ->where('p.stock > 0')
+            ->where('p.published = 1')
+            ->where('u.block = 0')
+            ->order('w.id')
+            ->setLimit($limit + 1);
+
+        $db->setQuery($query);
+        $users = $db->loadObjectList();
+
+        if (count($users) > $limit) {
+            $this->setState('watchdog_repeat', true);
+            array_pop($users);
+        } else {
+            $this->setState('watchdog_repeat', false);
+        }
+
         $successCount = 0;
 
         foreach ($users as $user) {
             $lang = $user->language;
-            if (!$lang || $lang === '*') {
-                $lang = $defLang;
-            }
 
             // Now load products for this user
             $query = $db->getQuery(true)
@@ -136,6 +141,11 @@ class PhocaCartCpModelPhocacartWishlist extends AdminModel
 
             $db->setQuery($query);
             $products = $db->loadObjectList('id');
+
+            if (!$lang || $lang === '*') {
+                $lang = $defLang;
+            }
+
             $mailProducts = [];
             foreach ($products as $product) {
                 $mailProducts[] = [

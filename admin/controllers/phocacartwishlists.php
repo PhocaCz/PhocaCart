@@ -33,6 +33,11 @@ class PhocaCartCpControllerPhocacartWishlists extends PhocaCartCpControllerPhoca
             $app->enqueueMessage($error, 'error');
         }
         $app->enqueueMessage(Text::plural('COM_PHOCACART_N_WATCHDOG_EMAIL_SENT', $model->getState('watchdog_count')), 'info');
+        if ($model->getState('watchdog_repeat')) {
+            $app->enqueueMessage(Text::_('COM_PHOCACART_WATCHDOG_EMAIL_SENT_REPEAT'), 'warning');
+        } else {
+            $app->enqueueMessage(Text::_('COM_PHOCACART_WATCHDOG_EMAIL_SENT_ALL'), 'success');
+        }
 
         $this->setRedirect('index.php?option=com_phocacart&view=phocacartwishlists');
     }
