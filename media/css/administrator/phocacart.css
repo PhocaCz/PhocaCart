@@ -2139,6 +2139,33 @@ a[target=_blank]::before {
 	margin: 0.2em;
 }
 
+/* select search */
+.ph-select-search-result {
+	display: grid;
+	gap: 0 .5rem;
+	grid-template-columns: 100px 1fr;
+}
+
+.select2-result:nth-child(2n) .ph-select-search-result {
+	background: rgba(var(--emphasis-color-rgb),.05);
+}
+
+.ph-select-search-result-image {
+	grid-row: 1 / 5;
+}
+
+.ph-select-search-result-image img {
+	max-width: 100%;
+}
+
+.ph-select-search-result-codes {
+	font-size: .8em;
+}
+
+.ph-select-search-result-categories {
+	font-size: .8em;
+	opacity: .8;
+}
 
 /* Hide objects in edit - administration - Product edit example */
 

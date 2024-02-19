@@ -35,8 +35,8 @@ class PhocaCartCpViewPhocaCartItemA extends HtmlView
             $db    = Factory::getDbo();
             $query = $db->getQuery(true);
 
-            $columns    = 'a.id, a.title, a.image';
-            $groupsFull = 'a.id, a.title, a.image';
+            $columns    = 'a.id, a.title, a.sku, a.ean, a.image';
+            $groupsFull = 'a.id, a.title, a.sku, a.ean, a.image';
             $groupsFast = 'a.id';
             $groups     = PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
 
@@ -118,8 +118,12 @@ class PhocaCartCpViewPhocaCartItemA extends HtmlView
             if (!empty($items)) {
                 foreach ($items as $k => $v) {
                     $itemsA[$k]['id']         = $v->id;
-                    $itemsA[$k]['title']      = $v->title . ' (' . $v->categories_title . ')';
+                    $itemsA[$k]['title']      = $v->title;
+                    $itemsA[$k]['categories_title'] = $v->categories_title;
                     $itemsA[$k]['categories'] = $v->categories;
+                    $itemsA[$k]['sku']        = $v->sku;
+                    $itemsA[$k]['ean']        = $v->ean;
+                    $itemsA[$k]['image']      = null;
                     if ($v->image != '') {
                         $thumb = PhocacartFileThumbnail::getOrCreateThumbnail($v->image, '', 0, 0, 0, 0, 'productimage');
                         if ($thumb['thumb_name_s_no_rel'] != '') {
