@@ -336,7 +336,7 @@ class PhocacartRouter extends RouterView
 
             if (I18nHelper::isI18n()) {
                 $dbquery
-                    ->join('LEFT', $db->quoteName('#__phocacart_products_i18n', 'i18n_p'), 'i18n_p.id = p.id AND i18n.language = ' . $db->quote($lang))
+                    ->join('LEFT', $db->quoteName('#__phocacart_products_i18n', 'i18n_p'), 'i18n_p.id = p.id AND i18n_p.language = ' . $db->quote($lang))
                     ->where('coalesce(' . $db->quoteName('i18n_p.alias') . ', ' . $db->quoteName('p.alias') . ')' . ' = :alias');
             } else {
                 $dbquery->where($db->quoteName('p.alias') . ' = :alias');
