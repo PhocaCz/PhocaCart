@@ -71,7 +71,7 @@ class PhocacartProduct
             'm.id as manufacturerid',
         ];
 
-        if (I18nHelper::useI18n()) {
+       /* if (I18nHelper::useI18n()) {
             $columns = array_merge($columns, [
                 'coalesce(i18n_i.title, i.title) as title', 'i18n_i.title_long', 'coalesce(i18n_i.alias, i.alias) as alias', 'i18n_i.description', 'i18n_i.description_long', 'i18n_i.features', 'i18n_i.metatitle', 'i18n_i.metadesc', 'i18n_i.metakey',
                 'coalesce(i18n_c.title, c.title) AS cattitle', 'coalesce(i18n_c.alias, c.alias) AS catalias',
@@ -83,7 +83,23 @@ class PhocacartProduct
                 'c.title AS cattitle', 'c.alias AS catalias',
                 'm.title as manufacturertitle', 'm.alias as manufactureralias',
             ]);
-        }
+        }*/
+
+        $columns = array_merge($columns, [
+            I18nHelper::sqlCoalesce(['title'], 'i'),
+            I18nHelper::sqlCoalesce(['alias'], 'i'),
+            I18nHelper::sqlCoalesce(['title_long'], 'i'),
+            I18nHelper::sqlCoalesce(['description'], 'i'),
+            I18nHelper::sqlCoalesce(['description_long'], 'i'),
+            I18nHelper::sqlCoalesce(['features'], 'i'),
+            I18nHelper::sqlCoalesce(['metatitle'], 'i'),
+            I18nHelper::sqlCoalesce(['metadesc'], 'i'),
+            I18nHelper::sqlCoalesce(['metakey'], 'i'),
+            I18nHelper::sqlCoalesce(['title'], 'c', 'cat'),
+            I18nHelper::sqlCoalesce(['alias'], 'c', 'cat'),
+            I18nHelper::sqlCoalesce(['title'], 'm', 'manufacturer'),
+            I18nHelper::sqlCoalesce(['link'], 'm', 'manufacturer')
+        ]);
 
         if (!$params->get('sql_product_skip_tax', false)) {
             $columns = array_merge($columns, [
@@ -118,9 +134,9 @@ class PhocacartProduct
             . ' LEFT JOIN #__phocacart_manufacturers AS m ON m.id = i.manufacturer_id';
 
         if (I18nHelper::useI18n()) {
-            $query .= I18nHelper::sqlJoin('#__phocacart_products_i18n', 'i18n_i', 'i');
-            $query .= I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'i18n_c', 'c');
-            $query .= I18nHelper::sqlJoin('#__phocacart_manufacturers_i18n', 'i18n_m', 'm');
+            $query .= I18nHelper::sqlJoin('#__phocacart_products_i18n', 'i');
+            $query .= I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'c');
+            $query .= I18nHelper::sqlJoin('#__phocacart_manufacturers_i18n', 'm');
         }
 
         if (!$params->get('sql_product_skip_tax', false)) {
@@ -648,7 +664,7 @@ class PhocacartProduct
         $baseColumns = array('a.id', 'a.image', 'a.video', 'a.sku', 'a.ean', 'a.stockstatus_a_id', 'a.stockstatus_n_id', 'a.min_quantity', 'a.min_multiple_quantity', 'a.stock', 'a.unit_amount', 'a.unit_unit', 'a.price', 'a.price_original', 'a.date', 'a.date_update', 'a.sales', 'a.featured', 'a.external_id', 'a.condition', 'a.points_received', 'a.points_needed', 'a.delivery_date', 'a.type', 'a.type_feed', 'a.type_category_feed', 'a.params_feed', 'a.gift_types');
 
 
-        if (I18nHelper::isI18n()) {
+       /* if (I18nHelper::isI18n()) {
 			$baseColumns = array_merge($baseColumns, [
 				'coalesce(i18n_a.alias, a.alias) as alias', 'coalesce(i18n_a.title, a.title) as title', 'i18n_a.title_long', 'i18n_a.description', 'i18n_a.description_long', 'i18n_a.features', 'i18n_a.metatitle', 'i18n_a.metadesc', 'i18n_a.metakey'
 			]);
@@ -656,7 +672,19 @@ class PhocacartProduct
 			$baseColumns = array_merge($baseColumns, [
 				'a.alias', 'a.title', 'a.title_long', 'a.description', 'a.description_long', 'a.features', 'a.metatitle', 'a.metadesc', 'a.metakey'
 			]);
-		}
+		}*/
+
+        $baseColumns = array_merge($baseColumns, [
+            I18nHelper::sqlCoalesce(['title']),
+            I18nHelper::sqlCoalesce(['alias']),
+            I18nHelper::sqlCoalesce(['title_long']),
+            I18nHelper::sqlCoalesce(['description']),
+            I18nHelper::sqlCoalesce(['description_long']),
+            I18nHelper::sqlCoalesce(['features']),
+            I18nHelper::sqlCoalesce(['metatitle']),
+            I18nHelper::sqlCoalesce(['metadesc']),
+            I18nHelper::sqlCoalesce(['metakey'])
+        ]);
 
 
 		$col = array_merge($baseColumns, $additionalColumns);
@@ -673,21 +701,21 @@ class PhocacartProduct
             $groupsFull = $queryColumns;
             $groupsFast = 'a.id';
         } else {
-             if (I18nHelper::isI18n()) {
-                $columns = implode(',', $col) . ', c.id AS catid, coalesce(i18n_c.title, c.title) AS cattitle, coalesce(i18n_c.alias, c.alias) AS catalias, c.title_feed AS cattitlefeed, c.type_feed AS cattypefeed, c.params_feed AS params_feed_category,'
-                 . ' MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received, t.id as taxid, t.tax_rate AS taxrate, t.calculation_type AS taxcalculationtype, t.title AS taxtitle, t.tax_hide as taxhide, coalesce(i18n_m.title, m.title) as manufacturertitle, coalesce(i18n_m.link, m.link) as manufacturerlink,'
+             //if (I18nHelper::isI18n()) {
+                $columns = implode(',', $col) . ', c.id AS catid, '.I18nHelper::sqlCoalesce(['title', 'alias'], 'c', 'cat').', c.title_feed AS cattitlefeed, c.type_feed AS cattypefeed, c.params_feed AS params_feed_category,'
+                 . ' MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received, t.id as taxid, t.tax_rate AS taxrate, t.calculation_type AS taxcalculationtype, t.title AS taxtitle, t.tax_hide as taxhide, '.I18nHelper::sqlCoalesce(['title', 'link'], 'm', 'manufacturer').','
                     . ' AVG(r.rating) AS rating,'
                     . ' at.required AS attribute_required';
                 $groupsFull = implode(',', $col) . ', c.id, c.title, c.alias, c.title_feed, c.type_feed, ppg.price, pptg.points_received, t.id, t.tax_rate, t.calculation_type, t.title, m.title, r.rating, at.required';
                 $groupsFast = 'a.id';
-            } else {
+            /*} else {
                 $columns = implode(',', $col) . ', c.id AS catid, c.title AS cattitle, c.alias AS catalias, c.title_feed AS cattitlefeed, c.type_feed AS cattypefeed, c.params_feed AS params_feed_category,'
                  . ' MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received, t.id as taxid, t.tax_rate AS taxrate, t.calculation_type AS taxcalculationtype, t.title AS taxtitle, t.tax_hide as taxhide, m.title AS manufacturertitle, m.link as manufacturerlink'
                     . ' AVG(r.rating) AS rating,'
                     . ' at.required AS attribute_required';
                 $groupsFull = implode(',', $col) . ', c.id, c.title, c.alias, c.title_feed, c.type_feed, ppg.price, pptg.points_received, t.id, t.tax_rate, t.calculation_type, t.title, m.title, r.rating, at.required';
                 $groupsFast = 'a.id';
-            }
+            }*/
 
 
         }
@@ -732,9 +760,9 @@ class PhocacartProduct
             . ' LEFT JOIN #__phocacart_product_point_groups AS pptg ON a.id = pptg.product_id AND pptg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = a.id AND group_id IN (' . $userGroups . ') AND type = 3)';
 
         if (I18nHelper::isI18n()) {
-			$q .= I18nHelper::sqlJoin('#__phocacart_products_i18n', 'i18n_a', 'a');
-			$q .= I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'i18n_c', 'c');
-            $q .= I18nHelper::sqlJoin('#__phocacart_manufacturers_i18n', 'i18n_m', 'm');
+			$q .= I18nHelper::sqlJoin('#__phocacart_products_i18n', 'a');
+			$q .= I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'c');
+            $q .= I18nHelper::sqlJoin('#__phocacart_manufacturers_i18n', 'm');
 		}
 
         // Additional Hits

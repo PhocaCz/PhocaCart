@@ -278,21 +278,21 @@ class PhocaCartModelCategory extends BaseDatabaseModel
             }
 
             $columns[] = 'm.id as manufacturerid';
-            if (I18nHelper::isI18n()) {
-                $join[] = I18nHelper::sqlJoin('#__phocacart_products_i18n', 'i18n_a');
-                $join[] = I18nHelper::sqlJoin('#__phocacart_manufacturers_i18n', 'i18n_m', 'm');
-                $columns[] = 'coalesce(i18n_a.title, a.title) AS title';
-                $columns[] = 'coalesce(i18n_a.alias, a.alias) AS alias';
-                $columns[] = 'i18n_a.description';
-                $columns[] = 'coalesce(i18n_m.title, m.title) as manufacturertitle';
-                $columns[] = 'coalesce(i18n_m.alias, m.alias) as manufactureralias';
-            } else {
+            //if (I18nHelper::isI18n()) {
+                $join[] = I18nHelper::sqlJoin('#__phocacart_products_i18n');
+                $join[] = I18nHelper::sqlJoin('#__phocacart_manufacturers_i18n', 'm');
+                $columns[] = I18nHelper::sqlCoalesce(['title']);
+                $columns[] = I18nHelper::sqlCoalesce(['alias']);
+                $columns[] = I18nHelper::sqlCoalesce(['description']);
+                $columns[] = I18nHelper::sqlCoalesce(['title'], 'm', 'manufacturer');
+                $columns[] = I18nHelper::sqlCoalesce(['alias'], 'm', 'manufacturer');
+           /* } else {
                 $columns[] = 'a.title';
                 $columns[] = 'a.alias';
                 $columns[] = 'a.description';
                 $columns[] = 'm.title as manufacturertitle';
                 $columns[] = 'm.alias as manufactureralias';
-            }
+            }*/
 
             if ($params->get('switch_image_category_items', false)) {
                 $columns[] = '(SELECT im.image FROM #__phocacart_product_images im WHERE im.product_id = a.id ORDER BY im.ordering LIMIT 1) as additional_image';
@@ -354,7 +354,7 @@ class PhocaCartModelCategory extends BaseDatabaseModel
         $join[] = 'LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = ' . GroupType::Category;
 
         if (I18nHelper::isI18n()) {
-            $join[] = I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'i18n_c', 'c');
+            $join[] = I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'c');
         }
 
 		if ($isSubcategoriesQuery) {
@@ -364,7 +364,7 @@ class PhocaCartModelCategory extends BaseDatabaseModel
 			$where[] = 'c.id = ' . (int)$categoryId;
             $join[] = 'LEFT JOIN #__phocacart_categories AS cc ON cc.id = c.parent_id';
             if (I18nHelper::isI18n()) {
-                $join[] = I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'i18n_cc', 'cc');
+                $join[] = I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'cc');
             }
 		}
 
@@ -379,13 +379,17 @@ class PhocaCartModelCategory extends BaseDatabaseModel
 		}
 
 		if ($isSubcategoriesQuery) {
-            if (I18nHelper::isI18n()) {
+           /* if (I18nHelper::isI18n()) {
                 $columns    = 'c.id, c.parent_id, coalesce(i18n_c.title, c.title) as title, i18n_c.title_long, coalesce(i18n_c.alias, c.alias) as alias, c.image';
                 $groupsFull = 'c.id, c.parent_id, coalesce(i18n_c.title, c.title), i18n_c.title_long, coalesce(i18n_c.alias, c.alias), c.image';
             } else {
                 $columns    = 'c.id, c.parent_id, c.title, c.title_long, c.alias, c.image';
                 $groupsFull = 'c.id, c.parent_id, c.title, c.title_long, c.alias, c.image';
-            }
+            }*/
+
+            $columns =  'c.id, c.parent_id,' . I18nHelper::sqlCoalesce(['title', 'alias', 'title_long'], 'c') . ', c.image';
+
+            $groupsFull = 'c.id, c.parent_id, c.title, c.title_long, c.alias, c.image';
 			$groupsFast	= 'c.id';
 			$groupBy	= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
 
@@ -396,14 +400,19 @@ class PhocaCartModelCategory extends BaseDatabaseModel
 				. ' GROUP BY ' . $groupBy
 				. ' ORDER BY ' . $categoryOrdering;
 		} else {
-            if (I18nHelper::isI18n()) {
+           /* if (I18nHelper::isI18n()) {
                 $columns	= 'c.id, c.parent_id, coalesce(i18n_c.title, c.title) as title, i18n_c.title_long, coalesce(i18n_c.alias, c.alias) as alias, c.image,'
                     . ' i18n_c.description, i18n_c.metatitle, i18n_c.metakey, i18n_c.metadesc, c.metadata,'
                     . ' coalesce(i18n_cc.title, cc.title) as parenttitle, c.parent_id as parentid, coalesce(i18n_cc.alias, cc.alias) as parentalias';
             } else {
                 $columns	= 'c.id, c.parent_id, c.title, c.title_long, c.alias, c.image, c.description, c.metatitle, c.metakey, c.metadesc, c.metadata,'
                     . ' cc.title as parenttitle, c.parent_id as parentid, cc.alias as parentalias';
-            }
+            }*/
+
+            $columns =  'c.id, c.parent_id,' . I18nHelper::sqlCoalesce(['title', 'alias', 'title_long', 'description', 'metatitle', 'metakey', 'metadesc'], 'c') . ', c.metadata, c.image,'
+            . 'c.parent_id as parentid, '.I18nHelper::sqlCoalesce(['title', 'alias'], 'cc', 'parent') . ', c.image';
+
+
 			$query = ' SELECT ' . $columns
 				. ' FROM #__phocacart_categories AS c'
                 . ' ' . implode(' ', $join)

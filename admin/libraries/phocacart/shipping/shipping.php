@@ -92,13 +92,17 @@ class PhocacartShipping
 			. ' s.highest_weight, s.default,'
 			. ' t.id, t.title, t.tax_rate, t.calculation_type, t.tax_hide as taxhide';
 
-		if (I18nHelper::useI18n()) {
+		/*if (I18nHelper::useI18n()) {
 			$columns .= ', coalesce(i18n_s.title, s.title) as title, coalesce(i18n_s.description, s.description) as description';
 			$groupsFull .= ', coalesce(i18n_s.title, s.title), coalesce(i18n_s.description, s.description)';
 		} else {
 			$columns .= ', s.title, s.description';
 			$groupsFull .= ', s.title, s.description';
-		}
+		}*/
+
+		$columns .= I18nHelper::sqlCoalesce(['title', 'description'], 's', '', '', ',');
+
+		$groupsFull .= ', s.title, s.description';
 		$groupsFast		= 's.id';
 		$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
 
@@ -108,7 +112,7 @@ class PhocacartShipping
 
 		$query = ' SELECT '.$columns
 				.' FROM #__phocacart_shipping_methods AS s'
-				. I18nHelper::sqlJoin('#__phocacart_shipping_methods_i18n', 'i18n_s', 's')
+				. I18nHelper::sqlJoin('#__phocacart_shipping_methods_i18n', 's')
 				.' LEFT JOIN #__phocacart_shipping_method_regions AS r ON r.shipping_id = s.id'
 				.' LEFT JOIN #__phocacart_shipping_method_countries AS c ON c.shipping_id = s.id'
 				.' LEFT JOIN #__phocacart_shipping_method_zones AS z ON z.shipping_id = s.id'
@@ -589,17 +593,20 @@ class PhocacartShipping
 	{
 		$db = Factory::getDBO();
 
-		if (I18nHelper::useI18n()) {
+		/*if (I18nHelper::useI18n()) {
 			$columns = 'coalesce(i18n_s.title, s.title) as title, coalesce(i18n_s.description, s.description) as description';
 		} else {
 			$columns = 's.title, s.description';
-		}
+		}*/
+
+		$columns = I18nHelper::sqlCoalesce(['title', 'description'], 's');
+
 		$query = ' SELECT s.id, s.tax_id, s.cost, s.cost_additional, s.calculation_type, s.method, s.params, s.image,'
 				.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.tax_hide as taxhide'
 				.', ' . $columns
 				.' FROM #__phocacart_shipping_methods AS s'
 				.' LEFT JOIN #__phocacart_taxes AS t ON t.id = s.tax_id'
-				. I18nHelper::sqlJoin('#__phocacart_shipping_methods_i18n', 'i18n_s', 's')
+				. I18nHelper::sqlJoin('#__phocacart_shipping_methods_i18n', 's')
 				.' WHERE s.id = '.(int)$shippingId
 				.' ORDER BY s.id'
 				.' LIMIT 1';

@@ -188,8 +188,8 @@ class PhocacartRouter extends RouterView
                     }
 
                     $dbquery
-                        ->select('coalesce(' . $dbquery->quoteName('i18n.alias') . ', ' . $dbquery->quoteName('p.alias') . ')')
-                        ->join('LEFT', $db->quoteName('#__phocacart_products_i18n', 'i18n'), 'i18n.id = p.id AND i18n.language = ' . $db->quote($lang));
+                        ->select('coalesce(' . $dbquery->quoteName('i18n_p.alias') . ', ' . $dbquery->quoteName('p.alias') . ')')
+                        ->join('LEFT', $db->quoteName('#__phocacart_products_i18n', 'i18n_p'), 'i18n_p.id = p.id AND i18n_p.language = ' . $db->quote($lang));
                 } else {
                     $dbquery->select($dbquery->quoteName('p.alias'));
                 }
@@ -253,8 +253,8 @@ class PhocacartRouter extends RouterView
 
             if (I18nHelper::isI18n()) {
                 $dbquery
-                    ->join('LEFT', $db->quoteName('#__phocacart_categories_i18n', 'i18n'), 'i18n.id = c.id AND i18n.language = ' . $db->quote($lang))
-                    ->where('coalesce(' . $db->quoteName('i18n.alias') . ', ' . $db->quoteName('c.alias') . ')' . ' = :alias');
+                    ->join('LEFT', $db->quoteName('#__phocacart_categories_i18n', 'i18n_c'), 'i18n_c.id = c.id AND i18n_c.language = ' . $db->quote($lang))
+                    ->where('coalesce(' . $db->quoteName('i18n_c.alias') . ', ' . $db->quoteName('c.alias') . ')' . ' = :alias');
             } else {
                 $dbquery->where($db->quoteName('c.alias') . ' = :alias');
             }
@@ -336,8 +336,8 @@ class PhocacartRouter extends RouterView
 
             if (I18nHelper::isI18n()) {
                 $dbquery
-                    ->join('LEFT', $db->quoteName('#__phocacart_products_i18n', 'i18n'), 'i18n.id = p.id AND i18n.language = ' . $db->quote($lang))
-                    ->where('coalesce(' . $db->quoteName('i18n.alias') . ', ' . $db->quoteName('p.alias') . ')' . ' = :alias');
+                    ->join('LEFT', $db->quoteName('#__phocacart_products_i18n', 'i18n_p'), 'i18n_p.id = p.id AND i18n.language = ' . $db->quote($lang))
+                    ->where('coalesce(' . $db->quoteName('i18n_p.alias') . ', ' . $db->quoteName('p.alias') . ')' . ' = :alias');
             } else {
                 $dbquery->where($db->quoteName('p.alias') . ' = :alias');
             }

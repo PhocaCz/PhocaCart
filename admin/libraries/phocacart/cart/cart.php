@@ -379,6 +379,7 @@ class PhocacartCart
         // Don't check for quantity as it can be NULL
         if ($idKey != '') {
             if (isset($this->items[$idKey])) {
+
                 $oldQuantity = $this->items[$idKey]['quantity'];
 
                 if ((int)$quantity > 0) {
@@ -389,7 +390,14 @@ class PhocacartCart
                     $newQuantity = 0;
                 }
 
-                $this->updateItems($idKey, $this->items[$idKey], $oldQuantity, $newQuantity);
+                if (!isset($this->items[$idKey])) {
+                    // it was unset
+                    //$this->updateItems($idKey, [], $oldQuantity, $newQuantity);
+                    $this->updateItems($idKey, null, $oldQuantity, $newQuantity);
+                } else {
+                    $this->updateItems($idKey, $this->items[$idKey], $oldQuantity, $newQuantity);
+                }
+
                 return true;
             }
         }

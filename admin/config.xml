@@ -1842,7 +1842,7 @@
             <option value="1">JYES</option>
           </field>
 
-          <field name="i18n_language" type="language" showon="i18n:1" default="" label="COM_PHOCACART_FIELD_I18N_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_I18N_LANGUAGE_DES">
+          <field name="i18n_language" type="language" showon="i18n:1" default="" label="COM_PHOCACART_FIELD_I18N_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_I18N_LANGUAGE_DESC">
             <option value="">COM_PHOCACART_DEFAULT_LANGUAGE_FRONTEND</option>
           </field>
 

@@ -21,16 +21,12 @@ class PhocacartAttribute
     {
         $db = Factory::getDBO();
 
-        if (I18nHelper::useI18n()) {
-            $query = 'SELECT a.id, coalesce(i18n.title, a.title) as title, coalesce(i18n.alias, a.alias) as alias, a.required, a.type, a.published'
-                . ' FROM #__phocacart_attributes AS a'
-                . I18nHelper::sqlJoin('#__phocacart_attributes_i18n')
-                . ' WHERE a.product_id = ' . (int) $productId;
-        } else {
-            $query = 'SELECT a.id, a.title, a.alias, a.required, a.type, a.published'
-                . ' FROM #__phocacart_attributes AS a'
-                . ' WHERE a.product_id = ' . (int) $productId;
-        }
+
+        $query = 'SELECT a.id, '. I18nHelper::sqlCoalesce(['title', 'alias']) . ', a.required, a.type, a.published'
+            . ' FROM #__phocacart_attributes AS a'
+            . I18nHelper::sqlJoin('#__phocacart_attributes_i18n')
+            . ' WHERE a.product_id = ' . (int) $productId;
+
 
         if (!$showUnpublished) {
             $query .= ' AND a.published = 1';
@@ -67,18 +63,12 @@ class PhocacartAttribute
 
         $db = Factory::getDBO();
 
-        if (I18nHelper::useI18n()) {
-            $query = 'SELECT a.id, coalesce(i18n.title, a.title) as title, coalesce(i18n.alias, a.alias) as alias, a.published, a.amount, a.operator, a.stock, a.operator_weight, a.weight, '
-                . 'a.image, a.image_medium, a.image_small, a.download_folder, a.download_file, a.download_token, a.color, a.default_value, a.required, a.type'
-                . ' FROM #__phocacart_attribute_values AS a'
-                . I18nHelper::sqlJoin('#__phocacart_attribute_values_i18n')
-                . ' WHERE a.attribute_id = ' . (int) $attributeId;
-        } else {
-            $query = 'SELECT a.id, a.title, a.alias, a.published, a.amount, a.operator, a.stock, a.operator_weight, a.weight, '
-                . 'a.image, a.image_medium, a.image_small, a.download_folder, a.download_file, a.download_token, a.color, a.default_value, a.required, a.type'
-                . ' FROM #__phocacart_attribute_values AS a'
-                . ' WHERE a.attribute_id = ' . (int) $attributeId;
-        }
+        $query = 'SELECT a.id, '.I18nHelper::sqlCoalesce(['title', 'alias']).', a.published, a.amount, a.operator, a.stock, a.operator_weight, a.weight, '
+            . 'a.image, a.image_medium, a.image_small, a.download_folder, a.download_file, a.download_token, a.color, a.default_value, a.required, a.type'
+            . ' FROM #__phocacart_attribute_values AS a'
+            . I18nHelper::sqlJoin('#__phocacart_attribute_values_i18n')
+            . ' WHERE a.attribute_id = ' . (int) $attributeId;
+
         if (!$showUnpublished) {
             $query .= ' AND a.published = 1';
         }
@@ -653,7 +643,12 @@ class PhocacartAttribute
         $columns    = 'v.id, v.image, v.image_medium, v.image_small, v.download_folder, v.download_file, v.download_token, v.color, v.default_value, v.required, v.type, at.id AS attrid, at.title AS attrtitle, at.alias AS attralias, at.type as attrtype';
         $groupsFull = 'v.id, v.image, v.image_medium, v.image_small, v.download_folder, v.download_file, v.download_token, v.color, v.default_value, v.required, v.type attralias, at.id, at.type';
 
-        if (I18nHelper::useI18n()) {
+        $groupsFull .= $columns . ', v.title, v.alias, at.title, at.alias';
+
+        $columns .= I18nHelper::sqlCoalesce(['title', 'alias'], 'v', '', '', ',');
+        $columns .= I18nHelper::sqlCoalesce(['title', 'alias'], 'at', 'attr', '', ',');
+
+        /*if (I18nHelper::useI18n()) {
             $groupsFull = $columns . ', coalesce(i18n_v.title, v.title), coalesce(i18n_v.alias, v.alias)';
             $groupsFull = $columns . ', coalesce(i18n_at.title, at.title), coalesce(i18n_at.alias, at.alias)';
             $columns .= ', coalesce(i18n_v.title, v.title) as title, coalesce(i18n_v.alias, v.alias) as alias';
@@ -661,7 +656,7 @@ class PhocacartAttribute
         } else {
             $columns   .= ', v.title, v.alias, at.title AS attrtitle, at.alias AS attralias';
             $groupsFull .= ', v.title, v.alias, at.title, at.alias';
-        }
+        }*/
 
 
 
@@ -706,8 +701,8 @@ class PhocacartAttribute
         $q = ' SELECT ' . $columns
             . ' FROM  #__phocacart_attribute_values AS v'
             . (!empty($lefts) ? ' LEFT JOIN ' . implode(' LEFT JOIN ', $lefts) : '')
-            . I18nHelper::sqlJoin('#__phocacart_attributes_i18n', 'i18n_at', 'at')
-            . I18nHelper::sqlJoin('#__phocacart_attribute_values_i18n', 'i18n_v', 'v')
+            . I18nHelper::sqlJoin('#__phocacart_attributes_i18n', 'at')
+            . I18nHelper::sqlJoin('#__phocacart_attribute_values_i18n', 'v')
             . (!empty($wheres) ? ' WHERE ' . implode(' AND ', $wheres) : '')
             . ' GROUP BY ' . $groups
             . ' ORDER BY ' . $orderingText;
@@ -755,19 +750,22 @@ class PhocacartAttribute
 
     public static function getAttributeValue($id, $attributeId) {
         $db    = Factory::getDBO();
-        if (I18nHelper::useI18n()) {
+        /*if (I18nHelper::useI18n()) {
             $columns = 'coalesce(i18n_a.title, a.title) as title, coalesce(i18n_a.alias, a.alias) as alias, coalesce(i18n_aa.title, aa.title) as atitle';
         } else {
             $columns = 'a.title, a.alias, aa.title as atitle';
-        }
+        }*/
+
+        $columns = I18nHelper::sqlCoalesce(['title', 'alias']);
+        $columns .= I18nHelper::sqlCoalesce(['title'], 'aa', 'a', '', ',');
 
         $query = ' SELECT a.id, a.type, a.amount, a.operator, a.weight, a.operator_weight, a.operator_volume, '
             . 'a.stock, a.image, a.image_medium, a.image_small, a.download_folder, a.download_file, a.download_token, a.color, a.default_value, a.required, a.type,'
             . ' aa.id as aid, aa.type as atype, ' . $columns
             . ' FROM #__phocacart_attribute_values AS a'
             . ' LEFT JOIN #__phocacart_attributes AS aa ON a.attribute_id = aa.id'
-            . I18nHelper::sqlJoin('#__phocacart_attribute_values_i18n', 'i18n_a')
-            . I18nHelper::sqlJoin('#__phocacart_attributes_i18n', 'i18n_aa', 'aa')
+            . I18nHelper::sqlJoin('#__phocacart_attribute_values_i18n')
+            . I18nHelper::sqlJoin('#__phocacart_attributes_i18n', 'aa')
             . ' WHERE a.id = ' . (int)$id . ' AND a.attribute_id = ' . (int)$attributeId
             . ' ORDER BY a.id'
             . ' LIMIT 1';
@@ -1747,12 +1745,24 @@ class PhocacartAttribute
         $ordering = PhocacartOrdering::getOrderingText($ordering, 5);//at v
         if (!empty($items)) {
             foreach ($items as $k => $v) {
-                $wheres[] = '( v.alias = ' . $db->quote($k) . ' AND at.alias IN (' . $v . ') )';
+                //$wheres[] = '( v.alias = ' . $db->quote($k) . ' AND at.alias IN (' . $v . ') )';
+                $wheres[] = '( '.I18nHelper::sqlCoalesce(['alias'], 'v', '', '', '', '', true).' = ' . $db->quote($k) . ' AND '.I18nHelper::sqlCoalesce(['alias'], 'at', '', '', '', '', true).' IN (' . $v . ') )';
             }
             if (!empty($wheres)) {
                 // FULL GROUP BY GROUP_CONCAT(DISTINCT o.title) AS title
                 $q = 'SELECT DISTINCT at.title, at.alias, CONCAT(\'a[\', v.alias, \']\')  AS parameteralias, v.title AS parametertitle FROM #__phocacart_attribute_values AS at'
                     . ' LEFT JOIN #__phocacart_attributes AS v ON v.id = at.attribute_id'
+                    . (!empty($wheres) ? ' WHERE ' . implode(' OR ', $wheres) : '')
+                    . ' GROUP BY v.alias, at.alias, at.title'
+                    . ' ORDER BY ' . $ordering;
+
+                $q = 'SELECT DISTINCT '.I18nHelper::sqlCoalesce(['title', 'alias'], 'at')
+					.I18nHelper::sqlCoalesce(['alias'], 'v', 'parameter', 'concatparametera', ',')
+                    .I18nHelper::sqlCoalesce(['title'], 'v', 'parameter', '', ',')
+					. ' FROM #__phocacart_attribute_values AS at'
+                    . ' LEFT JOIN #__phocacart_attributes AS v ON v.id = at.attribute_id'
+					. I18nHelper::sqlJoin('#__phocacart_attributes_i18n', 'v')
+					. I18nHelper::sqlJoin('#__phocacart_attribute_values_i18n', 'at')
                     . (!empty($wheres) ? ' WHERE ' . implode(' OR ', $wheres) : '')
                     . ' GROUP BY v.alias, at.alias, at.title'
                     . ' ORDER BY ' . $ordering;

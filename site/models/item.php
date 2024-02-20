@@ -220,7 +220,7 @@ class PhocaCartModelItem extends BaseDatabaseModel
 			'm.id as manufacturerid', 'm.image as manufacturerimage',
 		];
 
-		if (I18nHelper::isI18n()) {
+		/*if (I18nHelper::isI18n()) {
 			$columns = array_merge($columns, [
 				'coalesce(i18n_i.alias, i.alias) as alias', 'coalesce(i18n_i.title, i.title) as title', 'i18n_i.title_long', 'i18n_i.description', 'i18n_i.description_long', 'i18n_i.features', 'i18n_i.metatitle', 'i18n_i.metadesc', 'i18n_i.metakey',
 				'coalesce(i18n_c.title, c.title) AS cattitle', 'coalesce(i18n_c.alias, c.alias) AS catalias',
@@ -232,7 +232,25 @@ class PhocaCartModelItem extends BaseDatabaseModel
 				'c.title AS cattitle', 'c.alias AS catalias',
 				'm.title as manufacturertitle', 'm.link as manufacturerlink',
 			]);
-		}
+		}*/
+
+        $columns = array_merge($columns, [
+            I18nHelper::sqlCoalesce(['title'], 'i'),
+            I18nHelper::sqlCoalesce(['alias'], 'i'),
+            I18nHelper::sqlCoalesce(['title_long'], 'i'),
+            I18nHelper::sqlCoalesce(['description'], 'i'),
+            I18nHelper::sqlCoalesce(['description_long'], 'i'),
+            I18nHelper::sqlCoalesce(['features'], 'i'),
+            I18nHelper::sqlCoalesce(['metatitle'], 'i'),
+            I18nHelper::sqlCoalesce(['metadesc'], 'i'),
+            I18nHelper::sqlCoalesce(['metakey'], 'i'),
+            I18nHelper::sqlCoalesce(['title'], 'c', 'cat'),
+            I18nHelper::sqlCoalesce(['alias'], 'c', 'cat'),
+            I18nHelper::sqlCoalesce(['title'], 'm', 'manufacturer'),
+            I18nHelper::sqlCoalesce(['link'], 'm', 'manufacturer')
+        ]);
+
+
 
 		if (!$params->get('sql_product_skip_tax', false)) {
 			$columns = array_merge($columns, [
@@ -263,11 +281,10 @@ class PhocaCartModelItem extends BaseDatabaseModel
 				.' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id'
 				.' LEFT JOIN #__phocacart_manufacturers AS m ON m.id = i.manufacturer_id';
 
-		if (I18nHelper::isI18n()) {
-			$query .= I18nHelper::sqlJoin('#__phocacart_products_i18n', 'i18n_i', 'i');
-			$query .= I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'i18n_c', 'c');
-            $query .= I18nHelper::sqlJoin('#__phocacart_manufacturers_i18n', 'i18n_m', 'm');
-		}
+        $query .= I18nHelper::sqlJoin('#__phocacart_products_i18n', 'i');
+        $query .= I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'c');
+        $query .= I18nHelper::sqlJoin('#__phocacart_manufacturers_i18n', 'm');
+
 
 		if (!$params->get('sql_product_skip_tax', false)) {
             $query .= ' LEFT JOIN #__phocacart_taxes AS t ON t.id = i.tax_id';
@@ -326,7 +343,7 @@ class PhocaCartModelItem extends BaseDatabaseModel
 		$where[] = '(gc.group_id IN (' . $userGroups . ') OR gc.group_id IS NULL)';
 
 		$columns = ['c.id', 'c.parent_id'];
-		if (I18nHelper::isI18n()) {
+		/*if (I18nHelper::isI18n()) {
 			$columns = array_merge($columns, [
 				'coalesce(i18n.title, c.title) as title', 'coalesce(i18n.alias, c.alias) as alias', 'i18n.description'
 			]);
@@ -334,7 +351,13 @@ class PhocaCartModelItem extends BaseDatabaseModel
 			$columns = array_merge($columns, [
 				'c.title', 'c.alias', 'c.description'
 			]);
-		}
+		}*/
+
+         $columns = array_merge($columns, [
+            I18nHelper::sqlCoalesce(['title'], 'c'),
+            I18nHelper::sqlCoalesce(['alias'], 'c'),
+            I18nHelper::sqlCoalesce(['description'], 'c'),
+        ]);
 
 		$query = ' SELECT ' . implode(', ', $columns)
 				. ' FROM #__phocacart_categories AS c'
@@ -342,9 +365,7 @@ class PhocaCartModelItem extends BaseDatabaseModel
 				. ' LEFT JOIN #__phocacart_products AS a ON a.id = pc.product_id'
 				. ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = ' . GroupType::Product
 				. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = ' . GroupType::Category;
-		if (I18nHelper::isI18n()) {
-			$query .= I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'i18n', 'c');
-		}
+		$query .= I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'c');
 		$query .= ' WHERE ' . implode( ' AND ', $where)
 				. ' ORDER BY c.ordering';
 

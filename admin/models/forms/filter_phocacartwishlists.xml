@@ -14,7 +14,7 @@
 		</fields>
 
 		<fields name="list">
-			<field name="fullordering" type="list" label="COM_PHOCACART_LIST_FULL_ORDERING" description="COM_PHOCACART_LIST_FULL_ORDERING_DESC" onchange="this.form.submit();" default="a.title ASC" validate="options" >
+			<field name="fullordering" type="list" label="COM_PHOCACART_LIST_FULL_ORDERING" description="COM_PHOCACART_LIST_FULL_ORDERING_DESC" onchange="this.form.submit();" default="a.date DESC" validate="options" >
 				<option value="">JGLOBAL_SORT_BY</option>
 				<option value="a.ordering ASC">JGRID_HEADING_ORDERING_ASC</option>
 				<option value="a.ordering DESC">JGRID_HEADING_ORDERING_DESC</option>

@@ -123,14 +123,19 @@ final class PhocacartCategory
     private static function loadCategoriesCache(): void {
         if (self::$categoriesCache === null) {
             $db = Factory::getDBO();
-            if (I18nHelper::useI18n()) {
+
+            $db->setQuery('SELECT a.*, ' . I18nHelper::sqlCoalesce(['title', 'alias']) . ', null AS children ' .
+                'FROM #__phocacart_categories AS a ' .
+                I18nHelper::sqlJoin('#__phocacart_categories_i18n') .
+                'ORDER BY a.ordering, a.id');
+            /*if (I18nHelper::useI18n()) {
                 $db->setQuery('SELECT a.*, coalesce(i18n.title, a.title) as title, coalesce(i18n.alias, a.alias) as alias, null AS children ' .
                     'FROM #__phocacart_categories AS a ' .
                     I18nHelper::sqlJoin('#__phocacart_categories_i18n') .
                     'ORDER BY a.ordering, a.id');
             } else {
                 $db->setQuery('SELECT a.*, null AS children FROM #__phocacart_categories AS a ORDER BY a.ordering, a.id');
-            }
+            }*/
             $categories = $db->loadObjectList('id') ?? [];
 
             $i18nData = [];
@@ -171,11 +176,11 @@ final class PhocacartCategory
         }
     }
 
-  public static function getCategories(): array {
-    self::loadCategoriesCache();
+    public static function getCategories(): array {
+        self::loadCategoriesCache();
 
-    return self::$categoriesCache;
-  }
+        return self::$categoriesCache;
+    }
 
     public static function getCategoryById($id) {
         self::loadCategoriesCache();
@@ -223,8 +228,7 @@ final class PhocacartCategory
         return $path;
     }
 
-    public static function getPathRouter($path = array(), $id = 0, $parent_id = 0, $title = '', $alias = '', ?string $i18nLanguage = null)
-    {
+    public static function getPathRouter($path = array(), $id = 0, $parent_id = 0, $title = '', $alias = '', ?string $i18nLanguage = null) {
         return self::getPathTreeRouter($path, $id, $parent_id, $title, $alias, $i18nLanguage);
     }
 
@@ -452,13 +456,17 @@ final class PhocacartCategory
             }
 
             $columns    = 'c.id, c.parent_id, c.ordering';
-            if (I18nHelper::useI18n()) {
+            $groupsFull = $columns . ', c.title, c.alias';
+
+            $columns .= I18nHelper::sqlCoalesce(['title', 'alias'], 'c', '', '', ',');
+
+            /*if (I18nHelper::useI18n()) {
                 $groupsFull = $columns . ', coalesce(i18n_c.title, c.title), coalesce(i18n_c.alias, c.alias)';
                 $columns .= ', coalesce(i18n_c.title, c.title) as title, coalesce(i18n_c.alias, c.alias) as  alias';
             } else {
                 $columns   .= ', c.title, c.alias';
                 $groupsFull = $columns;
-            }
+            }*/
 
 
             $groupsFast = 'c.id';
@@ -466,7 +474,7 @@ final class PhocacartCategory
 
             $query = 'SELECT ' . $columns
                 . ' FROM #__phocacart_categories AS c'
-                . I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'i18n_c', 'c')
+                . I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'c')
                 . ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
                 . ' WHERE ' . implode(' AND ', $wheres)
                 . ' GROUP BY ' . $groups
@@ -568,17 +576,17 @@ final class PhocacartCategory
                 $wheres[] = ' c.featured = ' . ($params['featured'] ? '1' : '0');
             }
 
-            $columns    = 'c.id, c.parent_id, c.ordering';
-            if (I18nHelper::useI18n()) {
-                $columns .= ', coalesce(i18n_c.title, c.title) as title, coalesce(i18n_c.alias, c.alias) as  alias';
-            } else {
-                $columns   .= ', c.title, c.alias';
-            }
-
+            $columns = 'c.id, c.parent_id, c.ordering';
+            /* if (I18nHelper::useI18n()) {
+                 $columns .= ', coalesce(i18n_c.title, c.title) as title, coalesce(i18n_c.alias, c.alias) as  alias';
+             } else {
+                 $columns   .= ', c.title, c.alias';
+             }*/
+            $columns .= I18nHelper::sqlCoalesce(['title', 'alias'], 'c', '', '', ',');
             $columns .= ', c.icon_class, c.image, c.description, c.count_products';
-            $query = 'SELECT ' . $columns
+            $query   = 'SELECT ' . $columns
                 . ' FROM #__phocacart_categories AS c'
-                . I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'i18n_c', 'c')
+                . I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'c')
                 . ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
                 . ' WHERE ' . implode(' AND ', $wheres)
                 . ' ORDER BY ' . $itemOrdering;
@@ -626,7 +634,17 @@ final class PhocacartCategory
 
         $db       = Factory::getDbo();
         $ordering = PhocacartOrdering::getOrderingText($ordering, 1);//c
-        $q        = 'SELECT DISTINCT c.title, CONCAT(c.id, \'-\', c.alias) AS alias, \'c\' AS parameteralias, \'category\' AS parametertitle FROM #__phocacart_categories AS c'
+      /*  $q        = 'SELECT DISTINCT c.title, CONCAT(c.id, \'-\', c.alias) AS alias, \'c\' AS parameteralias, \'category\' AS parametertitle FROM #__phocacart_categories AS c'
+            . ' WHERE c.id IN (' . $items . ')'
+            . ' GROUP BY c.alias, c.title'
+            . ' ORDER BY ' . $ordering;
+*/
+
+        $q = 'SELECT DISTINCT '
+            . I18nHelper::sqlCoalesce(['alias'], 'c', '', 'concatid') . ', '
+            . I18nHelper::sqlCoalesce(['title'], 'c') . ', '
+            .'\'c\' AS parameteralias, \'category\' AS parametertitle FROM #__phocacart_categories AS c'
+            . I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'c')
             . ' WHERE c.id IN (' . $items . ')'
             . ' GROUP BY c.alias, c.title'
             . ' ORDER BY ' . $ordering;

@@ -136,17 +136,11 @@ class PhocaCartModelCategories extends BaseDatabaseModel
             $groupBy = ['c.id'];
         }
 
-        if (I18nHelper::isI18n()) {
-            $join[] = I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'i18n_c', 'c');
+        $join[] = I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'c');
+        $columns[] = I18nHelper::sqlCoalesce(['title'], 'c');
+        $columns[] = I18nHelper::sqlCoalesce(['alias'], 'c');
+        $columns[] = I18nHelper::sqlCoalesce(['description'], 'c');
 
-            $columns[] = 'coalesce(i18n_c.title, c.title) as title';
-            $columns[] = 'coalesce(i18n_c.alias, c.alias) as alias';
-            $columns[] = 'i18n_c.description';
-        } else {
-            $columns[] = 'c.title';
-            $columns[] = 'c.alias';
-            $columns[] = 'c.description';
-        }
 
         $columns[] = 'c.parent_id as parentid';
         $columns[] = '0 AS numsubcat';

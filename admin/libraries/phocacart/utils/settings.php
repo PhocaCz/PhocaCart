@@ -306,9 +306,13 @@ class PhocacartUtilsSettings
 
 	public static function isFullGroupBy() {
 
-		$pC							= PhocacartUtils::getComponentParameters();
+		/*$pC							= PhocacartUtils::getComponentParameters();
 		$sql_only_full_group_by		= $pC->get( 'sql_only_full_group_by', 0 );
-		return (bool)$sql_only_full_group_by;
+		return (bool)$sql_only_full_group_by;*/
+
+        // Joomla does not require full group by now
+        // This can be enabled in future but then all SQL Queries must be revised
+        return false;
 	}
 
 	public static function getShopType() {

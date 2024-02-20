@@ -26,11 +26,15 @@ class PhocacartCartDb
 		if(!isset(self::$cart[$userId][$vendorId][$ticketId][$unitId][$sectionId])) {
 			$db 	= Factory::getDBO();
 
-			if (I18nHelper::useI18n()) {
+			/*if (I18nHelper::useI18n()) {
 				$columns = 'coalesce(i18n_s.title, s.title) as shippingtitle, coalesce(i18n_p.title, p.title) as paymenttitle, coalesce(i18n_co.title, co.title) as coupontitle';
 			} else {
 				$columns = 's.title as shippingtitle, p.title as paymenttitle, co.title as coupontitle';
-			}
+			}*/
+
+			$columns = I18nHelper::sqlCoalesce(['title'], 's', 'shipping');
+			$columns .= I18nHelper::sqlCoalesce(['title'], 'p', 'payment', '', ',');
+			$columns .= I18nHelper::sqlCoalesce(['title'], 'co', 'coupon', '', ',');
 
 			$query = ' SELECT c.cart, c.shipping, c.params_shipping, c.payment, c.params_payment, c.coupon, c.reward, c.loyalty_card_number,'
 					.' s.method as shippingmethod, s.image as shippingimage, p.method as paymentmethod, p.image as paymentimage,'
@@ -39,9 +43,9 @@ class PhocacartCartDb
 					.' LEFT JOIN #__phocacart_shipping_methods AS s ON c.shipping = s.id'
 					.' LEFT JOIN #__phocacart_payment_methods AS p ON c.payment = p.id'
 					.' LEFT JOIN #__phocacart_coupons AS co ON c.coupon = co.id'
-					. I18nHelper::sqlJoin('#__phocacart_shipping_methods_i18n', 'i18n_s', 's')
-					. I18nHelper::sqlJoin('#__phocacart_payment_methods_i18n', 'i18n_p', 'p')
-					. I18nHelper::sqlJoin('#__phocacart_coupons_i18n', 'i18n_co', 'co')
+					. I18nHelper::sqlJoin('#__phocacart_shipping_methods_i18n', 's')
+					. I18nHelper::sqlJoin('#__phocacart_payment_methods_i18n', 'p')
+					. I18nHelper::sqlJoin('#__phocacart_coupons_i18n', 'co')
 					.' WHERE c.user_id = '.(int)$userId
 					.' AND c.vendor_id = '.(int)$vendorId
 					.' AND c.ticket_id = '.(int)$ticketId

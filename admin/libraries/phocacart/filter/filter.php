@@ -258,8 +258,7 @@ class PhocacartFilter
 
         $f['p'] = PhocacartParameter::getActiveParameterValues($pA, $this->ordering_parameter);
         $f['a'] = PhocacartAttribute::getActiveAttributeValues($aA, $this->ordering_attribute);
-        $f['s'] = PhocacartSpecification::getActiveSpecificationValues($aA, $this->ordering_specification);
-
+        $f['s'] = PhocacartSpecification::getActiveSpecificationValues($sA, $this->ordering_specification);
 
         return $f;
 

@@ -49,11 +49,12 @@ class PhocacartDiscountCart
             $groupBy = 'a.id';
         }
 
-        if (I18nHelper::useI18n()) {
+       /* if (I18nHelper::useI18n()) {
             $columns .= ', coalesce(i18n.title, a.title) as title, coalesce(i18n.alias, a.alias) as alias';
         } else {
             $columns .= ', a.title, a.alias';
-        }
+        }*/
+        $columns .= I18nHelper::sqlCoalesce(['title', 'alias'], 'a', '', '', ',');
 
         $columns .= ', GROUP_CONCAT(DISTINCT dp.product_id) AS product' // line of selected products
             . ', GROUP_CONCAT(DISTINCT dc.category_id) AS category'; // line of selected categories

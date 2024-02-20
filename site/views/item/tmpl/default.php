@@ -35,7 +35,7 @@ $layoutSZ	= new FileLayout('product_size', null, array('component' => 'com_phoca
 $layoutI	= new FileLayout('image', null, array('component' => 'com_phocacart'));
 $layoutAAQ	= new FileLayout('popup_container_iframe', null, array('component' => 'com_phocacart'));
 $layoutAl 	= new FileLayout('alert', null, array('component' => 'com_phocacart'));
-$layoutWatchdog	= new FileLayout('watchdog', null, ['component' => 'com_phocacart']);
+$layoutWatchdog	= new FileLayout('product_watchdog', null, ['component' => 'com_phocacart']);
 
 echo '<div id="ph-pc-item-box" class="pc-view pc-item-view'.$this->p->get( 'pageclass_sfx' ).'">';
 

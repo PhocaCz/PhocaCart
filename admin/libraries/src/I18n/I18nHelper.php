@@ -197,33 +197,39 @@ abstract class I18nHelper
         return I18nHelper::getI18nLanguages();
     }
 
-    public static function sqlJoin(string $i18nTable, string $i18nAlias = 'i18n', string $mainTableAlias = 'a'): string
+    public static function sqlJoin(string $i18nTable, string $mainTableAlias = 'a'): string
     {
         // space at the beginning and end in purpose, do not delete
         if (!self::useI18n()) {
             return ' ';
         }
 
+        $i18nTableAlias = 'i18n_'.$mainTableAlias;
+
         $db = Factory::getDbo();
-        return ' LEFT JOIN ' . $i18nTable . ' AS ' . $i18nAlias . ' ON ' . $i18nAlias . '.id = ' . $mainTableAlias . '.id AND ' . $i18nAlias . '.language = ' . $db->quote(self::getI18nLanguage()) . ' ';
+        return ' LEFT JOIN ' . $i18nTable . ' AS ' . $i18nTableAlias . ' ON ' . $i18nTableAlias . '.id = ' . $mainTableAlias . '.id AND ' . $i18nTableAlias . '.language = ' . $db->quote(self::getI18nLanguage()) . ' ';
     }
 
 
     /**
-     * @param array $i18nColumns       List of columns to be transformed to coalesce in case useI18n is used
-     * @param string $i18nAlias        I18n column alias
-     * @param string $mainTableAlias   Main table column alias
-     * @param string $finalAliasPrefix Final alias for columns, e.g. "shipping" will be "shippingtitle" based on main column alias: coalesce(i18n_s.title, s.title) as shippingtitle
-     * @param string $type             Different types like default, GROUP_CONCAT(...), GROUP_CONCAT(DISTINCT ...)
-     * @param string $prefix           If this SQL entry is a part of whole SQL query, add e.g. "," as prefix
-     * @param string $suffix           If this SQL entry is a part of whole SQL query, add e.g. "," as suffix
+     * @param array $columns            List of columns to be loaded in specific langauge
+     * @param string $tableAlias        Main table alias
+     * @param string $columnAliasPrefix Final column alias prefix, e.g. "shipping" will be "shippingtitle" based on column: coalesce(i18n_s.title, s.title) as shippingtitle
+     * @param string $type              Different types like default, GROUP_CONCAT(...), GROUP_CONCAT(DISTINCT ...)
+     * @param string $prefix            If this SQL entry is a part of whole SQL query, add e.g. "," as prefix
+     * @param string $suffix            If this SQL entry is a part of whole SQL query, add e.g. "," as suffix
+     * @param bool $skipAs              from: COALESCE(i18n_s.title, s.title) AS title to: COALESCE(i18n_s.title, s.title) - in different seach clauses
      *
      * @return string
      *
      * @since 5.0.0
      */
-    public static function sqlCoalesce(array $i18nColumns, string $i18nAlias = 'i18n', string $mainTableAlias = 'a', string $finalAliasPrefix = '', string $type = '', string $prefix = '', string $suffix = ''): string
+    public static function sqlCoalesce(array $columns, string $mainTableAlias = 'a', string $columnAliasPrefix = '', string $type = '', string $prefix = '', string $suffix = '', bool $skipAs = false): string
     {
+
+        $i18nTableAlias  = 'i18n_'. $mainTableAlias;
+        $columnsFallback = ['title', 'alias', 'alias_value'];// Could be possible parameter in options - these columns get coalesce
+
         $output = '';
 
         if ($prefix != '') {
@@ -241,6 +247,23 @@ abstract class I18nHelper
                 $columnSuffix = ')';
             break;
 
+            case 'concatid':
+                // I18nHelper::sqlCoalesce(['alias'], 'm', '', 'concatid')
+                // CONCAT(m.id, \'-\', COALESCE(i18n_m.alias, m.alias)) AS alias
+                $columnPrefix = 'CONCAT('.$mainTableAlias.'.id, \'-\', ';
+                $columnSuffix = ')';
+            break;
+
+            case 'concatparameters':
+                // I18nHelper::sqlCoalesce(['alias'], 'm', '', 'concatid')
+                // CONCAT(\'s[\', COALESCE(i18n_s.alias, s.alias), \']\')  AS parameteralias
+                $columnPrefix = 'CONCAT(\'s[\', ';
+                $columnSuffix = ', \']\')';
+            break;
+            case 'concatparametera':
+                $columnPrefix = 'CONCAT(\'a[\', ';
+                $columnSuffix = ', \']\')';
+            break;
             case '':
             default:
                 $columnPrefix = '';
@@ -250,17 +273,26 @@ abstract class I18nHelper
         }
 
         $useI18n = self::useI18n();
-        $columns = [];
-        if (!empty($i18nColumns)) {
-            foreach($i18nColumns as $column) {
+        $columnsOutput = [];
+        if (!empty($columns)) {
+            foreach($columns as $column) {
                 if ($useI18n) {
-                    $columns[] = $columnPrefix . 'coalesce(' . $i18nAlias . '_' . $mainTableAlias . '.' . $column. ', ' . $mainTableAlias. '.' . $column . ')' . $columnSuffix. ' as ' . $finalAliasPrefix . $column;
+
+                    if (in_array($column, $columnsFallback)) {
+                        $columnsOutput[] = $columnPrefix . 'COALESCE(' . $i18nTableAlias  . '.' . $column. ', ' . $mainTableAlias. '.' . $column . ')' . $columnSuffix
+                            . (!$skipAs ? ' AS ' . $columnAliasPrefix . $column : '');
+                    } else {
+                        $columnsOutput[] = $columnPrefix . $i18nTableAlias  . '.' . $column . $columnSuffix
+                            . (!$skipAs ? ' AS ' . $columnAliasPrefix . $column : '');
+                    }
+
                 } else {
-                    $columns[] =  $columnPrefix . $mainTableAlias. '.' . $column . $columnSuffix. ' as ' . $finalAliasPrefix . $column;
+                    $columnsOutput[] =  $columnPrefix . $mainTableAlias. '.' . $column . $columnSuffix
+                        . (!$skipAs ? ' AS ' . $columnAliasPrefix . $column : '');
                 }
             }
 
-            $output = implode(', ', $columns);
+            $output .= implode(', ', $columnsOutput);
         }
 
 

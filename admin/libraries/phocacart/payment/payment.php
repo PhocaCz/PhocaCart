@@ -98,14 +98,17 @@ class PhocacartPayment
 		.' p.lowest_amount, p.highest_amount, p.default, p.params,'
 		.' t.id, t.title, t.tax_rate, t.calculation_type, t.tax_hide as taxhide';
 
-		if (I18nHelper::useI18n()) {
+		/*if (I18nHelper::useI18n()) {
 			$columns .= ', coalesce(i18n_p.title, p.title) as title, coalesce(i18n_p.description, p.description) as description';
 			$groupsFull .= ', coalesce(i18n_p.title, p.title), coalesce(i18n_p.description, p.description)';
 		} else {
 			$columns .= ', p.title, p.description';
 			$groupsFull .= ', p.title, p.description';
-		}
+		}*/
 
+		$columns .= I18nHelper::sqlCoalesce(['title', 'description'], 'p', '', '', ',');
+
+		$groupsFull .= ', p.title, p.description';
 		$groupsFast		= 'p.id';
 		$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
 
@@ -113,7 +116,7 @@ class PhocacartPayment
 
 		$query = ' SELECT '.$columns
 				.' FROM #__phocacart_payment_methods AS p'
-				. I18nHelper::sqlJoin('#__phocacart_payment_methods_i18n', 'i18n_p', 'p')
+				. I18nHelper::sqlJoin('#__phocacart_payment_methods_i18n', 'p')
 				.' LEFT JOIN #__phocacart_payment_method_regions AS r ON r.payment_id = p.id'
 				.' LEFT JOIN #__phocacart_payment_method_countries AS c ON c.payment_id = p.id'
 				.' LEFT JOIN #__phocacart_payment_method_zones AS z ON z.payment_id = p.id'
@@ -465,17 +468,18 @@ class PhocacartPayment
 	public function getPaymentMethod($paymentId) {
 		$db = Factory::getDBO();
 
-		if (I18nHelper::useI18n()) {
+		/*if (I18nHelper::useI18n()) {
 			$columns = 'coalesce(i18n_p.title, p.title) as title, coalesce(i18n_p.description, p.description) as description';
 		} else {
 			$columns = 'p.title, p.description';
-		}
+		}*/
+		$columns = I18nHelper::sqlCoalesce(['title', 'description'], 'p');
 
 		$query = ' SELECT p.id, p.tax_id, p.cost, p.cost_additional, p.calculation_type, p.image, p.method, p.params, '
 				.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.tax_hide as taxhide, '
 				. $columns
 				.' FROM #__phocacart_payment_methods AS p'
-				. I18nHelper::sqlJoin('#__phocacart_payment_methods_i18n', 'i18n_p', 'p')
+				. I18nHelper::sqlJoin('#__phocacart_payment_methods_i18n', 'p')
 				.' LEFT JOIN #__phocacart_taxes AS t ON t.id = p.tax_id'
 				.' WHERE p.id = '.(int)$paymentId
 				.' ORDER BY p.id'

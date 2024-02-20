@@ -231,9 +231,13 @@ class PhocaCartCpModelPhocacartOrder extends AdminModel
 			return false;
 		}
 
-        $data['section_id'] = $data['section_id'] ?: 0;
-        $data['unit_id'] = $data['unit_id'] ?: 0;
-        $data['ticket_id'] = $data['ticket_id'] ?: 0;
+        //$data['section_id'] = $data['section_id'] ?: 0;
+        //$data['unit_id'] = $data['unit_id'] ?: 0;
+        //$data['ticket_id'] = $data['ticket_id'] ?: 0;
+
+        $data['section_id'] = isset($data['section_id']) ? $data['section_id'] : 0;
+        $data['unit_id'] = isset($data['unit_id']) ? $data['unit_id'] : 0;
+        $data['ticket_id'] = isset($data['ticket_id']) ? $data['ticket_id'] : 0;
 
 		if (!$table->bind($data)) {
 			$this->setError($table->getError());

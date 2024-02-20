@@ -30,11 +30,7 @@ class PhocacartManufacturer
 		$groupsFast		= 'm.id';
 		$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;*/
 
-		if (I18nHelper::useI18n()) {
-			$columns .= ', coalesce(i18n_m.title, m.title) as title, coalesce(i18n_m.alias, m.alias) as  alias';
-		} else {
-			$columns   .= ', m.title, m.alias';
-		}
+		$columns .= I18nHelper::sqlCoalesce(['title', 'alias'], 'm', '', '', ',');
 
 
 		$wheres[]	= ' m.published = 1';
@@ -81,7 +77,7 @@ class PhocacartManufacturer
 		$q = ' SELECT DISTINCT '.$columns
 			.' FROM  #__phocacart_manufacturers AS m'
 			. (!empty($lefts) ? ' LEFT JOIN ' . implode( ' LEFT JOIN ', $lefts ) : '')
-			. I18nHelper::sqlJoin('#__phocacart_manufacturers_i18n', 'i18n_m', 'm')
+			. I18nHelper::sqlJoin('#__phocacart_manufacturers_i18n', 'm')
 			. (!empty($wheres) ? ' WHERE ' . implode( ' AND ', $wheres ) : '')
 			//.' GROUP BY '.$groups
 			.' ORDER BY '.$orderingText;
@@ -156,13 +152,17 @@ class PhocacartManufacturer
         $ordering = PhocacartOrdering::getOrderingText($ordering, 4);//m
         if ($items != '') {
             $wheres[] = 'm.id IN (' . $items . ')';
-            $q = 'SELECT DISTINCT m.title, CONCAT(m.id, \'-\', m.alias) AS alias, '.$db->quote($manufacturerAlias).' AS parameteralias, '.$db->quote(ucfirst($manufacturerAlias)).' AS parametertitle FROM #__phocacart_manufacturers AS m'
-                . (!empty($wheres) ? ' WHERE ' . implode(' AND ', $wheres) : '')
+            $q = 'SELECT DISTINCT '.I18nHelper::sqlCoalesce(['title'], 'm').', '
+				.I18nHelper::sqlCoalesce(['alias'], 'm', '', 'concatid').', '
+				.$db->quote($manufacturerAlias).' AS parameteralias, '.$db->quote(ucfirst($manufacturerAlias)).' AS parametertitle FROM #__phocacart_manufacturers AS m'
+				. I18nHelper::sqlJoin('#__phocacart_manufacturers_i18n', 'm')
+				. (!empty($wheres) ? ' WHERE ' . implode(' AND ', $wheres) : '')
                 . ' GROUP BY m.alias, m.title'
                 . ' ORDER BY ' . $ordering;
 
             $db->setQuery($q);
             $o = $db->loadAssocList();
+
         }
         return $o;
     }

@@ -244,17 +244,21 @@ class PhocacartSpecification
 	public static function getSpecificationGroupsAndSpecifications($productId) {
 		$db = Factory::getDBO();
 
-		if (I18nHelper::useI18n()) {
+		/*if (I18nHelper::useI18n()) {
 			$columns = 's.id, coalesce(i18n_s.title, s.title) as title, coalesce(i18n_s.alias, s.alias) as alias, coalesce(i18n_s.value, s.value) as value, coalesce(i18n_s.alias_value, s.alias_value) as alias_value, '
 				. 's.image, s.image_medium, s.image_small, s.color, g.id as groupid, coalesce(i18n_g.title, g.title) as grouptitle';
 		} else {
 			$columns = 's.id, s.title, s.alias, s.value, s.alias_value, s.image, s.image_medium, s.image_small, s.color, g.id as groupid, g.title as grouptitle';
-		}
+		}*/
+
+		$columns = 's.id, '.I18nHelper::sqlCoalesce(['title', 'alias', 'value', 'alias_value'], 's').', '
+				. 's.image, s.image_medium, s.image_small, s.color, g.id as groupid, '.I18nHelper::sqlCoalesce(['title'], 'g', 'group');
+
 		$query = 'SELECT ' . $columns
 				.' FROM #__phocacart_specifications AS s'
 				.' LEFT JOIN #__phocacart_specification_groups AS g ON g.id = s.group_id'
-				. I18nHelper::sqlJoin('#__phocacart_specifications_i18n', 'i18n_s', 's')
-				. I18nHelper::sqlJoin('#__phocacart_specification_groups_i18n', 'i18n_g', 'g')
+				. I18nHelper::sqlJoin('#__phocacart_specifications_i18n', 's')
+				. I18nHelper::sqlJoin('#__phocacart_specification_groups_i18n', 'g')
 				.' WHERE s.product_id = '.(int)$productId
 			    .' ORDER by g.ordering';
 		$db->setQuery($query);
@@ -280,13 +284,16 @@ class PhocacartSpecification
 		$columns		= 's.id, s.image, s.image_medium, s.image_small, s.color';
 		//$groupsFull		= $columns;
 
-		if (I18nHelper::useI18n()) {
+		/*if (I18nHelper::useI18n()) {
 			$groupsFull = $columns . ', coalesce(i18n_s.title, s.title), coalesce(i18n_s.alias, s.alias), coalesce(i18n_s.value, s.value), coalesce(i18n_s.alias_value, s.alias_value)';
             $columns .= ', coalesce(i18n_s.title, s.title) as title, coalesce(i18n_s.alias, s.alias) as  alias, coalesce(i18n_s.value, s.value) as value, coalesce(i18n_s.alias_value, s.alias_value) as alias_value';
         } else {
             $columns   .= ', s.title, s.alias, s.value, s.alias_value';
 			$groupsFull = $columns;
-        }
+        }*/
+
+		$groupsFull = $columns;
+		$columns .= I18nHelper::sqlCoalesce(['title', 'alias', 'value', 'alias_value'], 's', '', '', ',');
 
 
 		$groupsFast		= 's.id';
@@ -332,8 +339,8 @@ class PhocacartSpecification
 		$query = 'SELECT '.$columns
 				.' FROM  #__phocacart_specifications AS s'
 				. (!empty($lefts) ? ' LEFT JOIN ' . implode( ' LEFT JOIN ', $lefts ) : '')
-				. I18nHelper::sqlJoin('#__phocacart_specification_groups_i18n', 'i18n_sg', 'sg')
-				. I18nHelper::sqlJoin('#__phocacart_specifications_i18n', 'i18n_s', 's')
+				. I18nHelper::sqlJoin('#__phocacart_specification_groups_i18n', 'sg')
+				. I18nHelper::sqlJoin('#__phocacart_specifications_i18n', 's')
 				. (!empty($wheres) ? ' WHERE ' . implode( ' AND ', $wheres ) : '')
 				.' GROUP BY '.$groups
 				.' ORDER BY '.$orderingText;
@@ -377,14 +384,41 @@ class PhocacartSpecification
 	    $o      = array();
         $wheres = array();
         $ordering = PhocacartOrdering::getOrderingText($ordering, 6);//s
+
         if (!empty($items)) {
             foreach ($items as $k => $v) {
-                $wheres[] = '( p.alias = ' . $db->quote($k) . ' AND s.alias IN (' . $v . ') )';
+
+				$wheres[] = '( '.I18nHelper::sqlCoalesce(['alias'], 's', '', '', '', '', true).' = ' . $db->quote($k) . ' AND '.I18nHelper::sqlCoalesce(['alias_value'], 's', '', '', '', '', true).' IN (' . $v . ') )';
+
             }
             if (!empty($wheres)) {
                 // FULL GROUP BY GROUP_CONCAT(DISTINCT o.title) AS title
-                $q = 'SELECT DISTINCT s.title, s.alias, CONCAT(\'a[\', p.alias, \']\')  AS parameteralias, p.title AS parametertitle FROM #__phocacart_specifications AS s'
+             /*   $q = 'SELECT DISTINCT CONCAT(s.title, \'(\', s.alias_value, \')\') as title, s.alias, s.alias_value, CONCAT(\'s[\', s.alias, \']\')  AS parameteralias, p.title AS parametertitle FROM #__phocacart_specifications AS s'
                     . ' LEFT JOIN #__phocacart_specification_groups AS p ON p.id = s.group_id'
+
+                    . (!empty($wheres) ? ' WHERE ' . implode(' OR ', $wheres) : '')
+                    . ' GROUP BY p.alias, s.alias, s.title'
+                    . ' ORDER BY ' . $ordering;
+
+				$q = 'SELECT DISTINCT CONCAT(COALESCE(i18n_s.title, s.title), \'(\', COALESCE(i18n_s.alias_value, s.alias_value), \')\') as title, COALESCE(i18n_s.alias, s.alias) as alias, COALESCE(i18n_s.alias_value, s.alias_value) as alias_value, CONCAT(\'s[\', COALESCE(i18n_s.alias, s.alias), \']\')  AS parameteralias, COALESCE(i18n_p.title, p.title) AS parametertitle FROM #__phocacart_specifications AS s'
+                    . ' LEFT JOIN #__phocacart_specification_groups AS p ON p.id = s.group_id'
+
+					. I18nHelper::sqlJoin('#__phocacart_specifications_i18n', 's')
+					. I18nHelper::sqlJoin('#__phocacart_specification_groups_i18n', 'p')
+                    . (!empty($wheres) ? ' WHERE ' . implode(' OR ', $wheres) : '')
+                    . ' GROUP BY p.alias, s.alias, s.title'
+                    . ' ORDER BY ' . $ordering;
+*/
+
+				$q = 'SELECT DISTINCT CONCAT('.I18nHelper::sqlCoalesce(['title'], 's', '', '', '', '', true).', \'(\', '.I18nHelper::sqlCoalesce(['alias_value'], 's', '', '', '', '', true).', \')\') as title,'
+					.I18nHelper::sqlCoalesce(['alias'], 's')
+					.I18nHelper::sqlCoalesce(['alias_value'], 's', '', '', ',')
+					.I18nHelper::sqlCoalesce(['alias'], 's', 'parameter', 'concatparameters', ',')
+					.I18nHelper::sqlCoalesce(['title'], 'p', 'parameter', '', ',')
+					. ' FROM #__phocacart_specifications AS s'
+                    . ' LEFT JOIN #__phocacart_specification_groups AS p ON p.id = s.group_id '
+					. I18nHelper::sqlJoin('#__phocacart_specifications_i18n', 's')
+					. I18nHelper::sqlJoin('#__phocacart_specification_groups_i18n', 'p')
                     . (!empty($wheres) ? ' WHERE ' . implode(' OR ', $wheres) : '')
                     . ' GROUP BY p.alias, s.alias, s.title'
                     . ' ORDER BY ' . $ordering;

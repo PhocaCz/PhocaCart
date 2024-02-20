@@ -362,6 +362,7 @@ class PhocacartSearch
         }
         $condition = $inA;
 
+
         if ($condition != '') {
             switch ($searchArea) {
                 case 'a': // Attributes
@@ -370,18 +371,28 @@ class PhocacartSearch
                         if (!empty($inAS)) {
                             $where = ' a.id IN (SELECT at2.product_id FROM #__phocacart_attributes AS at2';
 
+
+                            $where .= I18nHelper::sqlJoin('#__phocacart_attributes_i18n', 'at2');
+                           // $where .= I18nHelper::sqlJoin('#__phocacart_attribute_values_i18n', 'v2');
+
                             foreach ($inAS as $k => $v) {
 
-                                $where .= ' INNER JOIN  #__phocacart_attribute_values AS v2x' . $k . ' ON v2x' . $k . '.attribute_id = at2.id AND ' . $v;
-                                $where .= I18nHelper::sqlJoin('#__phocacart_attribute_values_i18n', 'i18n_v2x' . $k, 'v2x' . $k );
+                                 if (I18nHelper::isI18n()) {
+                                     $where .= ' LEFT JOIN #__phocacart_attribute_values AS v2x'.$k . ' ON v2x'.$k.'.attribute_id = at2.id';
+                                    $where .= I18nHelper::sqlJoin('#__phocacart_attribute_values_i18n', 'v2x' . $k );
+                                     $where .= ' INNER JOIN  #__phocacart_attribute_values AS v2bx' . $k . ' ON v2x' . $k . '.attribute_id = at2.id AND ' . $v;
+                                 } else {
+                                     $where .= ' INNER JOIN  #__phocacart_attribute_values AS v2x' . $k . ' ON v2x' . $k . '.attribute_id = at2.id AND ' . $v;
+                                 }
+
+                                //$where .= 'AND ' . $v;
                             }
 
-
-                            $where .= I18nHelper::sqlJoin('#__phocacart_attributes_i18n', 'i18n_at2', 'at2');
-                            $where .= I18nHelper::sqlJoin('#__phocacart_attribute_values_i18n', 'i18n_v2', 'v2');
-
-
                             $where .= ' GROUP BY at2.product_id)';
+
+
+
+
                         }
                     }
                     else {
@@ -393,8 +404,8 @@ class PhocacartSearch
                                 . ' LEFT JOIN  #__phocacart_attribute_values AS v2 ON v2.attribute_id = at2.id'
 
 
-                                . I18nHelper::sqlJoin('#__phocacart_attributes_i18n', 'i18n_at2', 'at2')
-                                . I18nHelper::sqlJoin('#__phocacart_attribute_values_i18n', 'i18n_v2', 'v2')
+                                . I18nHelper::sqlJoin('#__phocacart_attributes_i18n', 'at2')
+                                . I18nHelper::sqlJoin('#__phocacart_attribute_values_i18n', 'v2')
                                 . ' WHERE ' . implode(' OR ', $condition)
                                 . ' GROUP BY at2.product_id'
                                 //.' HAVING COUNT(distinct at2.alias) >= '.(int)$c.')';// problematic on some servers
@@ -417,16 +428,27 @@ class PhocacartSearch
                             $i          = 0;
                             foreach ($inAS as $v) {
                                 if ($i == 0) {
-                                    $where      .= " s2x" . $i . ".product_id FROM #__phocacart_specifications AS s2x" . $i;
+
+                                    $where  .= " s2x" . $i . ".product_id FROM #__phocacart_specifications AS s2x" . $i;
+
+                                   // $where .= I18nHelper::sqlJoin('#__phocacart_specifications_i18n', 's2');
+                                    $where .= I18nHelper::sqlJoin('#__phocacart_specifications_i18n', 's2x' . $i );
+
                                     $closeWhere = 'WHERE ' . $v;
                                 }
                                 else {
-                                    $where .= " INNER JOIN #__phocacart_specifications AS s2x" . $i . " ON s2x0.product_id = s2x" . $i . ".product_id AND " . $v;
+
+                                    $where .= I18nHelper::sqlJoin('#__phocacart_specifications_i18n', 's2x' . $i );
+                                    if (I18nHelper::isI18n()) {
+                                        $where .= " INNER JOIN #__phocacart_specifications AS s2bx" . $i . " ON s2x" . $i . ".product_id = s2x" . $i . ".product_id AND " . $v;
+                                    } else {
+                                        $where .= " INNER JOIN #__phocacart_specifications AS s2x".$i." ON s2x" . $i . ".product_id = s2x".$i.".product_id AND ". $v;
+                                    }
                                 }
                                 $i++;
                             }
 
-                            $where .= I18nHelper::sqlJoin('#__phocacart_specifications_i18n', 'i18n_s2', 's2');
+
 
                             $where .= ' ' . $closeWhere . ')';
                         }
@@ -437,11 +459,11 @@ class PhocacartSearch
                             $c     = count($condition);
 
                             $where = ' a.id IN (SELECT s2.product_id FROM #__phocacart_specifications AS s2'
-                                . I18nHelper::sqlJoin('#__phocacart_specifications_i18n', 'i18n_s2', 's2')
+                                . I18nHelper::sqlJoin('#__phocacart_specifications_i18n', 's2')
 
                                 . ' WHERE ' . implode(' OR ', $condition)
                                 . ' GROUP BY s2.product_id'
-                                . ' HAVING COUNT(s2.alias) >= ' . $c
+                                . ' HAVING COUNT(s2.alias) >= 1' /* TEST: . $c */
                                 . ')';
                         }
                     }
@@ -449,6 +471,7 @@ class PhocacartSearch
 
             }
         }
+
 
         return [
             'where' => $where,
