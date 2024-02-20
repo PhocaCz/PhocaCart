@@ -14,6 +14,7 @@ use Joomla\CMS\Plugin\PluginHelper;
 
 defined('_JEXEC') or die();
 
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Language\Text;
@@ -513,18 +514,22 @@ class PhocacartProduct
      */
     public static function getProductByProductId($id)
     {
-
         if ($id < 1) {
             return false;
         }
-        $db = Factory::getDBO();
-        $query = ' SELECT a.id, a.title, a.catid, a.language, '
-            . ' group_concat(CONCAT_WS(":", c.id, c.title) SEPARATOR \',\') AS categories,'
-            . ' group_concat(c.title SEPARATOR \' \') AS categories_title,'
+
+        /** @var DatabaseInterface $db */
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = 'SELECT a.id, a.catid, a.language, '
+            . I18nHelper::sqlCoalesce(['title']) . ', '
+            . ' group_concat(CONCAT_WS(":", c.id, ' . I18nHelper::sqlCoalesce(['title'], 'c', '', '', '', '', true) . ') SEPARATOR \',\') AS categories,'
+            . ' group_concat(' . I18nHelper::sqlCoalesce(['title'], 'c', '', '', '', '', true) . ' SEPARATOR \' \') AS categories_title,'
             . ' group_concat(c.id SEPARATOR \',\') AS categories_id'
             . ' FROM #__phocacart_products AS a'
+            . I18nHelper::sqlJoin('#__phocacart_products_i18n')
             . ' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id'
             . ' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id'
+            . I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'c')
             . ' WHERE a.id = ' . (int)$id
             . ' GROUP BY a.id, a.title'
             . ' ORDER BY a.id'
