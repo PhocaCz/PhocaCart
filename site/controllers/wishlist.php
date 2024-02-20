@@ -91,7 +91,6 @@ class PhocaCartControllerWishList extends FormController
             return;
         }
 
-        // TODO i18n
         $product = PhocacartProduct::getProductByProductId($id);
         if (!$product) {
             $app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_WATCHDOG_PRODUCT'), 'error');

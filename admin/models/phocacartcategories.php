@@ -15,7 +15,7 @@ jimport('joomla.application.component.modellist');
 class PhocaCartCpModelPhocaCartCategories extends ListModel
 {
 	protected $option 	= 'com_phocacart';
-	protected $total		= 0;
+
 	public function __construct($config = array())
 	{
 		if (empty($config['filter_fields'])) {
@@ -33,7 +33,8 @@ class PhocaCartCpModelPhocaCartCategories extends ListModel
 				'hits', 'a.hits',
 				'published','a.published',
 				'parentcat_title', 'parentcat_title',
-				'featured', 'a.featured'
+				'featured', 'a.featured',
+                'parent_id', 'a.parent_id'
 			);
 
 			// ASSOCIATION
@@ -98,9 +99,9 @@ class PhocaCartCpModelPhocaCartCategories extends ListModel
 		$id	.= ':'.$this->getState('filter.search');
 		$id	.= ':'.$this->getState('filter.access');
 		$id	.= ':'.$this->getState('filter.published');
-		$id	.= ':'.$this->getState('filter.category_id');
+		$id	.= ':'.$this->getState('filter.parent_id');
 		$id .= ':'.$this->getState('filter.language');
-		$id	.= ':'.$this->getState('filter.category_id');
+		$id	.= ':'.$this->getState('filter.level');
 
 		return parent::getStoreId($id);
 	}
@@ -118,6 +119,7 @@ class PhocaCartCpModelPhocaCartCategories extends ListModel
 				$this->buildCategoryTree($items, $category->children, $level + 1, $title, $category->parentstree);
 		}
 	}
+
 	/*
 	 * Because of tree we need to load all the items
 	 *
@@ -128,6 +130,7 @@ class PhocaCartCpModelPhocaCartCategories extends ListModel
 	 */
 	public function getItems()
 	{
+        //return parent::getItems();
 		// Get a storage key.
 		$store = $this->getStoreId();
 
@@ -138,17 +141,18 @@ class PhocaCartCpModelPhocaCartCategories extends ListModel
 
 		// Load the list items.
 		try {
-			$this->getDbo()->setQuery($this->getListQuery());
-			$categories	= $this->getDbo()->loadObjectList('id');
+			$this->getDatabase()->setQuery($this->getListQuery());
+			$categories	= $this->getDatabase()->loadObjectList('id');
 		} catch (RuntimeException $e) {
 			throw new Exception($e->getMessage(), 500);
 		}
 
+        //$allCategories
 		if ($this->getState('filter.search')) {
 			$items = $categories;
 		} else {
 			array_walk($categories, function ($category) use ($categories) {
-				if ($category->parent_id) {
+				if ($category->parent_id && isset($categories[$category->parent_id])) {
 					if ($categories[$category->parent_id]->children === null)
 						$categories[$category->parent_id]->children = [];
 					$categories[$category->parent_id]->children[] = $category;
@@ -162,14 +166,49 @@ class PhocaCartCpModelPhocaCartCategories extends ListModel
 			$items = [];
 			$this->buildCategoryTree($items, $rootCategories);
 
+            // Filter by max level
 			if ($level = $this->getState('filter.level')) {
 				$items = array_filter($items, function ($category) use ($level) {
 					return $category->level <= $level;
 				});
-
-				$this->setTotal(count($items));
 			}
-		}
+        }
+
+        // Filter by published state.
+        $published = $this->getState('filter.published');
+        if (is_numeric($published)) {
+            $items = array_filter($items, function ($category) use ($published) {
+                return $category->published == $published;
+            });
+        } else if ($published === '') {
+            $items = array_filter($items, function ($category) use ($published) {
+                return in_array($category->published, [0, 1]);
+            });
+        }
+
+        // Filter by access level.
+        if ($access = $this->getState('filter.access')) {
+            $items = array_filter($items, function ($category) use ($access) {
+                return $category->access == $access;
+            });
+        }
+
+        // Filter by category.
+        $categoryId = $this->getState('filter.parent_id');
+        if (is_numeric($categoryId)) {
+            $items = array_filter($items, function ($category) use ($categoryId) {
+                return $category->parent_id == $categoryId;
+            });
+        }
+
+        // Filter on the language.
+        if ($language = $this->getState('filter.language')) {
+            $items = array_filter($items, function ($category) use ($language) {
+                return $category->language == $language;
+            });
+        }
+
+        $this->setTotal(count($items));
 
 		// Add the items to the internal cache.
 		$this->cache[$store] = $items;
@@ -192,7 +231,7 @@ class PhocaCartCpModelPhocaCartCategories extends ListModel
 		$query->from('`#__phocacart_categories` AS a');
 
 		// Join over the language
-    $query->select('l.title AS language_title, l.image AS language_image');
+        $query->select('l.title AS language_title, l.image AS language_image');
 		$query->join('LEFT', '`#__languages` AS l ON l.lang_code = a.language');
 
 		// Join over the users for the checked out user.
@@ -226,31 +265,6 @@ class PhocaCartCpModelPhocaCartCategories extends ListModel
 			$query->select('(' . $subQuery . ') AS ' . $db->quoteName('association'));
 		}
 
-		// Filter by access level.
-		if ($access = $this->getState('filter.access')) {
-			$query->where('a.access = '.(int) $access);
-		}
-
-		// Filter by published state.
-		$published = $this->getState('filter.published');
-		if (is_numeric($published)) {
-			$query->where('a.published = '.(int) $published);
-		}
-		else if ($published === '') {
-			$query->where('(a.published IN (0, 1))');
-		}
-
-		// Filter by category.
-		$categoryId = $this->getState('filter.parent_id');
-		if (is_numeric($categoryId)) {
-			$query->where('a.parent_id = ' . (int) $categoryId);
-		}
-
-		// Filter on the language.
-		if ($language = $this->getState('filter.language')) {
-			$query->where('a.language = ' . $db->quote($language));
-		}
-
 		// Filter by search in title
 		$search = $this->getState('filter.search');
 		if (!empty($search))
@@ -265,58 +279,20 @@ class PhocaCartCpModelPhocaCartCategories extends ListModel
 			}
 		}
 
-		//- $query->group($groups);
-
 		// Add the list ordering clause.
 		$orderCol	= $this->state->get('list.ordering', 'title');
 		$orderDirn	= $this->state->get('list.direction', 'asc');
-		/*if ($orderCol == 'a.ordering' || $orderCol == 'parentcat_title') {
-			$orderCol = 'parentcat_title '.$orderDirn.', a.ordering';
-		}*/
 		$query->order($db->escape($orderCol.' '.$orderDirn));
-
-		//echo nl2br(str_replace('#__', 'jos_', $query->__toString()));
-
 
 		return $query;
 	}
 
-	public function getTotal() {
-		$store = $this->getStoreId('getTotal');
-		if (isset($this->cache[$store])) {
-			return $this->cache[$store];
-		}
-
-		// PHOCAEDIT
-		if (isset($this->total) && (int)$this->total > 0) {
-			$total = (int)$this->total;
-		} else {
-			$query = $this->_getListQuery();
-
-			try {
-				$total = (int) $this->_getListCount($query);
-			}
-			catch (RuntimeException $e) {
-				$this->setError($e->getMessage());
-
-				return false;
-			}
-		}
-
-		$this->cache[$store] = $total;
-		return $this->cache[$store];
-	}
-
 	public function setTotal($total) {
 		// When we use new total and new pagination, we need to clean their cache
-		$store1 = $this->getStoreId('getTotal');
-		$store2 = $this->getStoreId('getStart');
-		$store3 = $this->getStoreId('getPagination');
+		unset($this->cache[$this->getStoreId('getStart')]);
+		unset($this->cache[$this->getStoreId('getPagination')]);
 
-		unset($this->cache[$store1]);
-		unset($this->cache[$store2]);
-		unset($this->cache[$store3]);
-		$this->total = (int)$total;
+        $this->cache[$this->getStoreId('getTotal')] = (int)$total;
 	}
 }
-?>
+

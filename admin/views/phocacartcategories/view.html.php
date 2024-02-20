@@ -195,18 +195,5 @@ function phOpenCatalog(href){
 
 		PhocacartRenderAdminview::renderWizardButton('back');
 	}
-
-	protected function getSortFields() {
-		return array(
-			'a.ordering'	=> Text::_('JGRID_HEADING_ORDERING'),
-			'a.title' 		=> Text::_($this->t['l'] . '_TITLE'),
-			'a.published' 	=> Text::_($this->t['l'] . '_PUBLISHED'),
-			'parent_title' 	=> Text::_($this->t['l'] . '_PARENT_CATEGORY'),
-			'a.count_products' 	=> Text::_($this->t['l'] . '_PRODUCT_COUNT'),
-			'language' 		=> Text::_('JGRID_HEADING_LANGUAGE'),
-			'a.hits' 		=> Text::_($this->t['l'] . '_HITS'),
-			'a.id' 			=> Text::_('JGRID_HEADING_ID')
-		);
-	}
 }
-?>
+
