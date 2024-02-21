@@ -30,7 +30,7 @@ use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Factory;
 use Phoca\PhocaCart\Dispatcher\Dispatcher;
 
-$layoutAl 	= new FileLayout('alert', null, array('component' => 'com_phocacart'));
+$layoutAl 	= new FileLayout('alert', null, array('component' => 'com_phocacart', 'client' => 0));
 
 $d = $displayData;
 
@@ -96,7 +96,7 @@ if($d['type'] == 1 && $d['common']->receipt_number == '') {
 	return;
 }
 if($d['type'] == 2 && $d['common']->invoice_number == '') {
-	echo $layoutAl->render(array('type' => 'error', 'text' => Text::_('COM_PHOCACART_INVOICE_NOT_YET_ISSUED')));
+    echo $layoutAl->render(array('type' => 'error', 'text' => Text::_('COM_PHOCACART_INVOICE_NOT_YET_ISSUED')));
 	return;
 }
 

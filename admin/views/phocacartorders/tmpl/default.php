@@ -241,8 +241,8 @@ if (is_array($this->items)) {
         $amount = (isset($item->total_amount_currency) && $item->total_amount_currency > 0) ? $price->getPriceFormat($item->total_amount_currency, 0, 1) : $price->getPriceFormat($item->total_amount);
         echo $r->td($amount, "small ph-right ph-p-r-med ph-no-wrap");
 
-        echo $r->td($this->escape(PhocacartOrder::getInvoiceNumber($item->id, $item->date, $item->invoice_number, $item->invoice_number_id)), "small");
-
+        //echo $r->td($this->escape(PhocacartOrder::getInvoiceNumber($item->id, $item->date, $item->invoice_number, $item->invoice_number_id)), "small");
+        echo $r->td($this->escape($item->invoice_number), "small");
         echo $r->td(HTMLHelper::date($item->date, Text::_('DATE_FORMAT_LC5')), "small");
         echo $r->td(HTMLHelper::date($item->modified, Text::_('DATE_FORMAT_LC5')), "small");
 
