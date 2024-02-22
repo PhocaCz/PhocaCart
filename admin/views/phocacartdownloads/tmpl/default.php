@@ -153,7 +153,8 @@ if ($status == '') {
 }
 //COM_PHOCACART_DOWNLOAD_DATE_EXPIRED
 echo $r->td($status, "small");
-echo $r->td($item->date, "small");
+//echo $r->td($item->date, "small");
+echo $r->td(HTMLHelper::date($item->date, Text::_('DATE_FORMAT_LC5')), "small");
 echo $r->td($item->download_hits, "small");
 echo $r->td($item->id, "small");
 
