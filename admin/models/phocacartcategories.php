@@ -11,9 +11,12 @@ defined( '_JEXEC' ) or die();
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Factory;
 use Phoca\PhocaCart\I18n\I18nHelper;
+use Phoca\PhocaCart\I18n\I18nListModelTrait;
 
 class PhocaCartCpModelPhocaCartCategories extends ListModel
 {
+    use I18nListModelTrait;
+
 	protected $option 	= 'com_phocacart';
 
 	public function __construct($config = array())

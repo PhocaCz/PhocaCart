@@ -7,12 +7,15 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Factory;
-jimport('joomla.application.component.modellist');
+use Phoca\PhocaCart\I18n\I18nListModelTrait;
 
 class PhocaCartCpModelPhocacartPayments extends ListModel
 {
+	use I18nListModelTrait;
+
 	protected $option 	= 'com_phocacart';
 
 	public function __construct($config = array()) {

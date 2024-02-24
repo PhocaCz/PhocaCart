@@ -7,24 +7,21 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 
+defined( '_JEXEC' ) or die();
+
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
-
-defined( '_JEXEC' ) or die();
 use Joomla\CMS\MVC\Model\ListModel;
-use Joomla\CMS\Language\Associations;
 use Joomla\CMS\Factory;
-use Joomla\Component\Fields\Administrator\Helper\FieldsHelper;
 use Phoca\PhocaCart\Dispatcher\Dispatcher;
 use Phoca\PhocaCart\Event;
 use Phoca\PhocaCart\I18n\I18nHelper;
-
-jimport( 'joomla.application.component.modellist' );
-jimport( 'joomla.filesystem.folder' );
-jimport( 'joomla.filesystem.file' );
+use Phoca\PhocaCart\I18n\I18nListModelTrait;
 
 class PhocaCartCpModelPhocaCartItems extends ListModel
 {
+    use I18nListModelTrait;
+
 	protected $option 	= 'com_phocacart';
 
 	//protected $c 		= false;
@@ -325,26 +322,23 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 
 	public function getFilterForm($data = array(), $loadData = true)
 	{
-		$form      = parent::getFilterForm($data, $loadData);
+        $form = parent::getFilterForm($data, $loadData);
+        $this->prepareI18nFilterForm($form);
 
-		if ($form)  {
-			$field = $form->getField('fullordering', 'list');
+        $field = $form->getField('fullordering', 'list');
+		if (!empty($this->columns_full)) {
+            foreach ($this->columns_full as $v) {
+                if (isset($v['column']) && $v['column'] != '') {
+                    //$field->addOption(Text::_($data['title']. '_ASC'), array('value' => $data['column'] . ' ASC'));
+                    //$field->addOption(Text::_($data['title']. '_DESC'), array('value' => $data['column'] . ' DESC'));
+                    // Save hundreds of strings in translation
+                    // DEBUG Language can mark it as not translated erroneously
 
-			if (!empty($this->columns_full)) {
-				foreach ($this->columns_full as $k => $v) {
-
-					if (isset($v['column']) && $v['column'] != '') {
-						//$field->addOption(Text::_($data['title']. '_ASC'), array('value' => $data['column'] . ' ASC'));
-						//$field->addOption(Text::_($data['title']. '_DESC'), array('value' => $data['column'] . ' DESC'));
-						// Save hundreds of strings in translation
-						// DEBUG Language can mark it as not translated erroneously
-
-						$field->addOption(Text::_($v['title']). ' ' . Text::_('COM_PHOCACART_ASCENDING'), array('value' => $v['column'] . ' ASC'));
-						$field->addOption(Text::_($v['title']). ' ' . Text::_('COM_PHOCACART_DESCENDING'), array('value' => $v['column'] . ' DESC'));
-					}
-				}
-			}
-		}
+                    $field->addOption(Text::_($v['title']) . ' ' . Text::_('COM_PHOCACART_ASCENDING'), array('value' => $v['column'] . ' ASC'));
+                    $field->addOption(Text::_($v['title']) . ' ' . Text::_('COM_PHOCACART_DESCENDING'), array('value' => $v['column'] . ' DESC'));
+                }
+            }
+        }
 
 		return $form;
 	}
