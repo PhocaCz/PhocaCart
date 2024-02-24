@@ -54,7 +54,9 @@ echo '<th class="ph-productcount">' . HTMLHelper::_('searchtools.sort', $this->t
 if ($assoc) {
     echo '<th class="ph-association">' . Text::_('COM_PHOCACART_HEADING_ASSOCIATION') . '</th>' . "\n";
 }
-echo '<th class="ph-language">'.HTMLHelper::_('searchtools.sort',  	'JGRID_HEADING_LANGUAGE', 'a.language', $listDirn, $listOrder ).'</th>'."\n";
+if (!I18nHelper::isI18n()) {
+    echo '<th class="ph-language">' . HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_LANGUAGE', 'a.language', $listDirn, $listOrder) . '</th>' . "\n";
+}
 echo '<th class="ph-id">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_ID', 'a.id', $listDirn, $listOrder) . '</th>' . "\n";
 
 echo $r->endTblHeader();
@@ -109,8 +111,9 @@ if (is_array($this->items)) {
         if ($assoc) {
           echo $r->td($item->association ? HTMLHelper::_('phocacartmanufacturer.association', $item->id) : '');
         }
-        echo $r->td(LayoutHelper::render('joomla.content.language', $item), 'small');
-
+        if (!I18nHelper::isI18n()) {
+            echo $r->td(LayoutHelper::render('joomla.content.language', $item), 'small');
+        }
 
         echo $r->td($item->id, "small");
 
@@ -127,4 +130,3 @@ echo $r->endTable();
 echo $r->formInputsXML($listOrder, $listDirn, $originalOrders);
 echo $r->endMainContainer();
 echo $r->endForm();
-?>
