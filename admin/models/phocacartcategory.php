@@ -78,14 +78,10 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 		return Table::getInstance($type, $prefix, $config);
 	}
 
-	public function getForm($data = array(), $loadData = true) {
-
-		$app	= Factory::getApplication();
-		$form 	= $this->loadForm('com_phocacart.phocacartcategory', 'phocacartcategory', array('control' => 'jform', 'load_data' => $loadData));
-		if (empty($form)) {
-			return false;
-		}
-		return $form;
+	public function getForm($data = array(), $loadData = true)
+	{
+		$form = $this->loadForm('com_phocacart.phocacartcategory', 'phocacartcategory', array('control' => 'jform', 'load_data' => $loadData));
+		return $this->prepareI18nForm($form);
 	}
 
 	protected function loadFormData() {
@@ -133,13 +129,8 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 		return $item;
 	}
 
-	protected function prepareTable($table){
-
-
-		jimport('joomla.filter.output');
-		$date = Factory::getDate();
-		$user = Factory::getUser();
-
+	protected function prepareTable($table)
+	{
 		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
 		$table->alias		= ApplicationHelper::stringURLSafe($table->alias);
 
@@ -163,11 +154,6 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 
 				$table->ordering = $max+1;
 			}
-		}
-		else {
-			// Set the values
-			//$table->modified	= $date->toSql();
-			//$table->modified_by	= $user->get('id');
 		}
 	}
 

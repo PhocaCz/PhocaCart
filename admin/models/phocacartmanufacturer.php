@@ -55,11 +55,8 @@ class PhocaCartCpModelPhocacartManufacturer extends AdminModel
     }
 
     public function getForm($data = array(), $loadData = true) {
-        $form 	= $this->loadForm('com_phocacart.phocacartmanufacturer', 'phocacartmanufacturer', array('control' => 'jform', 'load_data' => $loadData));
-        if (empty($form)) {
-            return false;
-        }
-        return $form;
+        $form = $this->loadForm('com_phocacart.phocacartmanufacturer', 'phocacartmanufacturer', array('control' => 'jform', 'load_data' => $loadData));
+        return $this->prepareI18nForm($form);
     }
 
     public function getItem($pk = null) {

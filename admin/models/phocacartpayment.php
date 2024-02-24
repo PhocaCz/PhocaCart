@@ -47,7 +47,8 @@ class PhocaCartCpModelPhocacartPayment extends AdminModel
 	}
 
 	public function getForm($data = array(), $loadData = true) {
-		return $this->loadForm('com_phocacart.phocacartpayment', 'phocacartpayment', array('control' => 'jform', 'load_data' => $loadData));
+		$form = $this->loadForm('com_phocacart.phocacartpayment', 'phocacartpayment', array('control' => 'jform', 'load_data' => $loadData));
+		return $this->prepareI18nForm($form);
 	}
 
 	protected function loadFormData() {
