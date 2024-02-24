@@ -47,6 +47,7 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 			'title_long',
 			'title_feed',
             'description',
+			'description_bottom',
             'metatitle',
             'metakey',
             'metadesc',
@@ -217,7 +218,6 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 		if (!empty($data['feed'])) {
 			PluginHelper::importPlugin('pcf');
 			$registry 	= new Registry($data['feed']);
-			//$registry 	= new JRegistry($dataPh);
 			$dataFeed 	= $registry->toString();
 			if($dataFeed != '') {
 				$data['params_feed'] = $dataFeed;
@@ -879,11 +879,6 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 
     // ASSOCIATION
     protected function preprocessForm(Form $form, $data, $group = 'content'){
-        /*if ($this->canCreateCategory())
-        {
-            $form->setFieldAttribute('catid', 'allowAdd', 'true');
-        }*/
-
         // Association Phoca Cart items
         if (Associations::isEnabled()){
             $languages = LanguageHelper::getContentLanguages(false, true, null, 'ordering', 'asc');
@@ -920,13 +915,11 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 		$feedPlugins = PhocacartFeed::getFeedPluginMethods();
 
 		if (!empty($feedPlugins)) {
-			foreach ($feedPlugins as $k => $v) {
-
+			foreach ($feedPlugins as $v) {
 				$element = htmlspecialchars($v->element, ENT_QUOTES, 'UTF-8');
 				$addformF = new SimpleXMLElement('<form />');
 				$fields = $addformF->addChild('fields');
 				$fields->addAttribute('name', 'feed');
-				//$fields->addAttribute('addfieldpath', 'associations');
 				$fieldset = $fields->addChild('fieldset');
 				$fieldset->addAttribute('name', 'feed_'.$element);
 				$fieldset->addAttribute('group', 'pcf');
@@ -943,8 +936,6 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 				$field->addAttribute('propagate', 'true');
 				$form->load($addformF, false);
 			}
-
-
 		}
 
         parent::preprocessForm($form, $data, $group);
