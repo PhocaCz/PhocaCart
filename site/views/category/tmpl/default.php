@@ -485,7 +485,6 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 		$dL['manufacturer'] =  '';
 		if ($this->t['category_display_manufacturer'] > 0 && (int)$v->manufacturerid > 0 && $v->manufacturertitle != '') {
 			$dL['manufacturer'] .= PhocacartManufacturer::getManufacturerRendered((int)$v->manufacturerid, $v->manufacturertitle, $v->manufactureralias, $this->t['manufacturer_alias'], $this->t['category_display_manufacturer'], 0, '');
-
 		}
 
 		if ($lt == 'list') {
@@ -518,10 +517,17 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 	echo '</div>'. "\n"; // end items
 }
 
+// BOTTOM DESCRIPTION
+if ($this->category[0]->description_bottom) {
+?>
+	<div class="ph-desc-bottom"><?php echo HTMLHelper::_('content.prepare', $this->category[0]->description_bottom); ?></div>
+<?php
+}
+
+
 
 // FOOTER - NOT AJAX
 if (!$this->t['ajax']) {
-
 	echo '</div>';// end #phItemsBox
 	echo '</div>';// end #ph-pc-category-box
 
@@ -543,4 +549,3 @@ if (!$this->t['ajax']) {
 	echo '<div>&nbsp;</div>';
 	echo PhocacartUtilsInfo::getInfo();
 }
-?>

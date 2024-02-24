@@ -44,13 +44,9 @@ class PhocaCartViewCategory extends HtmlView
 		$this->s					= PhocacartRenderStyle::getStyles();
 		$uri 						= Uri::getInstance();
 		$model						= $this->getModel();
-		$document					= Factory::getDocument();
 		$this->t['categoryid']		= $app->input->get( 'id', 0, 'int' );
 		$this->t['limitstart']		= $app->input->get( 'limitstart', 0, 'int' );
 		$this->t['ajax'] 			= 0;
-
-
-
 
 		// PARAMS
 		$this->t['view']					= 'category';
@@ -58,18 +54,15 @@ class PhocaCartViewCategory extends HtmlView
 		$this->t['display_new']				= $this->p->get( 'display_new', 0 );
 		$this->t['cart_metakey'] 			= $this->p->get( 'cart_metakey', '' );
 		$this->t['cart_metadesc'] 			= $this->p->get( 'cart_metadesc', '' );
-		//$this->t['description']			= $this->p->get( 'description', '' );
 		$this->t['cv_display_description']	= $this->p->get( 'cv_display_description', 1 );
 		$this->t['image_width_cat']			= $this->p->get( 'image_width_cat', '' );
 		$this->t['image_height_cat']		= $this->p->get( 'image_height_cat', '' );
-		//$this->t['image_link']			= $this->p->get( 'image_link', 0 );
 		$this->t['columns_cat']				= $this->p->get( 'columns_cat', 3 );
 		$this->t['columns_cat_mobile']		= $this->p->get( 'columns_cat_mobile', 1 );
 		$this->t['columns_subcat_cat']		= $this->p->get( 'columns_subcat_cat', 3 );
 		$this->t['enable_social']			= $this->p->get( 'enable_social', 0 );
 		$this->t['cv_display_subcategories']= $this->p->get( 'cv_display_subcategories', 5 );
 		$this->t['display_back']			= $this->p->get( 'display_back', 3 );
-
 
 		$this->t['display_compare']			= $this->p->get( 'display_compare', 0 );
 		$this->t['display_wishlist']		= $this->p->get( 'display_wishlist', 0 );
@@ -152,7 +145,7 @@ class PhocaCartViewCategory extends HtmlView
 		$this->t['show_switch_layout_type'] 	= $this->p->get('show_switch_layout_type', 1);
 
 
-		$this->category						= $model->getCategory($this->t['categoryid']);
+		$this->category = $model->getCategory($this->t['categoryid']);
 
 		if (empty($this->category)) {
 			header("HTTP/1.0 404 ".Text::_('COM_PHOCACART_NO_CATEGORY_FOUND'));

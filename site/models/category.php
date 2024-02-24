@@ -345,8 +345,6 @@ class PhocaCartModelCategory extends BaseDatabaseModel
 
 	protected function getCategoriesQuery($categoryId, bool $isSubcategoriesQuery = false) {
 		$user 		= PhocacartUser::getUser();
-        $lang 		= Factory::getApplication()->getLanguage()->getTag();
-        $db 		= $this->getDatabase();
 
         $where		= [];
         $join		= [];
@@ -409,7 +407,7 @@ class PhocaCartModelCategory extends BaseDatabaseModel
                     . ' cc.title as parenttitle, c.parent_id as parentid, cc.alias as parentalias';
             }*/
 
-            $columns =  'c.id, c.parent_id,' . I18nHelper::sqlCoalesce(['title', 'alias', 'title_long', 'description', 'metatitle', 'metakey', 'metadesc'], 'c') . ', c.metadata, c.image,'
+            $columns =  'c.id, c.parent_id,' . I18nHelper::sqlCoalesce(['title', 'alias', 'title_long', 'description', 'description_bottom', 'metatitle', 'metakey', 'metadesc'], 'c') . ', c.metadata, c.image,'
             . 'c.parent_id as parentid, '.I18nHelper::sqlCoalesce(['title', 'alias'], 'cc', 'parent') . ', c.image';
 
 
