@@ -15,6 +15,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\CMS\Language\Associations;
 use Joomla\CMS\Component\ComponentHelper;
+use Phoca\PhocaCart\I18n\I18nHelper;
 
 class PhocaCartCpViewPhocacartCategory extends HtmlView
 {
@@ -103,7 +104,7 @@ class PhocaCartCpViewPhocacartCategory extends HtmlView
 			//JToolbarHelper::custom($this->t['c'].'cat.save2copy', 'copy.png', 'copy_f2.png', 'JTOOLBAR_SAVE_AS_COPY', false);
 		}
 
-		if (!$isNew && Associations::isEnabled() && ComponentHelper::isEnabled('com_associations')) {
+		if (!$isNew && I18nHelper::associationsEnabled() && ComponentHelper::isEnabled('com_associations')) {
 			ToolbarHelper::custom($this->t['task'] . '.editAssociations', 'contract', 'contract', 'JTOOLBAR_ASSOCIATIONS', false, false);
 		}
 

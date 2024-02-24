@@ -8,14 +8,13 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 
-use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Language\Text;
-
 defined('_JEXEC') or die();
+
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Associations;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
+use Phoca\PhocaCart\I18n\I18nHelper;
 
 HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
@@ -43,45 +42,13 @@ if ($this->t['ordering'] && !empty($this->ordering)) {
     $saveOrderCatSelected = true;
 }
 
-//$sortFields = $this->getSortFields();
-
-/*
-$nrColumns = 19;
-$assoc     = Associations::isEnabled();
-if ($assoc) {
-    $nrColumns = 20;
-}*/
-
-
 echo $r->jsJorderTable($listOrder);
 
 echo $r->startForm($this->t['o'], $this->t['tasks'], 'adminForm');
-/*echo $r->startFilter();
 
-//echo $r->selectFilterPublished('JOPTION_SELECT_PUBLISHED', $this->state->get('filter.published'));
-//echo $r->selectFilterLanguage('JOPTION_SELECT_LANGUAGE', $this->state->get('filter.language'));
-//echo $r->selectFilterCategory(PhocacartCategory::options($this->t['o']), 'JOPTION_SELECT_CATEGORY', $this->state->get('filter.category_id'));
-echo $r->endFilter();*/
 echo $r->startMainContainer();
 
-/*
-echo $r->startFilterBar();
-echo $r->inputFilterSearch($this->t['l'].'_FILTER_SEARCH_LABEL', $this->t['l'].'_FILTER_SEARCH_DESC',
-						$this->escape($this->state->get('filter.search')));
-echo $r->inputFilterSearchClear('JSEARCH_FILTER_SUBMIT', 'JSEARCH_FILTER_CLEAR');
-echo $r->inputFilterSearchLimit('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC', $this->pagination->getLimitBox());
-echo $r->selectFilterDirection('JFIELD_ORDERING_DESC', 'JGLOBAL_ORDER_ASCENDING', 'JGLOBAL_ORDER_DESCENDING', $listDirn);
-echo $r->selectFilterSortBy('JGLOBAL_SORT_BY', $sortFields, $listOrder);
-echo $r->startFilterBar(2);
-//echo $r->selectFilterPublished('JOPTION_SELECT_PUBLISHED', $this->state->get('filter.published'));
-echo $r->selectFilterLanguage('JOPTION_SELECT_LANGUAGE', $this->state->get('filter.language'));
-echo $r->selectFilterCategory(PhocacartCategory::options($this->t['o']), 'JOPTION_SELECT_CATEGORY', $this->state->get('filter.category_id'));
-echo $r->endFilterBar();
-echo $r->endFilterBar();
-*/
-//echo $r->startFilterBar();
 echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
-//echo $r->endFilterBar();
 
 echo $r->startTable('categoryList');
 
@@ -98,35 +65,11 @@ $options['listdirn']    = $listDirn;
 $options['listorder']   = $listOrder;
 $options['count']       = 2;
 $options['type']        = 'render';
-$options['association'] = Associations::isEnabled();
+$options['association'] = I18nHelper::associationsEnabled();
 $options['tasks']       = $this->t['tasks'];
 
 $c = new PhocacartRenderAdmincolumns();
 echo $c->renderHeader($this->t['admin_columns_products'], $options);
-
-
-
-/*
-echo '<th class="ph-image">' . Text::_($this->t['l'] . '_IMAGE') . '</th>' . "\n";
-echo '<th class="ph-sku">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_SKU', 'a.sku', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-title">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_TITLE', 'a.title', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-published">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_PUBLISHED', 'a.published', $listDirn, $listOrder) . '</th>' . "\n";
-//echo '<th class="ph-parentcattitle">'.HTMLHelper::_('searchtools.sort', $this->t['l'].'_CATEGORY', 'category_id', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-parentcattitle">' . Text::_($this->t['l'] . '_CATEGORY') . '</th>' . "\n";
-echo '<th class="ph-price">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_PRICE', 'a.price', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-price_original">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_ORIGINAL_PRICE', 'a.price_original', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-stock">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_IN_STOCK', 'a.stock', $listDirn, $listOrder) . '</th>' . "\n";
-//echo '<th class="ph-hits">'.HTMLHelper::_('searchtools.sort',  		$this->t['l'].'_HITS', 'a.hits', $listDirn, $listOrder ).'</th>'."\n";
-echo '<th class="ph-access">' . Text::_($this->t['l'] . '_ACCESS') . '</th>' . "\n";
-
-if ($options['association']) {
-    echo '<th class="ph-association">' . HTMLHelper::_('searchtools.sort', 'COM_PHOCACART_HEADING_ASSOCIATION', 'association', $listDirn, $listOrder) . '</th>' . "\n";
-}
-echo '<th class="ph-language">' . HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_LANGUAGE', 'a.language', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-hits">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_HITS', 'a.hits', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-id">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_ID', 'a.id', $listDirn, $listOrder) . '</th>' . "\n";
-*/
-
 
 echo $r->endTblHeader();
 

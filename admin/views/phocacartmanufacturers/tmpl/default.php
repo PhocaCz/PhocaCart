@@ -13,7 +13,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Router\Route;
-use Joomla\CMS\Language\Associations;
+use Phoca\PhocaCart\I18n\I18nHelper;
 
 HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
@@ -31,37 +31,14 @@ if ($saveOrder && !empty($this->items)) {
 $sortFields = $this->getSortFields();
 
 $nrColumns = 7;
-$assoc     = Associations::isEnabled();
+$assoc     = I18nHelper::associationsEnabled();
 if ($assoc) {$nrColumns = 8;}
 
 echo $r->jsJorderTable($listOrder);
 
-
 echo $r->startForm($this->t['o'], $this->t['tasks'], 'adminForm');
 
-
-//echo $r->startFilter();
-//echo $r->selectFilterPublished('JOPTION_SELECT_PUBLISHED', $this->state->get('filter.published'));
-//echo $r->selectFilterLanguage('JOPTION_SELECT_LANGUAGE', $this->state->get('filter.language'));
-//echo $r->selectFilterCategory(PhocaDownloadCategory::options($this->t['o']), 'JOPTION_SELECT_CATEGORY', $this->state->get('filter.category_id'));
-//echo $r->endFilter();
-
 echo $r->startMainContainer();
-
-/*echo $r->startFilterBar();
-echo $r->inputFilterSearch($this->t['l'] . '_FILTER_SEARCH_LABEL', $this->t['l'] . '_FILTER_SEARCH_DESC',
-    $this->escape($this->state->get('filter.search')));
-echo $r->inputFilterSearchClear('JSEARCH_FILTER_SUBMIT', 'JSEARCH_FILTER_CLEAR');
-echo $r->inputFilterSearchLimit('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC', $this->pagination->getLimitBox());
-echo $r->selectFilterDirection('JFIELD_ORDERING_DESC', 'JGLOBAL_ORDER_ASCENDING', 'JGLOBAL_ORDER_DESCENDING', $listDirn);
-echo $r->selectFilterSortBy('JGLOBAL_SORT_BY', $sortFields, $listOrder);
-
-echo $r->startFilterBar(2);
-echo $r->selectFilterPublished('JOPTION_SELECT_PUBLISHED', $this->state->get('filter.published'));
-echo $r->endFilterBar();
-
-echo $r->endFilterBar();
-*/
 
 echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 

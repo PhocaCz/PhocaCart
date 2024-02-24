@@ -9,9 +9,9 @@
 defined('_JEXEC') or die();
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Associations;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
+use Phoca\PhocaCart\I18n\I18nHelper;
 
 $r          = $this->r;
 $app        = Factory::getApplication();
@@ -19,7 +19,7 @@ $input      = $app->input;
 $isModal    = $input->get('layout') == 'modal' ? true : false;
 $layout     = $isModal ? 'modal' : 'edit';
 $tmpl       = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? 'component' : '';
-$assoc      = Associations::isEnabled();
+$assoc      = I18nHelper::associationsEnabled();
 
 echo $r->startForm($this->t['o'], $this->t['task'], $this->item->id, 'adminForm', 'adminForm', '', $layout, $tmpl);
 

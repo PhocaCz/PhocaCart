@@ -7,10 +7,10 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+
 use Joomla\CMS\MVC\Model\ListModel;
-use Joomla\CMS\Language\Associations;
 use Joomla\CMS\Factory;
-jimport('joomla.application.component.modellist');
+use Phoca\PhocaCart\I18n\I18nHelper;
 
 class PhocaCartCpModelPhocaCartCategories extends ListModel
 {
@@ -38,7 +38,7 @@ class PhocaCartCpModelPhocaCartCategories extends ListModel
 			);
 
 			// ASSOCIATION
-			if (Associations::isEnabled()){
+			if (I18nHelper::associationsEnabled()){
 				$config['filter_fields'][] = 'association';
 			}
 		}
@@ -254,7 +254,7 @@ class PhocaCartCpModelPhocaCartCategories extends ListModel
 
 		// ASSOCIATION
 		// Join over the associations.
-		if (Associations::isEnabled()) {
+		if (I18nHelper::associationsEnabled()) {
 			$subQuery = $db->getQuery(true)
 				->select('COUNT(' . $db->quoteName('asso2.id') . ')')
 				->from($db->quoteName('#__associations', 'asso'))

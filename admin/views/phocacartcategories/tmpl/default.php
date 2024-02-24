@@ -9,10 +9,10 @@
 defined('_JEXEC') or die();
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Associations;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
+use Phoca\PhocaCart\I18n\I18nHelper;
 
 HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
@@ -30,7 +30,7 @@ if ($saveOrder && !empty($this->items)) {
 }
 
 $nrColumns = 10;
-$assoc     = Associations::isEnabled();
+$assoc     = I18nHelper::associationsEnabled();
 if ($assoc) {$nrColumns = 11;}
 
 echo $r->jsJorderTable($listOrder);

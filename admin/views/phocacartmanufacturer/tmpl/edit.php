@@ -11,12 +11,12 @@ defined('_JEXEC') or die();
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Language\Associations;
 use Joomla\CMS\Layout\LayoutHelper;
+use Phoca\PhocaCart\I18n\I18nHelper;
 
 // ASSOCIATION
 HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
-$assoc = Associations::isEnabled();
+$assoc = I18nHelper::associationsEnabled();
 $app = Factory::getApplication();
 $input = $app->input;
 $isModal = $input->get('layout') == 'modal' ? true : false;

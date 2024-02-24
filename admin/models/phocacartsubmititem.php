@@ -19,10 +19,9 @@ use Joomla\CMS\Log\Log;
 use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Form\Form;
-use Joomla\CMS\Language\Associations;
 use Joomla\CMS\Language\LanguageHelper;
-jimport('joomla.application.component.modeladmin');
 use Joomla\String\StringHelper;
+use Phoca\PhocaCart\I18n\I18nHelper;
 
 class PhocaCartCpModelPhocaCartSubmititem extends AdminModel
 {
@@ -739,7 +738,7 @@ class PhocaCartCpModelPhocaCartSubmititem extends AdminModel
 		}*/
 
 		// Association Phoca Cart items
-		if (Associations::isEnabled()){
+		if (I18nHelper::associationsEnabled()) {
 			$languages = LanguageHelper::getContentLanguages(false, true, null, 'ordering', 'asc');
 
 			if (count($languages) > 1){

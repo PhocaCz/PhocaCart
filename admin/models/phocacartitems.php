@@ -17,6 +17,7 @@ use Joomla\CMS\Factory;
 use Joomla\Component\Fields\Administrator\Helper\FieldsHelper;
 use Phoca\PhocaCart\Dispatcher\Dispatcher;
 use Phoca\PhocaCart\Event;
+use Phoca\PhocaCart\I18n\I18nHelper;
 
 jimport( 'joomla.application.component.modellist' );
 jimport( 'joomla.filesystem.folder' );
@@ -32,21 +33,17 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 
 
 
-	public function __construct($config = array()) {
-
-
-
+	public function __construct($config = array())
+    {
 		$paramsC = PhocacartUtils::getComponentParameters();
 		$c = new PhocacartRenderAdmincolumns();
 
         $admin_columns_products = $paramsC->get('admin_columns_products', 'sku=E, image, title, published, categories, price=E, price_original=E, discount_percent, stock=E, access_level, language, association, hits, id');
         $admin_columns_products = explode(',', $admin_columns_products);
 
-
-
 		$options                = array();
 		$options['type']    	= 'data';
-		$options['association'] = Associations::isEnabled();
+		$options['association'] = I18nHelper::associationsEnabled();
 
 		if (!empty($admin_columns_products)) {
 			foreach ($admin_columns_products as $k => $v) {
@@ -61,42 +58,6 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 
 		// Add ordering and fields needed for filtering (search tools)
 		$config['filter_fields'] = array_merge(array('pc.ordering', 'category_id', 'manufacturer_id', 'owner_id', 'instock',  'published', 'language'), $this->columns);
-
-
-		//$config['filter_fields'][] = 'pc.ordering';
-
-
-
-		/*if (empty($config['filter_fields'])) {
-			$config['filter_fields'] = array(
-				'id', 'a.id',
-				'title', 'a.title',
-				'alias', 'a.alias',
-				'checked_out', 'a.checked_out',
-				'checked_out_time', 'a.checked_out_time',
-				'category_id', 'category_id',
-				'state', 'a.state',
-				'access', 'a.access', 'access_level',
-				'ordering', 'pc.ordering',
-				'language', 'a.language',
-				'hits', 'a.hits',
-				'date', 'a.date',
-				'published','a.published',
-				'image', 'a.image',
-				'price', 'a.price',
-				'price_original', 'a.price_original',
-				'stock', 'a.stock',
-				'sku', 'a.sku'
-			);
-
-			// ASSOCIATION
-            $assoc = Associations::isEnabled();
-            if ($assoc){
-                $config['filter_fields'][] = 'association';
-            }
-
-		}*/
-
 
 		parent::__construct($config);
 	}
@@ -219,8 +180,7 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 
 		// ASSOCIATION
 		// Join over the associations.
-		$assoc = Associations::isEnabled();
-		if ($assoc) {
+		if (I18nHelper::associationsEnabled()) {
 			$subQuery = $db->getQuery(true)
 				->select('COUNT(' . $db->quoteName('asso2.id') . ')')
 				->from($db->quoteName('#__associations', 'asso'))

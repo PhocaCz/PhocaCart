@@ -33,6 +33,7 @@ use Phoca\PhocaCart\Constants\TagType;
 use Phoca\PhocaCart\Dispatcher\Dispatcher;
 use Phoca\PhocaCart\Event;
 use Phoca\PhocaCart\I18n\I18nAdminModelTrait;
+use Phoca\PhocaCart\I18n\I18nHelper;
 use Phoca\PhocaCart\Product\Bundled;
 
 class PhocaCartCpModelPhocaCartItem extends AdminModel
@@ -324,8 +325,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
 			// ASSOCIATION
 			// Load associated Phoca Cart items
-			$assoc = Associations::isEnabled();
-			if ($assoc) {
+			if (I18nHelper::associationsEnabled()) {
 				$item->associations = array();
 
 				if ($item->id != null){
@@ -689,7 +689,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
 
 		// ASSOCIATION
-        if ($this->associationsContext && Associations::isEnabled() && !empty($data['associations'])) {
+        if ($this->associationsContext && I18nHelper::associationsEnabled() && !empty($data['associations'])) {
 			$associations = $data['associations'];
 			// Unset any invalid associations
 			$associations = ArrayHelper::toInteger($associations);
@@ -1728,7 +1728,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 		}*/
 
 		// Association Phoca Cart items
-		if (Associations::isEnabled()){
+		if (I18nHelper::associationsEnabled()){
 			$languages = LanguageHelper::getContentLanguages(false, true, null, 'ordering', 'asc');
 
 			if (count($languages) > 1){

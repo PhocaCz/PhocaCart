@@ -14,6 +14,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Associations;
 use Joomla\CMS\Language\LanguageHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\Database\DatabaseInterface;
@@ -371,4 +372,8 @@ abstract class I18nHelper
         }
     }
 
+    public static function associationsEnabled(): bool
+    {
+        return !self::isI18n() && Associations::isEnabled();
+    }
 }

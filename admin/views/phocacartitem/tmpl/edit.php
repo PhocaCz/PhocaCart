@@ -10,10 +10,10 @@ defined('_JEXEC') or die();
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Language\Associations;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
+use Phoca\PhocaCart\I18n\I18nHelper;
 
 // ASSOCIATION
 HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
@@ -68,10 +68,7 @@ Joomla.submitbutton = function(task) {
 Factory::getDocument()->addScriptDeclaration($js);
 
 // ASSOCIATION
-$assoc = Associations::isEnabled();
-
-
-
+$assoc = I18nHelper::associationsEnabled();
 
 // In case of modal
 $isModal = $input->get('layout') == 'modal' ? true : false;
@@ -364,8 +361,6 @@ echo $r->endTab();
 
 
 // ASSOCIATION
-$assoc = Associations::isEnabled();
-
 if (!$isModal && $assoc) {
     echo $r->startTab('associations', $tabs['associations']);
     echo $this->loadTemplate('associations');

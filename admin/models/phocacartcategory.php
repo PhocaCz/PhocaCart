@@ -25,16 +25,16 @@ use Joomla\String\StringHelper;
 use Phoca\PhocaCart\Dispatcher\Dispatcher;
 use Phoca\PhocaCart\Event;
 use Phoca\PhocaCart\I18n\I18nAdminModelTrait;
+use Phoca\PhocaCart\I18n\I18nHelper;
 
 class PhocaCartCpModelPhocacartCategory extends AdminModel
 {
 	use I18nAdminModelTrait;
 
-	protected	$option 		    = 'com_phocacart';
-	protected 	$text_prefix	        = 'com_phocacart';
-	public $typeAlias 			        = 'com_phocacart.phocacartcategory';
-	protected   $associationsContext    = 'com_phocacart.category';	// ASSOCIATION
-
+	protected $option = 'com_phocacart';
+	protected $text_prefix = 'com_phocacart';
+	public $typeAlias = 'com_phocacart.phocacartcategory';
+	protected $associationsContext = 'com_phocacart.category';
 
 	public function __construct($config = [], \Joomla\CMS\MVC\Factory\MVCFactoryInterface $factory = null, \Joomla\CMS\Form\FormFactoryInterface $formFactory = null)
 	{
@@ -116,13 +116,12 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 			}
 
             // ASSOCIATION
-            // Load associated Phoca Cart items
-            $assoc = Associations::isEnabled();
-            if ($assoc) {
-                $item->associations = array();
+            // Load associated Phoca Cart categories
+            if (I18nHelper::associationsEnabled()) {
+                $item->associations = [];
 
                 if ($item->id != null){
-                    $associations = Associations::getAssociations('com_phocacart', '#__phocacart_categories', 'com_phocacart.category', $item->id, 'id', 'alias', false);
+                    $associations = Associations::getAssociations('com_phocacart', '#__phocacart_categories', 'com_phocacart.category', $item->id, 'id', 'alias', null);
 
                     foreach ($associations as $tag => $association){
                         $item->associations[$tag] = $association->id;
@@ -325,7 +324,7 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 
 
         // ASSOCIATION
-        if ((int)$savedId > 0 && $this->associationsContext && Associations::isEnabled() && !empty($data['associations'])) {
+        if ((int)$savedId > 0 && $this->associationsContext && I18nHelper::associationsEnabled() && !empty($data['associations'])) {
             $associations = $data['associations'];
             // Unset any invalid associations
             $associations = ArrayHelper::toInteger($associations);
@@ -879,20 +878,18 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 
     // ASSOCIATION
     protected function preprocessForm(Form $form, $data, $group = 'content'){
-        // Association Phoca Cart items
-        if (Associations::isEnabled()){
+        // Association Phoca Cart Categories
+        if (I18nHelper::associationsEnabled()){
             $languages = LanguageHelper::getContentLanguages(false, true, null, 'ordering', 'asc');
 
-            if (count($languages) > 1){
+            if (count($languages) > 1) {
                 $addform = new SimpleXMLElement('<form />');
                 $fields = $addform->addChild('fields');
                 $fields->addAttribute('name', 'associations');
                 $fieldset = $fields->addChild('fieldset');
                 $fieldset->addAttribute('name', 'item_associations');
 
-                foreach ($languages as $language)
-                {
-
+                foreach ($languages as $language) {
                     $field = $fieldset->addChild('field');
                     $field->addAttribute('name', $language->lang_code);
                     $field->addAttribute('type', 'Modal_Phocacartcategory');
@@ -909,7 +906,6 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
                 $form->load($addform, false);
             }
         }
-
 
 		// Load Feed Forms - by Plugin
 		$feedPlugins = PhocacartFeed::getFeedPluginMethods();

@@ -7,14 +7,14 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+
 use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Toolbar\ToolbarHelper;
-use Joomla\CMS\Language\Associations;
 use Joomla\CMS\Component\ComponentHelper;
-jimport( 'joomla.application.component.view' );
+use Phoca\PhocaCart\I18n\I18nHelper;
 
 class PhocaCartCpViewPhocaCartItem extends HtmlView
 {
@@ -141,7 +141,7 @@ class PhocaCartCpViewPhocaCartItem extends HtmlView
 		}
 
 
-		if (!$isNew && Associations::isEnabled() && ComponentHelper::isEnabled('com_associations')) {
+		if (!$isNew && I18nHelper::associationsEnabled() && ComponentHelper::isEnabled('com_associations')) {
 			ToolbarHelper::custom($this->t['task'] . '.editAssociations', 'contract', 'contract', 'JTOOLBAR_ASSOCIATIONS', false, false);
 		}
 
