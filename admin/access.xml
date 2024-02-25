@@ -33,6 +33,7 @@
 		<action name="phocacart.fields" title="COM_PHOCACART_JACTION_FIELDS" />
 		<action name="phocacart.feeds" title="COM_PHOCACART_JACTION_FEEDS" />
 		<action name="phocacart.wishlists" title="COM_PHOCACART_JACTION_WISHLISTS" />
+		<action name="phocacart.contenttypes" title="COM_PHOCACART_JACTION_CONTENT_TYPES" />
 		<action name="phocacart.questions" title="COM_PHOCACART_JACTION_QUESTIONS" />
 		<action name="phocacart.times" title="COM_PHOCACART_JACTION_TIMES" />
 		<action name="phocacart.submititems" title="COM_PHOCACART_JACTION_SUBMITITEMS" />
