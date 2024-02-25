@@ -6,7 +6,7 @@
 
     <fields addfieldpath="/administrator/components/com_phocacart/models/fields">
         <fieldset name="title">
-            <field name="title" type="phocatext" i18n="true" required="true" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" />
+            <field name="title" type="phocatext" required="true" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" />
         </fieldset>
 
         <fieldset name="general" label="COM_PHOCACART_GENERAL_OPTIONS">

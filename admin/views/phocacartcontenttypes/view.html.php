@@ -48,7 +48,7 @@ class PhocaCartCpViewPhocacartContentTypes extends HtmlView
 		require_once JPATH_COMPONENT.'/helpers/phocacartcommon.php';
 		$canDo	= PhocaCartCommonHelper::getActions($this->t);
 
-		ToolbarHelper::title( Text::_('COM_PHOCACART_CONTENT_TYPES' ), 'ellipsis-h' );
+		ToolbarHelper::title( Text::_('COM_PHOCACART_CONTENT_TYPES' ), 'sourcetree' );
 
 		if ($canDo->get('core.create')) {
 			ToolbarHelper::addNew('phocacartcontenttype.add');
