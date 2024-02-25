@@ -30,6 +30,7 @@ use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\LanguageHelper;
 use Joomla\String\StringHelper;
 use Phoca\PhocaCart\Constants\TagType;
+use Phoca\PhocaCart\ContentType\ContentTypeHelper;
 use Phoca\PhocaCart\Dispatcher\Dispatcher;
 use Phoca\PhocaCart\Event;
 use Phoca\PhocaCart\I18n\I18nAdminModelTrait;
@@ -196,6 +197,18 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 			$data = $this->getItem();
 
             $this->loadI18nItem($data);
+
+            $categoryTypes = ContentTypeHelper::getContentTypes('category');
+            $categories = $data->catid_multiple;
+            $data->catid_multiple = [];
+            foreach ($categoryTypes as $categoryType) {
+                $data->catid_multiple[$categoryType->id] = [];
+            }
+            foreach ($categories as $catId) {
+                $category = PhocacartCategory::getCategoryById($catId);
+                $data->catid_multiple[$category->category_type][] = $catId;
+            }
+
             $data->attributes = $this->loadI18nArray($data->attributes, '#__phocacart_attributes_i18n', ['title', 'alias']);
             if ($data->attributes) {
                 foreach ($data->attributes as &$attribute) {
@@ -405,6 +418,14 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 	function save($data) {
         $i18nData   = $this->prepareI18nData($data);
 
+        if ($data['catid_multiple']) {
+            $categories = [];
+            foreach ($data['catid_multiple'] as $cats) {
+                $categories = array_merge($categories, $cats);
+            }
+            $data['catid_multiple'] = $categories;
+        }
+
 		$app		= Factory::getApplication();
 		$input  	= Factory::getApplication()->input;
 
@@ -606,17 +627,6 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 			PhocacartSpecification::storeSpecificationsById((int)$table->getId(), $data['specifications']);
 			PhocacartDiscountProduct::storeDiscountsById((int)$table->getId(), $data['discounts']);
 
-
-
-			//$pFormImg = $app->input->post->get('pformimg', array(), 'array');
-			//PhocacartImageAdditional::storeImagesByProductId((int)$table->getId(), $pFormImg);
-			//$pFormAttr = $app->input->post->get('pformattr', array(), 'array');
-			//PhocacartAttribute::storeAttributesById((int)$table->getId(), $pFormAttr);
-			//$pFormSpec = $app->input->post->get('pformspec', array(), 'array');
-			//PhocacartSpecification::storeSpecificationsById((int)$table->getId(), $pFormSpec);
-			//$pFormDisc = $app->input->post->get('pformdisc', array(), 'array');
-			//PhocacartDiscountProduct::storeDiscountsById((int)$table->getId(), $pFormDisc);
-
 			PhocacartGroup::storeGroupsById((int)$table->getId(), 3, $data['group']);
 			PhocacartPriceHistory::storePriceHistoryById((int)$table->getId(), $data['price']);
 			PhocacartGroup::updateGroupProductPriceById((int)$table->getId(), $data['price']);
@@ -755,8 +765,6 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
 		return true;
 	}
-
-
 
 	public function delete(&$pks = [])
     {
@@ -941,7 +949,6 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
 	protected function batchCopy($value, $pks, $contexts)
 	{
-
 		// Destination Category
 		$categoryId	= (int) $value;
 		// Source Category (current category)
@@ -1187,7 +1194,6 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 		$categoryId	= (int) $value;
 
 		$table	= $this->getTable();
-		//$db		= $this->getDbo();
 
 		// Check that the category exists
 		if ($categoryId) {
@@ -1278,11 +1284,8 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 			$this->_db->setQuery($query);
 			$files = $this->_db->loadObjectList();
 			if (isset($files) && count($files)) {
-
 				$msg = array();
 				foreach($files as $k => $v) {
-
-					$title 	= isset($v->title) ? $v->title : '';
 					$title	= Text::_('COM_PHOCACART_PRODUCT') . ' ' . $v->title . ': ';
 
 					if (isset($v->image) && $v->image != '') {
@@ -1390,9 +1393,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 					}
 				}
 
-				//$countMsg = count($msg);
 				$message = !empty($msg) ? implode('<br />', $msg) : '';
-
 			} else {
 				$message = Text::_('COM_PHOCACART_ERROR_LOADING_DATA_DB');
 				return false;
@@ -1492,7 +1493,6 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 	public function saveorder($pks = null, $order = null)
 	{
 		// PHOCAEDIT
-		//$table = $this->getTable();
 		$table 	= $this->getTable('PhocacartProductCategories', 'Table');
 
 		// CURRENT CATEGORY
@@ -1599,22 +1599,6 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 		return true;
 	}
 
-	/*
-	protected function getReorderConditions($table = null) {
-		$condition = array();
-		$condition[] = 'catid = '. (int) $table->catid;
-		return $condition;
-	}
-
-
-	public function increaseOrdering($categoryId) {
-		$ordering = 1;
-		$this->_db->setQuery('SELECT MAX(ordering) FROM #__phocacart_products WHERE catid='.(int)$categoryId);
-		$max = $this->_db->loadResult();
-		$ordering = $max + 1;
-		return $ordering;
-	}*/
-
 	protected function getReorderConditions($table = null) {
 		$condition = array();
 		$condition[] = 'category_id = '. (int) $table->category_id ;
@@ -1655,12 +1639,10 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 		return array($title, $alias);
 	}
 
-	public function copyattributes(&$cid = array(), $idSource = 0) {
-
-
-		$app 							= Factory::getApplication('administrator');
+	public function copyattributes(&$cid = array(), $idSource = 0)
+    {
+		$app 							= Factory::getApplication();
 		$copy_attributes_download_files 	= $app->input->post->get('copy_attributes_download_files', 0, 'int');
-
 
 		$copy = 1;// When copying attributes or batch products we do a copy of attributes (copy = 1) but in this case without copying download files on the server
 		if ($copy_attributes_download_files == 1) {
@@ -1673,8 +1655,6 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
 			// Attributes
 			$aA = PhocacartAttribute::getAttributesById($idSource, 1);
-
-
 			if (!empty($aA)) {
 				foreach ($aA as $k => $v) {
 					if (isset($v['id']) && $v['id'] > 0) {
@@ -1684,7 +1664,6 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 						}
 					}
 				}
-
 			} else {
 				$app->enqueueMessage(Text::_('COM_PHOCACART_SELECTED_SOURCE_PRODUCT_DOES_NOT_HAVE_ANY_ATTRIBUTES'), 'error');
 				return false;
@@ -1706,7 +1685,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
 		}
 
-		if ((int)$cA > 0) {
+		if ($cA > 0) {
 			return true;
 		} else {
 			$app->enqueueMessage(Text::_('COM_PHOCACART_NO_ATTRIBUTE_COPIED'), 'error');
@@ -1715,12 +1694,8 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 	}
 
 	// ASSOCIATION/PARAMETERS
-	protected function preprocessForm(Form $form, $data, $group = 'content'){
-		/*if ($this->canCreateCategory())
-		{
-			$form->setFieldAttribute('catid', 'allowAdd', 'true');
-		}*/
-
+	protected function preprocessForm(Form $form, $data, $group = 'content')
+    {
 		// Association Phoca Cart items
 		if (I18nHelper::associationsEnabled()){
 			$languages = LanguageHelper::getContentLanguages(false, true, null, 'ordering', 'asc');
@@ -1785,15 +1760,10 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 				$field->addAttribute('propagate', 'true');
 				$form->load($addformF, false);
 			}
-
-
 		}
-
 
 		// Load Parameter Values for Parameters
 		$parameters = PhocacartParameter::getAllParameters();
-
-
 
 		if (count($parameters) > 0){
 			$addform = new SimpleXMLElement('<form />');
@@ -1802,16 +1772,12 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 			$fieldset = $fields->addChild('fieldset');
 			$fieldset->addAttribute('name', 'items_parameter');
 
-			foreach ($parameters as $k => $v)
+			foreach ($parameters as $v)
 			{
-
-
-
 				$field = $fieldset->addChild('field');
 				$field->addAttribute('name', $v->id);
 				$field->addAttribute('parameterid', $v->id);
 				$field->addAttribute('type', 'PhocaCartParameterValues');
-				//$field->addAttribute('language', $language->lang_code);
 				$field->addAttribute('label', $v->title);
 				$field->addAttribute('multiple', 'true');
 				$field->addAttribute('translate_label', 'false');
@@ -1823,14 +1789,12 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 				$field->addAttribute('layout', 'joomla.form.field.list-fancy-select');
 			}
 
-
 			$form->load($addform, false);
 		}
 
 		if (Factory::getApplication()->isClient('api')) {
 			$form->setFieldAttribute('catid_multiple', 'required', 'false');
 		}
-
 
 		parent::preprocessForm($form, $data, $group);
 	}
