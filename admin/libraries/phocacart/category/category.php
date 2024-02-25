@@ -415,6 +415,7 @@ final class PhocacartCategory
             'lang' => null,                                      // language
             'limitCount' => -1,                                  // only categories with certain products count
             'featured' => null,                                  // null -> all categories, true -> only featured, false -> only not featured
+            'category_type' => null,                             // null -> all category types, array -> only selected types
             'format' => 'js',                                    // output format
         ], $params);
 
@@ -453,6 +454,10 @@ final class PhocacartCategory
 
             if ($params['featured'] !== null) {
                 $wheres[] = ' c.featured = ' . ($params['featured'] ? '1' : '0');
+            }
+
+            if ($params['category_type'] !== null) {
+                $wheres[] = ' c.category_type in (' . implode(',', (array)$params['category_type']) . ')';
             }
 
             $columns    = 'c.id, c.parent_id, c.ordering';
