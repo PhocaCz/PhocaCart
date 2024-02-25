@@ -114,17 +114,18 @@ class PhocaCartCpModelPhocaCartCategories extends ListModel
 		return parent::getStoreId($id);
 	}
 
-	private function buildCategoryTree(array &$items, array $categories, int $level = 1, string $treeTitle = '', string $parentsTree = ''): void {
+	private function buildCategoryTree(array &$items, array $categories, int $level = 1, string $treeTitle = '', array $parents = []): void {
 		foreach ($categories as $idx => $category) {
 			$title = ($treeTitle ? $treeTitle . ' - ' : '') . $category->title;
 			$category->level = $level;
 			$category->title = $title;
 			$category->orderup = $idx > 0;
 			$category->orderdown = $idx < count($categories);
-			$category->parentstree = ($parentsTree ? $parentsTree . ' ' : '') . $category->id;
+            $category->parents = array_merge($parents, [$category->id]);
+			$category->parentstree = implode(':', $category->parents);
 			$items[] = $category;
 			if ($category->children)
-				$this->buildCategoryTree($items, $category->children, $level + 1, $title, $category->parentstree);
+				$this->buildCategoryTree($items, $category->children, $level + 1, $title, $category->parents);
 		}
 	}
 
@@ -204,7 +205,7 @@ class PhocaCartCpModelPhocaCartCategories extends ListModel
         $categoryId = $this->getState('filter.parent_id');
         if (is_numeric($categoryId)) {
             $items = array_filter($items, function ($category) use ($categoryId) {
-                return $category->parent_id == $categoryId;
+                return in_array($categoryId, $category->parents);
             });
         }
 
