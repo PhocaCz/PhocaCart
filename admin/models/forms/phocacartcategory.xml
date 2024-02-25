@@ -40,7 +40,9 @@
 
             <field name="parent_id" type="phocacartcategory" layout="joomla.form.field.list" label="COM_PHOCACART_FIELD_PARENT_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_PARENT_CATEGORY_DESC"/>
 
-            <field name="type" type="list" label="COM_PHOCACART_FIELD_TYPE_LABEL" description="COM_PHOCACART_FIELD_TYPE_DESC" default="0">
+            <field name="category_type" type="PhocaCartContentType" context="category" required="true" label="COM_PHOCACART_FIELD_CATEGORY_TYPE_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_TYPE_DESC" />
+
+            <field name="type" type="list" default="0" label="COM_PHOCACART_FIELD_TYPE_LABEL" description="COM_PHOCACART_FIELD_TYPE_DESC">
                 <option value="0">COM_PHOCACART_COMMON</option>
                 <option value="1">COM_PHOCACART_ONLINE_SHOP_ONLY</option>
                 <option value="2">COM_PHOCACART_POS_ONLY</option>

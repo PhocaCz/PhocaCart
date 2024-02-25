@@ -37,7 +37,8 @@ class PhocaCartCpModelPhocaCartCategories extends ListModel
 				'published','a.published',
 				'parentcat_title', 'parentcat_title',
 				'featured', 'a.featured',
-                'parent_id', 'a.parent_id'
+                'parent_id', 'a.parent_id',
+                'category_type', 'a.category_type'
 			);
 
 			// ASSOCIATION
@@ -77,11 +78,14 @@ class PhocaCartCpModelPhocaCartCategories extends ListModel
 		$levels = $app->getUserStateFromRequest($this->context.'.filter.level', 'filter_level', '', 'string');
 		$this->setState('filter.level', $levels);
 
-		$categoryId = $app->getUserStateFromRequest($this->context.'.filter.parent_id', 'filter_parent_id', null);
+		$categoryId = $app->getUserStateFromRequest($this->context.'.filter.parent_id', 'filter_parent_id');
 		$this->setState('filter.parent_id', $categoryId);
 
 		$language = $app->getUserStateFromRequest($this->context.'.filter.language', 'filter_language', '');
 		$this->setState('filter.language', $language);
+
+        $categoryType = $app->getUserStateFromRequest($this->context.'.filter.category_type', 'filter_category_type');
+        $this->setState('filter.category_type', $categoryType);
 
 		// Load the parameters.
 		$params = PhocacartUtils::getComponentParameters();
@@ -103,6 +107,7 @@ class PhocaCartCpModelPhocaCartCategories extends ListModel
 		$id	.= ':'.$this->getState('filter.access');
 		$id	.= ':'.$this->getState('filter.published');
 		$id	.= ':'.$this->getState('filter.parent_id');
+        $id	.= ':'.$this->getState('filter.category_type');
 		$id .= ':'.$this->getState('filter.language');
 		$id	.= ':'.$this->getState('filter.level');
 
@@ -150,7 +155,6 @@ class PhocaCartCpModelPhocaCartCategories extends ListModel
 			throw new Exception($e->getMessage(), 500);
 		}
 
-        //$allCategories
 		if ($this->getState('filter.search')) {
 			$items = $categories;
 		} else {
@@ -196,11 +200,19 @@ class PhocaCartCpModelPhocaCartCategories extends ListModel
             });
         }
 
-        // Filter by category.
+        // Filter by parent category.
         $categoryId = $this->getState('filter.parent_id');
         if (is_numeric($categoryId)) {
             $items = array_filter($items, function ($category) use ($categoryId) {
                 return $category->parent_id == $categoryId;
+            });
+        }
+
+        // Filter by category type.
+        $categoryType = $this->getState('filter.category_type');
+        if (is_numeric($categoryType)) {
+            $items = array_filter($items, function ($category) use ($categoryType) {
+                return $category->category_type == $categoryType;
             });
         }
 
@@ -212,6 +224,8 @@ class PhocaCartCpModelPhocaCartCategories extends ListModel
         }
 
         $this->setTotal(count($items));
+        $pagination = $this->getPagination();
+        $items = array_slice($items, $pagination->limitstart, $pagination->limit);
 
 		// Add the items to the internal cache.
 		$this->cache[$store] = $items;
@@ -245,9 +259,13 @@ class PhocaCartCpModelPhocaCartCategories extends ListModel
 		$query->select('ag.title AS access_level');
 		$query->join('LEFT', '#__viewlevels AS ag ON ag.id = a.access');
 
-		// Join over the categories.
+		// Join over the parent categories
 		$query->select('c.title AS parentcat_title, c.id AS parentcat_id');
 		$query->join('LEFT', '#__phocacart_categories AS c ON c.id = a.parent_id');
+
+        // Join over the content types
+        $query->select('a.category_type, ct.title AS category_type_title');
+        $query->join('INNER', '#__phocacart_content_types AS ct ON ct.id = a.category_type');
 
 		$query->select('cc.countid AS countid');
 		$query->join('LEFT', '(SELECT cc.parent_id, COUNT(*) AS countid'
@@ -292,7 +310,7 @@ class PhocaCartCpModelPhocaCartCategories extends ListModel
 
 	public function setTotal($total) {
 		// When we use new total and new pagination, we need to clean their cache
-		unset($this->cache[$this->getStoreId('getStart')]);
+		unset($this->cache[$this->getStoreId('getstart')]);
 		unset($this->cache[$this->getStoreId('getPagination')]);
 
         $this->cache[$this->getStoreId('getTotal')] = (int)$total;

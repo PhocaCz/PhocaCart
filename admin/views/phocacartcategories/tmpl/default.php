@@ -60,8 +60,11 @@ if ($assoc) {
     echo '<th class="ph-association">' . HTMLHelper::_('searchtools.sort', 'COM_PHOCACART_HEADING_ASSOCIATION', 'association', $listDirn, $listOrder) . '</th>' . "\n";
 }
 
-echo '<th class="ph-language">'.HTMLHelper::_('searchtools.sort',  	'JGRID_HEADING_LANGUAGE', 'a.language', $listDirn, $listOrder ).'</th>'."\n";
+if (!I18nHelper::isI18n()) {
+    echo '<th class="ph-language">' . HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_LANGUAGE', 'a.language', $listDirn, $listOrder) . '</th>' . "\n";
+}
 echo '<th class="ph-hits">'.HTMLHelper::_('searchtools.sort',  		$this->t['l'].'_HITS', 'a.hits', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-content-type">'.HTMLHelper::_('searchtools.sort', $this->t['l'].'_CATEGORY_TYPE', 'category_type_title', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-id">'.HTMLHelper::_('searchtools.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
 
 echo $r->endTblHeader();
@@ -70,13 +73,9 @@ echo $r->startTblBody($saveOrder, $saveOrderingUrl, $listDirn);
 
 $originalOrders = array();
 $parentsStr 	= "";
-$j 				= 0;
 
 if (is_array($this->items)) {
 	foreach ($this->items as $i => $item) {
-		if ($i >= (int)$this->pagination->limitstart && $j < (int)$this->pagination->limit) {
-			$j++;
-
 $urlEdit		= 'index.php?option='.$this->t['o'].'&task='.$this->t['task'].'.edit&id=';
 $orderkey   	= array_search($item->id, $this->ordering[$item->parent_id]);
 $ordering		= ($listOrder == 'a.ordering');
@@ -111,7 +110,6 @@ if ($canCreate || $canEdit) {
 }
 $checkO .= ' <span class="smallsub">(<span>'.Text::_($this->t['l'].'_FIELD_ALIAS_LABEL').':</span>'. $this->escape($item->alias).')</span>';
 echo $r->td($checkO, "small", 'th');
-//echo $r->td(HTMLHelper::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small");
 
 echo $r->td(HTMLHelper::_('jgrid.published', $item->published, $i, $this->t['tasks'] . '.', $canChange) . PhocacartHtmlFeatured::featured($item->featured, $i, $canChange, 'category'), "small");
 
@@ -140,13 +138,15 @@ if ($assoc) {
     }
 }
 
-echo $r->td(LayoutHelper::render('joomla.content.language', $item), 'small');
+if (!I18nHelper::isI18n()) {
+    echo $r->td(LayoutHelper::render('joomla.content.language', $item), 'small');
+}
+
 echo $r->td($item->hits, "small");
+echo $r->td(Text::_($item->category_type_title), "small");
 echo $r->td($item->id, "small");
 
 echo $r->endTr();
-
-		}
 	}
 }
 echo $r->endTblBody();
