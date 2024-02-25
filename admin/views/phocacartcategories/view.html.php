@@ -27,6 +27,7 @@ class PhocaCartCpViewPhocaCartCategories extends HtmlView
 	protected $r;
 	public $filterForm;
 	public $activeFilters;
+    public $batchForm;
 
 	function display($tpl = null) {
 		$this->t = PhocacartUtils::setVars('category');
@@ -37,6 +38,7 @@ class PhocaCartCpViewPhocaCartCategories extends HtmlView
 		$this->state = $this->get('State');
 		$this->filterForm = $this->get('FilterForm');
 		$this->activeFilters = $this->get('ActiveFilters');
+        $this->batchForm = $this->get('BatchForm');
 
 		// Preprocess the list of items to find ordering divisions.
 		foreach ($this->items as &$item) {

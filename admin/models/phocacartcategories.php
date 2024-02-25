@@ -8,9 +8,11 @@
  */
 defined( '_JEXEC' ) or die();
 
-use Joomla\CMS\MVC\Model\ListModel;
+    use Joomla\CMS\Form\Form;
+    use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Factory;
-use Phoca\PhocaCart\I18n\I18nHelper;
+    use Phoca\PhocaCart\Dispatcher\Dispatcher;
+    use Phoca\PhocaCart\I18n\I18nHelper;
 use Phoca\PhocaCart\I18n\I18nListModelTrait;
 
 class PhocaCartCpModelPhocaCartCategories extends ListModel
@@ -180,6 +182,14 @@ class PhocaCartCpModelPhocaCartCategories extends ListModel
 					return $category->level <= $level;
 				});
 			}
+
+            // Filter by parent category.
+            $categoryId = $this->getState('filter.parent_id');
+            if (is_numeric($categoryId)) {
+                $items = array_filter($items, function ($category) use ($categoryId) {
+                    return in_array($categoryId, (array)$category->parents);
+                });
+            }
         }
 
         // Filter by published state.
@@ -198,14 +208,6 @@ class PhocaCartCpModelPhocaCartCategories extends ListModel
         if ($access = $this->getState('filter.access')) {
             $items = array_filter($items, function ($category) use ($access) {
                 return $category->access == $access;
-            });
-        }
-
-        // Filter by parent category.
-        $categoryId = $this->getState('filter.parent_id');
-        if (is_numeric($categoryId)) {
-            $items = array_filter($items, function ($category) use ($categoryId) {
-                return in_array($categoryId, $category->parents);
             });
         }
 
@@ -316,5 +318,10 @@ class PhocaCartCpModelPhocaCartCategories extends ListModel
 
         $this->cache[$this->getStoreId('getTotal')] = (int)$total;
 	}
+
+    public function getBatchForm(): Form
+    {
+        return $this->loadForm($this->context . '.batch', 'batch_category', ['control' => '', 'load_data' => false]);
+    }
 }
 

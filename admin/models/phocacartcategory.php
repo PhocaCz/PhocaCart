@@ -8,6 +8,7 @@
  */
 defined( '_JEXEC' ) or die();
 
+use Joomla\CMS\Event\Model\BeforeBatchEvent;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Table\Table;
@@ -35,6 +36,12 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 	protected $text_prefix = 'com_phocacart';
 	public $typeAlias = 'com_phocacart.phocacartcategory';
 	protected $associationsContext = 'com_phocacart.category';
+
+	protected $batch_commands = [
+		'assetgroup_id'             => 'batchAccess',
+		'language_id'               => 'batchLanguage',
+		'category_type'             => 'batchCategoryType',
+	];
 
 	public function __construct($config = [], \Joomla\CMS\MVC\Factory\MVCFactoryInterface $factory = null, \Joomla\CMS\Form\FormFactoryInterface $formFactory = null)
 	{
@@ -486,11 +493,9 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 
 	protected function batchCopy($value, $pks, $contexts)
 	{
-		$categoryId	= (int) $value;
-
+		$categoryId	= (int)$value;
 
 		$table	= $this->getTable();
-		$db		= $this->getDbo();
 
 		// Check that the category exists
 		if ($categoryId) {
@@ -509,7 +514,6 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 			}
 		}
 
-		//if (empty($categoryId)) {
 		if (!isset($categoryId)) {
 			$this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_MOVE_CATEGORY_NOT_FOUND'));
 			return false;
@@ -522,8 +526,6 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 			$this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));
 			return false;
 		}
-
-		//$i		= 0;
 
 		// Parent exists so we let's proceed
 		while (!empty($pks))
@@ -583,9 +585,6 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 			$newIds[$pk]	= $newId;
 			// Store other new information
 			PhocacartUtilsBatchhelper::storeCategoryItems($pk, (int)$newId);
-
-
-			//$i++;
 		}
 
 		// Clean the cache
@@ -599,7 +598,6 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 		$categoryId	= (int) $value;
 
 		$table	= $this->getTable();
-		//$db		= $this->getDbo();
 		$app	= Factory::getApplication();
 
 		// Check that the category exists
@@ -618,7 +616,6 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 			}
 		}
 
-		//if (empty($categoryId)) {
 		if (!isset($categoryId)) {
 			$this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_MOVE_CATEGORY_NOT_FOUND'));
 			return false;
@@ -690,98 +687,13 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 	}
 
 
-	public function increaseOrdering($categoryId) {
-
-		$ordering = 1;
+	public function increaseOrdering($categoryId)
+    {
 		$this->_db->setQuery('SELECT MAX(ordering) FROM #__phocacart_categories WHERE parent_id='.(int)$categoryId);
 		$max = $this->_db->loadResult();
 		$ordering = $max + 1;
 		return $ordering;
 	}
-
-
-	public function batch($commands, $pks, $contexts)
-	{
-
-		// Sanitize user ids.
-		$pks = array_unique($pks);
-		ArrayHelper::toInteger($pks);
-
-		// Remove any values of zero.
-		if (array_search(0, $pks, true)) {
-			unset($pks[array_search(0, $pks, true)]);
-		}
-
-		if (empty($pks)) {
-			$this->setError(Text::_('JGLOBAL_NO_ITEM_SELECTED'));
-			return false;
-		}
-
-		$done = false;
-
-		if (!empty($commands['assetgroup_id'])) {
-			if (!$this->batchAccess($commands['assetgroup_id'], $pks)) {
-				return false;
-			}
-
-			$done = true;
-		}
-
-		//PHOCAEDIT - Parent is by Phoca 0 not 1 like by Joomla!
-		$comCat =false;
-		if ($commands['category_id'] == '') {
-			$comCat = false;
-		} else if ( $commands['category_id'] == '0') {
-			$comCat = true;
-		} else if ((int)$commands['category_id'] > 0) {
-			$comCat = true;
-		}
-
-		if ($comCat)
-		//if (isset($commands['category_id']))
-		{
-			$cmd = ArrayHelper::getValue($commands, 'move_copy', 'c');
-
-			if ($cmd == 'c')
-			{
-				$result = $this->batchCopy($commands['category_id'], $pks, $contexts);
-				if (is_array($result))
-				{
-					$pks = $result;
-				}
-				else
-				{
-					return false;
-				}
-			}
-			elseif ($cmd == 'm' && !$this->batchMove($commands['category_id'], $pks, $contexts))
-			{
-				return false;
-			}
-			$done = true;
-		}
-
-		if (!empty($commands['language_id']))
-		{
-			if (!$this->batchLanguage($commands['language_id'], $pks, $contexts))
-			{
-				return false;
-			}
-
-			$done = true;
-		}
-
-		if (!$done) {
-			$this->setError(Text::_('JLIB_APPLICATION_ERROR_INSUFFICIENT_BATCH_INFORMATION'));
-			return false;
-		}
-
-		// Clear the cache
-		$this->cleanCache();
-
-		return true;
-	}
-
 
 	protected function generateNewTitle($category_id, $alias, $title)
 	{
@@ -926,7 +838,7 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 
 	public function featured($pks, $value = 0) {
 		// Sanitize the ids.
-		$pks = (array) $pks;
+		$pks = (array)$pks;
 		ArrayHelper::toInteger($pks);
 
 		if (empty($pks))
@@ -934,10 +846,6 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 			$this->setError(Text::_('COM_PHOCACART_NO_ITEM_SELECTED'));
 			return false;
 		}
-
-		//$table = $this->getTable('PhocacartCategoryFeatured', 'Table');
-
-
 
 		try
 		{
@@ -948,50 +856,6 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 						->where('id IN (' . implode(',', $pks) . ')');
 			$db->setQuery($query);
 			$db->execute();
-
-			/*if ((int) $value == 0)
-			{
-				// Adjust the mapping table.
-				// Clear the existing features settings.
-				$query = $db->getQuery(true)
-							->delete($db->quoteName('#__phocacart_category_featured'))
-							->where('product_id IN (' . implode(',', $pks) . ')');
-				$db->setQuery($query);
-				$db->execute();
-			}
-			else
-			{
-				// first, we find out which of our new featured articles are already featured.
-				$query = $db->getQuery(true)
-					->select('f.product_id')
-					->from('#__phocacart_category_featured AS f')
-					->where('product_id IN (' . implode(',', $pks) . ')');
-				//echo $query;
-				$db->setQuery($query);
-
-				$old_featured = $db->loadColumn();
-
-				// we diff the arrays to get a list of the articles that are newly featured
-				$new_featured = array_diff($pks, $old_featured);
-
-				// Featuring.
-				$tuples = array();
-				foreach ($new_featured as $pk)
-				{
-					$tuples[] = $pk . ', 0';
-				}
-				if (count($tuples))
-				{
-					$db = $this->getDbo();
-					$columns = array('product_id', 'ordering');
-					$query = $db->getQuery(true)
-						->insert($db->quoteName('#__phocacart_category_featured'))
-						->columns($db->quoteName($columns))
-						->values($tuples);
-					$db->setQuery($query);
-					$db->execute();
-				}
-			}*/
 		}
 		catch (Exception $e)
 		{
@@ -999,12 +863,56 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 			return false;
 		}
 
-		//$table->reorder();
-
 		$this->cleanCache();
 
 		return true;
 	}
 
+	private function batchDBField(string $fieldname, $value, $pks, $contexts): bool
+	{
+		$this->initBatch();
+
+		foreach ($pks as $pk) {
+			if ($this->user->authorise('core.edit', $contexts[$pk])) {
+				$this->table->reset();
+				$this->table->load($pk);
+				$this->table->$fieldname = $value;
+
+				$event = new BeforeBatchEvent(
+					$this->event_before_batch,
+					['src' => $this->table, 'type' => $fieldname]
+				);
+				$this->dispatchEvent($event);
+
+				// Check the row.
+				if (!$this->table->check()) {
+					$this->setError($this->table->getError());
+
+					return false;
+				}
+
+				if (!$this->table->store()) {
+					$this->setError($this->table->getError());
+
+					return false;
+				}
+			} else {
+				$this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+
+				return false;
+			}
+		}
+
+		// Clean the cache
+		$this->cleanCache();
+
+		return true;
+	}
+
+	protected function batchCategoryType($value, $pks, $contexts): bool
+	{
+		return $this->batchDBField('category_type', (int)$value, $pks, $contexts);
+	}
+
 }
-?>
+

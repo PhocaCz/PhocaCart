@@ -945,13 +945,11 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 		// Destination Category
 		$categoryId	= (int) $value;
 		// Source Category (current category)
-		$app 			= Factory::getApplication('administrator');
-		$currentCatid 	= $app->input->post->get('filter_category_id', 0, 'int');
-		$batchParams 		= $app->input->post->get('batch', array(), 'array');
+        $app 			= Factory::getApplication('administrator');
+        $batchParams 	= $app->input->post->get('batch', array(), 'array');
 
 
-		$table	= $this->getTable();
-		$db		= $this->getDbo();
+        $table	= $this->getTable();
 
 		// Check that the category exists
 		if ($categoryId) {
@@ -1842,7 +1840,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
         $input = Factory::getApplication()->getInput();
         $itemsFilter = isset($commands['items_filter']) ? $commands['items_filter'] : 'selected';
 		if (empty($pks) && in_array($itemsFilter, ['filtered', 'all'])) {
-            $db    = $this->getDbo();
+            $db    = $this->getDatabase();
             $query = $db->getQuery(true)
                 ->select('DISTINCT a.id')
                 ->from('`#__phocacart_products` AS a');
