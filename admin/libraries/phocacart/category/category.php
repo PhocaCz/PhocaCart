@@ -456,7 +456,7 @@ final class PhocacartCategory
                 $wheres[] = ' c.featured = ' . ($params['featured'] ? '1' : '0');
             }
 
-            if ($params['category_type'] !== null) {
+            if ($params['category_type']) {
                 $wheres[] = ' c.category_type in (' . implode(',', (array)$params['category_type']) . ')';
             }
 
