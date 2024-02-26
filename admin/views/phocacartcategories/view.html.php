@@ -27,6 +27,7 @@ class PhocaCartCpViewPhocaCartCategories extends HtmlView
 	protected $r;
 	public $filterForm;
 	public $activeFilters;
+    public $batchForm;
 
 	function display($tpl = null) {
 		$this->t = PhocacartUtils::setVars('category');
@@ -37,6 +38,7 @@ class PhocaCartCpViewPhocaCartCategories extends HtmlView
 		$this->state = $this->get('State');
 		$this->filterForm = $this->get('FilterForm');
 		$this->activeFilters = $this->get('ActiveFilters');
+        $this->batchForm = $this->get('BatchForm');
 
 		// Preprocess the list of items to find ordering divisions.
 		foreach ($this->items as &$item) {
@@ -195,18 +197,5 @@ function phOpenCatalog(href){
 
 		PhocacartRenderAdminview::renderWizardButton('back');
 	}
-
-	protected function getSortFields() {
-		return array(
-			'a.ordering'	=> Text::_('JGRID_HEADING_ORDERING'),
-			'a.title' 		=> Text::_($this->t['l'] . '_TITLE'),
-			'a.published' 	=> Text::_($this->t['l'] . '_PUBLISHED'),
-			'parent_title' 	=> Text::_($this->t['l'] . '_PARENT_CATEGORY'),
-			'a.count_products' 	=> Text::_($this->t['l'] . '_PRODUCT_COUNT'),
-			'language' 		=> Text::_('JGRID_HEADING_LANGUAGE'),
-			'a.hits' 		=> Text::_($this->t['l'] . '_HITS'),
-			'a.id' 			=> Text::_('JGRID_HEADING_ID')
-		);
-	}
 }
-?>
+

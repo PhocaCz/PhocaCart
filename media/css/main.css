@@ -46,6 +46,11 @@
     margin-bottom: 2em;
 }
 
+.ph-desc-bottom {
+    margin-top: 2em;
+    margin-bottom: 1em;
+}
+
 .pc-item-view .ph-desc {
     margin-top: 1.5em;
     margin-bottom: 1.5em;

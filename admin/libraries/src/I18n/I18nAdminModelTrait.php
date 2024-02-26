@@ -13,6 +13,7 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Form;
 
 trait I18nAdminModelTrait
 {
@@ -104,5 +105,14 @@ trait I18nAdminModelTrait
     private function deleteI18nData(array $ids): bool
     {
         return I18nHelper::deleteI18nData($ids, $this->i18nTable);
+    }
+
+    private function prepareI18nForm(Form $form): Form
+    {
+        if (I18nHelper::isI18n()) {
+            $form->removeField('language');
+        }
+
+        return $form;
     }
 }

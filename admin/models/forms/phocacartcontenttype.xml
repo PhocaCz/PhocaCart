@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <config>
+        <inlinehelp button="show"/>
+    </config>
+
+    <fields addfieldpath="/administrator/components/com_phocacart/models/fields">
+        <fieldset name="title">
+            <field name="title" type="phocatext" required="true" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" />
+        </fieldset>
+
+        <fieldset name="general" label="COM_PHOCACART_GENERAL_OPTIONS">
+        </fieldset>
+
+        <fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
+            <field name="published" type="list" default="1" class="form-select-color-state" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC">
+                <option value="1">JPUBLISHED</option>
+                <option	value="0">JUNPUBLISHED</option>
+            </field>
+
+            <field name="context" type="list" default="category" label="COM_PHOCACART_FIELD_CONTEXT_LABEL" description="COM_PHOCACART_FIELD_CONTEXT_DESC">
+                <option value="category">COM_PHOCACART_CONTEXT_CATEGORY</option>
+                <option value="product_related">COM_PHOCACART_CONTEXT_PRODUCT_RELATED</option>
+            </field>
+
+            <field name="ordering" type="PhocacartOrdering" table="content_types" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC"/>
+
+            <field name="id" type="hidden"/>
+        </fieldset>
+    </fields>
+</form>

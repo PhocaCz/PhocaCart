@@ -10,10 +10,10 @@ defined('_JEXEC') or die();
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Language\Associations;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
+use Phoca\PhocaCart\I18n\I18nHelper;
 
 // ASSOCIATION
 HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
@@ -44,8 +44,6 @@ function phCheckRequestStatus(i, task) {
             phCheckRequestStatus(i, task);
         }, 1000);
     } else {
-
-
         if (task != "'. $this->t['task'].'.cancel" && task != "phocacartwizard.backtowizard" && document.getElementById("jform_catid_multiple").value == "") {
             alert("'. $this->escape(Text::_('JGLOBAL_VALIDATION_FORM_FAILED')) . ' - '. $this->escape(Text::_('COM_PHOCACART_ERROR_CATEGORY_NOT_SELECTED')).'");
         } else if (task == "' . $this->t['task'] . '.cancel" || task == "phocacartwizard.backtowizard" || document.formvalidator.isValid(document.getElementById("adminForm"))) {
@@ -65,13 +63,10 @@ Joomla.submitbutton = function(task) {
     phCheckRequestStatus(0, task);
 }
 ';
-Factory::getDocument()->addScriptDeclaration($js);
+//Factory::getDocument()->addScriptDeclaration($js);
 
 // ASSOCIATION
-$assoc = Associations::isEnabled();
-
-
-
+$assoc = I18nHelper::associationsEnabled();
 
 // In case of modal
 $isModal = $input->get('layout') == 'modal' ? true : false;
@@ -364,8 +359,6 @@ echo $r->endTab();
 
 
 // ASSOCIATION
-$assoc = Associations::isEnabled();
-
 if (!$isModal && $assoc) {
     echo $r->startTab('associations', $tabs['associations']);
     echo $this->loadTemplate('associations');

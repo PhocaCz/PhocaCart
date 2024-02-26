@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_categories` (
   `user_id` int(11) NOT NULL DEFAULT '0',
   `vendor_id` int(11) NOT NULL DEFAULT '0',
   `owner_id` int(11) NOT NULL DEFAULT '0',
+  `category_type` int(11) NOT NULL,
   `title` varchar(255) NOT NULL DEFAULT '',
   `title_long` varchar(255) NOT NULL DEFAULT '',
   `alias` varchar(255) NOT NULL DEFAULT '',
@@ -26,6 +27,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_categories` (
   `icon_class` varchar(64) NOT NULL DEFAULT '',
   `type_feed` text,
   `description` text,
+  `description_bottom` text,
   `published` tinyint(1) NOT NULL DEFAULT '0',
   `checked_out` int(11) unsigned NOT NULL DEFAULT '0',
   `checked_out_time` datetime,
@@ -415,8 +417,10 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_specification_groups` (
 
 CREATE TABLE IF NOT EXISTS `#__phocacart_product_related` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `related_type` int(11) NOT NULL,
   `product_a` int(11) NOT NULL DEFAULT '0',
   `product_b` int(11) NOT NULL DEFAULT '0',
+  `ordering` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `product_a` (`product_a`),
   KEY `product_b` (`product_b`)
@@ -1803,6 +1807,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_categories_i18n` (
     `alias` varchar(255),
     `title_feed` varchar(255),
     `description` text,
+    `description_bottom` text,
     `metatitle` varchar(255),
     `metakey` text,
     `metadesc` text,
@@ -1957,6 +1962,19 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_discounts_i18n` (
     KEY `idx_alias` (`alias`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS `#__phocacart_content_types` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `title` varchar(255) NOT NULL,
+    `context` varchar(255) NOT NULL,
+    `published` tinyint(1) NOT NULL DEFAULT 0,
+    `checked_out` int(11),
+    `checked_out_time` datetime,
+    `ordering` int(11) NOT NULL DEFAULT 0,
+    `params` text,
+    PRIMARY KEY (`id`),
+    KEY `idx_context` (`context`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+
 -- Data
 INSERT INTO `#__phocacart_order_statuses` (`id`, `title`, `code`, `published`, `ordering`, `stock_movements`, `type`, `download`, `change_user_group`, `change_points_needed`, `change_points_received`, `orders_view_display`, `date`) VALUES
 (1, 'COM_PHOCACART_STATUS_PENDING', 'P', '1', '1', '-', '1', '0', '0', '1', '0', '[1]', CURRENT_TIMESTAMP),
@@ -2005,6 +2023,11 @@ INSERT INTO `#__phocacart_groups` (`id`, `title`, `published`, `display_price`, 
 
 INSERT INTO `#__mail_templates` (`template_id`, `extension`, `language`, `subject`, `body`, `htmlbody`, `attachments`, `params`) VALUES
     ('com_phocacart.watchdog', 'com_phocacart', '', 'COM_PHOCACART_EMAIL_WATCHDOG_SUBJECT', 'COM_PHOCACART_EMAIL_WATCHDOG_BODY', 'COM_PHOCACART_EMAIL_WATCHDOG_HTMLBODY', '', '{"tags":["user_name","user_username","user_email","product_title","product_sku","product_url","site_name","site_url"]}');
+
+INSERT INTO `#__phocacart_content_types` (`id`, `title`, `context`, `published`, `ordering`, `params`)
+    VALUES (1, 'COM_PHOCACART_CONTENT_TYPE_CATEGORY_DEFAULT', 'category', 1, 1, '{}');
+INSERT INTO `#__phocacart_content_types` (`id`, `title`, `context`, `published`, `ordering`, `params`)
+    VALUES (2, 'COM_PHOCACART_CONTENT_TYPE_RELATED_DEFAULT', 'product_related', 1, 1, '{}');
 
 
 -- UTF-8 test: ä,ö,ü

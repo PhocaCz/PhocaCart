@@ -45,12 +45,8 @@ class PhocaCartCpModelPhocacartCoupon extends AdminModel
 	}
 
 	public function getForm($data = array(), $loadData = true) {
-		$app	= Factory::getApplication();
-		$form 	= $this->loadForm('com_phocacart.phocacartcoupon', 'phocacartcoupon', array('control' => 'jform', 'load_data' => $loadData));
-		if (empty($form)) {
-			return false;
-		}
-		return $form;
+		$form = $this->loadForm('com_phocacart.phocacartcoupon', 'phocacartcoupon', array('control' => 'jform', 'load_data' => $loadData));
+        return $this->prepareI18nForm($form);
 	}
 
 	protected function loadFormData() {

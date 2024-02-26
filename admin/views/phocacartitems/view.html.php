@@ -15,6 +15,8 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\CMS\HTML\HTMLHelper;
+use Phoca\PhocaCart\I18n\I18nHelper;
+
 jimport( 'joomla.application.component.view' );
 
 class PhocaCartCpViewPhocaCartItems extends HtmlView
@@ -43,13 +45,17 @@ class PhocaCartCpViewPhocaCartItems extends HtmlView
         // Check for errors.
 		if (count($errors = $this->get('Errors'))) {
 			throw new Exception(implode("\n", $errors), 500);
-			return false;
 		}
 
 
         $paramsC = PhocacartUtils::getComponentParameters();
         $this->t['admin_columns_products'] = $paramsC->get('admin_columns_products', 'sku=E, image, title, published, categories, price=E, price_original=E, stock=E, access_level, language, association, hits, id');
         $this->t['admin_columns_products'] = explode(',', $this->t['admin_columns_products']);
+        if (I18nHelper::isI18n()) {
+            $this->t['admin_columns_products'] = array_filter($this->t['admin_columns_products'], function($column) {
+              return !preg_match('~^\s*language~', $column);
+            });
+        }
 
 
 		// Multiple categories, ordering

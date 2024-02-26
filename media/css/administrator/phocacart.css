@@ -2167,6 +2167,27 @@ a[target=_blank]::before {
 	opacity: .8;
 }
 
+.ph-par-related .table-responsive {
+	overflow: visible;
+}
+
+.ph-par-related table .control-group {
+	margin: 0;
+}
+
+.ph-par-related table .control-group {
+	margin: 0 !important;;
+}
+
+.ph-par-related table tbody td {
+	padding: 0.25rem !important;
+	border: none;
+}
+
+.ph-par-related table tbody tr:nth-child(2n + 1) td {
+	background: rgba(var(--emphasis-color-rgb),.05);
+}
+
 /* Hide objects in edit - administration - Product edit example */
 
 /* Entire tab *//*

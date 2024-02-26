@@ -616,6 +616,10 @@ a.ph-submenu:before {
 	color: #EA7C7C;
     content: "\13c5a";/*heart*/
 }
+.nav a.ph-submenu.ph-submenu-contenttypes:before {
+	color: #7faa7f;
+	content: "\13cc9";/*sourcetree*/
+}
 .nav a.ph-submenu.ph-submenu-questions:before {
 	color: #9900CC;
     content: "\13c73";/*messaging*/

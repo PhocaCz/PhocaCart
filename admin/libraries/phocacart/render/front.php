@@ -703,25 +703,6 @@ class PhocacartRenderFront
                         ]
                     );
 
-
-
-
-            /*if (Associations::isEnabled())
-            {
-                $subQuery = $db->getQuery(true)
-                    ->select('COUNT(' . $db->quoteName('asso1.id') . ') > 1')
-                    ->from($db->quoteName('#__associations', 'asso1'))
-                    ->join('INNER', $db->quoteName('#__associations', 'asso2'), $db->quoteName('asso1.key') . ' = ' . $db->quoteName('asso2.key'))
-                    ->where(
-                        [
-                            $db->quoteName('asso1.id') . ' = ' . $db->quoteName('a.id'),
-                            $db->quoteName('asso1.context') . ' = ' . $db->quote('com_content.item'),
-                        ]
-                    );
-
-                $query->select('(' . $subQuery . ') AS ' . $db->quoteName('association'));
-            }*/
-
             $db->setQuery((string)$query);
 
             $a = $db->loadObject();

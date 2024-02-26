@@ -9,10 +9,10 @@
 defined('_JEXEC') or die();
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Associations;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
+use Phoca\PhocaCart\I18n\I18nHelper;
 
 HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
@@ -29,54 +29,25 @@ if ($saveOrder && !empty($this->items)) {
 	$saveOrderingUrl = $r->saveOrder($this->t, $listDirn);
 }
 
-$sortFields = $this->getSortFields();
-
-
 $nrColumns = 10;
-$assoc     = Associations::isEnabled();
+$assoc     = I18nHelper::associationsEnabled();
 if ($assoc) {$nrColumns = 11;}
 
 echo $r->jsJorderTable($listOrder);
 
-//echo '<div class="clearfix"></div>';
-
-
 echo $r->startForm($this->t['o'], $this->t['tasks'], 'adminForm');
-//echo $r->startFilter();
-//echo $r->selectFilterPublished('JOPTION_SELECT_PUBLISHED', $this->state->get('filter.published'));
-//echo $r->selectFilterLanguage('JOPTION_SELECT_LANGUAGE', $this->state->get('filter.language'));
-//echo $r->endFilter();
 
 echo $r->startMainContainer();
 
 if ($this->t['search']) {
-	echo '<div class="alert alert-message">' . Text::_('COM_PHOCACART_SEARCH_FILTER_IS_ACTIVE') .'</div>';
+	echo '<div class="alert alert-info">' . Text::_('COM_PHOCACART_SEARCH_FILTER_IS_ACTIVE') .'</div>';
 }
-
-//echo $r->startFilterBar();
-/*
-echo $r->inputFilterSearch($this->t['l'].'_FILTER_SEARCH_LABEL', $this->t['l'].'_FILTER_SEARCH_DESC',
-							$this->escape($this->state->get('filter.search')));
-echo $r->inputFilterSearchClear('JSEARCH_FILTER_SUBMIT', 'JSEARCH_FILTER_CLEAR');
-echo $r->inputFilterSearchLimit('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC', $this->pagination->getLimitBox());
-echo $r->selectFilterDirection('JFIELD_ORDERING_DESC', 'JGLOBAL_ORDER_ASCENDING', 'JGLOBAL_ORDER_DESCENDING', $listDirn);
-echo $r->selectFilterSortBy('JGLOBAL_SORT_BY', $sortFields, $listOrder);
-
-echo $r->startFilterBar(2);
-echo $r->selectFilterPublished('JOPTION_SELECT_PUBLISHED', $this->state->get('filter.published'));
-echo $r->selectFilterLanguage('JOPTION_SELECT_LANGUAGE', $this->state->get('filter.language'));
-echo $r->selectFilterLevels('COM_PHOCACART_SELECT_MAX_LEVELS', $this->state->get('filter.level'));
-echo $r->endFilterBar();
-*/
-//echo $r->endFilterBar();
 
 echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 echo $r->startTable('categoryList');
 
 echo $r->startTblHeader();
 
-//echo $r->thOrderingXML('JGRID_HEADING_ORDERING', $listDirn, $listOrder);
-//echo $r->thCheck('JGLOBAL_CHECK_ALL');
 echo $r->firstColumnHeader($listDirn, $listOrder);
 echo $r->secondColumnHeader($listDirn, $listOrder);
 echo '<th class="ph-title">'.HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_TITLE', 'a.title', $listDirn, $listOrder ).'</th>'."\n";
@@ -89,8 +60,11 @@ if ($assoc) {
     echo '<th class="ph-association">' . HTMLHelper::_('searchtools.sort', 'COM_PHOCACART_HEADING_ASSOCIATION', 'association', $listDirn, $listOrder) . '</th>' . "\n";
 }
 
-echo '<th class="ph-language">'.HTMLHelper::_('searchtools.sort',  	'JGRID_HEADING_LANGUAGE', 'a.language', $listDirn, $listOrder ).'</th>'."\n";
+if (!I18nHelper::isI18n()) {
+    echo '<th class="ph-language">' . HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_LANGUAGE', 'a.language', $listDirn, $listOrder) . '</th>' . "\n";
+}
 echo '<th class="ph-hits">'.HTMLHelper::_('searchtools.sort',  		$this->t['l'].'_HITS', 'a.hits', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-content-type">'.HTMLHelper::_('searchtools.sort', $this->t['l'].'_CATEGORY_TYPE', 'category_type_title', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-id">'.HTMLHelper::_('searchtools.sort',  		$this->t['l'].'_ID', 'a.id', $listDirn, $listOrder ).'</th>'."\n";
 
 echo $r->endTblHeader();
@@ -99,13 +73,9 @@ echo $r->startTblBody($saveOrder, $saveOrderingUrl, $listDirn);
 
 $originalOrders = array();
 $parentsStr 	= "";
-$j 				= 0;
 
 if (is_array($this->items)) {
 	foreach ($this->items as $i => $item) {
-		if ($i >= (int)$this->pagination->limitstart && $j < (int)$this->pagination->limit) {
-			$j++;
-
 $urlEdit		= 'index.php?option='.$this->t['o'].'&task='.$this->t['task'].'.edit&id=';
 $orderkey   	= array_search($item->id, $this->ordering[$item->parent_id]);
 $ordering		= ($listOrder == 'a.ordering');
@@ -125,13 +95,7 @@ if (!isset($item->level)) {
 	$item->level = 0;
 }
 
-//$iD = $i % 2;
-//echo $r->startTr($i, isset($item->catid) ? (int)$item->catid : 0);
-//echo '<tr class="row'.$iD.'" sortable-group-id="'.$item->parent_id.'" item-id="'.$item->id.'" parents="'.$parentsStr.'" level="'. $item->level.'">'. "\n";
-
 echo $r->startTr($i, isset($item->parent_id) ? (int)$item->parent_id : 0, $item->id, $item->level, $parentsStr);
-//echo $r->tdOrder($canChange, $saveOrder, $orderkey, $item->ordering);
-//echo $r->td(JHtml::_('grid.id', $i, $item->id), "small");
 echo $r->firstColumn($i, $item->id, $canChange, $saveOrder, $orderkey, $item->ordering);
 echo $r->secondColumn($i, $item->id, $canChange, $saveOrder, $orderkey, $item->ordering);
 
@@ -146,7 +110,6 @@ if ($canCreate || $canEdit) {
 }
 $checkO .= ' <span class="smallsub">(<span>'.Text::_($this->t['l'].'_FIELD_ALIAS_LABEL').':</span>'. $this->escape($item->alias).')</span>';
 echo $r->td($checkO, "small", 'th');
-//echo $r->td(HTMLHelper::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small");
 
 echo $r->td(HTMLHelper::_('jgrid.published', $item->published, $i, $this->t['tasks'] . '.', $canChange) . PhocacartHtmlFeatured::featured($item->featured, $i, $canChange, 'category'), "small");
 
@@ -175,14 +138,15 @@ if ($assoc) {
     }
 }
 
-//echo $r->tdLanguage($item->language, $item->language_title, $this->escape($item->language_title));
-echo $r->td(LayoutHelper::render('joomla.content.language', $item), 'small');
+if (!I18nHelper::isI18n()) {
+    echo $r->td(LayoutHelper::render('joomla.content.language', $item), 'small');
+}
+
 echo $r->td($item->hits, "small");
+echo $r->td(Text::_($item->category_type_title), "small");
 echo $r->td($item->id, "small");
 
 echo $r->endTr();
-
-		}
 	}
 }
 echo $r->endTblBody();

@@ -14,6 +14,7 @@ use Joomla\CMS\Plugin\PluginHelper;
 
 defined('_JEXEC') or die();
 
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Language\Text;
@@ -513,18 +514,22 @@ class PhocacartProduct
      */
     public static function getProductByProductId($id)
     {
-
         if ($id < 1) {
             return false;
         }
-        $db = Factory::getDBO();
-        $query = ' SELECT a.id, a.title, a.catid, a.language, '
-            . ' group_concat(CONCAT_WS(":", c.id, c.title) SEPARATOR \',\') AS categories,'
-            . ' group_concat(c.title SEPARATOR \' \') AS categories_title,'
+
+        /** @var DatabaseInterface $db */
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = 'SELECT a.id, a.catid, a.language, '
+            . I18nHelper::sqlCoalesce(['title']) . ', '
+            . ' group_concat(CONCAT_WS(":", c.id, ' . I18nHelper::sqlCoalesce(['title'], 'c', '', '', '', '', true) . ') SEPARATOR \',\') AS categories,'
+            . ' group_concat(' . I18nHelper::sqlCoalesce(['title'], 'c', '', '', '', '', true) . ' SEPARATOR \' \') AS categories_title,'
             . ' group_concat(c.id SEPARATOR \',\') AS categories_id'
             . ' FROM #__phocacart_products AS a'
+            . I18nHelper::sqlJoin('#__phocacart_products_i18n')
             . ' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id'
             . ' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id'
+            . I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'c')
             . ' WHERE a.id = ' . (int)$id
             . ' GROUP BY a.id, a.title'
             . ' ORDER BY a.id'
@@ -1243,8 +1248,6 @@ class PhocacartProduct
 
     public static function storeProduct($data, $importColumn = 1)
     {
-
-
         // Store
         $table = Table::getInstance('PhocaCartItem', 'Table', array());
 
@@ -1291,7 +1294,6 @@ class PhocacartProduct
 
         if (!$table->bind($data)) {
             throw new Exception($table->getError());
-            return false;
         }
 
         if (intval($table->date) == 0) {
@@ -1317,7 +1319,6 @@ class PhocacartProduct
 
         if (!$table->check()) {
             throw new Exception($table->getError());
-            return false;
         }
 
         if ($newInsertOldId == 1) {
@@ -1329,21 +1330,18 @@ class PhocacartProduct
 
             if (!$db->insertObject('#__phocacart_products', $table, 'id')) {
                 throw new Exception($table->getError());
-                return false;
             }
 
         } else {
             if (!$table->store()) {
                 throw new Exception($table->getError());
-                return false;
-
             }
         }
 
 
         // Test Thumbnails (Create if not exists)
         if ($table->image != '') {
-            $thumb = PhocacartFileThumbnail::getOrCreateThumbnail($table->image, '', 1, 1, 1, 0, 'productimage');
+            PhocacartFileThumbnail::getOrCreateThumbnail($table->image, '', 1, 1, 1, 0, 'productimage');
         }
 
         if ((int)$table->id > 0) {
@@ -1360,17 +1358,6 @@ class PhocacartProduct
                 PhocacartProduct::featured((int)$table->id, $data['featured']);
             }
 
-            $dataRelated = '';
-            if (!isset($data['related'])) {
-                $dataRelated = '';
-            } else {
-                $dataRelated = $data['related'];
-                if (is_array($data['related']) && isset($data['related'][0])) {
-                    $dataRelated = $data['related'][0];
-                }
-            }
-
-            $advancedStockOptions = '';
             if (!isset($data['advanced_stock_options'])) {
                 $advancedStockOptions = '';
             } else {
@@ -1380,14 +1367,13 @@ class PhocacartProduct
                 }
             }
 
-            $additionalDownloadFiles = '';
             if (!isset($data['additional_download_files'])) {
                 $additionalDownloadFiles = '';
             } else {
                 $additionalDownloadFiles = $data['additional_download_files'];
             }
 
-            PhocacartRelated::storeRelatedItemsById($dataRelated, (int)$table->id);
+            PhocacartRelated::storeRelatedItems((int)$table->id, $data['related']);
             PhocacartImageAdditional::storeImagesByProductId((int)$table->id, $data['images']);
             PhocacartAttribute::storeAttributesById((int)$table->id, $data['attributes']);
             PhocacartAttribute::storeCombinationsById((int)$table->id, $advancedStockOptions);

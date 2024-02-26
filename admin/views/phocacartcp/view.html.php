@@ -66,6 +66,7 @@ class PhocaCartCpViewPhocaCartCp extends HtmlView
 		'fields'		=> array('JGLOBAL_FIELDS', $i .'ellipsis-v', '#ff4000', 'index.php?option=com_fields&context=com_phocacart.phocacartitem'),
 		'feeds'			=> array($this->t['l'] . '_XML_FEEDS', $i .'feed', '#ffb300'),
 		'wishlists'		=> array($this->t['l'] . '_WISH_LISTS', $i .'heart', '#EA7C7C'),
+		'contenttypes'	=> array($this->t['l'] . '_CONTENT_TYPES', $i .'sourcetree', '#7faa7f'),
 		'questions'		=> array($this->t['l'] . '_QUESTIONS', $d.$i .'messaging', '#9900CC'),
 		'times'			=> array($this->t['l'] . '_OPENING_TIMES', $i .'clock-alt', '#73b9ff'),
 		'submititems'	=> array($this->t['l'] . '_SUBMITTED_ITEMS', $d.$i .'duplicate-alt', '#7fff73'),

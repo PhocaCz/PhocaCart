@@ -74,11 +74,8 @@ class Adminviews
         }
     }
 
-    public function startHeader() {
-
-		$layoutSVG 	= new FileLayout('svg_definitions', null, array('component' => $this->option));
-		//return $layoutSVG->render(array());
-
+    public function startHeader()
+    {
 	}
 
 
@@ -446,7 +443,7 @@ class Adminviews
         return "";
     }
 
-    public function firstColumn($i, $itemId, $canChange, $saveOrder, $orderkey, $ordering, $saveOrderCatSelected = true) {
+    public function firstColumn($i, $itemId, $canChange = null, $saveOrder = null, $orderkey = null, $ordering = null, $saveOrderCatSelected = true) {
         return $this->td(HTMLHelper::_('grid.id', $i, $itemId), 'text-center ph-select-row');
     }
 

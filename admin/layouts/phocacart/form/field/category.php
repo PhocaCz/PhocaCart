@@ -40,13 +40,21 @@ extract($displayData);
  * @var   integer  $size            Size attribute of the input.
  * @var   boolean  $spellcheck      Spellcheck state for the form field.
  * @var   string   $validate        Validation rules to apply.
- * @var   string   $value           Value attribute of the field.
+ * @var   string|Array $value       Value attribute of the field.
  * @var   array    $options         Options available for this field.
  * @var   string   $dataAttribute   Miscellaneous data attributes preprocessed for HTML output
  * @var   array    $dataAttributes  Miscellaneous data attribute for eg, data-*
+ * @var   array    $splitCategoryTypes Show multiple inputs, one per category type
+ * @var   array    $categoryTypes   Category types array
  */
 
-$html = array();
+Text::script('JGLOBAL_SELECT_NO_RESULTS_MATCH');
+Text::script('JGLOBAL_SELECT_PRESS_TO_SELECT');
+
+Factory::getApplication()->getDocument()->getWebAssetManager()
+    ->usePreset('choicesjs')
+    ->useScript('webcomponent.field-fancy-select');
+
 $attr = '';
 
 // Initialize the field attributes.
@@ -58,60 +66,86 @@ $attr .= $dataAttribute;
 
 // To avoid user's confusion, readonly="readonly" should imply disabled="disabled".
 if ($readonly || $disabled) {
-  $attr .= ' disabled="disabled"';
+    $attr .= ' disabled="disabled"';
 }
 
 $attr2  = '';
-$attr2 .= !empty($class) ? ' class="' . $class . '"' : '';
 $attr2 .= ' placeholder="' . $this->escape($hint ?: Text::_('JGLOBAL_TYPE_OR_SELECT_SOME_OPTIONS')) . '" ';
 
-if ($required) {
-  $attr  .= ' required class="required"';
-  $attr2 .= ' required';
-}
-
-// Create a read-only list (no name) with hidden input(s) to store the value(s).
-if ($readonly) {
-  $html[] = HTMLHelper::_('select.genericlist', $options, '', trim($attr), 'value', 'text', $value, $id);
-
-  // E.g. form field type tag sends $this->value as array
-  if ($multiple && is_array($value)) {
-    if (!count($value)) {
-      $value[] = '';
-    }
-
-    foreach ($value as $val) {
-      $html[] = '<input type="hidden" name="' . $name . '" value="' . htmlspecialchars($val, ENT_COMPAT, 'UTF-8') . '">';
-    }
-  } else {
-    $html[] = '<input type="hidden" name="' . $name . '" value="' . htmlspecialchars($value, ENT_COMPAT, 'UTF-8') . '">';
-  }
-} else // Create a regular list.
-{
-  $html[] = HTMLHelper::_('select.genericlist', $options, $name, trim($attr), 'value', 'text', $value, $id);
-}
-
-if ($refreshPage === true && $hasCustomFields) {
-  $attr2 .= ' data-refresh-catid="' . $refreshCatId . '" data-refresh-section="' . $refreshSection . '"';
-  $attr2 .= ' onchange="Joomla.categoryHasChanged(this)"';
-
-  Factory::getDocument()->getWebAssetManager()
-    ->registerAndUseScript('field.category-change', 'layouts/joomla/form/field/category-change.min.js', [], ['defer' => true], ['core'])
-    ->useScript('webcomponent.core-loader');
-
-  // Pass the element id to the javascript
-  Factory::getDocument()->addScriptOptions('category-change', $id);
+if ($splitCategoryTypes) {
+    $name = preg_replace('~\[]$~', '', $name);
+    $attr2 .= !empty($class) ? ' class="form-floating ' . $class . '"' : ' class="form-floating"';
 } else {
-  $attr2 .= $onchange ? ' onchange="' . $onchange . '"' : '';
+    $categoryTypes = [''];
+    $attr2 .= !empty($class) ? ' class="' . $class . '"' : '';
 }
 
-Text::script('JGLOBAL_SELECT_NO_RESULTS_MATCH');
-Text::script('JGLOBAL_SELECT_PRESS_TO_SELECT');
+foreach ($categoryTypes as $index => $categoryType) {
+    $html = [];
+    $requiredAttr  = '';
+    $requiredAttr2 = '';
+    if ($required && $index === 0) {
+        $requiredAttr  .= ' required class="required"';
+        $requiredAttr2 .= ' required';
+    }
 
-Factory::getApplication()->getDocument()->getWebAssetManager()
-  ->usePreset('choicesjs')
-  ->useScript('webcomponent.field-fancy-select');
+    if ($splitCategoryTypes) {
+        $nameExt = '[' . $categoryType->id . '][]';
+        $idExt = '-' . $categoryType->id;
+        $inputOptions = $options[$categoryType->id];
+        $inputValue = $value[$categoryType->id] ?? null;
+    } else {
+        $nameExt = '';
+        $idExt = '';
+        $inputOptions = $options;
+        $inputValue = $value;
+    }
 
+    if ($readonly) {
+        // Create a read-only list (no name) with hidden input(s) to store the value(s).
+        $html[] = HTMLHelper::_('select.genericlist', $inputOptions, '', trim($attr . $requiredAttr), 'value', 'text', $inputValue, $id . $idExt);
+
+        // E.g. form field type tag sends $this->value as array
+        if ($multiple && is_array($inputValue)) {
+            if (!count($inputValue)) {
+                $inputValue[] = '';
+            }
+
+            foreach ($inputValue as $val) {
+                $html[] = '<input type="hidden" name="' . $name . $nameExt . '" value="' . htmlspecialchars($val, ENT_COMPAT, 'UTF-8') . '">';
+            }
+        } else {
+            $html[] = '<input type="hidden" name="' . $name . $nameExt . '" value="' . htmlspecialchars($inputValue, ENT_COMPAT, 'UTF-8') . '">';
+        }
+    } else {
+        // Create a regular list.
+        $html[] = HTMLHelper::_('select.genericlist', $inputOptions, $name . $nameExt, trim($attr . $requiredAttr), 'value', 'text', $inputValue, $id . $idExt);
+
+        if ($refreshPage === true && $hasCustomFields) {
+            $attr2 .= ' data-refresh-catid="' . $refreshCatId . '" data-refresh-section="' . $refreshSection . '"';
+            $attr2 .= ' onchange="Joomla.categoryHasChanged(this)"';
+
+            Factory::getApplication()->getDocument()->getWebAssetManager()
+                ->registerAndUseScript('field.category-change', 'layouts/joomla/form/field/category-change.min.js', [], ['defer' => true], ['core'])
+                ->useScript('webcomponent.core-loader');
+
+            // Pass the element id to the javascript
+            Factory::getApplication()->getDocument()->addScriptOptions('category-change', $id . $idExt);
+        } else {
+            $attr2 .= $onchange ? ' onchange="' . $onchange . '"' : '';
+        }
+    }
+
+    if ($splitCategoryTypes) {
 ?>
-
-<joomla-field-fancy-select <?php echo $attr2; ?>><?php echo implode($html); ?></joomla-field-fancy-select>
+      <div class="input-group">
+        <span class="input-group-text bg-light text-dark border-primary-subtle"><?php echo Text::_($categoryType->title); ?></span>
+        <joomla-field-fancy-select <?php echo $attr2 . $requiredAttr2; ?>><?php echo implode($html); ?></joomla-field-fancy-select>
+      </div>
+<?php
+    } else {
+?>
+  <joomla-field-fancy-select <?php echo $attr2 . $requiredAttr2; ?>><?php echo implode($html); ?></joomla-field-fancy-select>
+<?php
+    }
+}

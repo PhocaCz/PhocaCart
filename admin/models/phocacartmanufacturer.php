@@ -21,6 +21,7 @@ use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Language\Associations;
 use Phoca\PhocaCart\I18n\I18nAdminModelTrait;
+use Phoca\PhocaCart\I18n\I18nHelper;
 use Phoca\PhocaCart\MVC\Model\AdminModelTrait;
 
 class PhocaCartCpModelPhocacartManufacturer extends AdminModel
@@ -54,11 +55,8 @@ class PhocaCartCpModelPhocacartManufacturer extends AdminModel
     }
 
     public function getForm($data = array(), $loadData = true) {
-        $form 	= $this->loadForm('com_phocacart.phocacartmanufacturer', 'phocacartmanufacturer', array('control' => 'jform', 'load_data' => $loadData));
-        if (empty($form)) {
-            return false;
-        }
-        return $form;
+        $form = $this->loadForm('com_phocacart.phocacartmanufacturer', 'phocacartmanufacturer', array('control' => 'jform', 'load_data' => $loadData));
+        return $this->prepareI18nForm($form);
     }
 
     public function getItem($pk = null) {
@@ -72,7 +70,7 @@ class PhocaCartCpModelPhocacartManufacturer extends AdminModel
 
             // ASSOCIATION
             // Load associated manufacturers
-            if (Associations::isEnabled()) {
+            if (I18nHelper::associationsEnabled()) {
                 $item->associations = [];
 
                 if ($item->id) {
@@ -169,7 +167,7 @@ class PhocaCartCpModelPhocacartManufacturer extends AdminModel
     }
 
     protected function preprocessForm(Form $form, $data, $group = 'content') {
-        if (Associations::isEnabled()){
+        if (I18nHelper::associationsEnabled()){
             $languages = LanguageHelper::getContentLanguages(false, false, null, 'ordering', 'asc');
 
             if (count($languages) > 1) {

@@ -40,7 +40,7 @@
 
         <field name="tax_id" type="phocatax" label="COM_PHOCACART_FIELD_TAX_LABEL" description="COM_PHOCACART_FIELD_TAX_DESC"/>
 
-        <field name="catid_multiple" type="phocacartcategory" label="COM_PHOCACART_FIELD_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_DESC" multiple="true" required="true" />
+        <field name="catid_multiple" type="phocacartcategory" splitCategoryTypes="true" multiple="true" required="true" label="COM_PHOCACART_FIELD_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_DESC" />
 
         <field name="catid" type="phocacartcategory" label="COM_PHOCACART_FIELD_PREFERRED_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_PREFERRED_CATEGORY_DESC" />
 
@@ -78,8 +78,14 @@
         <field name="stockstatus_a_id" type="phocastockstatus" manager="a" label="COM_PHOCACART_FIELD_STOCK_STATUS_A_LABEL" description="COM_PHOCACART_FIELD_STOCK_STATUS_A_DESC" default="2"/>
         <field name="stockstatus_n_id" type="phocastockstatus" manager="n" label="COM_PHOCACART_FIELD_STOCK_STATUS_B_LABEL" description="COM_PHOCACART_FIELD_STOCK_STATUS_B_DESC" default="1"/>
 
-        <field name="related" type="PhocaSelectItem" label="COM_PHOCACART_FIELD_RELATED_PRODUCTS_LABEL" description="COM_PHOCACART_FIELD_RELATED_PRODUCTS_DESC" class="" multiple="true" related="true" />
-        <field name="bundles" type="PhocaSelectItem" label="COM_PHOCACART_FIELD_BUNDLED_PRODUCTS_LABEL" description="COM_PHOCACART_FIELD_BUNDLED_PRODUCTS_DESC" class="" multiple="true" related="true" />
+        <field name="related" type="subform" multiple="true" layout="joomla.form.field.subform.repeatable-table" label="COM_PHOCACART_FIELD_RELATED_PRODUCTS_LABEL" description="COM_PHOCACART_FIELD_RELATED_PRODUCTS_DESC">
+            <form>
+                <field name="related_type" type="PhocaCartContentType" context="product_related" label="COM_PHOCACART_FIELD_RELATED_PRODUCTS_TYPE_LABEL" />
+                <field name="id" type="PhocaCartItem" label="COM_PHOCACART_FIELD_RELATED_PRODUCTS_LABEL" />
+            </form>
+        </field>
+
+        <field name="related2" type="PhocaSelectItem" label="COM_PHOCACART_FIELD_RELATED_PRODUCTS_LABEL" description="COM_PHOCACART_FIELD_RELATED_PRODUCTS_DESC" class="" multiple="true" related="true" />
 
         <field name="image" type="phocaselectfilenameimage" manager="productimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL" description="COM_PHOCACART_FIELD_IMAGE_DESC" class="form-control imageCreateThumbs"/>
 
