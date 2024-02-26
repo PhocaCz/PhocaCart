@@ -22,7 +22,7 @@ $d 				= $displayData;
 $displayData 	= null;
 
 if (isset($d['pos']) && $d['pos'] == 1) {
-    s['c']['class-type'] == 'bs5';
+    $s['c']['class-type'] == 'bs5';
 
 }
 

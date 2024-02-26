@@ -2923,6 +2923,7 @@ class PhocacartOrder
             return false;
         }
 
+
         $orderNumberId   = 0;
         $receiptNumberId = 0;
         $invoiceNumberId = 0;
@@ -2975,11 +2976,24 @@ class PhocacartOrder
             }
 
 
-            if ((!isset($orderData['invoice_number_id']) || (isset($orderData['invoice_number_id']) && (int)$orderData['invoice_number_id'] == 0))
-                && (!isset($orderData['invoice_number']) || (isset($orderData['invoice_number']) && $orderData['invoice_number'] == ''))) {
+            if (!isset($orderData['invoice_number_id']) || (isset($orderData['invoice_number_id']) && (int)$orderData['invoice_number_id'] == 0)) {
                 $d['invoice_number_id'] = PhocaCartOrder::getNumberId('invoice', $id, $dateNow);
                 $invoiceNumberId        = $d['invoice_number_id'];
-                $d['invoice_number']    = PhocacartOrder::getInvoiceNumber($id, $dateNow, false, $d['invoice_number_id']);
+            } else {
+                $d['invoice_number_id'] = (int)$orderData['invoice_number_id'];
+                $invoiceNumberId        = $d['invoice_number_id'];
+            }
+
+            if (!isset($orderData['invoice_number']) || (isset($orderData['invoice_number']) && $orderData['invoice_number'] == '')) {
+
+                if (isset($d['invoice_number_id']) && (int)$d['invoice_number_id'] > 0){
+
+                    // Be aware - order made in last year, order status change in new year
+                    // Be 100% - invoice numbers are not in conflict with invoice number from other year
+                    $dateOrder = PhocacartOrder::getOrderDate($id);
+
+                    $d['invoice_number'] = PhocacartOrder::getInvoiceNumber($id, $dateOrder, false, $d['invoice_number_id']);
+                }
 
             }
 

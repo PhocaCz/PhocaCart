@@ -185,3 +185,11 @@ img {
 .ph-filter-box-horizontal .uk-dropdown-box li {
     list-style-type: none;
 }
+
+.ph-row-flex.grid .row-item {
+    margin-bottom: 1em;
+}
+
+.ph-items .ph-cb {
+    display: none;
+}
