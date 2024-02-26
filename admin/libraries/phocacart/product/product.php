@@ -1248,8 +1248,6 @@ class PhocacartProduct
 
     public static function storeProduct($data, $importColumn = 1)
     {
-
-
         // Store
         $table = Table::getInstance('PhocaCartItem', 'Table', array());
 
@@ -1296,7 +1294,6 @@ class PhocacartProduct
 
         if (!$table->bind($data)) {
             throw new Exception($table->getError());
-            return false;
         }
 
         if (intval($table->date) == 0) {
@@ -1322,7 +1319,6 @@ class PhocacartProduct
 
         if (!$table->check()) {
             throw new Exception($table->getError());
-            return false;
         }
 
         if ($newInsertOldId == 1) {
@@ -1334,21 +1330,18 @@ class PhocacartProduct
 
             if (!$db->insertObject('#__phocacart_products', $table, 'id')) {
                 throw new Exception($table->getError());
-                return false;
             }
 
         } else {
             if (!$table->store()) {
                 throw new Exception($table->getError());
-                return false;
-
             }
         }
 
 
         // Test Thumbnails (Create if not exists)
         if ($table->image != '') {
-            $thumb = PhocacartFileThumbnail::getOrCreateThumbnail($table->image, '', 1, 1, 1, 0, 'productimage');
+            PhocacartFileThumbnail::getOrCreateThumbnail($table->image, '', 1, 1, 1, 0, 'productimage');
         }
 
         if ((int)$table->id > 0) {
@@ -1365,17 +1358,6 @@ class PhocacartProduct
                 PhocacartProduct::featured((int)$table->id, $data['featured']);
             }
 
-            $dataRelated = '';
-            if (!isset($data['related'])) {
-                $dataRelated = '';
-            } else {
-                $dataRelated = $data['related'];
-                if (is_array($data['related']) && isset($data['related'][0])) {
-                    $dataRelated = $data['related'][0];
-                }
-            }
-
-            $advancedStockOptions = '';
             if (!isset($data['advanced_stock_options'])) {
                 $advancedStockOptions = '';
             } else {
@@ -1385,14 +1367,13 @@ class PhocacartProduct
                 }
             }
 
-            $additionalDownloadFiles = '';
             if (!isset($data['additional_download_files'])) {
                 $additionalDownloadFiles = '';
             } else {
                 $additionalDownloadFiles = $data['additional_download_files'];
             }
 
-            PhocacartRelated::storeRelatedItemsById($dataRelated, (int)$table->id);
+            PhocacartRelated::storeRelatedItems((int)$table->id, $data['related']);
             PhocacartImageAdditional::storeImagesByProductId((int)$table->id, $data['images']);
             PhocacartAttribute::storeAttributesById((int)$table->id, $data['attributes']);
             PhocacartAttribute::storeCombinationsById((int)$table->id, $advancedStockOptions);

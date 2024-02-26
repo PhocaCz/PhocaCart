@@ -242,3 +242,5 @@ ALTER TABLE `#__phocacart_product_related` ADD COLUMN `related_type` int(11) NOT
 
 UPDATE `#__phocacart_categories` SET `category_type` = 1 WHERE `category_type` = 0;
 UPDATE `#__phocacart_product_related` SET `related_type` = 2 WHERE `related_type` = 0;
+
+ALTER TABLE `#__phocacart_product_related` ADD COLUMN `ordering` int(11) NOT NULL DEFAULT 0;

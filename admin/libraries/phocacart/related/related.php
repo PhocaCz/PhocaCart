@@ -10,13 +10,13 @@
  */
 defined('_JEXEC') or die();
 use Joomla\CMS\Factory;
+use Joomla\Database\DatabaseInterface;
 
 class PhocacartRelated
 {
-	public static function storeRelatedItemsById($relatedString, $productId) {
-
-
-		if ((int)$productId > 0) {
+	public static function storeRelatedItemsById($relatedString, $productId)
+    {
+    	if ((int)$productId > 0) {
 			$db =Factory::getDBO();
 			$query = ' DELETE '
 					.' FROM #__phocacart_product_related'
@@ -24,11 +24,10 @@ class PhocacartRelated
 			$db->setQuery($query);
 			$db->execute();
 
-			if (isset($relatedString) && $relatedString != '') {
-
+			if (isset($relatedString) && $relatedString != '')
+            {
 				$relatedArray 	= explode(",", $relatedString);
 				$values 		= array();
-				$valuesString 	= '';
 
 				foreach($relatedArray as $k => $v) {
 					$values[] = ' ('.(int)$productId.', '.(int)$v.')';
@@ -47,6 +46,45 @@ class PhocacartRelated
 		}
 	}
 
+    public static function copyRelatedItems(int $sourceProductId, int $destProductId): void
+    {
+        /** @var DatabaseInterface $db */
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = 'INSERT INTO #__phocacart_product_related(related_type, product_a, product_b)'
+            . 'SELECT related_type, ' . $destProductId . ', product_b FROM #__phocacart_product_related WHERE product_a = ' . $sourceProductId;
+        $db->setQuery($query);
+        $db->execute();
+    }
+
+    public static function storeRelatedItems(int $productId, ?array $related): void
+    {
+        if (!$productId) {
+            return;
+        }
+
+        /** @var DatabaseInterface $db */
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        $query = 'DELETE FROM #__phocacart_product_related WHERE product_a = '. $productId;
+        $db->setQuery($query);
+        $db->execute();
+
+        if ($related) {
+            $values = [];
+            // Make numeric indexes
+            $related = array_values($related);
+            $related = array_unique($related, SORT_REGULAR);
+            foreach ($related as $index => $relatedItem) {
+                $values[] = '(' . $productId . ', ' . $relatedItem['id'] . ', ' . $relatedItem['related_type'] . ', ' . $index . ')';
+            }
+
+            $query = 'INSERT INTO #__phocacart_product_related (product_a, product_b, related_type, ordering)'
+                .' VALUES ' . implode(', ', $values);
+            $db->setQuery($query);
+            $db->execute();
+        }
+    }
+
 	/*
 	* Try to find the best menu link so we search for category which we are located
 	* if we find the category, we use this, if not we use another if accessible, etc.
@@ -54,20 +92,17 @@ class PhocacartRelated
 
 	public static function getRelatedItemsById($productId, $select = 0, $frontend = 0)
     {
-
         $db         = Factory::getDBO();
-        $wheres     = array();
+        $wheres     = [];
         $wheres[]   = 't.product_a = ' . (int)$productId;
         $catid      = 0;
         $params 	= PhocacartUtils::getComponentParameters();
 
         // FRONTEND
-        $skip = array();
+        $skip = [];
         $skip['access']         = $params->get('sql_product_skip_access', 0);
         $skip['group']          = $params->get('sql_product_skip_group', 0);
-        //$skip['attributes']	= $params->get('sql_product_skip_attributes', 0);
         $skip['category_type']  = $params->get('sql_product_skip_category_type', 0);
-        //$skip['tax']          = $params->get('sql_product_skip_tax', 0);
 
         if ($frontend) {
             $user = PhocacartUser::getUser();
@@ -92,7 +127,6 @@ class PhocacartRelated
             $wheres[] = " a.published = 1";
 
             $catid = PhocacartCategoryMultiple::getCurrentCategoryId();
-
         }
 
         if ($select == 1) {
@@ -100,7 +134,7 @@ class PhocacartRelated
         } else if ($select == 2) {
             $query = ' SELECT a.id, a.alias';
         } else if ($select == 3) {
-            $query = ' SELECT DISTINCT a.id as id, a.title as title, a.image as image, a.alias as alias, a.description, a.description_long';
+            $query = ' SELECT DISTINCT a.id as id, a.title as title, a.image as image, a.alias as alias, a.description, a.description_long, t.related_type';
         } else {
             // FULL GROUP BY ISSUE
             // We have three issues with MySQL (zero with MariaDB)
@@ -155,7 +189,6 @@ class PhocacartRelated
 
         $query .= ' FROM #__phocacart_products AS a'
             . ' LEFT JOIN #__phocacart_product_related AS t ON a.id = t.product_b'
-            //.' LEFT JOIN #__phocacart_categories AS c ON a.catid = c.id'
             . ' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id'
             . ' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id';
 
@@ -189,6 +222,8 @@ class PhocacartRelated
             //$query .= ' GROUP BY a.id, a.title, a.alias, a.image, a.description, a.description_long';
             $query .= ' GROUP BY a.id';
 		}
+
+        $query .= ' ORDER BY t.ordering';
 
         //$query .= ' ORDER BY a.id';
 

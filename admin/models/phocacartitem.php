@@ -168,31 +168,6 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 					$data['related'] = $value;
 				}
 			}
-
-			if (isset($data['bundles']) && is_array($data['bundles'])) {
-				$relatedOption = array_shift($data['bundles']);
-				$relatedOption = explode(',', $relatedOption);
-
-				if($relatedOption) {
-					$i = 0;
-					$value = '';
-					foreach($relatedOption as $id) {
-						$v = PhocacartProduct::getProductByProductId($id);
-						if ($v) {
-							if ($i > 0) {
-								$value .= '[|]';
-							}
-
-							$title    = PhocacartText::filterValue($v->title, 'text');
-							$titleCat = PhocacartText::filterValue($v->categories_title, 'text');
-
-							$value .= (int)$v->id . ':' . $title . ' (' . $titleCat . ')';
-							$i++;
-						}
-					}
-					$data['bundles'] = $value;
-				}
-			}
 		} else {
 			$data = $this->getItem();
 
@@ -290,27 +265,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 				$itemParameters[$parameter->id] = PhocacartParameter::getParameterValues((int)$item->id, $parameter->id, 1);
 			}
 			$item->set('items_parameter', $itemParameters);
-
-			$value = '';
-			if ((int)$item->id > 0) {
-				$relatedOption	= PhocacartRelated::getRelatedItemsById((int)$item->id, 3);
-
-				if($relatedOption) {
-					$i = 0;
-					foreach($relatedOption as $v) {
-						if ($i > 0) {
-							$value .= '[|]';
-						}
-
-						$title = PhocacartText::filterValue($v->title, 'text');
-						$titleCat = PhocacartText::filterValue($v->categories_title, 'text');
-
-						$value .= (int)$v->id . ':'.$title.' ('.$titleCat.')';
-						$i++;
-					}
-				}
-			}
-			$item->set('related', $value);
+            $item->related = PhocacartRelated::getRelatedItemsById((int)$item->id, 3);
 
 			$value = '';
 			if ((int)$item->id > 0) {
@@ -594,24 +549,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 				$this->featured((int)$table->getId(), $data['featured']);
 			}
 
-			if (!isset($data['related'])) {
-				$dataRelated = '';
-			} else {
-				$dataRelated = $data['related'];
-				if (isset($data['related'][0])) {
-					$dataRelated = $data['related'][0];
-				}
-			}
-			PhocacartRelated::storeRelatedItemsById($dataRelated, (int)$table->getId());
-
-			$dataRelated = '';
-			if (isset($data['bundles'])) {
-				$dataRelated = $data['bundles'];
-				if (isset($data['bundles'][0])) {
-					$dataRelated = $data['bundles'][0];
-				}
-			}
-			Bundled::storeBundledItemsById($dataRelated, (int)$table->getId());
+			PhocacartRelated::storeRelatedItems((int)$table->getId(), $data['related']);
 
 			if (!isset($data['attributes'])) {
 				$data['attributes'] = array();
