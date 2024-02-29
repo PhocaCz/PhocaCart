@@ -2133,6 +2133,7 @@ a[target=_blank]::before {
 
 .ph-attributes-options-box {
 	display: flex;
+	flex-wrap: wrap;
 }
 
 .ph-attributes-options-box a {
