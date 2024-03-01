@@ -636,7 +636,7 @@ class PhocacartFilter
         // -ATTRIBUTES- AVAILABLE PRODUCTS ONLY - Yes
         if ($this->attributes) {
             /*phocacart import('phocacart.attribute.attribute');*/
-            $attributes = PhocacartAttribute::getAllAttributesAndOptions($this->ordering_attribute, $this->check_available_products, $language, $activeProductsAttributes);
+            $attributes = PhocacartAttribute::getAllAttributesAndOptions($this->ordering_attribute, $this->check_available_products, $language, $activeProductsAttributes, true);
 
             if (!empty($attributes)) {
                 foreach ($attributes as $k => $v) {

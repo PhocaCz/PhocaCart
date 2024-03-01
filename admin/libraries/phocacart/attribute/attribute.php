@@ -653,7 +653,7 @@ class PhocacartAttribute
         return $attributesKey;
     }
 
-    public static function getAllAttributesAndOptions($ordering = 1, $onlyAvailableProducts = 0, $lang = '', $filterProducts = array()) {
+    public static function getAllAttributesAndOptions($ordering = 1, $onlyAvailableProducts = 0, $lang = '', $filterProducts = [], $limitToIsFilter = false) {
 
         $db           = Factory::getDBO();
         $orderingText = PhocacartOrdering::getOrderingText($ordering, 5);
@@ -707,6 +707,10 @@ class PhocacartAttribute
                 $lefts[]  = ' #__phocacart_products AS p ON at.product_id = p.id';
                 $productTableAdded = 1;
             }
+        }
+
+        if ($limitToIsFilter) {
+            $wheres[] = 'at.is_filter = 1';
         }
 
         if (!empty($filterProducts)) {
