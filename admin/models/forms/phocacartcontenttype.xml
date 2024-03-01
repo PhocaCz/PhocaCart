@@ -32,6 +32,13 @@
 
     <fields name="params" addfieldpath="/administrator/components/com_phocacart/models/fields">
         <fieldset name="general" label="COM_PHOCACART_GENERAL_OPTIONS">
+            <fields name="product_related">
+                <field name="display_in_product" type="radio" default="1" showon=".context:product_related" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_DISAPLY_IN_PRODUCT_LABEL">
+                    <option value="0">COM_PHOCACART_NO</option>
+                    <option value="1">COM_PHOCACART_YES</option>
+                </field>
+            </fields>
+
             <fields name="attribute">
                 <field name="title" type="phocatext" i18n="true" showon=".context:attribute" label="COM_PHOCACART_FIELD_TITLE_LABEL" />
 

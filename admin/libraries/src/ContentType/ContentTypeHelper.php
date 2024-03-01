@@ -8,6 +8,10 @@ use Joomla\Utilities\ArrayHelper;
 
 final class ContentTypeHelper
 {
+    public const Category = 'category';
+    public const ProductRelated = 'product_related';
+    public const Attribute = 'attribute';
+
     private static $cache = null;
 
     public static function getContentTypes(string $context, ?array $publishedFilter = null)
@@ -24,7 +28,9 @@ final class ContentTypeHelper
 
             $items = $db->loadObjectList('id');
             array_walk($items, function($item) {
-               $item->params = new Registry($item->params);
+               $params = new Registry($item->params);
+               $params = $params->toArray()[$item->context] ?? [];
+               $item->params = new Registry($params);
             });
             self::$cache = $items;
         }
@@ -51,8 +57,8 @@ final class ContentTypeHelper
 
     public static function getContentTypeParams(string $context, int $id): Registry
     {
-        $contentTypes = self::getContentTypes($context);
-        return new Registry($contentTypes[$id]->params->toArray()[$context] ?? []);
+        $contentType = self::getContentType($context, $id);
+        return $contentType->params ?? new Registry();
     }
 
 }

@@ -173,7 +173,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
             $this->loadI18nItem($data);
 
-            $categoryTypes = ContentTypeHelper::getContentTypes('category');
+            $categoryTypes = ContentTypeHelper::getContentTypes(ContentTypeHelper::Category);
             $categories = $data->catid_multiple;
             $data->catid_multiple = [];
             foreach ($categoryTypes as $categoryType) {

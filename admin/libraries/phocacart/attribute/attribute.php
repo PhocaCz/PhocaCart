@@ -283,7 +283,7 @@ class PhocacartAttribute
 
                 foreach ($attributesArray as &$attribute) {
                     if ($attribute['attribute_template']) {
-                        $template = ContentTypeHelper::getContentTypeParams('attribute', (int)$attribute['attribute_template']);
+                        $template = ContentTypeHelper::getContentTypeParams(ContentTypeHelper::Attribute, (int)$attribute['attribute_template']);
                         $attribute = array_merge($attribute, $template->toArray());
                     }
 

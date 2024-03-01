@@ -14,6 +14,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\Component\Fields\Administrator\Helper\FieldsHelper;
+use Phoca\PhocaCart\ContentType\ContentTypeHelper;
 use Phoca\PhocaCart\Dispatcher\Dispatcher;
 use Phoca\PhocaCart\Event;
 
@@ -800,85 +801,99 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	// RELATED PRODUCTS
 
 	if (!empty($this->t['rel_products'])) {
-		$tabLiO .= '<li class="'.$this->s['c']['nav-item'].' '.$activeTab.'"><a href="#phrelated" data-bs-toggle="tab" class="'.$this->s['c']['nav-link'].' '.$active.'">'.Text::_('COM_PHOCACART_RELATED_PRODUCTS').'</a></li>';
+        foreach (ContentTypeHelper::getContentTypes(ContentTypeHelper::ProductRelated) as $relatedType) {
+            if (!$relatedType->params->get('display_in_product', 1)) {
+                continue;
+            }
 
-		$tabO 	.= '<div class="'.$this->s['c']['tabpane'].' ph-tab-pane '.$active.'" id="phrelated">';
+            $related = array_filter($this->t['rel_products'], function($relatedProduct) use ($relatedType) {
+               return $relatedProduct->related_type === $relatedType->id;
+            });
 
-		$tabO	.= '<div class="'.$this->s['c']['row'].'">';
-		foreach($this->t['rel_products'] as $k => $v) {
+            if (!$related) {
+                continue;
+            }
 
+            $tabLiO .= '<li class="' . $this->s['c']['nav-item'] . ' ' . $activeTab . '"><a href="#phrelated-' . $relatedType->id . '" data-bs-toggle="tab" class="' . $this->s['c']['nav-link'] . ' ' . $active . '">' . Text::_($relatedType->title) . '</a></li>';
 
-			$tabO	.= '<div class="'.$this->s['c']['row-item'].' '.$this->s['c']['col.xs12.sm3.md3'].'">';
-			$tabO	.= '<div class="ph-item-box grid ph-item-thumbnail-related">';
+            $tabO .= '<div class="' . $this->s['c']['tabpane'] . ' ph-tab-pane ' . $active . '" id="phrelated-' . $relatedType->id . '">';
 
-
-			$tabO	.= '<div class="'.PhocacartRenderFront::completeClass(array($this->s['c']['thumbnail'], 'ph-thumbnail', 'ph-thumbnail-c', 'ph-item')).'">';
-			$tabO	.= '<div class="ph-item-content">';
-
-			$image 	= PhocacartImage::getThumbnailName($this->t['pathitem'], $v->image, 'medium');
-
-			// Try to find the best menu link
-			if (isset($v->catid_pref) && (int)$v->catid_pref > 0 && isset($v->catalias_pref) && $v->catalias_pref != '') {
-
-				// PREFERRED CATEGORY SET BY VENDER in product edit (catid column administration)
-				$link 	= Route::_(PhocacartRoute::getItemRoute($v->id, $v->catid_pref, $v->alias, $v->catalias_pref));
-
-			} else if (isset($v->catid_sel) && (int)$v->catid_sel > 0 && isset($v->catalias_sel) && $v->catalias_sel != '') {
-
-				// SELECTED CATEGORY SET BY USER in product view (frontend)
-				$link 	= Route::_(PhocacartRoute::getItemRoute($v->id, $v->catid_sel, $v->alias, $v->catalias_sel));
-			} else {
-
-				// RANDOM CATEGORY ORDERED BY ORDERING
-				$link 	= Route::_(PhocacartRoute::getItemRoute($v->id, $v->catid, $v->alias, $v->catalias));
-			}
-
-			$tabO	.= '<a href="'.$link.'">';
-			if (isset($image->rel) && $image->rel != '') {
-				/*$tabO	.= '<img src="'.Uri::base(true).'/'.$image->rel.'" alt="" class="'.$this->s['c']['img-responsive'].' ph-image"';
-				if (isset($this->t['image_width']) && $this->t['image_width'] != '' && isset($this->t['image_height']) && $this->t['image_height'] != '') {
-					$tabO	.= ' style="width:'.$this->t['image_width'].';height:'.$this->t['image_height'].'"';
-				}
-				$tabO	.= ' />';*/
-
-				$d = array();
-				$d['t'] = $this->t;
-				$d['s'] = $this->s;
-				$d['src'] = Uri::base(true) . '/' . $image->rel;
-				$d['srcset-webp'] = Uri::base(true) . '/' . $image->rel_webp;
-				$d['data-image'] = Uri::base(true) . '/' . $image->rel;
-				$d['data-image-webp'] = Uri::base(true) . '/' . $image->rel_webp;
-				$d['alt-value'] = PhocaCartImage::getAltTitle($v->title, $image->rel);
-				$d['class'] = PhocacartRenderFront::completeClass(array($this->s['c']['img-responsive'], 'img-thumbnail', 'ph-image-full', 'phImageFull', 'phjProductImage' . ''));
-				$d['style'] = '';
-				/*if (isset($this->t['image_width']) && (int)$this->t['image_width'] > 0 && isset($this->t['image_height']) && (int)$this->t['image_height'] > 0) {
-					$d['style'] = 'width:' . $this->t['image_width'] . 'px;height:' . $this->t['image_height'] . 'px';
-				}*/
-
-				$tabO .= $layoutI->render($d);
-
-			}
-			$tabO	.= '</a>';
-			$tabO	.= '<div class="'.$this->s['c']['caption'].'"><h4><a href="'.$link.'">'.$v->title.'</a></h4></div>';
-
-			$tabO	.= '<div class="">';
-			$tabO	.= '<a href="'.$link.'" class="'.$this->s['c']['btn.btn-primary.btn-sm'].' ph-btn" role="button">';
-			//$tabO   .= '<span class="'.$this->s['i']['view-product'].'"></span> ';
-			$tabO   .= PhocacartRenderIcon::icon($d['s']['i']['ok'], '', ' ');
-			$tabO   .= Text::_('COM_PHOCACART_VIEW_PRODUCT').'</a>';
-			$tabO	.= '</div>';
-
-			$tabO	.= '</div>';
-			$tabO	.= '</div>';
-
-			$tabO	.= '</div>';
-			$tabO	.= '</div>';
+            $tabO .= '<div class="' . $this->s['c']['row'] . '">';
+            foreach ($related as $k => $v) {
 
 
-		}
-		$tabO	.= '</div>';
-		$tabO	.= '</div>';
-		$active = $activeTab = '';
+                $tabO .= '<div class="' . $this->s['c']['row-item'] . ' ' . $this->s['c']['col.xs12.sm3.md3'] . '">';
+                $tabO .= '<div class="ph-item-box grid ph-item-thumbnail-related">';
+
+
+                $tabO .= '<div class="' . PhocacartRenderFront::completeClass(array($this->s['c']['thumbnail'], 'ph-thumbnail', 'ph-thumbnail-c', 'ph-item')) . '">';
+                $tabO .= '<div class="ph-item-content">';
+
+                $image = PhocacartImage::getThumbnailName($this->t['pathitem'], $v->image, 'medium');
+
+                // Try to find the best menu link
+                if (isset($v->catid_pref) && (int) $v->catid_pref > 0 && isset($v->catalias_pref) && $v->catalias_pref != '') {
+
+                    // PREFERRED CATEGORY SET BY VENDER in product edit (catid column administration)
+                    $link = Route::_(PhocacartRoute::getItemRoute($v->id, $v->catid_pref, $v->alias, $v->catalias_pref));
+
+                } else if (isset($v->catid_sel) && (int) $v->catid_sel > 0 && isset($v->catalias_sel) && $v->catalias_sel != '') {
+
+                    // SELECTED CATEGORY SET BY USER in product view (frontend)
+                    $link = Route::_(PhocacartRoute::getItemRoute($v->id, $v->catid_sel, $v->alias, $v->catalias_sel));
+                } else {
+
+                    // RANDOM CATEGORY ORDERED BY ORDERING
+                    $link = Route::_(PhocacartRoute::getItemRoute($v->id, $v->catid, $v->alias, $v->catalias));
+                }
+
+                $tabO .= '<a href="' . $link . '">';
+                if (isset($image->rel) && $image->rel != '') {
+                    /*$tabO	.= '<img src="'.Uri::base(true).'/'.$image->rel.'" alt="" class="'.$this->s['c']['img-responsive'].' ph-image"';
+                    if (isset($this->t['image_width']) && $this->t['image_width'] != '' && isset($this->t['image_height']) && $this->t['image_height'] != '') {
+                        $tabO	.= ' style="width:'.$this->t['image_width'].';height:'.$this->t['image_height'].'"';
+                    }
+                    $tabO	.= ' />';*/
+
+                    $d                    = array();
+                    $d['t']               = $this->t;
+                    $d['s']               = $this->s;
+                    $d['src']             = Uri::base(true) . '/' . $image->rel;
+                    $d['srcset-webp']     = Uri::base(true) . '/' . $image->rel_webp;
+                    $d['data-image']      = Uri::base(true) . '/' . $image->rel;
+                    $d['data-image-webp'] = Uri::base(true) . '/' . $image->rel_webp;
+                    $d['alt-value']       = PhocaCartImage::getAltTitle($v->title, $image->rel);
+                    $d['class']           = PhocacartRenderFront::completeClass(array($this->s['c']['img-responsive'], 'img-thumbnail', 'ph-image-full', 'phImageFull', 'phjProductImage' . ''));
+                    $d['style']           = '';
+                    /*if (isset($this->t['image_width']) && (int)$this->t['image_width'] > 0 && isset($this->t['image_height']) && (int)$this->t['image_height'] > 0) {
+                        $d['style'] = 'width:' . $this->t['image_width'] . 'px;height:' . $this->t['image_height'] . 'px';
+                    }*/
+
+                    $tabO .= $layoutI->render($d);
+
+                }
+                $tabO .= '</a>';
+                $tabO .= '<div class="' . $this->s['c']['caption'] . '"><h4><a href="' . $link . '">' . $v->title . '</a></h4></div>';
+
+                $tabO .= '<div class="">';
+                $tabO .= '<a href="' . $link . '" class="' . $this->s['c']['btn.btn-primary.btn-sm'] . ' ph-btn" role="button">';
+                //$tabO   .= '<span class="'.$this->s['i']['view-product'].'"></span> ';
+                $tabO .= PhocacartRenderIcon::icon($d['s']['i']['ok'], '', ' ');
+                $tabO .= Text::_('COM_PHOCACART_VIEW_PRODUCT') . '</a>';
+                $tabO .= '</div>';
+
+                $tabO .= '</div>';
+                $tabO .= '</div>';
+
+                $tabO .= '</div>';
+                $tabO .= '</div>';
+
+
+            }
+            $tabO   .= '</div>';
+            $tabO   .= '</div>';
+            $active = $activeTab = '';
+        }
 	}
 
 	// PRICE HISTORY

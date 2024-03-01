@@ -232,10 +232,7 @@ abstract class I18nHelper
         $columnsFallback = ['title', 'alias', 'alias_value'];// Could be possible parameter in options - these columns get coalesce
 
         $output = '';
-
-        if ($prefix != '') {
-            $output .= $prefix;
-        }
+        $output .= $prefix;
 
         switch($type) {
             case 'groupconcat':
@@ -297,9 +294,7 @@ abstract class I18nHelper
         }
 
 
-        if ($suffix != '') {
-            $output .= $suffix;
-        }
+        $output .= $suffix;
 
         return $output;
     }
