@@ -132,7 +132,19 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 	public function getForm($data = array(), $loadData = true)
 	{
 		$form = $this->loadForm('com_phocacart.phocacartitem', 'phocacartitem', array('control' => 'jform', 'load_data' => $loadData));
-        return $this->prepareI18nForm($form);
+        $form = $this->prepareI18nForm($form);
+
+        $attributeTemplates = ContentTypeHelper::getContentTypes(ContentTypeHelper::Attribute);
+        foreach ($attributeTemplates as $attributeTemplate) {
+            if ($attributeTemplate->params->get('is_default')) {
+                /** @var \Joomla\CMS\Form\Field\SubformField $field */
+                $field = $form->getField('attributes');
+                $subform = $field->loadSubForm();
+                $subform->setFieldAttribute('attribute_template', 'default', $attributeTemplate->id);
+                break;
+            }
+        }
+        return $form;
 	}
 
 	protected function loadFormData()

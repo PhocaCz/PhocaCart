@@ -44,6 +44,11 @@
 
                 <field name="alias" type="phocatext" i18n="true" showon=".context:attribute" label="COM_PHOCACART_FIELD_ALIAS_LABEL" />
 
+                <field name="is_default" type="radio" default="0" showon=".context:attribute" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_IS_DEFAULT_LABEL">
+                    <option value="0">COM_PHOCACART_NO</option>
+                    <option value="1">COM_PHOCACART_YES</option>
+                </field>
+
                 <field name="required" type="radio" default="0" showon=".context:attribute" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_REQUIRED_LABEL">
                     <option value="0">COM_PHOCACART_NO</option>
                     <option value="1">COM_PHOCACART_YES</option>
