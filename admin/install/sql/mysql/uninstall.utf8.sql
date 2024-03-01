@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS `#__phocacart_attribute_values`;
 DROP TABLE IF EXISTS `#__phocacart_bulk_prices`;
 DROP TABLE IF EXISTS `#__phocacart_cart_multiple`;
 DROP TABLE IF EXISTS `#__phocacart_categories`;
+DROP TABLE IF EXISTS `#__phocacart_content_types`;
 DROP TABLE IF EXISTS `#__phocacart_countries`;
 DROP TABLE IF EXISTS `#__phocacart_coupons`;
 DROP TABLE IF EXISTS `#__phocacart_coupon_categories`;
@@ -109,3 +110,6 @@ DROP TABLE IF EXISTS `#__phocacart_payment_method_access`;
 DROP TABLE IF EXISTS `#__phocacart_product_access`;
 DROP TABLE IF EXISTS `#__phocacart_product_discount_access`;
 DROP TABLE IF EXISTS `#__phocacart_shipping_method_access`;
+
+-- Templates
+DELETE FROM `#__mail_templates` WHERE template_id = 'com_phocacart.watchdog';

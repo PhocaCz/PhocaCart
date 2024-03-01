@@ -316,6 +316,8 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_attributes` (
   `alias` varchar(255) NOT NULL DEFAULT '',
   `required` tinyint(1) NOT NULL DEFAULT '0',
   `type` tinyint(1) NOT NULL DEFAULT '0',
+  `attribute_template` int(11),
+  `is_filter` int(11) NOT NULL DEFAULT 1,
   `published` tinyint(1) NOT NULL DEFAULT '1',
   `checked_out` int(11) unsigned NOT NULL DEFAULT '0',
   `checked_out_time` datetime,
@@ -2021,7 +2023,8 @@ INSERT INTO `#__phocacart_form_fields` ( `title`, `label`, `description`, `type`
 
 INSERT INTO `#__phocacart_groups` (`id`, `title`, `published`, `display_price`, `display_addtocart`, `display_attributes`, `ordering`, `type`) VALUES (1, 'COM_PHOCACART_DEFAULT', '1', '1', '1', '1', '1', '1');
 
-INSERT INTO `#__mail_templates` (`template_id`, `extension`, `language`, `subject`, `body`, `htmlbody`, `attachments`, `params`) VALUES
+-- INSERT -> REPLACE
+REPLACE INTO `#__mail_templates` (`template_id`, `extension`, `language`, `subject`, `body`, `htmlbody`, `attachments`, `params`) VALUES
     ('com_phocacart.watchdog', 'com_phocacart', '', 'COM_PHOCACART_EMAIL_WATCHDOG_SUBJECT', 'COM_PHOCACART_EMAIL_WATCHDOG_BODY', 'COM_PHOCACART_EMAIL_WATCHDOG_HTMLBODY', '', '{"tags":["user_name","user_username","user_email","product_title","product_sku","product_url","site_name","site_url"]}');
 
 INSERT INTO `#__phocacart_content_types` (`id`, `title`, `context`, `published`, `ordering`, `params`)

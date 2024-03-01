@@ -29,9 +29,9 @@ if ($saveOrder && !empty($this->items)) {
 	$saveOrderingUrl = $r->saveOrder($this->t, $listDirn);
 }
 
-$nrColumns = 10;
+$nrColumns = 11;
 $assoc     = I18nHelper::associationsEnabled();
-if ($assoc) {$nrColumns = 11;}
+if ($assoc) {$nrColumns = 12;}
 
 echo $r->jsJorderTable($listOrder);
 
