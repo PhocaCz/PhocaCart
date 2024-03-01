@@ -12,6 +12,8 @@ use Joomla\CMS\Table\Table;
 
 class TablePhocacartContentType extends Table
 {
+    protected $_jsonEncode = ['params'];
+
 	function __construct($db)
     {
 		parent::__construct('#__phocacart_content_types', 'id', $db);

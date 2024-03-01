@@ -244,3 +244,6 @@ UPDATE `#__phocacart_categories` SET `category_type` = 1 WHERE `category_type` =
 UPDATE `#__phocacart_product_related` SET `related_type` = 2 WHERE `related_type` = 0;
 
 ALTER TABLE `#__phocacart_product_related` ADD COLUMN `ordering` int(11) NOT NULL DEFAULT 0;
+
+ALTER TABLE `#__phocacart_attributes` ADD COLUMN `attribute_template` int(11) AFTER `product_id`;
+ALTER TABLE `#__phocacart_attributes` ADD COLUMN `is_filter` int(11) NOT NULL DEFAULT 1 AFTER `published`;

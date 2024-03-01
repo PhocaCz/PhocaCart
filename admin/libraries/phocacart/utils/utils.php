@@ -741,9 +741,11 @@ class PhocacartUtils
 		return '';
 	}
 
-	public static function arrayDefValues(array $array, array $defValues): array
+	public static function arrayDefValues(array $array, array $defValues, array $emptyValues = []): array
 	{
-		foreach ($defValues as $key => $value) {
+        $array = array_merge($defValues, $array);
+
+		foreach ($emptyValues as $key => $value) {
 			if (!array_key_exists($key, $array) || empty($array[$key])) {
 				$array[$key] = $value;
 			}

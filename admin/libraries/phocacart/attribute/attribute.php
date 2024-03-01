@@ -13,6 +13,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Folder;
+use Phoca\PhocaCart\ContentType\ContentTypeHelper;
 use Phoca\PhocaCart\I18n\I18nHelper;
 
 class PhocacartAttribute
@@ -22,7 +23,7 @@ class PhocacartAttribute
         $db = Factory::getDBO();
 
 
-        $query = 'SELECT a.id, '. I18nHelper::sqlCoalesce(['title', 'alias']) . ', a.required, a.type, a.published'
+        $query = 'SELECT a.id, '. I18nHelper::sqlCoalesce(['title', 'alias']) . ', a.required, a.type, a.published, a.is_filter, a.attribute_template'
             . ' FROM #__phocacart_attributes AS a'
             . I18nHelper::sqlJoin('#__phocacart_attributes_i18n')
             . ' WHERE a.product_id = ' . (int) $productId;
@@ -47,10 +48,12 @@ class PhocacartAttribute
             if ($attributes) {
                 foreach ($attributes as $attribute) {
                     $attributesSubform['attributes' . $i]['id']       = (int)$attribute['id'];
+                    $attributesSubform['attributes' . $i]['attribute_template'] = (int)$attribute['attribute_template'];
                     $attributesSubform['attributes' . $i]['title']    = (string)$attribute['title'];
                     $attributesSubform['attributes' . $i]['alias']    = (string)$attribute['alias'];
                     $attributesSubform['attributes' . $i]['published'] = (int)$attribute['published'];
                     $attributesSubform['attributes' . $i]['required'] = (int)$attribute['required'];
+                    $attributesSubform['attributes' . $i]['is_filter'] = (int)$attribute['is_filter'];
                     $attributesSubform['attributes' . $i]['type']     = (int)$attribute['type'];
                     $i++;
                 }
@@ -218,9 +221,8 @@ class PhocacartAttribute
      * type of option
      */
 
-    public static function setAttributeValue($type, $value, $encoded = false, $display = false, $typeOption = 0) {
-
-
+    public static function setAttributeValue($type, $value, $encoded = false, $display = false, $typeOption = 0)
+    {
         switch ($type) {
             case 7:
             case 8:
@@ -236,7 +238,6 @@ class PhocacartAttribute
 
                 $value = strip_tags($value);
                 return urlencode(substr($value, 0, self::getAttributeLength($type, $typeOption)));
-            break;
 
             default:
                 if ($display) {
@@ -244,13 +245,11 @@ class PhocacartAttribute
                 } else {
                     return (int)$value;
                 }
-
-            break;
         }
-        return false;
     }
 
-    public static function getRequiredArray() {
+    public static function getRequiredArray()
+    {
         $o = array('0' => Text::_('COM_PHOCACART_NO'), '1' => Text::_('COM_PHOCACART_YES'));
         return $o;
     }
@@ -283,12 +282,20 @@ class PhocacartAttribute
             if (!empty($attributesArray)) {
 
                 foreach ($attributesArray as &$attribute) {
+                    if ($attribute['attribute_template']) {
+                        $template = ContentTypeHelper::getContentTypeParams('attribute', (int)$attribute['attribute_template']);
+                        $attribute = array_merge($attribute, $template->toArray());
+                    }
+
                     $i18nData = I18nHelper::prepareI18nData($attribute, ['title', 'alias']);
                     $attribute = PhocacartUtils::arrayDefValues($attribute, [
-                       'title' => Factory::getDate()->format("Y-m-d-H-i-s"),
+                       'attribute_template' => null,
                        'published' => 1,
                        'required' => '',
+                       'is_filter' => 1,
                        'type' => '',
+                    ], [
+                        'title' => Factory::getDate()->format("Y-m-d-H-i-s"),
                     ]);
 
                     if (empty($attribute['alias'])) {
@@ -309,10 +316,12 @@ class PhocacartAttribute
                     if ((int)$idExists > 0) {
                         $query = 'UPDATE #__phocacart_attributes SET'
                             . ' product_id = ' . (int)$productId . ','
+                            . ' attribute_template = ' . ((int)$attribute['attribute_template'] ?: 'null')  . ','
                             . ' title = ' . $db->quote($attribute['title']) . ','
                             . ' alias = ' . $db->quote($attribute['alias']) . ','
                             . ' published = ' . (int)$attribute['published'] . ','
                             . ' required = ' . (int)$attribute['required'] . ','
+                            . ' is_filter = ' . (int)$attribute['is_filter'] . ','
                             . ' type = ' . (int)$attribute['type'] . ','
                             . ' ordering = ' . $i
                             . ' WHERE id = ' . (int)$idExists;
@@ -324,8 +333,17 @@ class PhocacartAttribute
                         $date = Factory::getDate();
                         $now  = $date->toSql();
 
-                        $valuesString = '(' . (int)$productId . ', ' . $db->quote($attribute['title']) . ', ' . $db->quote($attribute['alias']) . ', ' . (int)$attribute['published'] . ', ' . (int)$attribute['required'] . ', ' . (int)$attribute['type'] . ', ' . $db->quote($now) . ', '.  $i . ')';
-                        $query        = ' INSERT INTO #__phocacart_attributes (product_id, title, alias, published, required, type, date, ordering)'
+                        $valuesString = '(' . (int)$productId . ', '
+                            . ((int)$attribute['attribute_template'] ?: 'null') . ', '
+                            . $db->quote($attribute['title']) . ', '
+                            . $db->quote($attribute['alias']) . ', '
+                            . (int)$attribute['published'] . ', '
+                            . (int)$attribute['required'] . ', '
+                            . (int)$attribute['is_filter'] . ', '
+                            . (int)$attribute['type'] . ', '
+                            . $db->quote($now) . ', '
+                            .  $i . ')';
+                        $query = ' INSERT INTO #__phocacart_attributes (product_id, attribute_template, title, alias, published, required, is_filter, type, date, ordering)'
                             . ' VALUES ' . $valuesString;
                         $db->setQuery($query);
                         $db->execute(); // insert is not done together but step by step because of getting last insert id
@@ -353,7 +371,6 @@ class PhocacartAttribute
                             $i18nData = I18nHelper::prepareI18nData($option, ['title', 'alias']);
 
                             $option = PhocacartUtils::arrayDefValues($option, [
-                                'title' => '',
                                 'alias' => '',
                                 'amount' => '',
                                 'operator' => '1',
@@ -369,6 +386,8 @@ class PhocacartAttribute
                                 'color' => '',
                                 'required' => '0',
                                 'type' => '0',
+                            ], [
+                                'title' => Factory::getDate()->format("Y-m-d-H-i-s"),
                             ]);
 
                             if (!isset($option['published'])) {

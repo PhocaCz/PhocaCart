@@ -6,22 +6,31 @@
 
 			<field name="id" type="hidden" />
 
-			<field name="title" type="phocatext" i18n="true" required="true" label="COM_PHOCACART_FIELD_TITLE_LABEL" />
+			<field name="attribute_template" type="PhocaCartContentType" context="attribute" default="0" label="COM_PHOCACART_FIELD_ATTRIBUTE_TEMPLATE_LABEL" description="COM_PHOCACART_FIELD_ATTRIBUTE_TEMPLATE_DESC">
+				<option value="0">COM_PHOCACART_FIELD_ATTRIBUTE_TEMPLATE_CUSTOM</option>
+			</field>
 
-			<field name="alias" type="phocatext" i18n="true" label="COM_PHOCACART_FIELD_ALIAS_LABEL" />
+			<field name="title" type="phocatext" i18n="true" showon="attribute_template:0" label="COM_PHOCACART_FIELD_TITLE_LABEL" />
+
+			<field name="alias" type="phocatext" i18n="true" showon="attribute_template:0" label="COM_PHOCACART_FIELD_ALIAS_LABEL" />
 
 			<field name="published" type="radio" default="1" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL">
 				<option value="0">COM_PHOCACART_NO</option>
 				<option value="1">COM_PHOCACART_YES</option>
 			</field>
 
-			<field name="required" type="radio" default="0" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_REQUIRED_LABEL">
+			<field name="required" type="radio" default="0" showon="attribute_template:0" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_REQUIRED_LABEL">
 				<option value="0">COM_PHOCACART_NO</option>
 				<option value="1">COM_PHOCACART_YES</option>
 			</field>
 
-			<field name="type" type="list" default="1" label="COM_PHOCACART_FIELD_TYPE_LABEL">
-				<option value="1">COM_PHOCACART_ATTR_TYPE_SELECT</option>
+			<field name="is_filter" type="radio" default="1" showon="attribute_template:0" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_IS_FILTER_LABEL">
+				<option value="0">COM_PHOCACART_NO</option>
+				<option value="1">COM_PHOCACART_YES</option>
+			</field>
+
+			<field name="type" type="list" default="1" showon="attribute_template:0" label="COM_PHOCACART_FIELD_TYPE_LABEL">
+				<option value="1">COM_PHOCACART_ATTR_TYPE_LIST</option>
 				<option value="2">COM_PHOCACART_ATTR_TYPE_COLOR_SELECT</option>
 				<option value="3">COM_PHOCACART_ATTR_TYPE_IMAGE_SELECT</option>
 				<option value="4">COM_PHOCACART_ATTR_TYPE_CHECKBOX</option>
