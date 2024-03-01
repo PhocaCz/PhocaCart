@@ -251,15 +251,18 @@ jQuery(document).ready(function() {
         } else {
             // Get alias from parent attribute and send the value so only options from such type of alias will be selected
             var parentAliasName = parentId + '__alias';
-            var parentAlias = jQuery('#' + parentAliasName).val();
+            var parentAlias = jQuery('input[id^=' + parentAliasName + ']').val()
             src = src + '&parentattributealias=' + encodeURIComponent(parentAlias);
             var parentTitleName = parentId + '__title';
-            var parentTitle = jQuery('#' + parentTitleName).val();
+            var parentTitle = jQuery('input[id^=' + parentTitleName + ']').val()
             src = src + '&parentattributetitle=' + encodeURIComponent(parentTitle);
         }
 
         // Get all categories of current product for possible filtering
-        var cidA = jQuery('#jform_catid_multiple').val();
+        var cidA = [];
+        jQuery('[name*="jform[catid_multiple]"]').each((_, edit) => {
+            cidA.push(...jQuery(edit).val())
+        });
         var cid = cidA.toString();
 
         src = src + '&cid=' + cid;

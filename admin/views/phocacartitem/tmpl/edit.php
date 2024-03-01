@@ -44,7 +44,12 @@ function phCheckRequestStatus(i, task) {
             phCheckRequestStatus(i, task);
         }, 1000);
     } else {
-        if (task != "'. $this->t['task'].'.cancel" && task != "phocacartwizard.backtowizard" && document.getElementById("jform_catid_multiple").value == "") {
+        var cidA = [];
+        jQuery(\'[name*="jform[catid_multiple]"]\').each((_, edit) => {
+            cidA.push(...jQuery(edit).val())
+        });
+            
+        if (task != "'. $this->t['task'].'.cancel" && task != "phocacartwizard.backtowizard" && !cidA.length) {
             alert("'. $this->escape(Text::_('JGLOBAL_VALIDATION_FORM_FAILED')) . ' - '. $this->escape(Text::_('COM_PHOCACART_ERROR_CATEGORY_NOT_SELECTED')).'");
         } else if (task == "' . $this->t['task'] . '.cancel" || task == "phocacartwizard.backtowizard" || document.formvalidator.isValid(document.getElementById("adminForm"))) {
             Joomla.submitform(task, document.getElementById("adminForm"));
@@ -63,7 +68,7 @@ Joomla.submitbutton = function(task) {
     phCheckRequestStatus(0, task);
 }
 ';
-//Factory::getDocument()->addScriptDeclaration($js);
+Factory::getDocument()->addScriptDeclaration($js);
 
 // ASSOCIATION
 $assoc = I18nHelper::associationsEnabled();

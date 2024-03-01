@@ -11,6 +11,8 @@
 defined('_JEXEC') or die();
 use Joomla\CMS\Factory;
 use Joomla\Database\DatabaseInterface;
+use Phoca\PhocaCart\ContentType\ContentTypeHelper;
+use Phoca\PhocaCart\I18n\I18nHelper;
 
 class PhocacartRelated
 {
@@ -126,6 +128,19 @@ class PhocacartRelated
             $wheres[] = " c.published = 1";
             $wheres[] = " a.published = 1";
 
+            $limitType = [];
+            $contentTypes = ContentTypeHelper::getContentTypes(ContentTypeHelper::ProductRelated);
+            foreach ($contentTypes as $contentType) {
+                if ($contentType->params->get('display_in_product', 1)) {
+                    $limitType[] = $contentType->id;
+                }
+            }
+
+            if (!$limitType) {
+                return [];
+            }
+            $wheres[] = ' t.related_type in (' . implode(', ', $limitType) . ')';
+
             $catid = PhocacartCategoryMultiple::getCurrentCategoryId();
         }
 
@@ -147,7 +162,8 @@ class PhocacartRelated
 
             //$query = ' SELECT a.id as id, a.title as title, a.image as image, a.alias as alias,'
             //		.' c.id as catid, c.alias as catalias, c.title as cattitle';
-            $query = ' SELECT DISTINCT a.id as id, a.title as title, a.image as image, a.alias as alias, a.description, a.description_long,';
+            $query = ' SELECT DISTINCT a.id as id, a.image as image, t.related_type, ';
+            $query .= I18nHelper::sqlCoalesce(['title', 'alias', 'description', 'description_long']) . ',';
 
             // (1)RANDOM CATEGORY
             /*$query  .= ' GROUP_CONCAT(c.id ORDER BY c.parent_id, c.ordering DESC LIMIT 1) as catid,'
@@ -165,21 +181,24 @@ class PhocacartRelated
             .' (SELECT c.alias FROM jos_phocacart_product_categories AS pc'
             .' LEFT JOIN jos_phocacart_categories AS c ON c.id = pc.category_id WHERE a.id = pc.product_id LIMIT 1) AS catalias';*/
 
-            $query  .= ' c.id as catid, c.title as cattitle, c.alias as catalias,';
+            $query  .= ' c.id as catid, ';
+            $query .= I18nHelper::sqlCoalesce(['title', 'alias'], 'c', 'cat') . ', ';
 
             // (2)PREFERRED CATEGORY (catid set)
             // FULL GROUP BY ISSUE
             //$query .= ' GROUP_CONCAT(cp.id) AS catid_pref, GROUP_CONCAT(cp.alias) AS catalias_pref, GROUP_CONCAT(cp.title) AS cattitle_pref';
-            $query .= ' cp.id AS catid_pref, cp.alias AS catalias_pref, cp.title AS cattitle_pref';
-
+            $query .= ' cp.id AS catid_pref, ';
+            $query .= I18nHelper::sqlCoalesce(['title'], 'cp', '', '', '', '', true) . ' AS cattitle_pref, ';
+            $query .= I18nHelper::sqlCoalesce(['alias'], 'cp', '', '', '', '', true) . ' AS catalias_pref ';
         }
 
         if ((int)$catid > 0) {
             // (3)SELECTED CATEGORY (displayed category in frontend)
-            $query .= ',';
             // FULL GROUP BY ISSUE
             //$query .= ' GROUP_CONCAT(cs.id) AS catid_sel, GROUP_CONCAT(cs.alias) AS catalias_sel, GROUP_CONCAT(cs.title) AS cattitle_sel';
-            $query .= ' cs.id AS catid_sel, cs.alias AS catalias_sel, cs.title AS cattitle_sel';
+            $query .= ', cs.id AS catid_sel, ';
+            $query .= I18nHelper::sqlCoalesce(['title'], 'cs', '', '', '', '', true) . ' AS cattitle_sel, ';
+            $query .= I18nHelper::sqlCoalesce(['alias'], 'cs', '', '', '', '', true) . ' AS catalias_sel ';
         }
 
         if (!$frontend) {
@@ -195,11 +214,15 @@ class PhocacartRelated
         if ($select != 1 && $select != 2 && $select != 3) {
             // (2)
             $query .= ' LEFT JOIN #__phocacart_categories AS cp ON cp.id = pc.category_id and pc.category_id = a.catid';
+            $query .= I18nHelper::sqlJoin('#__phocacart_products_i18n');
+            $query .= I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'c');
+            $query .= I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'cp');
         }
 
         if ((int)$catid > 0) {
             // (3)
             $query .= ' LEFT JOIN #__phocacart_categories AS cs ON cs.id = pc.category_id and pc.category_id = ' . (int)$catid;
+            $query .= I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'cs');
         }
 
         if ($frontend && !$skip['group']) {

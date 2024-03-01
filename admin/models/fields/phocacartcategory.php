@@ -92,7 +92,7 @@ class JFormFieldPhocacartCategory extends ListField
 
         $options = [];
         if ($splitCategoryTypes) {
-            $categoryTypes = ContentTypeHelper::getContentTypes('category');
+            $categoryTypes = ContentTypeHelper::getContentTypes(ContentTypeHelper::Category);
             foreach ($categoryTypes as $categoryType) {
                 $rootCategories = array_filter(PhocacartCategory::getCategories(), function ($category) use ($categoryType) {
                     return !$category->parent_id && $category->category_type == $categoryType->id;
@@ -143,7 +143,7 @@ class JFormFieldPhocacartCategory extends ListField
         $data['hasCustomFields'] = !empty(FieldsHelper::getFields('com_phocacart.phocacartitem'));
         $data['splitCategoryTypes'] = (string)$this->element['splitCategoryTypes'] === 'true';
         if ($data['splitCategoryTypes']) {
-            $data['categoryTypes'] = ContentTypeHelper::getContentTypes('category');
+            $data['categoryTypes'] = ContentTypeHelper::getContentTypes(ContentTypeHelper::Category);
         } else {
             $data['categoryTypes'] = [];
         }
