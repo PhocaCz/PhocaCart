@@ -27,44 +27,6 @@ $app   = Factory::getApplication();
 $input = $app->input;
 $r     = $this->r;
 
-
-// phocacartitem-form ==> adminForm
-$js = '
-let phRequestActive = null;
-
-function phCheckRequestStatus(i, task) {
-    i++;
-    if (i > 30) {
-        /* Stop Loop */
-        phRequestActive = null;
-    }
-
-    if (phRequestActive) {
-        setTimeout(function(){
-            phCheckRequestStatus(i, task);
-        }, 1000);
-    } else {
-        if (task != "'. $this->t['task'].'.cancel" && task != "phocacartwizard.backtowizard" && document.getElementById("jform_catid_multiple").value == "") {
-            alert("'. $this->escape(Text::_('JGLOBAL_VALIDATION_FORM_FAILED')) . ' - '. $this->escape(Text::_('COM_PHOCACART_ERROR_CATEGORY_NOT_SELECTED')).'");
-        } else if (task == "' . $this->t['task'] . '.cancel" || task == "phocacartwizard.backtowizard" || document.formvalidator.isValid(document.getElementById("adminForm"))) {
-            Joomla.submitform(task, document.getElementById("adminForm"));
-
-            /* Close Modal */
-            if (task !== "phocacartitem.apply") {
-                window.parent.jQuery("#phocacartitemEdit' . $this->item->id . 'Modal").modal("hide");
-            }
-        } else {
-            Joomla.renderMessages({error: ["' . Text::_('JGLOBAL_VALIDATION_FORM_FAILED', true) . '"]});
-        }
-    }
-}
-
-Joomla.submitbutton = function(task) {
-    phCheckRequestStatus(0, task);
-}
-';
-//Factory::getDocument()->addScriptDeclaration($js);
-
 // ASSOCIATION
 $assoc = I18nHelper::associationsEnabled();
 
