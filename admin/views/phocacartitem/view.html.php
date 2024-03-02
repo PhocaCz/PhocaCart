@@ -153,9 +153,9 @@ class PhocaCartCpViewPhocaCartItem extends HtmlView
 		}
 
 		ToolbarHelper::divider();
+		ToolbarHelper::inlinehelp();
 		ToolbarHelper::help( 'screen.'.$this->t['c'], true );
 
 		PhocacartRenderAdminview::renderWizardButton('back');
 	}
 }
-?>
