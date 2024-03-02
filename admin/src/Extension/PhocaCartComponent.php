@@ -30,11 +30,16 @@ use Joomla\CMS\Version;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
 use Joomla\Event\Event;
-use Joomla\Event\Priority;
 use Joomla\Registry\Registry;
 use Phoca\PhocaCart\Schemaorg\Schema;
 
 \defined('JPATH_PLATFORM') or die;
+
+// Joomla 4 compatibility
+if (Version::MAJOR_VERSION < 5) {
+    interface CompatSchemaorgServiceInterface {}
+    class_alias('\\Joomla\\Component\\PhocaCart\\Administrator\\Extension\\CompatSchemaorgServiceInterface', '\\Joomla\\CMS\\Schemaorg\\SchemaorgServiceInterface');
+}
 
 /**
  * Component class for com_phocacart
