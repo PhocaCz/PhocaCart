@@ -12,6 +12,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\HTML\HTMLHelper;
+use Phoca\PhocaCart\Form\FormHelper;
 use Phoca\PhocaCart\I18n\I18nHelper;
 
 extract($displayData);
@@ -36,6 +37,11 @@ if (!empty($options['showonEnabled'])) {
     /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
     $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
     $wa->useScript('showon');
+
+    $options['rel'] = ' data-showon=\'' .
+            json_encode(FormHelper::parseShowOnConditions($field->showon, $field->formControl, $field->group)) .
+            '\''
+        ;
 }
 
 $class = ['ph-par'];
