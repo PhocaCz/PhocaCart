@@ -67,7 +67,7 @@ class PhocacartAttribute
         $db = Factory::getDBO();
 
         $query = 'SELECT a.id, '.I18nHelper::sqlCoalesce(['title', 'alias']).', a.published, a.amount, a.operator, a.stock, a.operator_weight, a.weight, '
-            . 'a.image, a.image_medium, a.image_small, a.download_folder, a.download_file, a.download_token, a.color, a.default_value, a.required, a.type'
+            . 'a.image, a.image_medium, a.image_small, a.download_folder, a.download_file, a.download_token, a.color, a.default_value, a.required, a.type, a.sku, a.ean'
             . ' FROM #__phocacart_attribute_values AS a'
             . I18nHelper::sqlJoin('#__phocacart_attribute_values_i18n')
             . ' WHERE a.attribute_id = ' . (int) $attributeId;
@@ -80,41 +80,9 @@ class PhocacartAttribute
 
         if ($return == 0) {
             return $db->loadObjectList();
-        } else if ($return == 1) {
-            return $db->loadAssocList();
         } else {
-            $options        = $db->loadAssocList();
-            $optionsSubform = array();
-            $i              = 0;
-            if (!empty($options)) {
-                foreach ($options as $k => $v) {
-                    $optionsSubform['options' . $i]['id']              = (int)$v['id'];
-                    $optionsSubform['options' . $i]['title']           = (string)$v['title'];
-                    $optionsSubform['options' . $i]['alias']           = (string)$v['alias'];
-                    $optionsSubform['options' . $i]['published']       = (int)$v['published'];
-                    $optionsSubform['options' . $i]['operator']        = (string)$v['operator'];
-                    $optionsSubform['options' . $i]['amount']          = PhocacartPrice::cleanPrice($v['amount']);
-                    $optionsSubform['options' . $i]['stock']           = (string)$v['stock'];
-                    $optionsSubform['options' . $i]['operator_weight'] = (string)$v['operator_weight'];
-                    $optionsSubform['options' . $i]['weight']          = PhocacartPrice::cleanPrice($v['weight']);
-                    $optionsSubform['options' . $i]['image']           = (string)$v['image'];
-                    $optionsSubform['options' . $i]['image_medium']    = (string)$v['image_medium'];
-                    $optionsSubform['options' . $i]['image_small']     = (string)$v['image_small'];
-                    $optionsSubform['options' . $i]['download_folder'] = (string)$v['download_folder'];
-                    $optionsSubform['options' . $i]['download_file']   = (string)$v['download_file'];
-                    $optionsSubform['options' . $i]['download_token']  = (string)$v['download_token'];
-                    $optionsSubform['options' . $i]['color']           = (string)$v['color'];
-                    $optionsSubform['options' . $i]['default_value']   = (int)$v['default_value'];
-                    $optionsSubform['options' . $i]['required']        = (int)$v['required'];
-                    $optionsSubform['options' . $i]['type']            = (int)$v['type'];
-
-                    $i++;
-                }
-            }
-            return $optionsSubform;
+            return $db->loadAssocList();
         }
-
-        return false;
     }
 
     public static function getTypeArray($returnId = 0, $returnValue = 0, $returnFull = 0) {
@@ -386,6 +354,8 @@ class PhocacartAttribute
                                 'color' => '',
                                 'required' => '0',
                                 'type' => '0',
+                                'ean' => '',
+                                'sku' => '',
                             ], [
                                 'title' => Factory::getDate()->format("Y-m-d-H-i-s"),
                             ]);
@@ -485,6 +455,8 @@ class PhocacartAttribute
                                 $option['amount'] = PhocacartUtils::replaceCommaWithPoint($option['amount']);
                                 $option['weight'] = PhocacartUtils::replaceCommaWithPoint($option['weight']);
 
+                                n3tDebug::barDump($option,'jo');
+
                                 $query = 'UPDATE #__phocacart_attribute_values SET'
                                     . ' attribute_id = ' . (int)$newIdA . ','
                                     . ' title = ' . $db->quote($option['title']) . ','
@@ -505,6 +477,8 @@ class PhocacartAttribute
                                     . ' default_value = ' . (int)$defaultValue . ','
                                     . ' required = ' . (int)$option['required'] . ','
                                     . ' type = ' . (int)$option['type'] . ','
+                                    . ' ean = ' . $db->quote($option['ean']) . ','
+                                    . ' sku = ' . $db->quote($option['sku']) . ','
                                     . ' ordering = ' . (int)$j
                                     . ' WHERE id = ' . (int)$idExists;
 
@@ -537,10 +511,12 @@ class PhocacartAttribute
                                     . (int)$defaultValue . ','
                                     . (int)$option['required'] . ', '
                                     . (int)$option['type'] . ', '
+                                    . $db->quote($option['ean']) . ', '
+                                    . $db->quote($option['sku']) . ', '
                                     . (int)$j . ')';
 
 
-                                $query = ' INSERT INTO #__phocacart_attribute_values (attribute_id, title, alias, published, operator, amount, stock, operator_weight, weight, image, image_medium, image_small, download_folder, download_file, download_token, color, default_value, required, type, ordering)'
+                                $query = ' INSERT INTO #__phocacart_attribute_values (attribute_id, title, alias, published, operator, amount, stock, operator_weight, weight, image, image_medium, image_small, download_folder, download_file, download_token, color, default_value, required, type, ean, sku, ordering)'
                                     . ' VALUES ' . $options;
 
                                 $db->setQuery($query);
