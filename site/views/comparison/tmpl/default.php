@@ -133,7 +133,7 @@ if (!empty($this->t['items'])) {
 		$c['remove'] .= HTMLHelper::_('form.token');
 		$c['remove'] .= '</form>';
 		$c['remove'] .= '</td>';
-		
+
 		if ($v['description']) {
 			$c['desc'] .= '<td>'.HTMLHelper::_('content.prepare', $v['description']).'</td>';
 		} else {
