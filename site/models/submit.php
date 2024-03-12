@@ -192,7 +192,8 @@ class PhocaCartModelSubmit extends FormModel
 		$data['published']	= 1;
 
 		$data['upload_token'] 			= PhocacartUtils::getToken();
-		$data['upload_folder']			= PhocacartUtils::getToken('folder');
+		$data['upload_folder']			= PhocacartUtils::getAndCheckToken('folder', PhocacartPath::getPath('submititem'));
+		//$data['upload_folder']			= PhocacartUtils::getToken('folder');
 
 		/*
 		if (isset($data['catid'])) {

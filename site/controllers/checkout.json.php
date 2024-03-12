@@ -534,6 +534,7 @@ class PhocaCartControllerCheckout extends FormController
                 $paramsM                               = new Registry($module->params);
                 $cart->params['display_image']         = $paramsM->get('display_image', 0);
                 $cart->params['display_checkout_link'] = $paramsM->get('display_checkout_link', 1);
+                $cart->params['display_product_tax_info'] = $paramsM->get('display_product_tax_info', 0);
 
                 $added = $cart->addItems((int)$item['id'], (int)$item['catid'], (int)$item['quantity'], $item['attribute']);
 
@@ -730,6 +731,7 @@ class PhocaCartControllerCheckout extends FormController
             $paramsM                               = new Registry($module->params);
             $cart->params['display_image']         = $paramsM->get('display_image', 0);
             $cart->params['display_checkout_link'] = $paramsM->get('display_checkout_link', 1);
+            $cart->params['display_product_tax_info'] = $paramsM->get('display_product_tax_info', 1);
 
             if ($item['action'] == 'delete') {
                 $updated = $cart->updateItemsFromCheckout($item['idkey'], 0);

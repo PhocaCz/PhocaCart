@@ -45,6 +45,17 @@ if (!empty($d['fullitems'])) {
 		$cXT 	= $d['s']['c']['col.xs5.sm5.md5'];// -1 //xs12
 		$cXP 	= $d['s']['c']['col.xs4.sm4.md4'];// -1 //xs12
 		$cS		= '-i';
+
+		if ((int)$p['tax_calculation'] > 0 && isset($d['paramsmodule']['display_product_tax_info']) && $d['paramsmodule']['display_product_tax_info'] == 1) {
+
+			$cI 	= $d['s']['c']['col.xs2.sm2.md2'];// +2 //xs12
+			$cX 	= $d['s']['c']['col.xs1.sm1.md1'];// //xs12
+			$cXT 	= $d['s']['c']['col.xs3.sm3.md3'];// -1 //xs12
+			$cXP 	= $d['s']['c']['col.xs2.sm2.md2'];// -1 //xs12
+			$cS		= ''; // S Suffix
+
+		}
+
 	} else {
 		//$c2 = 2;
 		//$c3 = 3;
@@ -53,6 +64,16 @@ if (!empty($d['fullitems'])) {
 		$cXT 	= $d['s']['c']['col.xs6.sm6.md6']; // T Text/Title //xs12
 		$cXP 	= $d['s']['c']['col.xs5.sm5.md5']; // P Price //xs12
 		$cS		= ''; // S Suffix
+
+		if ((int)$p['tax_calculation'] > 0 && isset($d['paramsmodule']['display_product_tax_info']) && $d['paramsmodule']['display_product_tax_info'] == 1) {
+
+			$cI 	= '';
+			$cX 	= $d['s']['c']['col.xs1.sm1.md1']; // X Emtpy space //xs12
+			$cXT 	= $d['s']['c']['col.xs5.sm5.md5']; // T Text/Title //xs12
+			$cXP 	= $d['s']['c']['col.xs2.sm2.md2']; // * 3 !!! P Price //xs12 * 3
+			$cS		= ''; // S Suffix
+
+		}
 	}
 	//$r	= 'row';
 	$r	= $d['s']['c']['row'];
@@ -158,9 +179,22 @@ if (!empty($d['fullitems'])) {
 
 		echo '</div>';
 
-		echo '<div class="'.$cXP.' ph-small ph-cart-small-price ph-right">'.$priceItem.'</div>';
-		echo '</div>';// end row
 
+		if ((int)$p['tax_calculation'] > 0 && isset($d['paramsmodule']['display_product_tax_info']) && $d['paramsmodule']['display_product_tax_info'] == 1) {
+			$priceItemNetto  = $price->getPriceFormat((int)$v['quantity'] * $v['netto']);
+			$priceItemBrutto = $price->getPriceFormat((int)$v['quantity'] * $v['brutto']);
+			$priceItemTax = $price->getPriceFormat($v['tax'] * $v['quantity']);
+			$priceItemFinal = $price->getPriceFormat($v['final']);
+
+			echo '<div class="' . $cXP . ' ph-small ph-cart-small-price ph-right ph-netto">' . $priceItemNetto . '</div>';
+			echo '<div class="' . $cXP . ' ph-small ph-cart-small-price ph-right ph-tax">' . $priceItemTax . '</div>';
+			echo '<div class="' . $cXP . ' ph-small ph-cart-small-price ph-right ph-brutto">' . $priceItemBrutto . '</div>';
+
+		} else {
+			echo '<div class="' . $cXP . ' ph-small ph-cart-small-price ph-right">' . $priceItem . '</div>';
+		}
+
+		echo '</div>';// end row
 
 
 		if (!empty($v['attributes'])) {

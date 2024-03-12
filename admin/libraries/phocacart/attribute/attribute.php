@@ -435,7 +435,8 @@ class PhocacartAttribute
                                 // First create new token and token folder
                                 $oldDownloadFolder     = $option['download_folder'];
                                 $option['download_token']  = PhocacartUtils::getToken();
-                                $option['download_folder'] = PhocacartUtils::getToken('folder');
+                                $option['download_folder'] = PhocacartUtils::getAndCheckToken('folder', PhocacartPath::getPath('attributefile'));
+                                //$option['download_folder']			= PhocacartUtils::getToken('folder');
 
                                 if ($copy == 2 && $option['download_file'] != '' && File::exists($pathAttributes['orig_abs_ds'] . $option['download_file'])) {
                                     $newDownloadFile = str_replace($oldDownloadFolder, $option['download_folder'], $option['download_file']);

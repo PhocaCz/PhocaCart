@@ -17,7 +17,7 @@
 
         <field name="tracking_date_shipped" type="Calendar" label="COM_PHOCACART_FIELD_DATE_SHIPPED_LABEL" description="COM_PHOCACART_FIELD_DATE_SHIPPED_DESC" translateformat="true" filter="user_utc" />
 
-        <field name="order_token" type="phocacarttoken" readonly="true" manager="folder" label="COM_PHOCACART_FIELD_ORDER_TOKEN_LABEL" description="COM_PHOCACART_FIELD_ORDER_TOKEN_DESC"/>
+        <field name="order_token" type="phocacarttoken" readonly="true" manager="token" label="COM_PHOCACART_FIELD_ORDER_TOKEN_LABEL" description="COM_PHOCACART_FIELD_ORDER_TOKEN_DESC"/>
 
         <field name="id" type="text" default="0" required="true" readonly="true" label="COM_PHOCACART_ORDER_ID_LABEL" description="COM_PHOCACART_ORDER_ID_DESC" />
 

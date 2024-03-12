@@ -992,12 +992,16 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 				$copy = 2;// The same like 1 but in this case we even copy the download files on the server
 			}
 			if ($copy > 0) {
-				// First create new token and token folder
+
+                $pathFile = PhocacartPath::getPath('productfile');
+
+                // First create new token and token folder
 				$table->download_token 			= PhocacartUtils::getToken();
-				$table->download_folder			= PhocacartUtils::getToken('folder');
+				$table->download_folder			= PhocacartUtils::getAndCheckToken('folder', $pathFile);
+                //$table->download_folder			= PhocacartUtils::getToken('folder');
 				$params['newdownloadfolder']	= $table->download_folder;
 
-				$pathFile = PhocacartPath::getPath('productfile');
+
 
 				if($copy == 2) {
 
