@@ -26,8 +26,10 @@ class JFormFieldPhocaCartToken extends FormField
 		$readonly	= ((string) $this->element['readonly'] == 'true') ? ' readonly="readonly"' : '';
 		$disabled	= ((string) $this->element['disabled'] == 'true') ? ' disabled="disabled"' : '';
 		$manager	= $this->element['manager'] ? $this->element['manager'] : '';
+        $managerPath	= $this->element['managerpath'] ? $this->element['managerpath'] : '';
 
-		$token = PhocacartUtils::getToken($manager);
+		$token = PhocacartUtils::getAndCheckToken($manager, PhocacartPath::getPath($managerPath));
+        //$token = PhocacartUtils::getToken($manager);
 
 		if ($this->value == '') {
 			$this->value = htmlspecialchars((string)$token);

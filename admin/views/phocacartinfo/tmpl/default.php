@@ -191,6 +191,18 @@ $o .=  '</div>';
 
 $pathImg = 'media/com_phocacart/images/administrator/';
 
+
+$o .= '<div class="phTemplateItemsInfo">'.Text::_('COM_PHOCACART_ADMIN_BOOK_INFO1'). '</div>';
+
+$o .= '<div class="phTemplateItems">';
+
+$o .= '<div class="phTemplateItem"><a href="https://www.phoca.cz/books/1317-phoca-cart-user-manual" target="_blank">'.HTMLHelper::_('image', $pathImg . 'book-phoca-cart-user-manual.webp', 'Phoca Cart - User Manual ' ) .'</a><div class="phTemplateItemTitle">Phoca Cart - User Manual </div></div>';
+$o .= '<div class="phTemplateItem"><a href="https://www.phoca.cz/books/1318-creating-an-e-commerce-website-using-joomla-and-phoca-cart" target="_blank">'.HTMLHelper::_('image', $pathImg . 'book-phoca-cart-ecommerce-website.webp', 'Creating an E-Commerce Website Using Joomla! and Phoca Cart' ) .'</a><div class="phTemplateItemTitle">Creating an E-Commerce Website Using Joomla! and Phoca Cart</div></div>';
+
+$o .= '</div>';
+
+
+
 $o .= '<div class="phTemplateItemsBox">';
 $o .= '<div class="phTemplateItemsInfo">'.Text::_('COM_PHOCACART_ADMIN_TEMPLATE_INFO1'). '</div>';
 
@@ -198,11 +210,17 @@ $o .= '<div class="phTemplateItemsInfo">'.Text::_('COM_PHOCACART_ADMIN_TEMPLATE_
 
 $o .= '<div class="phTemplateItems">';
 
-$o .= '<div class="phTemplateItem"><a href="https://www.phoca.cz/phocacart-extensions/3-templates" target="_blank">'.HTMLHelper::_('image', $pathImg . 'thumb-template-fashion.jpg', 'Phoca Cart - Cassiopeia - Fashion Child Template' ) .'</a><div class="phTemplateItemTitle">Cassiopeia Child Template - Phoca Cart <b>Fashion</b></div></div>';
+$o .= '<div class="phTemplateItem"><a href="https://www.phoca.cz/phocacart-extensions/3-templates" target="_blank">'.HTMLHelper::_('image', $pathImg . 'thumb-template-toys.webp', 'Phoca Cart - Cassiopeia - Toys Child Template' ) .'</a><div class="phTemplateItemTitle">Cassiopeia Child Template - Phoca Cart <b>Toys</b></div></div>';
 
-$o .= '<div class="phTemplateItem"><a href="https://www.phoca.cz/phocacart-extensions/3-templates" target="_blank">'.HTMLHelper::_('image', $pathImg . 'thumb-template-food.jpg', 'Phoca Cart - Cassiopeia - Food Child Template' ) .'</a><div class="phTemplateItemTitle">Cassiopeia Child Template - Phoca Cart <b>Food</b></div></div>';
+$o .= '<div class="phTemplateItem"><a href="https://www.phoca.cz/phocacart-extensions/3-templates" target="_blank">'.HTMLHelper::_('image', $pathImg . 'thumb-template-tools.webp', 'Phoca Cart - Cassiopeia - Tools Child Template' ) .'</a><div class="phTemplateItemTitle">Cassiopeia Child Template - Phoca Cart <b>Tools</b></div></div>';
 
-$o .= '<div class="phTemplateItem"><a href="https://www.phoca.cz/phocacart-extensions/3-templates" target="_blank">'.HTMLHelper::_('image', $pathImg . 'thumb-template-furniture.jpg', 'Phoca Cart - Cassiopeia - Furniture Child Template' ) .'</a><div class="phTemplateItemTitle">Cassiopeia Child Template - Phoca Cart <b>Furniture</b></div></div>';
+$o .= '<div class="phTemplateItem"><a href="https://www.phoca.cz/phocacart-extensions/3-templates" target="_blank">'.HTMLHelper::_('image', $pathImg . 'thumb-template-furniture.webp', 'Phoca Cart - Cassiopeia - Furniture Child Template' ) .'</a><div class="phTemplateItemTitle">Cassiopeia Child Template - Phoca Cart <b>Furniture</b></div></div>';
+
+$o .= '<div class="phTemplateItem"><a href="https://www.phoca.cz/phocacart-extensions/3-templates" target="_blank">'.HTMLHelper::_('image', $pathImg . 'thumb-template-beauty.webp', 'Phoca Cart - Cassiopeia - Beauty Child Template' ) .'</a><div class="phTemplateItemTitle">Cassiopeia Child Template - Phoca Cart <b>Beauty</b></div></div>';
+
+$o .= '<div class="phTemplateItem"><a href="https://www.phoca.cz/phocacart-extensions/3-templates" target="_blank">'.HTMLHelper::_('image', $pathImg . 'thumb-template-fashion.webp', 'Phoca Cart - Cassiopeia - Fashion Child Template' ) .'</a><div class="phTemplateItemTitle">Cassiopeia Child Template - Phoca Cart <b>Fashion</b></div></div>';
+
+            $o .= '<div class="phTemplateItem"><a href="https://www.phoca.cz/phocacart-extensions/3-templates" target="_blank">'.HTMLHelper::_('image', $pathImg . 'thumb-template-food.webp', 'Phoca Cart - Cassiopeia - Food Child Template' ) .'</a><div class="phTemplateItemTitle">Cassiopeia Child Template - Phoca Cart <b>Food</b></div></div>';
 
 $o .= '</div>';
 
@@ -211,11 +229,11 @@ $o .= '<div class="phTemplateItemsInfo">'.Text::_('COM_PHOCACART_ADMIN_TEMPLATE_
 
 $o .= '<div class="phTemplateItems">';
 
-$o .= '<div class="phTemplateItem"><a href="https://www.linelab.org/support/lbox-free-joomla-4-template" target="_blank">'.HTMLHelper::_('image', $pathImg . 'thumb-template-lbox.jpg', ' LBOX - Free Joomla Template ' ) .'</a><div class="phTemplateItemTitle">LBOX - Free Joomla Template </div></div>';
+$o .= '<div class="phTemplateItem"><a href="https://www.linelab.org/support/lbox-free-joomla-4-template" target="_blank">'.HTMLHelper::_('image', $pathImg . 'thumb-template-lbox.webp', ' LBOX - Free Joomla Template ' ) .'</a><div class="phTemplateItemTitle">LBOX - Free Joomla Template </div></div>';
 
-$o .= '<div class="phTemplateItem"><a href="https://www.hotjoomlatemplates.com/joomla-templates/electronics-shop" target="_blank">'.HTMLHelper::_('image', $pathImg . 'thumb-template-ht.jpg', 'Hot Themes - Electronics Shop Joomla Template' ) .'</a><div class="phTemplateItemTitle">Hot Themes - Electronics Shop Joomla Template</div></div>';
+$o .= '<div class="phTemplateItem"><a href="https://www.hotjoomlatemplates.com/joomla-templates/electronics-shop" target="_blank">'.HTMLHelper::_('image', $pathImg . 'thumb-template-ht.webp', 'Hot Themes - Electronics Shop Joomla Template' ) .'</a><div class="phTemplateItemTitle">Hot Themes - Electronics Shop Joomla Template</div></div>';
 
-$o .= '<div class="phTemplateItem"><a href="https://yootheme.com/joomla-templates" target="_blank">'.HTMLHelper::_('image', $pathImg . 'thumb-template-yootheme.jpg', 'YOOtheme - Premium Joomla Templates' ) .'</a><div class="phTemplateItemTitle">YOOtheme - Premium Joomla Templates</div></div>';
+$o .= '<div class="phTemplateItem"><a href="https://yootheme.com/joomla-templates" target="_blank">'.HTMLHelper::_('image', $pathImg . 'thumb-template-yootheme.webp', 'YOOtheme - Premium Joomla Templates' ) .'</a><div class="phTemplateItemTitle">YOOtheme - Premium Joomla Templates</div></div>';
 $o .= '</div>';
 
 $o .= '</div>';

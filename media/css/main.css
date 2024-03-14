@@ -2575,3 +2575,19 @@ form.ph-form-placeholder .ph-checkout-billing-row {
     text-align: right;
     padding: 1em 0;
 }
+
+/* Small Cart Tax Info */
+.ph-cart-small-price.ph-netto,
+.ph-cart-small-price.ph-brutto,
+.ph-cart-small-price.ph-tax {
+    /*white-space:nowrap;*/
+}
+
+.ph-cart-small-price.ph-brutto {
+    font-weight: bold;
+}
+
+.ph-item-subcategory-box {
+    text-align: center;
+    margin-bottom: 1em;
+}

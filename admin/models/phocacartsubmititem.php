@@ -217,7 +217,8 @@ class PhocaCartCpModelPhocaCartSubmititem extends AdminModel
 		$data['published']	= 1;
 
 		$data['upload_token'] 			= PhocacartUtils::getToken();
-		$data['upload_folder']			= PhocacartUtils::getToken('folder');
+		$data['upload_folder']			= PhocacartUtils::getAndCheckToken('folder', PhocacartPath::getPath('submititem'));
+		//$data['upload_folder']			= PhocacartUtils::getToken('folder');
 
 		// ALIAS
 		if (in_array($input->get('task'), array('apply', 'save', 'save2new')) && (!isset($data['id']) || (int) $data['id'] == 0)) {

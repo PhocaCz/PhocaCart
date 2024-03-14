@@ -112,8 +112,9 @@ class PhocaCartControllerPos extends FormController
 
 		$cart	= new PhocacartCartRendercheckout();
 		$cart->setType(array(0,2));
-		$cart->params['display_image'] 			= 1;
-		$cart->params['display_checkout_link'] 	= 0;
+		$cart->params['display_image'] 				= 1;
+		$cart->params['display_checkout_link'] 		= 0;
+		$cart->params['display_product_tax_info'] 	= 0;
 
 
 
@@ -260,6 +261,7 @@ class PhocaCartControllerPos extends FormController
 			$cart->setType(array(0,2));
 			$cart->params['display_image'] 			= 1;
 			$cart->params['display_checkout_link'] 	= 0;
+			$cart->params['display_product_tax_info'] 	= 0;
 
 			if ($item['action'] == 'delete') {
 				$updated	= $cart->updateItemsFromCheckout($item['idkey'], 0);
@@ -371,6 +373,7 @@ class PhocaCartControllerPos extends FormController
 			$cart->setType(array(0,2));
 			$cart->params['display_image'] 			= 1;
 			$cart->params['display_checkout_link'] 	= 0;
+			$cart->params['display_product_tax_info'] 	= 0;
 			// Ticket id set by ticket class
 			$cart->setFullItems();
 

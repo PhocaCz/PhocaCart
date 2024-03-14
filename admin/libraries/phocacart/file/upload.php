@@ -778,7 +778,8 @@ class PhocacartFileUpload
                     $i++;
 
                     $ext                = PhocacartFile::getExtension($v['name']);
-                    $fileNameToken	    = PhocacartUtils::getToken('folder');
+                    $fileNameToken	    = PhocacartUtils::getAndCheckToken('folder', array(Path::clean($path['orig_abs_ds'] . $folder . '/')));
+                    //$fileNameToken	    = PhocacartUtils::getToken('folder');
                     $fileNameTokenExt	= $fileNameToken . '.'.$ext;
                     $folderPath         = Path::clean($path['orig_abs_ds'] . $folder);
                     $filePath           = Path::clean($path['orig_abs_ds'] . $folder . '/'. $fileNameTokenExt);
