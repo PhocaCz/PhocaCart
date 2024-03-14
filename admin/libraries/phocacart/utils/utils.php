@@ -127,6 +127,58 @@ class PhocacartUtils
 		}
 	}
 
+
+    public static function getAndCheckToken($type = 'token', $pathFolder = []) {
+
+        $logFolderNameInfo = '';
+        // We are creating tokenized folder here, so check if such does not exist yet
+        if ($type == 'folder') {
+
+            if (empty($pathFolder)) {
+                // Folder is not specified, return only token
+                return self::getToken($type);
+            }
+
+            if (isset($pathFolder['orig_abs_ds'])) {
+
+                // We have 10 attempts to create unique folder, when not done in 10 attempts, something is wrong, then stop possible loop
+                // With these 10 attempts we try to stop possible loop on server
+                $newToken = '';
+                for ($i = 1; $i <= 10; $i++) {
+
+                    $newTokenLoop = self::getToken('folder');
+                    if (Folder::exists($pathFolder['orig_abs_ds'] . $newTokenLoop)) {
+                        continue;
+                    } else {
+                        $newToken = $newTokenLoop;
+                        break;
+                    }
+
+                }
+
+                if ($newToken != '') {
+                    return $newToken;
+                }
+
+                $logFolderNameInfo = $pathFolder['orig_abs_ds'];
+
+            } else {
+                PhocacartLog::add(2, 'Creating Tokenized Folder - ERROR', 0, 'Tokenized folder could not be checked for uniqueness because of missing Path (orig_abs_ds), Type: '. $type);
+            }
+
+            // This should really not happen, in fact it means, it was not possible to generate random token which does not exist yes (comparing to current folders) with 10 attempts
+            $tokenWithoutCheck = self::getToken('folder');
+
+            PhocacartLog::add(2, 'Creating Tokenized Folder - ERROR', 0, 'Tokenized folder created without checking for uniqueness, Folder: '. $logFolderNameInfo . ', Token: ' . $tokenWithoutCheck);
+
+            return $tokenWithoutCheck;
+
+        } else {
+             return self::getToken($type);
+        }
+
+    }
+
 	public static function getToken($type = 'token') {
 
 		$app         = Factory::getApplication();
@@ -144,7 +196,7 @@ class PhocacartUtils
 
 		$salt = md5('string ' . $secretPartA . date('s') . $randA . str_replace($randC, $randD, date('r')) . $secretPartB . 'end string');
 		$salt = str_replace($saltArray[$randD], $saltArray[$randD2], $salt);
-		if ($type > 100) {
+		if ((int)$type > 100) {
 			$salt = md5($salt);
 		}
 

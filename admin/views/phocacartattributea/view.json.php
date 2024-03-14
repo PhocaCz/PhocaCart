@@ -35,7 +35,8 @@ class PhocaCartCpViewPhocaCartAttributeA extends HtmlView
 
 			// Only tokens and names - don't create folders now they will be created when accessing manager
 			$token 	= PhocacartUtils::getToken();
-			$folder	= PhocacartUtils::getToken('folder');
+			$folder	= PhocacartUtils::getAndCheckToken('folder', PhocacartPath::getPath('attributefile'));
+			//$folder	= PhocacartUtils::getToken('folder');
 
 
 			$msg = '';// No message when all OK

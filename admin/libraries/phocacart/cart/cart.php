@@ -376,6 +376,7 @@ class PhocacartCart
      * UPDATE - public function to update from CHECKOUT (update, remove buttons)
      */
     public function updateItemsFromCheckout($idKey = '', $quantity = 0) {
+
         // Don't check for quantity as it can be NULL
         if ($idKey != '') {
             if (isset($this->items[$idKey])) {
@@ -652,8 +653,11 @@ class PhocacartCart
                             . Text::_('COM_PHOCACART_PLEASE_RECHECK_PRODUCTS_IN_YOUR_CART'), 'error');
                         }
 
-                        unset($this->items[$k]);
+
+
                         $this->updateItemsFromCheckout($k, 0);
+                        unset($this->items[$k]);
+
                         // In case this all happens when order is made - stop the order and inform user
                         $this->updateProductsRemoved($k);
 
@@ -676,8 +680,9 @@ class PhocacartCart
                                     Text::_('COM_PHOCACART_ERROR_ATTRIBUTE_OF_PRODUCT_STORED_IN_CART_NOT_EXISTS') . ' '
                                     . Text::_('COM_PHOCACART_ERROR_PRODUCT_REMOVED_FROM_CART') . ' '
                                     . Text::_('COM_PHOCACART_PLEASE_RECHECK_PRODUCTS_IN_YOUR_CART'), 'error');
-                                unset($this->items[$k]);
+
                                 $this->updateItemsFromCheckout($k, 0);
+                                unset($this->items[$k]);
                                 // In case this all happens when order is made - stop the order and inform user
                                 $this->updateProductsRemoved($k);
 
