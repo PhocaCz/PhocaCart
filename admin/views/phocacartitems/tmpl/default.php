@@ -137,6 +137,7 @@ if (is_array($this->items)) {
                     $itemColumn['valuealias']       = $item->alias;
                     $itemColumn['namealias']        = 'alias';
                     $itemColumn['idtokencombined']  = 'products:alias:' . (int)$itemColumn['id'];
+                    $itemColumn['tags']  = PhocacartTag::getTagsRendered($item->id, 1, ' ');
                 }
 
                 if ($v == 'published') {

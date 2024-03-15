@@ -15,6 +15,10 @@
 
 			<field name="category_id" typemethod="filter" type="phocacartcategory" layout="joomla.form.field.list-fancy-select" label="JOPTION_FILTER_CATEGORY" description="JOPTION_FILTER_CATEGORY_DESC" onchange="this.form.submit();" />
 
+			<field name="tag_id" type="phocatags" layout="joomla.form.field.list-fancy-select" table="3" default="" label="COM_PHOCACART_FIELD_TAGS_LABEL" description="COM_PHOCACART_FIELD_TAGS_DESC" onchange="this.form.submit();">
+				<option value="">COM_PHOCACART_FILTER_PRODUCT_TAG_SELECT</option>
+			</field>
+
 			<field name="manufacturer_id" type="PhocaManufacturer" label="COM_PHOCACART_OPTION_SELECT_MANUFACTURER" description="COM_PHOCACART_OPTION_SELECT_MANUFACTURER" onchange="this.form.submit();" />
 
 			<field name="owner_id" type="PhocacartProductVendor" label="COM_PHOCACART_FIELD_OWNER_ID_LABEL" onchange="this.form.submit();">

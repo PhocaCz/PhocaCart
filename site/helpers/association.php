@@ -17,7 +17,6 @@ use Phoca\PhocaCart\I18n\I18nHelper;
 
 abstract class PhocacartHelperAssociation
 {
-
     private static function getJoomlaAssociations($id = 0, $view = null)
     {
         $input = Factory::getApplication()->input;
@@ -170,6 +169,8 @@ abstract class PhocacartHelperAssociation
 
 	public static function getAssociations($id = 0, $view = null)
 	{
+        require_once JPATH_ADMINISTRATOR . '/components/com_phocacart/libraries/bootstrap.php';
+
         if (I18nHelper::isI18n()) {
             return self::getI18nAssociations($id, $view);
         } else {

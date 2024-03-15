@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
+    <config>
+        <inlinehelp button="show"/>
+    </config>
+
     <fieldset addfieldpath="/administrator/components/com_phocacart/models/fields">
         <field name="id" type="text" default="0" required="true" readonly="true" label="JGLOBAL_FIELD_ID_LABEL" />
 
@@ -160,7 +164,7 @@
         <field name="additional_images" type="subform" label="COM_PHOCACART_FIELD_ADDITIONAL_IMAGES_LABEL" description="COM_PHOCACART_FIELD_ADDITIONAL_IMAGES_DESC" multiple="true"
                layout="joomla.form.field.subform.repeatable" formsource="administrator/components/com_phocacart/models/forms/subform_additional_images.xml"/>
 
-        <field name="attributes" fieldname="attributes" type="subform" label="COM_PHOCACART_FIELD_ATTRIBUTES_LABEL" description="COM_PHOCACART_FIELD_ATTRIBUTES_DESC" multiple="true" layout="joomla.form.field.subform.repeatable"
+        <field name="attributes" fieldname="attributes" type="subform" groupByFieldset="true" label="COM_PHOCACART_FIELD_ATTRIBUTES_LABEL" description="COM_PHOCACART_FIELD_ATTRIBUTES_DESC" multiple="true" layout="joomla.form.field.subform.repeatable"
                formsource="administrator/components/com_phocacart/models/forms/subform_attributes.xml" class="phSubformAttributes"/>
 
         <field name="specifications" type="subform" label="COM_PHOCACART_FIELD_SPECIFICATIONS_LABEL" description="COM_PHOCACART_FIELD_SPECIFICATIONS_DESC" multiple="true" layout="joomla.form.field.subform.repeatable"

@@ -23,12 +23,8 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
     use I18nListModelTrait;
 
 	protected $option 	= 'com_phocacart';
-
-	//protected $c 		= false;
-	protected $columns	= array();
-	protected $columns_full	= array();
-
-
+	protected $columns	= [];
+	protected $columns_full	= [];
 
 	public function __construct($config = array())
     {
@@ -54,7 +50,7 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 		}
 
 		// Add ordering and fields needed for filtering (search tools)
-		$config['filter_fields'] = array_merge(array('pc.ordering', 'category_id', 'manufacturer_id', 'owner_id', 'instock',  'published', 'language'), $this->columns);
+		$config['filter_fields'] = array_merge(array('pc.ordering', 'category_id', 'tag_id', 'manufacturer_id', 'owner_id', 'instock',  'published', 'language'), $this->columns);
 
 		parent::__construct($config);
 	}
@@ -85,16 +81,19 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 		$state = $app->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '', 'string');
 		$this->setState('filter.published', $state);
 
-		$categoryId = $app->getUserStateFromRequest($this->context.'.filter.category_id', 'filter_category_id', null);
+		$categoryId = $app->getUserStateFromRequest($this->context.'.filter.category_id', 'filter_category_id');
 		$this->setState('filter.category_id', $categoryId);
 
-		$manId = $app->getUserStateFromRequest($this->context.'.filter.manufacturer_id', 'filter_manufacturer_id', null);
+        $tagId = $app->getUserStateFromRequest($this->context.'.filter.tag_id', 'filter_tag_id', null, 'int');
+        $this->setState('filter.tag_id', $tagId);
+
+		$manId = $app->getUserStateFromRequest($this->context.'.filter.manufacturer_id', 'filter_manufacturer_id', null, 'int');
 		$this->setState('filter.manufacturer_id', $manId);
 
-		$ownerId = $app->getUserStateFromRequest($this->context.'.filter.owner_id', 'filter_owner_id');
+		$ownerId = $app->getUserStateFromRequest($this->context.'.filter.owner_id', 'filter_owner_id', null, 'int');
 		$this->setState('filter.owner_id', $ownerId);
 
-		$inStock = $app->getUserStateFromRequest($this->context.'.filter.instock', 'filter_instock');
+		$inStock = $app->getUserStateFromRequest($this->context.'.filter.instock', 'filter_instock', null, 'int');
 		$this->setState('filter.instock', $inStock);
 
 		$language = $app->getUserStateFromRequest($this->context.'.filter.language', 'filter_language');
@@ -124,6 +123,7 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 		$id	.= ':'.$this->getState('filter.access');
 		$id	.= ':'.$this->getState('filter.published');
 		$id	.= ':'.$this->getState('filter.category_id');
+        $id	.= ':'.$this->getState('filter.tag_id');
 		$id	.= ':'.$this->getState('filter.manufacturer_id');
 		$id	.= ':'.$this->getState('filter.owner_id');
 		$id	.= ':'.$this->getState('filter.instock');
@@ -209,9 +209,9 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 		// is complicated but loads much faster
 		$orderCol	= $this->state->get('list.ordering', 'title');
 		$orderDirn	= $this->state->get('list.direction', 'asc');
-		$categoryId = $this->getState('filter.category_id');
 
-		// Filter by category.
+		// Filter by category
+        $categoryId = $this->getState('filter.category_id');
 		if ($orderCol == 'pc.ordering' || is_numeric($categoryId)) {
 			// Ask only when really needed
 			$query->select('pc.ordering');
@@ -219,23 +219,32 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 			$query->join('LEFT', '#__phocacart_categories AS c ON c.id = pc.category_id');
 		}
 
-
 		if (is_numeric($categoryId)) {
-			//$query->where('a.catid = ' . (int) $categoryId);
 			$query->where('pc.category_id = ' . (int) $categoryId);
 		}
 
+        // Filter by tag
+        $tagId = $this->getState('filter.tag_id');
+        if (is_numeric($tagId)) {
+            $query
+                ->join('LEFT', '#__phocacart_tags_related AS tr ON a.id = tr.item_id')
+                ->where('tr.tag_id = ' . (int)$tagId);
+        }
+
+        // Filter by manufacturer
 		$manufacturerId = $this->getState('filter.manufacturer_id');
 		if (is_numeric($manufacturerId)) {
 			$query->join('LEFT', '#__phocacart_manufacturers AS pm ON pm.id = a.manufacturer_id');
 			$query->where('a.manufacturer_id = ' . (int) $manufacturerId);
 		}
 
+        // Filter by owner
 		$ownerId = $this->getState('filter.owner_id');
 		if (is_numeric($ownerId)) {
 			$query->where('a.owner_id = ' . (int) $ownerId);
 		}
 
+        // Filter by in stock
 		$inStock = $this->getState('filter.instock');
 		if (is_numeric($inStock)) {
 			if ($inStock) {
@@ -245,32 +254,28 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 			}
 		}
 
-		// Filter on the language.
+		// Filter by language
 		if ($language = $this->getState('filter.language')) {
 			$query->where('a.language = ' . $db->quote($language));
 		}
 
+        // Filter by SKU (for API)
 		if ($sku = $this->getState('filter.sku')) {
 			$query->where('a.sku = ' . $db->quote($sku));
 		}
 
+        // Filter by GTIN (for API)
 		if ($gtin = $this->getState('filter.gtin')) {
 			$query->where('a.ean = ' . $db->quote($gtin));
 		}
 
-		// Search EAN, SKU in attributes (advanced stock management) - Moved to subquery
-		//$query->join('LEFT', '#__phocacart_product_stock AS ps ON a.id = ps.product_id');
-
 		// Filter by search in title
 		$search = $this->getState('filter.search');
-		if (!empty($search))
-		{
+		if (!empty($search)) {
             $search = trim($search);
 			if (stripos($search, 'id:') === 0) {
 				$query->where('a.id = '.(int) substr($search, 3));
-			}
-			else
-			{
+			} else {
                 $words	= explode(' ', $search);
                 $words = array_filter($words);
 

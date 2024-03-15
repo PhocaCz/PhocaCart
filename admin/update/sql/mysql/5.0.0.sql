@@ -247,3 +247,8 @@ ALTER TABLE `#__phocacart_product_related` ADD COLUMN `ordering` int(11) NOT NUL
 
 ALTER TABLE `#__phocacart_attributes` ADD COLUMN `attribute_template` int(11) AFTER `product_id`;
 ALTER TABLE `#__phocacart_attributes` ADD COLUMN `is_filter` int(11) NOT NULL DEFAULT 1 AFTER `published`;
+
+ALTER TABLE `#__phocacart_cart_multiple` DROP INDEX `idx_user_id`, ADD UNIQUE `idx_user_id` (`user_id`);
+ALTER TABLE `#__phocacart_cart_multiple` DROP INDEX `idx_vendor_id`, ADD UNIQUE `idx_vendor_id` (`vendor_id`);
+ALTER TABLE `#__phocacart_cart_multiple` DROP INDEX `idx_section_id`, ADD UNIQUE `idx_section_id` (`section_id`);
+ALTER TABLE `#__phocacart_cart_multiple` DROP INDEX `idx_unit_id`, ADD UNIQUE `idx_unit_id` (`unit_id`);

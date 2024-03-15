@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
 	<fields addfieldpath="/administrator/components/com_phocacart/models/fields">
-		<fieldset>
+		<fieldset name="header" class="ph-fieldset-attribute-header">
 			<field name="current_attributes" type="PhocaCartCurrentAttributesOptions" typeview="attribute" label="" />
 
 			<field name="id" type="hidden" />
@@ -9,11 +9,15 @@
 			<field name="attribute_template" type="PhocaCartContentType" context="attribute" default="0" label="COM_PHOCACART_FIELD_ATTRIBUTE_TEMPLATE_LABEL" description="COM_PHOCACART_FIELD_ATTRIBUTE_TEMPLATE_DESC">
 				<option value="0">COM_PHOCACART_FIELD_ATTRIBUTE_TEMPLATE_CUSTOM</option>
 			</field>
+		</fieldset>
 
+		<fieldset name="title" class="ph-fieldset-attribute-title">
 			<field name="title" type="phocatext" i18n="true" showon="attribute_template:0" label="COM_PHOCACART_FIELD_TITLE_LABEL" />
 
 			<field name="alias" type="phocatext" i18n="true" showon="attribute_template:0" label="COM_PHOCACART_FIELD_ALIAS_LABEL" />
+		</fieldset>
 
+		<fieldset name="publish" class="ph-fieldset-attribute-publish">
 			<field name="published" type="radio" default="1" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL">
 				<option value="0">COM_PHOCACART_NO</option>
 				<option value="1">COM_PHOCACART_YES</option>
@@ -29,6 +33,9 @@
 				<option value="1">COM_PHOCACART_YES</option>
 			</field>
 
+		</fieldset>
+
+		<fieldset name="type" class="ph-fieldset-attribute-type">
 			<field name="type" type="list" default="1" showon="attribute_template:0" label="COM_PHOCACART_FIELD_TYPE_LABEL">
 				<option value="1">COM_PHOCACART_ATTR_TYPE_LIST</option>
 				<option value="2">COM_PHOCACART_ATTR_TYPE_COLOR_SELECT</option>
@@ -44,8 +51,10 @@
 				<option value="12">COM_PHOCACART_ATTR_TYPE_TEXT_COLOR_PICKER</option>
 				<option value="20">COM_PHOCACART_ATTR_TYPE_GIFT</option>
 			</field>
+		</fieldset>
 
-			<field name="options" fieldname="options" type="subform" multiple="true" layout="joomla.form.field.subform.repeatable" formsource="administrator/components/com_phocacart/models/forms/subform_options.xml" label="COM_PHOCACART_FIELD_OPTIONS_LABEL"/>
+		<fieldset name="options" class="ph-fieldset-attribute-options">
+			<field name="options" fieldname="options" type="subform" multiple="true" groupByFieldset="true" layout="joomla.form.field.subform.repeatable" formsource="administrator/components/com_phocacart/models/forms/subform_options.xml" label="COM_PHOCACART_FIELD_OPTIONS_LABEL"/>
 		</fieldset>
 	</fields>
 </form>
