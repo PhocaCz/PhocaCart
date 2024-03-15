@@ -456,7 +456,6 @@ class PhocacartAttribute
                                 $option['amount'] = PhocacartUtils::replaceCommaWithPoint($option['amount']);
                                 $option['weight'] = PhocacartUtils::replaceCommaWithPoint($option['weight']);
 
-                                n3tDebug::barDump($option,'jo');
 
                                 $query = 'UPDATE #__phocacart_attribute_values SET'
                                     . ' attribute_id = ' . (int)$newIdA . ','
