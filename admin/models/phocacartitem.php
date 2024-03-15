@@ -155,31 +155,6 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 			if (!isset($data['group']) || !$data['group']) {
 				$data['group'] = PhocacartGroup::getDefaultGroup(1);
 			}
-
-			if (isset($data['related']) && is_array($data['related'])) {
-				$relatedOption = array_shift($data['related']);
-				$relatedOption = explode(',', $relatedOption);
-
-				if($relatedOption) {
-					$i = 0;
-					$value = '';
-					foreach($relatedOption as $id) {
-						$v = PhocacartProduct::getProductByProductId($id);
-						if ($v) {
-							if ($i > 0) {
-								$value .= '[|]';
-							}
-
-							$title    = PhocacartText::filterValue($v->title, 'text');
-							$titleCat = PhocacartText::filterValue($v->categories_title, 'text');
-
-							$value .= (int)$v->id . ':' . $title . ' (' . $titleCat . ')';
-							$i++;
-						}
-					}
-					$data['related'] = $value;
-				}
-			}
 		} else {
 			$data = $this->getItem();
 
