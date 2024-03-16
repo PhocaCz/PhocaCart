@@ -459,3 +459,93 @@ jQuery(document).ready(function() {
 })
 
 
+let phocaToastContainer = null;
+
+/**
+ * @param {string} message Message Text
+ * @param {string} type Toast color scheme class success|error
+ */
+const phocaToast = (message, type) => {
+	if (phocaToastContainer === null) {
+		phocaToastContainer = document.createElement('div');
+		phocaToastContainer.classList.add('toast-container', 'position-fixed', 'bottom-0', 'end-0', 'p-3');
+
+		document.body.appendChild(phocaToastContainer);
+	}
+
+	const toast = document.createElement('div');
+	toast.classList.add('toast', 'align-items-center', 'bg-gradient');
+	if (type === 'success') {
+		toast.classList.add('bg-success', 'text-white');
+	} else {
+		toast.classList.add('bg-danger', 'text-white');
+	}
+	toast.setAttribute('role', 'alert');
+	toast.setAttribute('aria-live', 'assertive');
+	toast.setAttribute('aria-atomic', 'true');
+
+	const toastBodyWrapper = document.createElement('div');
+	toastBodyWrapper.classList.add('d-flex');
+
+	const toastBody = document.createElement('div');
+	toastBody.classList.add('toast-body');
+	toastBody.textContent = message;
+
+	const toastButton = document.createElement('button');
+	toastButton.setAttribute('type', 'button');
+	toastButton.setAttribute('data-bs-dismiss', 'toast');
+	toastButton.setAttribute('aria-label', Joomla.Text._('COM_PHOCACART_AJAX_CLOSE'));
+	toastButton.classList.add('btn-close', 'btn-close-white', 'me-2', 'm-auto');
+
+	toast.appendChild(toastBodyWrapper);
+	toastBodyWrapper.appendChild(toastBody);
+	toastBodyWrapper.appendChild(toastButton);
+
+	phocaToastContainer.appendChild(toast);
+
+	const bootstrapToast = new bootstrap.Toast(toast);
+	bootstrapToast.show();
+};
+
+const phocaAjax = () => {
+	const targets = document.querySelectorAll('[data-phajax]');
+	targets.forEach((target) => {
+		target.addEventListener('click', (e) => {
+			e.preventDefault();
+			e.stopPropagation();
+
+			var xhr = new XMLHttpRequest();
+			xhr.open('POST', target.href, true);
+			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			xhr.responseType = 'json';
+
+			xhr.onload = () => {
+				// Check if the request was successful (status code 200)
+				if(xhr.status === 200) {
+					var jsonResponse = xhr.response;
+
+					if (jsonResponse.success) {
+						phocaToast(jsonResponse.message, 'success');
+
+						target.dataset.phajax = jsonResponse.data.phajax;
+						target.innerHTML = jsonResponse.data.content;
+					} else {
+						phocaToast(jsonResponse.message, 'error');
+					}
+				} else {
+					phocaToast(Joomla.Text._('COM_PHOCACART_AJAX_ERROR'), 'error');
+				}
+			};
+
+			xhr.onerror = () => {
+				phocaToast(Joomla.Text._('COM_PHOCACART_AJAX_ERROR'), 'error');
+			};
+
+			xhr.send(target.dataset.phajax);
+		});
+	});
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+	phocaAjax();
+});

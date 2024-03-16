@@ -18,6 +18,7 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
+use Phoca\PhocaCart\Html\Grid\HtmlGridHelper;
 
 class PhocacartRenderAdmincolumns
 {
@@ -628,7 +629,10 @@ class PhocacartRenderAdmincolumns
     }
 
     public function published($item, &$options) {
-        return $this->r->td('<div class="">' . HTMLHelper::_('jgrid.published', $item['value'], $item['i'], $options['tasks'] . '.', $item['canchange']) . PhocacartHtmlFeatured::featured($item['valuefeatured'], $item['i'], $item['canchange']) . '</div>', "small");
+        return $this->r->td('<div>' .
+            HtmlGridHelper::stateButton('phocacartitems', $item['id'], $item['value'], $item['canchange']) .
+            HtmlGridHelper::featuredButton('phocacartitems', $item['id'], $item['valuefeatured'], $item['canchange']) .
+            '</div>', 'small');
     }
 
     public function categories($item, &$options) {

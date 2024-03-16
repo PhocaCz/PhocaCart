@@ -8,16 +8,27 @@
  */
 defined('_JEXEC') or die();
 
+use Joomla\CMS\Application\CMSWebApplicationInterface;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Session\Session;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Response\JsonResponse;
 use Joomla\Database\DatabaseInterface;
-use Joomla\Utilities\ArrayHelper;
+use Phoca\PhocaCart\Html\Grid\HtmlGridHelper;
+use Phoca\PhocaCart\MVC\Controller\Ajax\FeaturedControllerTrait;
+use Phoca\PhocaCart\MVC\Controller\Ajax\StateControllerTrait;
 
 require_once JPATH_COMPONENT.'/controllers/phocacartcommons.php';
 
 class PhocaCartCpControllerPhocaCartItems extends PhocaCartCpControllerPhocaCartCommons
 {
+    use StateControllerTrait, FeaturedControllerTrait;
+
+    public function &getModel($name = 'PhocaCartItem', $prefix = 'PhocaCartCpModel', $config = array())
+    {
+        $model = parent::getModel($name, $prefix, array('ignore_request' => true));
+        return $model;
+    }
+
     public function search()
     {
         $search = $this->input->get('search', '', 'string');
