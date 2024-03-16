@@ -13,6 +13,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Router\Route;
+use Phoca\PhocaCart\Html\Grid\HtmlGridHelper;
 use Phoca\PhocaCart\I18n\I18nHelper;
 
 HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
@@ -99,7 +100,11 @@ if (is_array($this->items)) {
         }
         echo $r->td($checkO, "small", 'th');
 
-        echo $r->td(HTMLHelper::_('jgrid.published', $item->published, $i, $this->t['tasks'] . '.', $canChange) . PhocacartHtmlFeatured::featured($item->featured, $i, $canChange, 'manufacturer'), "small");
+        echo $r->td(
+            HtmlGridHelper::stateButton('phocacartmanufacturers', $item->id, $item->published, $canChange) .
+            HtmlGridHelper::featuredButton('phocacartmanufacturers', $item->id, $item->featured, $canChange),
+            "small"
+        );
 
         $pC = '<div class="center">' . $item->count_products;
         if (PhocacartUtils::validateDate($item->count_date)) {

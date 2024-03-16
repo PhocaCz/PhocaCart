@@ -24,11 +24,26 @@ abstract class HtmlGridHelper
         Text::script('COM_PHOCACART_AJAX_ERROR');
     }
 
-    public static function featuredIcon(int $value, bool $enabled = true): string
+    public static function featuredIcon(int $value, bool $enabled = true, string $controller = 'phocacartitems'): string
     {
+        switch ($controller) {
+            case 'phocacartcategories':
+                $activeTextSuffix = '_CATEGORY';
+                $inactiveTextSuffix = '_CATEGORY';
+                break;
+            case 'phocacartmanufacturers':
+                $activeTextSuffix = '_MANUFACTURER';
+                $inactiveTextSuffix = '_MANUFACTURER';
+                break;
+            case 'phocacartitems':
+            default:
+                $activeTextSuffix = '';
+                $inactiveTextSuffix = '_PRODUCT';
+                break;
+        }
         $states = [
-            1  => ['COM_PHOCACART_TOGGLE_TO_UNFEATURE', 'COM_PHOCACART_FEATURED_PRODUCT', 'star featured'],
-            0  => ['COM_PHOCACART_TOGGLE_TO_FEATURE', 'COM_PHOCACART_UNFEATURED_PRODUCT', 'circle'],
+            1  => ['COM_PHOCACART_TOGGLE_TO_UNFEATURE' . $activeTextSuffix, 'COM_PHOCACART_FEATURED' . $inactiveTextSuffix, 'star featured'],
+            0  => ['COM_PHOCACART_TOGGLE_TO_FEATURE' . $activeTextSuffix, 'COM_PHOCACART_UNFEATURED' . $inactiveTextSuffix, 'circle'],
         ];
 
         $state = ArrayHelper::getValue($states, $value, $states[0]);
@@ -50,7 +65,7 @@ abstract class HtmlGridHelper
     public static function featuredButton(string $controller, int $id, int $value, bool $enabled = true): string
     {
         if (!$enabled) {
-            return self::featuredIcon($value, $enabled);
+            return self::featuredIcon($value, $enabled, $controller);
         }
 
         self::jsCommon();
@@ -62,7 +77,7 @@ abstract class HtmlGridHelper
         }
 
         return '<a href="' . Route::_('index.php?option=com_phocacart&task=' . $controller . '.featured&format=json&id=' . $id). '" data-phajax="state=' . $newState . '">'
-            . self::featuredIcon($value, $enabled)
+            . self::featuredIcon($value, $enabled, $controller)
             . '</a>';
     }
 

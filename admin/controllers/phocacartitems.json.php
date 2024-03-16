@@ -14,106 +14,19 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Response\JsonResponse;
 use Joomla\Database\DatabaseInterface;
 use Phoca\PhocaCart\Html\Grid\HtmlGridHelper;
+use Phoca\PhocaCart\MVC\Controller\Ajax\FeaturedControllerTrait;
+use Phoca\PhocaCart\MVC\Controller\Ajax\StateControllerTrait;
 
 require_once JPATH_COMPONENT.'/controllers/phocacartcommons.php';
 
 class PhocaCartCpControllerPhocaCartItems extends PhocaCartCpControllerPhocaCartCommons
 {
+    use StateControllerTrait, FeaturedControllerTrait;
+
     public function &getModel($name = 'PhocaCartItem', $prefix = 'PhocaCartCpModel', $config = array())
     {
         $model = parent::getModel($name, $prefix, array('ignore_request' => true));
         return $model;
-    }
-
-    public function state(): void
-    {
-        try {
-            $input = Factory::getApplication()->input;
-            $id    = $input->get('id', null, 'int');
-            $state = $input->get('state', null, 'int');
-
-            if (!$id || !in_array($state, [0, 1, 2, -2], true)) {
-                throw new Exception(Text::_('COM_PHOCACART_AJAX_REQUEST_ERROR'));
-            }
-
-            $model = $this->getModel();
-
-            $model->publish($id, $state);
-            $errors = $model->getErrors();
-            if ($errors) {
-                throw new Exception($errors[0]);
-            }
-
-            if ($state === 1) {
-                $message = $this->text_prefix . '_N_ITEMS_PUBLISHED';
-                $newState = 0;
-            } elseif ($state === 0) {
-                $message = $this->text_prefix . '_N_ITEMS_UNPUBLISHED';
-                $newState = 1;
-            } elseif ($state === 2) {
-                $message = $this->text_prefix . '_N_ITEMS_ARCHIVED';
-                $newState = 0;
-            } else {
-                $message = $this->text_prefix . '_N_ITEMS_TRASHED';
-                $newState = 1;
-            }
-
-            $result = [
-                'phajax'  => 'state=' . $newState,
-                'content' => HtmlGridHelper::stateIcon($state),
-            ];
-
-            echo new JsonResponse($result, Text::plural($message, 1));
-        }
-        catch(Exception $e)
-        {
-            echo new JsonResponse($e);
-        }
-    }
-
-    public function featured(): void
-    {
-        try {
-            $input = Factory::getApplication()->input;
-            $user   = Factory::getApplication()->getIdentity();
-            $id    = $input->get('id', null, 'int');
-            $state = $input->get('state', null, 'int');
-
-            if (!$id || !in_array($state, [0, 1, 2, -2], true)) {
-                throw new Exception(Text::_('COM_PHOCACART_AJAX_REQUEST_ERROR'));
-            }
-
-            if (!$user->authorise('core.edit.state', 'com_phocacart.phocacartitem.' . $id)) {
-                throw new Exception(Text::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
-            }
-
-            $model = $this->getModel();
-
-            $model->featured($id, $state);
-            $errors = $model->getErrors();
-            if ($errors) {
-                throw new Exception($errors[0]);
-            }
-
-            if ($state === 1) {
-                $message = $this->text_prefix . '_N_ITEMS_FEATURED';
-                $newState = 0;
-            } else {
-                $message = $this->text_prefix . '_N_ITEMS_UNFEATURED';
-                $newState = 1;
-            }
-
-            $result = [
-                'phajax'  => 'state=' . $newState,
-                'content' => HtmlGridHelper::featuredIcon($state),
-            ];
-
-            echo new JsonResponse($result, Text::plural($message, 1));
-        }
-        catch(Exception $e)
-        {
-            echo new JsonResponse($e);
-        }
     }
 
     public function search()
