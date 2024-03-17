@@ -50,7 +50,7 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 		}
 
 		// Add ordering and fields needed for filtering (search tools)
-		$config['filter_fields'] = array_merge(array('pc.ordering', 'category_id', 'tag_id', 'manufacturer_id', 'owner_id', 'instock',  'published', 'language'), $this->columns);
+		$config['filter_fields'] = array_merge(['pc.ordering', 'category_id', 'tag_id', 'manufacturer_id', 'owner_id', 'instock',  'published', 'language'], $this->columns);
 
 		parent::__construct($config);
 	}
@@ -160,20 +160,29 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 		$col = array_unique($col);
 
 		$columns	= implode(',', $col);
-		$query->select($this->getState('list.select', $columns));
-		$query->from('`#__phocacart_products` AS a');
+		$query
+            ->select($this->getState('list.select', $columns))
+            ->from('`#__phocacart_products` AS a');
 
 		// Join over the language
-		$query->select('l.title AS language_title, l.image AS language_image');
-		$query->join('LEFT', '`#__languages` AS l ON l.lang_code = a.language');
+		$query
+            ->select('l.title AS language_title, l.image AS language_image')
+            ->join('LEFT', '`#__languages` AS l ON l.lang_code = a.language');
 
 		// Join over the users for the checked out user.
-		$query->select('uc.name AS editor');
-		$query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
+		$query
+            ->select('uc.name AS editor')
+            ->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
 
 		// Join over the asset groups.
-		$query->select('ag.title AS access_level');
-		$query->join('LEFT', '#__viewlevels AS ag ON ag.id = a.access');
+		$query
+            ->select('ag.title AS access_level')
+		    ->join('LEFT', '#__viewlevels AS ag ON ag.id = a.access');
+
+        // Join over manufacturer
+        $query
+            ->select('pm.title AS manufacturer')
+            ->join('LEFT', '#__phocacart_manufacturers AS pm ON pm.id = a.manufacturer_id');
 
 		// ASSOCIATION
 		// Join over the associations.
@@ -187,7 +196,6 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 
 			$query->select('(' . $subQuery . ') AS ' . $db->quoteName('association'));
 		}
-
 
 		// Filter by access level.
 		if ($access = $this->getState('filter.access')) {
@@ -234,7 +242,6 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
         // Filter by manufacturer
 		$manufacturerId = $this->getState('filter.manufacturer_id');
 		if (is_numeric($manufacturerId)) {
-			$query->join('LEFT', '#__phocacart_manufacturers AS pm ON pm.id = a.manufacturer_id');
 			$query->where('a.manufacturer_id = ' . (int) $manufacturerId);
 		}
 
