@@ -254,3 +254,4 @@ ALTER TABLE `#__phocacart_cart_multiple` DROP INDEX `idx_section_id`, ADD UNIQUE
 ALTER TABLE `#__phocacart_cart_multiple` DROP INDEX `idx_unit_id`, ADD UNIQUE `idx_unit_id` (`unit_id`);
 
 ALTER TABLE `#__phocacart_export` CHANGE `item` `item` MEDIUMTEXT;
+ALTER TABLE `#__phocacart_import` CHANGE `item` `item` MEDIUMTEXT;
