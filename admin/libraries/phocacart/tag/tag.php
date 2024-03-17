@@ -14,6 +14,8 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Language\Text;
+use Joomla\Database\DatabaseInterface;
+use Joomla\Registry\Registry;
 use Phoca\PhocaCart\Constants\TagType;
 use Phoca\PhocaCart\I18n\I18nHelper;
 
@@ -29,35 +31,23 @@ class PhocacartTag
         }
     }
 
-    private static function getProductTags($type, $itemId, $select = 0, $checkPublish = 0) {
-        $db = Factory::getDBO();
+    private static function getProductTags(array $type, $itemId, $select = 0, $checkPublish = 0) {
+        /** @var DatabaseInterface $db */
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         if ($select == 1) {
             $query = 'SELECT r.tag_id';
         } else if ($select == 2) {
-            /* if (I18nHelper::useI18n()) {
-                 $query = 'SELECT a.id, coalesce(i18n.alias, a.alias) as alias';
-             } else {
-                 $query = 'SELECT a.id, a.alias';
-             }*/
-
             $query = 'SELECT a.id, ' . I18nHelper::sqlCoalesce(['alias']);
-
         } else {
-            /*if (I18nHelper::useI18n()) {
-                $query = 'SELECT a.id, coalesce(i18n.title, a.title) as title, coalesce(i18n.alias, a.alias) as alias, a.type, a.display_format, a.link_ext, a.link_cat, a.icon_class';
-            } else {
-              $query = 'SELECT a.id, a.title, a.alias, a.type, a.display_format, a.link_ext, a.link_cat, a.icon_class';
-            }*/
-
-            $query = 'SELECT a.id, ' . I18nHelper::sqlCoalesce(['title', 'alias']) . ', a.type, a.display_format, a.link_ext, a.link_cat, a.icon_class';
+            $query = 'SELECT a.id, ' . I18nHelper::sqlCoalesce(['title', 'alias']) . ', a.type, a.display_format, a.link_ext, a.link_cat, a.icon_class, a.params';
         }
 
         $query .= ' FROM #__phocacart_tags AS a'
             . ' LEFT JOIN ' . self::getRelatedTable($type) . ' AS r ON a.id = r.tag_id';
 
         $query .= I18nHelper::sqlJoin('#__phocacart_tags_i18n');
-        $query .= ' WHERE a.type = ' . (int)$type
+        $query .= ' WHERE a.type in (' . implode(', ', $type) . ')'
             . ' AND r.item_id = ' . (int)$itemId;
 
         if ($checkPublish == 1) {
@@ -74,7 +64,6 @@ class PhocacartTag
 
         return $tags;
     }
-
 
     private static function getSubmittedProductTags($type, $itemId) {
         $db    = Factory::getDBO();
@@ -130,7 +119,7 @@ class PhocacartTag
      * @return mixed|void|mixed[]
      */
     public static function getTags($itemId, $select = 0, $checkPublish = 0) {
-        return self::getProductTags(TagType::Tag, $itemId, $select, $checkPublish);
+        return self::getProductTags([TagType::Tag], $itemId, $select, $checkPublish);
     }
 
     /*
@@ -151,7 +140,7 @@ class PhocacartTag
      * @return mixed|void|mixed[]
      */
     public static function getTagLabels($itemId, $select = 0, $checkPublish = 0) {
-        return self::getProductTags(TagType::Label, $itemId, $select, $checkPublish);
+        return self::getProductTags([TagType::Label], $itemId, $select, $checkPublish);
     }
 
     /*
@@ -295,8 +284,8 @@ class PhocacartTag
      * @param number $types 0 ... nothing, 1 ... tags only, 2 ... labels only, 3 ... tags and labels
      * @return string
      */
-    public static function getTagsRendered($itemId, $types = 0, $separator = '') {
-
+    public static function getTagsRendered($itemId, $types = 0, $separator = '')
+    {
         if ($types == 1) {
             // Only tags
             $tags = self::getTags($itemId, 0, 1);
@@ -305,87 +294,89 @@ class PhocacartTag
             $tags = self::getTagLabels($itemId, 0, 1);
         } else if ($types == 3) {
             // Tags and Labels together (they can be displayed as labels in category/items view)
-            $t    = self::getTags($itemId, 0, 1);
-            $l    = self::getTagLabels($itemId, 0, 1);
-            $tags = array_merge($t, $l);
+            $tags = self::getProductTags([TagType::Tag], $itemId, 0, 1);
         } else {
             return '';
         }
-        $db = Factory::getDBO();
-        $p  = PhocacartUtils::getComponentParameters();
-        $s  = PhocacartRenderStyle::getStyles();
-        $tl = $p->get('tags_links', 0);
 
-        $o = array();
+        $tagsLinks = PhocacartUtils::getComponentParameters()->get('tags_links', 0);
+
+        $html = [];
         $i = 0;
 
         if (!empty($tags)) {
-            foreach ($tags as $k => $v) {
+            foreach ($tags as $tag) {
+                $tag->params = new Registry($tag->params);
+
+                $class = ' ph-tag-' . $tag->alias;
+                $style = '';
+                if ($tag->params->get('background')) {
+                    $style .= 'background-color: ' . $tag->params->get('background') . ' !important;';
+                }
+                if ($tag->params->get('foreground')) {
+                    $style .= 'color: ' . $tag->params->get('foreground') . ' !important;';
+                }
+                if ($tag->params->get('class')) {
+                    $class .= ' ' . $tag->params->get('class');
+                }
+                $style = $style ? ' style="' . $style . '"' : '';
 
                 if ($types == 2 || $types == 3) {
-                    $o[$i] = '<div class="ph-corner-icon-wrapper"><div class="ph-corner-icon ph-corner-icon-' . htmlspecialchars(strip_tags($v->alias)) . '">';
+                    $html[$i] = '<div class="ph-corner-icon-wrapper"><div class="ph-corner-icon ph-corner-icon-' . $tag->alias . $class . '"' . $style . '>';
                 } else {
-                    $o[$i] = '<span class="' . $s['c']['label.label-info'] . '">';
+                    $html[$i] = '<span class="' . PhocacartRenderStyle::class('label.label-info') . $class . '"' . $style . '>';
                 }
 
+                $dO = htmlspecialchars($tag->title);
 
-                $dO = htmlspecialchars(strip_tags($v->title));
-
-                if ($v->display_format == 2) {
-                    if ($v->icon_class != '') {
-                        $dO = '<span class="' . htmlspecialchars(strip_tags($v->icon_class)) . '"></span>';
+                if ($tag->display_format == 2) {
+                    if ($tag->icon_class != '') {
+                        $dO = '<span class="' . htmlspecialchars(strip_tags($tag->icon_class)) . '"></span>';
                     } else {
-                        $dO = $v->title;
+                        $dO = $tag->title;
                     }
-                } else if ($v->display_format == 3) {
-                    if ($v->icon_class != '') {
-                        $dO = '<span class="' . htmlspecialchars(strip_tags($v->icon_class)) . '"></span>';
+                } else if ($tag->display_format == 3) {
+                    if ($tag->icon_class != '') {
+                        $dO = '<span class="' . htmlspecialchars(strip_tags($tag->icon_class)) . '"></span>';
                     }
-                    $dO .= $v->title;
+                    $dO .= $tag->title;
                 }
 
-                if ($tl == 0) {
-                    $o[$i] .= $dO;
-                } else if ($tl == 1) {
-                    if ($v->link_ext != '') {
-                        $o[$i] .= '<a href="' . $v->link_ext . '">' . $dO . '</a>';
+                if ($tagsLinks == 0) {
+                    $html[$i] .= $dO;
+                } else if ($tagsLinks == 1) {
+                    if ($tag->link_ext != '') {
+                        $html[$i] .= '<a href="' . $tag->link_ext . '">' . $dO . '</a>';
                     } else {
-                        $o[$i] .= $dO;
+                        $html[$i] .= $dO;
                     }
-                } else if ($tl == 2) {
-
-                    if ($v->link_cat != '') {
-                        $query = 'SELECT a.id, a.alias'
-                            . ' FROM #__phocacart_categories AS a'
-                            . ' WHERE a.id = ' . (int)$v->link_cat;
-
-                        $db->setQuery($query, 0, 1);
-                        $category = $db->loadObject();
-
-                        if (isset($category->id) && isset($category->alias)) {
+                } else if ($tagsLinks == 2) {
+                    if ($tag->link_cat != '') {
+                        $category = PhocacartCategory::getCategoryById($tag->link_cat);
+                        if ($category) {
                             $link  = PhocacartRoute::getCategoryRoute($category->id, $category->alias);
-                            $o[$i] .= '<a href="' . $link . '">' . $dO . '</a>';
+                            $html[$i] .= '<a href="' . $link . '">' . $dO . '</a>';
                         } else {
-                            $o[$i] .= $dO;
+                            $html[$i] .= $dO;
                         }
                     } else {
-                        $o[$i] .= $dO;
+                        $html[$i] .= $dO;
                     }
-                } else if ($tl == 3) {
+                } else if ($tagsLinks == 3) {
                     $link = PhocacartRoute::getItemsRoute();
                     if ($types == 2 || $types == 3) {
-                        $link = $link . PhocacartRoute::getItemsRouteSuffix('label', $v->id, $v->alias);
+                        $link = $link . PhocacartRoute::getItemsRouteSuffix('label', $tag->id, $tag->alias);
                     } else {
-                        $link = $link . PhocacartRoute::getItemsRouteSuffix('tag', $v->id, $v->alias);
+                        $link = $link . PhocacartRoute::getItemsRouteSuffix('tag', $tag->id, $tag->alias);
                     }
 
-                    $o[$i] .= '<a href="' . Route::_($link) . '">' . $dO . '</a>';
+                    $html[$i] .= '<a href="' . Route::_($link) . '">' . $dO . '</a>';
                 }
 
                 if ($types == 2 || $types == 3) {
-                    $o[$i] .= '</div></div>';
+                    $html[$i] .= '</div></div>';
                 } else {
-                    $o[$i] .= '</span>';
+                    $html[$i] .= '</span>';
                 }
 
                 $i++;
@@ -393,7 +384,7 @@ class PhocacartTag
 
         }
 
-        return implode($separator, $o);
+        return implode($separator, $html);
     }
 
 

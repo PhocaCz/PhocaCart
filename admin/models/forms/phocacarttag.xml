@@ -42,5 +42,15 @@
 
 			<field name="id" type="hidden" />
 		</fieldset>
+
+		<fields name="params">
+			<fieldset name="display" label="JGLOBAL_FIELDSET_DISPLAY_OPTIONS">
+				<field name="background" type="color" label="COM_PHOCACART_FIELD_BACKGROUND_LABEL" description="COM_PHOCACART_FIELD_BACKGROUND_DESC" />
+
+				<field name="foreground" type="color" label="COM_PHOCACART_FIELD_FOREGROUND_LABEL" description="COM_PHOCACART_FIELD_FOREGROUND_DESC" />
+
+				<field name="class" type="text" label="COM_PHOCACART_FIELD_CLASS_LABEL" description="COM_PHOCACART_FIELD_CLASS_DESC" />
+			</fieldset>
+		</fields>
 	</fields>
 </form>
