@@ -110,7 +110,8 @@ trait I18nAdminModelTrait
     private function prepareI18nForm(Form $form): Form
     {
         if (I18nHelper::isI18n()) {
-            $form->removeField('language');
+            $form->setFieldAttribute('language', 'type', 'hidden');
+            $form->setFieldAttribute('language', 'default', '*');
         }
 
         return $form;
