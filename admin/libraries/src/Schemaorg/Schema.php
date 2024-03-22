@@ -16,6 +16,7 @@ defined('_JEXEC') or die();
 use Joomla\CMS\Cache\CacheControllerFactory;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Router\Route;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 use Joomla\CMS\Uri\Uri;
@@ -137,7 +138,7 @@ class Schema
         $offers['@type'] = 'Offer';
         $offers['price'] = $product->price;
         $offers['priceCurrency'] = \PhocacartCurrency::getCurrency()->code;
-        $offers['url'] = \PhocacartRoute::getProductCanonicalLink($product->id, $product->catid, $product->alias, $product->catalias);
+        $offers['url'] = Route::_(\PhocacartRoute::getProductCanonicalLink($product->id, $product->catid, $product->alias, $product->catalias), true, Route::TLS_IGNORE, true);
         switch ($product->condition) {
             case ProductCondition::New:
             default:

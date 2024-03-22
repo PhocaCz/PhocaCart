@@ -54,8 +54,6 @@ echo $r->startTable('categoryList');
 
 echo $r->startTblHeader();
 
-//echo $r->thOrderingXML('JGRID_HEADING_ORDERING', $listDirn, $listOrder, 'pc');
-//echo $r->thCheck('JGLOBAL_CHECK_ALL');
 echo $r->firstColumnHeader($listDirn, $listOrder, 'pc');
 echo $r->secondColumnHeader($listDirn, $listOrder, 'pc');
 
@@ -115,12 +113,12 @@ if (is_array($this->items)) {
                 $columnParams                 = array();
                 $itemColumn                   = array();
                 $itemColumn['i']              = $i;
-                $itemColumn['params']         = array();
+                $itemColumn['params']         = [];
                 $itemColumn['params']['edit'] = false;
                 $v                            = PhocacartText::parseDbColumnParameter($v, $itemColumn['params']);
                 $itemColumn['name']           = $v;
-                $itemColumn['value']          = isset($item->{$v}) ? $item->{$v} : '';
-                $itemColumn['id']             = isset($item->id) ? $item->id : 0;
+                $itemColumn['value']          = $item->{$v} ?? '';
+                $itemColumn['id']             = $item->id ?? 0;
                 $itemColumn['idtoken']        = 'products:' . $v . ':' . (int)$itemColumn['id'];
                 $itemColumn['cancreate']      = $canCreate;
                 $itemColumn['canedit']        = $canEdit;
@@ -170,12 +168,8 @@ echo $r->tblFoot($this->pagination->getListFooter(), $options['count']);
 echo $r->endTable();
 
 echo $this->loadTemplate('batch');
-
 echo $this->loadTemplate('copy_attributes');
 
 echo $r->formInputsXML($listOrder, $listDirn, $originalOrders);
 echo $r->endMainContainer();
 echo $r->endForm();
-
-
-?>

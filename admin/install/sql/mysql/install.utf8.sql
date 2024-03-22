@@ -1550,7 +1550,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_import` (
   `row_id` int(11) NOT NULL default '0',
   `title` varchar(255) NOT NULL DEFAULT '',
   `alias` varchar(255) NOT NULL DEFAULT '',
-  `item` text,
+  `item` mediumtext,
   `type` int(3) NOT NULL default '0',
   `file_type` int(3) NOT NULL default '0',
   PRIMARY KEY  (`id`)
@@ -1563,7 +1563,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_export` (
   `row_id` int(11) NOT NULL default '0',
   `title` varchar(255) NOT NULL DEFAULT '',
   `alias` varchar(255) NOT NULL DEFAULT '',
-  `item` text,
+  `item` mediumtext,
   `type` int(3) NOT NULL default '0',
   `file_type` int(3) NOT NULL default '0',
   PRIMARY KEY  (`id`)
