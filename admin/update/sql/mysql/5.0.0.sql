@@ -253,4 +253,3 @@ ALTER TABLE `#__phocacart_cart_multiple` ADD INDEX `idx_vendor_id` (`vendor_id`)
 ALTER TABLE `#__phocacart_cart_multiple` ADD INDEX `idx_section_id` (`section_id`);
 ALTER TABLE `#__phocacart_cart_multiple` ADD INDEX `idx_unit_id` (`unit_id`);
 
-ALTER TABLE `#__phocacart_products` ADD COLUMN `price_min` decimal(15,4) AFTER `price_original`;
