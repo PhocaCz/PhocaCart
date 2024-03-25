@@ -35,10 +35,6 @@ UPDATE `#__phocacart_form_fields` SET `autocomplete` = 'tel' WHERE `title` = 'ph
 UPDATE `#__phocacart_form_fields` SET `autocomplete` = 'tel' WHERE `title` = 'phone_mobile';
 
 ALTER TABLE `#__phocacart_users` ADD UNIQUE `uq_phocacart_users` (`type`, `user_id`);
-ALTER TABLE `#__phocacart_cart_multiple` ADD UNIQUE `idx_user_id` (`user_id`);
-ALTER TABLE `#__phocacart_cart_multiple` ADD UNIQUE `idx_vendor_id` (`vendor_id`);
-ALTER TABLE `#__phocacart_cart_multiple` ADD UNIQUE `idx_section_id` (`section_id`);
-ALTER TABLE `#__phocacart_cart_multiple` ADD UNIQUE `idx_unit_id` (`unit_id`);
 
 ALTER TABLE `#__phocacart_orders` ADD COLUMN `internal_comment` text;
 
@@ -248,10 +244,12 @@ ALTER TABLE `#__phocacart_product_related` ADD COLUMN `ordering` int(11) NOT NUL
 ALTER TABLE `#__phocacart_attributes` ADD COLUMN `attribute_template` int(11) AFTER `product_id`;
 ALTER TABLE `#__phocacart_attributes` ADD COLUMN `is_filter` int(11) NOT NULL DEFAULT 1 AFTER `published`;
 
-ALTER TABLE `#__phocacart_cart_multiple` DROP INDEX `idx_user_id`, ADD UNIQUE `idx_user_id` (`user_id`);
-ALTER TABLE `#__phocacart_cart_multiple` DROP INDEX `idx_vendor_id`, ADD UNIQUE `idx_vendor_id` (`vendor_id`);
-ALTER TABLE `#__phocacart_cart_multiple` DROP INDEX `idx_section_id`, ADD UNIQUE `idx_section_id` (`section_id`);
-ALTER TABLE `#__phocacart_cart_multiple` DROP INDEX `idx_unit_id`, ADD UNIQUE `idx_unit_id` (`unit_id`);
-
 ALTER TABLE `#__phocacart_export` CHANGE `item` `item` MEDIUMTEXT;
 ALTER TABLE `#__phocacart_import` CHANGE `item` `item` MEDIUMTEXT;
+
+ALTER TABLE `#__phocacart_orders` ADD INDEX `idx_user_id` (`user_id`);
+ALTER TABLE `#__phocacart_cart_multiple` ADD INDEX `idx_user_id` (`user_id`);
+ALTER TABLE `#__phocacart_cart_multiple` ADD INDEX `idx_vendor_id` (`vendor_id`);
+ALTER TABLE `#__phocacart_cart_multiple` ADD INDEX `idx_section_id` (`section_id`);
+ALTER TABLE `#__phocacart_cart_multiple` ADD INDEX `idx_unit_id` (`unit_id`);
+
