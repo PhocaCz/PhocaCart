@@ -34,8 +34,8 @@ if (!empty($this->itemhistory)) {
                     <td><?php echo HTMLHelper::date($history->date, Text::_('DATE_FORMAT_LC')); ?></td>
                     <td><?php echo PhocacartUtilsSettings::getOrderStatusBadge($history->statustitle, $history->status_params); ?></td>
                     <td><?php echo $history->user_name . ($history->user_username ? ' <small>(' . $history->user_username . ')</small>' : ''); ?></td>
-                    <td><?php echo Text::_(['COM_PHOCACART_NO_ERROR', 'COM_PHOCACART_NO', 'COM_PHOCACART_YES'][$history->notify]); ?></td>
-                    <td><?php echo $history->comment;; ?></td>
+                    <td><?php echo Text::_([-1 => 'COM_PHOCACART_NO_ERROR', 'COM_PHOCACART_NO', 'COM_PHOCACART_YES'][$history->notify]); ?></td>
+                    <td><?php echo $history->comment; ?></td>
                 </tr>
             <?php } ?>
             </tbody>
