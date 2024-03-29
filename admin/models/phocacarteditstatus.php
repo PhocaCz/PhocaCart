@@ -114,9 +114,9 @@ class PhocaCartCpModelPhocaCartEditStatus extends AdminModel
 
             if ($statusChanged || $commentChanged) {
                 PhocacartOrder::storeOrderReceiptInvoiceId($order->id, false, $status['id'], ['I']);
-
-                $notifyUser           = $data['notify_customer'] !== '' ? !!$data['notify_customer'] : $status['notify_customer'];
-                $notifyOther          = $data['notify_others'] !== '' ? !!$data['notify_others'] : $status['notify_others'];
+                
+                $notifyUser           = $data['notify_customer'] !== '' ? !!$data['notify_customer'] : !!$status['email_customer'];
+                $notifyOther          = $data['notify_others'] !== '' ? !!$data['notify_others'] : !!$status['email_others'];
                 $emailSend            = $data['email_send'] !== '' ? $data['email_send'] : $status['email_send'];
                 $stockMovements       = $data['stock_movements'] !== '' ? $data['stock_movements'] : $status['stock_movements'];
                 $changeUserGroup      = $data['change_user_group'] !== '' ? $data['change_user_group'] : $status['change_user_group'];
