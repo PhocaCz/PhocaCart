@@ -1383,15 +1383,16 @@ class PhocacartOrderStatus
 
 		// CUSTOMER
 		if (isset($common->user_lang) && $common->user_lang != '' && $common->user_lang != '*') {
-
 			$pLang->setLanguage($common->user_lang);
 
-			// Run content plugins e.g. because of translation
-			// Disable emailclock for PDF | MAIL
-			//if ($d['format'] == 'pdf' || $d['format'] == 'mail') {
-				$object = '{emailcloak=off}' . $object;
-			//}
-			$object = HTMLHelper::_('content.prepare', $object);
+            if ($object) {
+                // Run content plugins e.g. because of translation
+                // Disable emailclock for PDF | MAIL
+                //if ($d['format'] == 'pdf' || $d['format'] == 'mail') {
+                $object = '{emailcloak=off}' . $object;
+                //}
+                $object = HTMLHelper::_('content.prepare', $object);
+            }
 
 			Dispatcher::dispatchChangeText($object);
 
@@ -1399,13 +1400,14 @@ class PhocacartOrderStatus
 			$pLang->setLanguageBack();
 
 		} else {
-
-			// Run content plugins e.g. because of translation
-			// Disable emailclock for PDF | MAIL
-			//if ($d['format'] == 'pdf' || $d['format'] == 'mail') {
-				$object = '{emailcloak=off}' . $object;
-			//}
-			$object = HTMLHelper::_('content.prepare', $object);
+            if ($object) {
+                // Run content plugins e.g. because of translation
+                // Disable emailclock for PDF | MAIL
+                //if ($d['format'] == 'pdf' || $d['format'] == 'mail') {
+                $object = '{emailcloak=off}' . $object;
+                //}
+                $object = HTMLHelper::_('content.prepare', $object);
+            }
 
 			Dispatcher::dispatchChangeText($object);
 		}
@@ -1415,12 +1417,14 @@ class PhocacartOrderStatus
 		PluginHelper::importPlugin( 'system' );
 		PluginHelper::importPlugin('plgSystemMultilanguagesck');
 
-		// Run content plugins e.g. because of translation
-		// Disable emailclock for PDF | MAIL
-		//if ($d['format'] == 'pdf' || $d['format'] == 'mail') {
-			$object = '{emailcloak=off}' . $object;
-		//}
-		$object = HTMLHelper::_('content.prepare', $object);
+        if ($object) {
+            // Run content plugins e.g. because of translation
+            // Disable emailclock for PDF | MAIL
+            //if ($d['format'] == 'pdf' || $d['format'] == 'mail') {
+            $object = '{emailcloak=off}' . $object;
+            //}
+            $object = HTMLHelper::_('content.prepare', $object);
+        }
 
 		Dispatcher::dispatchChangeText($object);
 	}
