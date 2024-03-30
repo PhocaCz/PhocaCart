@@ -104,7 +104,7 @@ class PhocacartProduct
 
         if (!$params->get('sql_product_skip_tax', false)) {
             $columns = array_merge($columns, [
-                't.id as taxid', 't.tax_rate as taxrate', 't.calculation_type as taxcalculationtype', 't.title as taxtitle', 't.tax_hide as taxhide'
+                't.id as taxid', 't.tax_rate as taxrate', 't.calculation_type as taxcalculationtype', I18nHelper::sqlCoalesce(['title'], 't', 'tax'), 't.tax_hide as taxhide'
             ]);
         } else {
             $columns = array_merge($columns, [
@@ -142,6 +142,7 @@ class PhocacartProduct
 
         if (!$params->get('sql_product_skip_tax', false)) {
             $query .= ' LEFT JOIN #__phocacart_taxes AS t ON t.id = i.tax_id';
+            $query .= I18nHelper::sqlJoin('#__phocacart_taxes_i18n', 't');
         }
 
         if (!$params->get('sql_product_skip_group', false)) {
@@ -708,7 +709,7 @@ class PhocacartProduct
         } else {
              //if (I18nHelper::isI18n()) {
                 $columns = implode(',', $col) . ', c.id AS catid, '.I18nHelper::sqlCoalesce(['title', 'alias'], 'c', 'cat').', c.title_feed AS cattitlefeed, c.type_feed AS cattypefeed, c.params_feed AS params_feed_category,'
-                 . ' MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received, t.id as taxid, t.tax_rate AS taxrate, t.calculation_type AS taxcalculationtype, t.title AS taxtitle, t.tax_hide as taxhide, '.I18nHelper::sqlCoalesce(['title', 'link'], 'm', 'manufacturer').','
+                 . ' MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received, t.id as taxid, t.tax_rate AS taxrate, t.calculation_type AS taxcalculationtype, '.I18nHelper::sqlCoalesce(['title'], 't', 'tax').', t.tax_hide as taxhide, '.I18nHelper::sqlCoalesce(['title', 'link'], 'm', 'manufacturer').','
                     . ' AVG(r.rating) AS rating,'
                     . ' at.required AS attribute_required';
                 $groupsFull = implode(',', $col) . ', c.id, c.title, c.alias, c.title_feed, c.type_feed, ppg.price, pptg.points_received, t.id, t.tax_rate, t.calculation_type, t.title, m.title, r.rating, at.required';
@@ -768,6 +769,7 @@ class PhocacartProduct
 			$q .= I18nHelper::sqlJoin('#__phocacart_products_i18n', 'a');
 			$q .= I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'c');
             $q .= I18nHelper::sqlJoin('#__phocacart_manufacturers_i18n', 'm');
+            $q .= I18nHelper::sqlJoin('#__phocacart_taxes_i18n', 't');
 		}
 
         // Additional Hits

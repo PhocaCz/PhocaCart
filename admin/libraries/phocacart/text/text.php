@@ -244,6 +244,7 @@ class PhocacartText {
 
             $r['downloadlinkforce'] 	= PhocacartPath::getRightPathLink(PhocacartRoute::getDownloadRoute());
 
+
             $r['downloadlink'] = '';
             $products 	= $order->getItemProducts($orderId);
             $isDownload = false;
@@ -305,6 +306,8 @@ class PhocacartText {
             $isDownload = false;
 
 			$downloadO 	= '';
+
+
 			if(!empty($products) && isset($common->order_token) && $common->order_token != '' && $download_guest_access > 0) {
 				$downloadO	= '<p>&nbsp;</p><h4>'.Text::_('COM_PHOCACART_DOWNLOAD_LINKS').'</h4>';
 				foreach ($products as $k => $v) {
@@ -315,6 +318,7 @@ class PhocacartText {
 
 
                             // Main Product Download File
+
                             if (isset($v2->published) && $v2->published == 1 && isset($v2->download_file) && $v2->download_file != '' && isset($v2->download_folder) && $v2->download_folder != '' && isset($v2->download_token) && $v2->download_token != '') {
 
                                 $title = str_replace($v2->download_folder, '', $v2->download_file);

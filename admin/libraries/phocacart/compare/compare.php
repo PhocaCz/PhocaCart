@@ -139,7 +139,9 @@ class PhocacartCompare
 			.' a.gift_types,'
 			//.' m.title as manufacturer_title,'
 			. I18nHelper::sqlCoalesce(['title'], 'm', 'manufacturer_', '', '', ',')
-			.' t.id as taxid, t.tax_rate as taxrate, t.title as taxtitle, t.calculation_type as taxcalculationtype, t.tax_hide as taxhide,'
+			.' t.id as taxid, t.tax_rate as taxrate,'
+			. I18nHelper::sqlCoalesce(['title'], 't', 'tax', '', '', ',')
+			.'t.calculation_type as taxcalculationtype, t.tax_hide as taxhide,'
 			.' MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received,';
 			$columns .= I18nHelper::sqlCoalesce(['title', 'alias'], 'c', 'cat', 'groupconcatdistinct');
 
@@ -160,6 +162,7 @@ class PhocacartCompare
 			.' LEFT JOIN #__phocacart_categories AS c ON c.id =  pc.category_id'
 		    . I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'c')
 			.' LEFT JOIN #__phocacart_taxes AS t ON t.id = a.tax_id'
+			 . I18nHelper::sqlJoin('#__phocacart_taxes_i18n', 't')
 			.' LEFT JOIN #__phocacart_manufacturers AS m ON a.manufacturer_id = m.id'
 		 	. I18nHelper::sqlJoin('#__phocacart_manufacturers_i18n', 'm')
 			.' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3'// type 3 is product

@@ -1964,6 +1964,15 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_discounts_i18n` (
     KEY `idx_alias` (`alias`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS `#__phocacart_taxes_i18n` (
+    `id` int(11) NOT NULL,
+    `language` char(7) NOT NULL,
+    `title` varchar(255),
+    `alias` varchar(255),
+    PRIMARY KEY  (`id`, `language`),
+    KEY `idx_alias` (`alias`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE IF NOT EXISTS `#__phocacart_content_types` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `title` varchar(255) NOT NULL,

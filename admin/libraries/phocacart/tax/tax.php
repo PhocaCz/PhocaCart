@@ -13,6 +13,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\PluginHelper;
 use Phoca\PhocaCart\Dispatcher\Dispatcher;
 use Phoca\PhocaCart\Event;
+use Phoca\PhocaCart\I18n\I18nHelper;
 
 class PhocacartTax
 {
@@ -24,13 +25,18 @@ class PhocacartTax
 	public static function getAllTaxes() {
 
         $db = Factory::getDBO();
-        $q = 'SELECT t.id, t.title, t.tax_rate, t.tax_hide'
-        . ' FROM #__phocacart_taxes as t'
+        $query = 'SELECT t.id, ' . I18nHelper::sqlCoalesce(['title', 'alias'], 't') . ', t.tax_rate, t.tax_hide'
+        . ' FROM #__phocacart_taxes as t';
         //. ' LEFT JOIN #__phocacart_tax_countries AS tc ON tc.tax_id = t.id AND tc.country_id = '.(int)$countryId
         //. ' WHERE tc.country_id = '.(int)$id
          //   . " WHERE t.published = 1"
-        . ' ORDER BY t.ordering ASC';
-        $db->setQuery($q) ;
+
+        if (I18nHelper::useI18n()) {
+            $query .= I18nHelper::sqlJoin('#__phocacart_taxes_i18n', 't');
+        }
+
+        $query .= ' ORDER BY t.ordering ASC';
+        $db->setQuery($query) ;
         $items = $db->loadAssocList('id');
         return $items;
 
@@ -42,13 +48,18 @@ class PhocacartTax
 
         if (empty(self::$taxById[$id])) {
             $db = Factory::getDBO();
-            $q  = 'SELECT t.id, t.title, t.tax_rate, t.tax_hide'
-                . ' FROM #__phocacart_taxes as t'
+            $query  = 'SELECT t.id, ' . I18nHelper::sqlCoalesce(['title', 'alias'], 't') . ', t.tax_rate, t.tax_hide'
+                . ' FROM #__phocacart_taxes as t';
                 //. ' LEFT JOIN #__phocacart_tax_countries AS tc ON tc.tax_id = t.id AND tc.country_id = '.(int)$countryId
                 //. ' WHERE tc.country_id = '.(int)$id
-                . " WHERE t.published = 1 AND t.id = " . (int)$id
+
+                if (I18nHelper::useI18n()) {
+                    $query .= I18nHelper::sqlJoin('#__phocacart_taxes_i18n', 't');
+                }
+
+                $query .= " WHERE t.published = 1 AND t.id = " . (int)$id
                 . ' ORDER BY t.ordering ASC LIMIT 1';
-            $db->setQuery($q);
+            $db->setQuery($query);
             $item = $db->loadAssoc();
             self::$taxById[$id] = $item;
 
@@ -60,26 +71,32 @@ class PhocacartTax
 
 			// Tax key = IDTAX:IDCOUNTRYTAX:IDREGIONTAX:IDPLUGINTAX
 			$db = Factory::getDBO();
-			$q 	= 'SELECT CONCAT_WS(\':\', t.id, 0, 0, 0) as tkey, t.id, t.title, t.tax_rate, t.tax_hide, t.calculation_type FROM #__phocacart_taxes AS t ORDER BY t.ordering ASC';
-			$db->setQuery($q) ;
+			$query 	= 'SELECT CONCAT_WS(\':\', t.id, 0, 0, 0) as tkey, t.id, ' . I18nHelper::sqlCoalesce(['title', 'alias'], 't') . ', t.tax_rate, t.tax_hide, t.calculation_type FROM #__phocacart_taxes AS t';
+
+                if (I18nHelper::useI18n()) {
+                    $query .= I18nHelper::sqlJoin('#__phocacart_taxes_i18n', 't');
+                }
+
+            $query .= ' ORDER BY t.ordering ASC';
+			$db->setQuery($query) ;
 			$itemsT = $db->loadAssocList('tkey');
 
-			$q 	= 'SELECT CONCAT_WS(\':\', tc.tax_id, tc.id, 0, 0) as tkey, tc.id, tc.title, tc.tax_id, tc.tax_rate, t.tax_hide, t.calculation_type FROM #__phocacart_tax_countries AS tc'
+			$query 	= 'SELECT CONCAT_WS(\':\', tc.tax_id, tc.id, 0, 0) as tkey, tc.id, tc.title, tc.tax_id, tc.tax_rate, t.tax_hide, t.calculation_type FROM #__phocacart_tax_countries AS tc'
 				.' LEFT JOIN #__phocacart_taxes AS t ON t.id = tc.tax_id'
 				.' ORDER BY t.ordering ASC';
-			$db->setQuery($q) ;
+			$db->setQuery($query) ;
 			$itemsC = $db->loadAssocList('tkey');
 
-			$q 	= 'SELECT CONCAT_WS(\':\', tr.tax_id, 0, tr.id, 0) as tkey, tr.id, tr.title, tr.tax_id, tr.tax_rate, t.tax_hide, t.calculation_type FROM #__phocacart_tax_regions AS tr'
+			$query 	= 'SELECT CONCAT_WS(\':\', tr.tax_id, 0, tr.id, 0) as tkey, tr.id, tr.title, tr.tax_id, tr.tax_rate, t.tax_hide, t.calculation_type FROM #__phocacart_tax_regions AS tr'
 				.' LEFT JOIN #__phocacart_taxes AS t ON t.id = tr.tax_id'
 				.' ORDER BY t.ordering ASC';
-			$db->setQuery($q) ;
+			$db->setQuery($query) ;
 			$itemsR = $db->loadAssocList('tkey');
 
-            /*$q 	= 'SELECT CONCAT_WS(\':\', tp.tax_id, 0, tp.id) as tkey, tp.id, tp.title, tp.tax_id, tp.tax_rate, t.tax_hide, t.calculation_type FROM #__phocacart_tax_regions AS tr'
+            /*$query 	= 'SELECT CONCAT_WS(\':\', tp.tax_id, 0, tp.id) as tkey, tp.id, tp.title, tp.tax_id, tp.tax_rate, t.tax_hide, t.calculation_type FROM #__phocacart_tax_regions AS tr'
 				.' LEFT JOIN #__phocacart_taxes AS t ON t.id = tr.tax_id'
 				.' ORDER BY t.ordering ASC';
-			$db->setQuery($q) ;
+			$db->setQuery($query) ;
 			$itemsR = $db->loadAssocList('tkey');*/
 
             // Find all possible VAT or TAX pct plugins which can change the tax
@@ -111,13 +128,17 @@ class PhocacartTax
 
 		if ((int)$countryId > 0) {
 			$db = Factory::getDBO();
-			$q = 'SELECT t.id, t.title, t.ordering, t.tax_rate, t.tax_hide, tc.id as tcr_id, tc.title as tcr_title, tc.alias as tcr_alias, tc.tax_rate as tcr_tax_rate'
+			$query = 'SELECT t.id, ' . I18nHelper::sqlCoalesce(['title', 'alias'], 't') . ', t.ordering, t.tax_rate, t.tax_hide, tc.id as tcr_id, tc.title as tcr_title, tc.alias as tcr_alias, tc.tax_rate as tcr_tax_rate'
 			. ' FROM #__phocacart_taxes as t'
-			. ' LEFT JOIN #__phocacart_tax_countries AS tc ON tc.tax_id = t.id AND tc.country_id = '.(int)$countryId
+			. ' LEFT JOIN #__phocacart_tax_countries AS tc ON tc.tax_id = t.id AND tc.country_id = '.(int)$countryId;
+
+                if (I18nHelper::useI18n()) {
+                    $query .= I18nHelper::sqlJoin('#__phocacart_taxes_i18n', 't');
+                }
 			//. ' WHERE tc.country_id = '.(int)$id
 			//. ' WHERE tc.tax_rate > -1'
-			. ' ORDER BY t.ordering ASC';
-			$db->setQuery($q) ;
+			$query .= ' ORDER BY t.ordering ASC';
+			$db->setQuery($query) ;
 			$items = $db->loadObjectList();
 
 			return $items;
@@ -130,13 +151,17 @@ class PhocacartTax
 
 		if ((int)$regionId > 0) {
 			$db = Factory::getDBO();
-			$q = 'SELECT t.id, t.title, t.ordering, t.tax_rate, t.tax_hide, tr.id as tcr_id, tr.title as tcr_title, tr.alias as tcr_alias, tr.tax_rate as tcr_tax_rate'
+			$query = 'SELECT t.id, ' . I18nHelper::sqlCoalesce(['title', 'alias'], 't') . ', t.ordering, t.tax_rate, t.tax_hide, tr.id as tcr_id, tr.title as tcr_title, tr.alias as tcr_alias, tr.tax_rate as tcr_tax_rate'
 			. ' FROM #__phocacart_taxes as t'
-			. ' LEFT JOIN #__phocacart_tax_regions AS tr ON tr.tax_id = t.id AND tr.region_id = '.(int)$regionId
+			. ' LEFT JOIN #__phocacart_tax_regions AS tr ON tr.tax_id = t.id AND tr.region_id = '.(int)$regionId;
+
+                if (I18nHelper::useI18n()) {
+                    $query .= I18nHelper::sqlJoin('#__phocacart_taxes_i18n', 't');
+                }
 			//. ' WHERE tc.country_id = '.(int)$id
 			//. ' WHERE tr.tax_rate > -1'
-			. ' ORDER BY t.ordering ASC';
-			$db->setQuery($q) ;
+			$query .= ' ORDER BY t.ordering ASC';
+			$db->setQuery($query) ;
 			$items = $db->loadObjectList();
 
 			return $items;
@@ -162,13 +187,13 @@ class PhocacartTax
 
             if ((int)$taxId > 0 && $countryId > 0) {
                 $db = Factory::getDBO();
-                $q  = 'SELECT tc.id, tc.title, tc.tax_rate'
+                $query  = 'SELECT tc.id, tc.title, tc.tax_rate'
                     . ' FROM #__phocacart_tax_countries as tc'
                     . ' WHERE tc.country_id = ' . (int)$countryId
                     . ' AND tc.tax_id = ' . (int)$taxId
                     . ' AND tc.tax_rate > -1'
                     . ' LIMIT 1';
-                $db->setQuery($q);
+                $db->setQuery($query);
                 $taxO = $db->loadObject();
 
                 if (isset($taxO->tax_rate) && $taxO->tax_rate != '') {
@@ -225,13 +250,13 @@ class PhocacartTax
             // even if the tax rate changes it uniques the tax type for each country/region
             if ((int)$taxId > 0 && $regionId > 0) {
                 $db = Factory::getDBO();
-                $q  = 'SELECT tr.id, tr.title, tr.tax_rate'
+                $query  = 'SELECT tr.id, tr.title, tr.tax_rate'
                     . ' FROM #__phocacart_tax_regions as tr'
                     . ' WHERE tr.region_id = ' . (int)$regionId
                     . ' AND tr.tax_id = ' . (int)$taxId
                     . ' AND tr.tax_rate > -1'
                     . ' LIMIT 1';
-                $db->setQuery($q);
+                $db->setQuery($query);
                 $taxO = $db->loadObject();
 
                 if (isset($taxO->tax_rate) && $taxO->tax_rate != '') {
@@ -361,12 +386,12 @@ class PhocacartTax
 
 		if (isset($user->id) && (int)$user->id > 0 && (int)$dynamic_tax_rate > 0) {
 			$db = Factory::getDBO();
-			$q = 'SELECT country'
+			$query = 'SELECT country'
 			. ' FROM #__phocacart_users'
 			. ' WHERE user_id = '.(int)$user->id
 			. ' AND type = '.(int)$type
 			. ' LIMIT 1';
-			$db->setQuery($q) ;
+			$db->setQuery($query) ;
 			$countryId = $db->loadResult();
 			if ((int)$countryId > 0) {
 				return $countryId;
@@ -408,12 +433,12 @@ class PhocacartTax
 
 		if (isset($user->id) && (int)$user->id > 0 && (int)$dynamic_tax_rate > 0) {
 			$db = Factory::getDBO();
-			$q = 'SELECT region'
+			$query = 'SELECT region'
 			. ' FROM #__phocacart_users'
 			. ' WHERE user_id = '.(int)$user->id
 			. ' AND type = '.(int)$type
 			. ' LIMIT 1';
-			$db->setQuery($q) ;
+			$db->setQuery($query) ;
 			$regionId = $db->loadResult();
 			if ((int)$regionId > 0) {
 				return $regionId;

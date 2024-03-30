@@ -253,3 +253,11 @@ ALTER TABLE `#__phocacart_cart_multiple` ADD INDEX `idx_vendor_id` (`vendor_id`)
 ALTER TABLE `#__phocacart_cart_multiple` ADD INDEX `idx_section_id` (`section_id`);
 ALTER TABLE `#__phocacart_cart_multiple` ADD INDEX `idx_unit_id` (`unit_id`);
 
+CREATE TABLE IF NOT EXISTS `#__phocacart_taxes_i18n` (
+    `id` int(11) NOT NULL,
+    `language` char(7) NOT NULL,
+    `title` varchar(255),
+    `alias` varchar(255),
+    PRIMARY KEY  (`id`, `language`),
+    KEY `idx_alias` (`alias`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;

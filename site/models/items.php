@@ -398,6 +398,7 @@ class PhocaCartModelItems extends BaseDatabaseModel
 
 			if (!$params->get('sql_products_skip_tax', false)) {
 				$join[] = ' LEFT JOIN #__phocacart_taxes AS t ON t.id = a.tax_id';
+				$join[] = I18nHelper::sqlJoin('#__phocacart_taxes_i18n', 't');
 			}
 
 			if (!$params->get('sql_products_skip_group', false)) {
@@ -474,7 +475,8 @@ class PhocaCartModelItems extends BaseDatabaseModel
 				$columns[] = 't.id as taxid';
 				$columns[] = 't.tax_rate as taxrate';
 				$columns[] = 't.calculation_type as taxcalculationtype';
-				$columns[] = 't.title as taxtitle';
+				//$columns[] = 't.title as taxtitle';
+				$columns[] = I18nHelper::sqlCoalesce(['title'], 't', 'tax');
 				$columns[] = 't.tax_hide as taxhide';
 			} else {
 				$columns[] = 'NULL as taxid';

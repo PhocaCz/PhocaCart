@@ -39,7 +39,7 @@ class PhocacartRouterrules extends MenuRules
 
 
         // PHOCAEDIT
-        if (!isset($item->query['id'])) {
+        if (isset($item->query) && !isset($item->query['id'])) {
             $item->query['id'] = 0;
         }
 

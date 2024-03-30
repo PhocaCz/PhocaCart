@@ -100,6 +100,7 @@ DROP TABLE IF EXISTS `#__phocacart_payment_methods_i18n`;
 DROP TABLE IF EXISTS `#__phocacart_tags_i18n`;
 DROP TABLE IF EXISTS `#__phocacart_parameters_i18n`;
 DROP TABLE IF EXISTS `#__phocacart_parameter_values_i18n`;
+DROP TABLE IF EXISTS `#__phocacart_taxes_i18n`;
 
 -- Obsolete
 DROP TABLE IF EXISTS `#__phocacart_cart`;

@@ -151,11 +151,16 @@ if (!empty($this->itemproducts)) {
 
 
 	foreach($this->itemproducts as $k => $v) {
-		echo '<tr>';
 		echo '<td>'.$r->itemCalc($v->id, 'title', $v->title, 'pform', 2).'</td>';
 		echo '<td>'.$r->itemCalc($v->id, 'quantity', $v->quantity, 'pform', 0).'</td>';
-		echo '<td>'.$r->itemCalc($v->id, 'netto', PhocacartPrice::cleanPrice($v->netto)).'</td>';
-		echo '<td>'.$r->itemCalc($v->id, 'tax', PhocacartPrice::cleanPrice($v->tax)).'</td>';
+
+        $taxQuantity = '';
+        if ($v->quantity > 1) {
+            $taxQuantity = ' <span class="ph-col-title-small">( ' . PhocacartPrice::cleanPrice($v->quantity * $v->tax) . ' )</span>';
+        }
+
+		echo '<td>'.$r->itemCalc($v->id, 'netto', PhocacartPrice::cleanPrice($v->netto)).' </td>';
+		echo '<td>'.$r->itemCalc($v->id, 'tax', PhocacartPrice::cleanPrice($v->tax)). $taxQuantity .'</td>';
 		echo '<td>'.$r->itemCalc($v->id, 'brutto', PhocacartPrice::cleanPrice($v->brutto)).'</td>';
 		echo '<td align="center">'.$r->itemCalcCheckBox($v->id, 'published', $v->published).'</td>';
 		echo '<td class="ph-col-add-cur">( '. $this->pr->getPriceFormat($v->brutto).' )</td>';

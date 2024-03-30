@@ -73,13 +73,13 @@ class PhocacartShipping
 
 		}
 
-		$columns = 's.id, s.tax_id, s.cost, s.cost_additional, s.calculation_type, s.title, s.description, s.image, s.access, s.method, s.zip,'
+		$columns = 's.id, s.tax_id, s.cost, s.cost_additional, s.calculation_type, s.image, s.access, s.method, s.zip,'
 			. ' s.active_amount, s.active_quantity, s.active_zone, s.active_country, s.active_region, s.active_zip,'
 			. ' s.active_weight, s.active_size,'
 			. ' s.lowest_amount, s.highest_amount, s.minimal_quantity, s.maximal_quantity, s.lowest_weight,'
 			. ' s.highest_weight, s.default,'
 			. ' s.minimal_length, s.minimal_width, s.minimal_height, s.maximal_length, s.maximal_width, s.maximal_height, s.params,'
-			. ' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.tax_hide as taxhide,'
+			. ' t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.tax_hide as taxhide,'
 			. ' GROUP_CONCAT(DISTINCT r.region_id) AS region,'
 			. ' GROUP_CONCAT(DISTINCT c.country_id) AS country,'
 			. ' GROUP_CONCAT(DISTINCT z.zone_id) AS zone';
@@ -101,6 +101,7 @@ class PhocacartShipping
 		}*/
 
 		$columns .= I18nHelper::sqlCoalesce(['title', 'description'], 's', '', '', ',');
+		$columns .= I18nHelper::sqlCoalesce(['title'], 't', 'tax', '', ',');
 
 		$groupsFull .= ', s.title, s.description';
 		$groupsFast		= 's.id';
@@ -117,6 +118,7 @@ class PhocacartShipping
 				.' LEFT JOIN #__phocacart_shipping_method_countries AS c ON c.shipping_id = s.id'
 				.' LEFT JOIN #__phocacart_shipping_method_zones AS z ON z.shipping_id = s.id'
 				.' LEFT JOIN #__phocacart_taxes AS t ON t.id = s.tax_id'
+				. I18nHelper::sqlJoin('#__phocacart_taxes_i18n', 't')
 				.' LEFT JOIN #__phocacart_item_groups AS ga ON s.id = ga.item_id AND ga.type = 7'// type 8 is payment
 				. $where
 				. ' GROUP BY '.$groups
@@ -602,10 +604,11 @@ class PhocacartShipping
 		$columns = I18nHelper::sqlCoalesce(['title', 'description'], 's');
 
 		$query = ' SELECT s.id, s.tax_id, s.cost, s.cost_additional, s.calculation_type, s.method, s.params, s.image,'
-				.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.tax_hide as taxhide'
+				.' t.id as taxid, '.I18nHelper::sqlCoalesce(['title'], 't', 'tax').', t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.tax_hide as taxhide'
 				.', ' . $columns
 				.' FROM #__phocacart_shipping_methods AS s'
 				.' LEFT JOIN #__phocacart_taxes AS t ON t.id = s.tax_id'
+				. I18nHelper::sqlJoin('#__phocacart_taxes_i18n', 't')
 				. I18nHelper::sqlJoin('#__phocacart_shipping_methods_i18n', 's')
 				.' WHERE s.id = '.(int)$shippingId
 				.' ORDER BY s.id'

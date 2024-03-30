@@ -254,7 +254,7 @@ class PhocaCartModelItem extends BaseDatabaseModel
 
 		if (!$params->get('sql_product_skip_tax', false)) {
 			$columns = array_merge($columns, [
-				't.id as taxid', 't.tax_rate as taxrate', 't.calculation_type as taxcalculationtype', 't.title as taxtitle', 't.tax_hide as taxhide'
+				't.id as taxid', 't.tax_rate as taxrate', 't.calculation_type as taxcalculationtype', I18nHelper::sqlCoalesce(['title'], 't', 'tax'), 't.tax_hide as taxhide'
 			]);
 		} else {
 			$columns = array_merge($columns, [
@@ -288,6 +288,7 @@ class PhocaCartModelItem extends BaseDatabaseModel
 
 		if (!$params->get('sql_product_skip_tax', false)) {
             $query .= ' LEFT JOIN #__phocacart_taxes AS t ON t.id = i.tax_id';
+            $query .= I18nHelper::sqlJoin('#__phocacart_taxes_i18n', 't');
         }
 
 		if (!$params->get('sql_product_skip_group', false)) {
