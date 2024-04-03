@@ -89,7 +89,7 @@ if (!empty($this->items)) {
 	echo '<div class="ph-cb"></div>';
 
 	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-center-pagination ph-pagination-mt pagination">';
-	
+
 	if (!empty($this->t['pagination']->getPagesCounter())) {
 		echo str_replace('class="form-control"', 'class="' . $this->s['c']['inputbox'] . ' ' . $this->s['c']['form-control'] . ' chosen-select"', $this->t['pagination']->getPagesCounter());
 	}

@@ -1500,7 +1500,8 @@ class PhocacartOrder
         $d['stock_calculation'] = $d['stockcalculation'];
         unset($d['id']);// we do new autoincrement
 
-        $d['tax'] = $d['tax'] / $d['quantity'];// in database we store the items per item
+
+        //$d['tax'] = $d['tax'] / $d['quantity'];// in database we store the items per item
         //$d['dtax'] = $d['dtax']/$d['quantity'];// in database we store the items per item
 
 
