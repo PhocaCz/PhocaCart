@@ -278,6 +278,83 @@ class PhocacartTag
         return HTMLHelper::_('select.genericlist', self::getAllTagsList($order, $type), $name, $attributes, 'value', 'text', $activeArray, $id);
     }
 
+    private static function renderTag(object $tag, bool $displayAsLabels = false): string
+    {
+        $class = ' ph-tag-' . $tag->alias;
+        $style = '';
+        if ($tag->params->get('background')) {
+            $style .= 'background-color: ' . $tag->params->get('background') . ' !important;';
+        }
+        if ($tag->params->get('foreground')) {
+            $style .= 'color: ' . $tag->params->get('foreground') . ' !important;';
+        }
+        if ($tag->params->get('class')) {
+            $class .= ' ' . $tag->params->get('class');
+        }
+        $style = $style ? ' style="' . $style . '"' : '';
+
+        if ($displayAsLabels) {
+            $html = '<div class="ph-corner-icon-wrapper"><div class="ph-corner-icon ph-corner-icon-' . $tag->alias . $class . '"' . $style . '>';
+        } else {
+            $html = '<span class="' . PhocacartRenderStyle::class('label.label-info') . $class . '"' . $style . '>';
+        }
+
+        $tagContent = htmlspecialchars($tag->title);
+
+        if ($tag->display_format == 2) {
+            if ($tag->icon_class != '') {
+                $tagContent = '<span class="' . htmlspecialchars(strip_tags($tag->icon_class)) . '"></span>';
+            } else {
+                $tagContent = $tag->title;
+            }
+        } else if ($tag->display_format == 3) {
+            if ($tag->icon_class != '') {
+                $tagContent = '<span class="' . htmlspecialchars(strip_tags($tag->icon_class)) . '"></span>';
+            }
+            $tagContent .= $tag->title;
+        }
+
+        $tagsLinks = PhocacartUtils::getComponentParameters()->get('tags_links', 0);
+        if ($tagsLinks == 0) {
+            $html .= $tagContent;
+        } else if ($tagsLinks == 1) {
+            if ($tag->link_ext) {
+                $html .= '<a href="' . $tag->link_ext . '">' . $tagContent . '</a>';
+            } else {
+                $html .= $tagContent;
+            }
+        } else if ($tagsLinks == 2) {
+            if ($tag->link_cat != '') {
+                $category = PhocacartCategory::getCategoryById($tag->link_cat);
+                if ($category) {
+                    $link  = PhocacartRoute::getCategoryRoute($category->id, $category->alias);
+                    $html .= '<a href="' . $link . '">' . $tagContent . '</a>';
+                } else {
+                    $html .= $tagContent;
+                }
+            } else {
+                $html .= $tagContent;
+            }
+        } else if ($tagsLinks == 3) {
+            $link = PhocacartRoute::getItemsRoute();
+            if ($displayAsLabels) {
+                $link = $link . PhocacartRoute::getItemsRouteSuffix('label', $tag->id, $tag->alias);
+            } else {
+                $link = $link . PhocacartRoute::getItemsRouteSuffix('tag', $tag->id, $tag->alias);
+            }
+
+            $html .= '<a href="' . Route::_($link) . '">' . $tagContent . '</a>';
+        }
+
+        if ($displayAsLabels) {
+            $html .= '</div></div>';
+        } else {
+            $html .= '</span>';
+        }
+
+        return $html;
+    }
+
     /**
      *
      * @param int $itemId
@@ -299,89 +376,13 @@ class PhocacartTag
             return '';
         }
 
-        $tagsLinks = PhocacartUtils::getComponentParameters()->get('tags_links', 0);
-
         $html = [];
-        $i = 0;
-
         if (!empty($tags)) {
             foreach ($tags as $tag) {
                 $tag->params = new Registry($tag->params);
 
-                $class = ' ph-tag-' . $tag->alias;
-                $style = '';
-                if ($tag->params->get('background')) {
-                    $style .= 'background-color: ' . $tag->params->get('background') . ' !important;';
-                }
-                if ($tag->params->get('foreground')) {
-                    $style .= 'color: ' . $tag->params->get('foreground') . ' !important;';
-                }
-                if ($tag->params->get('class')) {
-                    $class .= ' ' . $tag->params->get('class');
-                }
-                $style = $style ? ' style="' . $style . '"' : '';
-
-                if ($types == 2 || $types == 3) {
-                    $html[$i] = '<div class="ph-corner-icon-wrapper"><div class="ph-corner-icon ph-corner-icon-' . $tag->alias . $class . '"' . $style . '>';
-                } else {
-                    $html[$i] = '<span class="' . PhocacartRenderStyle::class('label.label-info') . $class . '"' . $style . '>';
-                }
-
-                $dO = htmlspecialchars($tag->title);
-
-                if ($tag->display_format == 2) {
-                    if ($tag->icon_class != '') {
-                        $dO = '<span class="' . htmlspecialchars(strip_tags($tag->icon_class)) . '"></span>';
-                    } else {
-                        $dO = $tag->title;
-                    }
-                } else if ($tag->display_format == 3) {
-                    if ($tag->icon_class != '') {
-                        $dO = '<span class="' . htmlspecialchars(strip_tags($tag->icon_class)) . '"></span>';
-                    }
-                    $dO .= $tag->title;
-                }
-
-                if ($tagsLinks == 0) {
-                    $html[$i] .= $dO;
-                } else if ($tagsLinks == 1) {
-                    if ($tag->link_ext != '') {
-                        $html[$i] .= '<a href="' . $tag->link_ext . '">' . $dO . '</a>';
-                    } else {
-                        $html[$i] .= $dO;
-                    }
-                } else if ($tagsLinks == 2) {
-                    if ($tag->link_cat != '') {
-                        $category = PhocacartCategory::getCategoryById($tag->link_cat);
-                        if ($category) {
-                            $link  = PhocacartRoute::getCategoryRoute($category->id, $category->alias);
-                            $html[$i] .= '<a href="' . $link . '">' . $dO . '</a>';
-                        } else {
-                            $html[$i] .= $dO;
-                        }
-                    } else {
-                        $html[$i] .= $dO;
-                    }
-                } else if ($tagsLinks == 3) {
-                    $link = PhocacartRoute::getItemsRoute();
-                    if ($types == 2 || $types == 3) {
-                        $link = $link . PhocacartRoute::getItemsRouteSuffix('label', $tag->id, $tag->alias);
-                    } else {
-                        $link = $link . PhocacartRoute::getItemsRouteSuffix('tag', $tag->id, $tag->alias);
-                    }
-
-                    $html[$i] .= '<a href="' . Route::_($link) . '">' . $dO . '</a>';
-                }
-
-                if ($types == 2 || $types == 3) {
-                    $html[$i] .= '</div></div>';
-                } else {
-                    $html[$i] .= '</span>';
-                }
-
-                $i++;
+                $html[] = self::renderTag($tag, $types == 2 || $types == 3);
             }
-
         }
 
         return implode($separator, $html);
