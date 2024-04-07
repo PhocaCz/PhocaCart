@@ -15,6 +15,6 @@ defined('_JEXEC') or die();
 
 use Joomla\CMS\Factory;
 
-class WatchDogException extends PhocaCartException
+class PhocaCartException extends \Exception
 {
 }

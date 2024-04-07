@@ -126,7 +126,7 @@ echo '<div class="ph-inline-param">'. "\n"
 .'</div>'. "\n";
 
 $listOrderStatus	= $this->escape($this->state->get('filter.order_status'));
-$orderStatuses 		= PhocacartOrderStatus::getOrderStatuses();
+$orderStatuses 		= PhocacartOrderStatus::getOptions();
 array_unshift($orderStatuses, HTMLHelper::_('select.option', '', '' . Text::_('COM_PHOCACART_OPTION_SELECT_ORDER_STATUS') . '', 'value', 'text'));
 echo '<div class="ph-inline-param">'. "\n"
 .'<label for="sortTable" class="element-invisible">'.Text::_('COM_PHOCACART_SELECT_ORDER_STATUS').'</label>'. "\n"
