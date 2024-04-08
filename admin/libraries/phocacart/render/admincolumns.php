@@ -649,7 +649,7 @@ class PhocacartRenderAdmincolumns
             'class'  => 'ph-manufacturer',
             'title'  => 'COM_PHOCACART_FIELD_MANUFACTURER_LABEL',
             'tool'   => 'searchtools.sort',
-            'column' => 'pm.title'
+            'column' => 'pm.title AS manufacturer'
         ], $options);
     }
 
