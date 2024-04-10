@@ -187,6 +187,13 @@ class PhocaCartCpModelPhocaCartStatus extends AdminModel
 
 	public function save($data) {
 
+
+
+
+		if (!isset($data['date'])) {
+			$data['date'] = Factory::getDate()->toSql();;
+		}
+
 	    if(!isset($data['orders_view_display'])) {
 	        $data['orders_view_display'] = array();
         }

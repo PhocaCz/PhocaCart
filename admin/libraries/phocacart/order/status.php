@@ -799,6 +799,7 @@ class PhocacartOrderStatus
 
 		$gifts = array();
 		$activateGifts = array();
+
 		if ((int)$status['email_gift'] > 0 || (isset($status['activate_gift']) && $status['activate_gift'] == 1)) {
 
 			// Get all Gifts stored for this order
@@ -841,6 +842,7 @@ class PhocacartOrderStatus
 		}
 
 		$giftVoucherText = Text::_('COM_PHOCACART_GIFT_VOUCHER');
+
 		// Build email or paste gift vouchers - do them when at least one should get the email with gift voucher
 		if (!empty($gifts) && ($buyerEmail != ''|| !empty($recipientsEmails))) {
 
@@ -1106,7 +1108,6 @@ class PhocacartOrderStatus
 				}
 			}
 		}
-
 
 		// --------------------------------
 		// BACK TO MAIN NOTIFY FUNCTION
