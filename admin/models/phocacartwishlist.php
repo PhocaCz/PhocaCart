@@ -9,9 +9,8 @@
 defined( '_JEXEC' ) or die();
 
 use Joomla\CMS\Component\ComponentHelper;
-use Joomla\CMS\Date\Date;
 use Joomla\CMS\Log\Log;
-use Joomla\CMS\Mail\MailTemplate;
+use Phoca\PhocaCart\Mail\MailTemplate;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Table\Table;
