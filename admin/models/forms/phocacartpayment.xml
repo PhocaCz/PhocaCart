@@ -11,7 +11,9 @@
 			<field name="alias" type="phocahidden" i18n="true" />
 		</fieldset>
 
+
 		<fieldset name="general" label="COM_PHOCACART_GENERAL_OPTIONS">
+
 			<field name="code" type="text" label="COM_PHOCACART_FIELD_SHIPPING_CODE_LABEL" description="COM_PHOCACART_FIELD_SHIPPING_CODE_DESC" />
 
 			<field name="calculation_type" type="list" default="0" label="COM_PHOCACART_FIELD_CALCULATION_TYPE_LABEL" description="COM_PHOCACART_FIELD_CALCULATION_TYPE_DESC">
