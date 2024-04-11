@@ -25,123 +25,19 @@ class PhocacartText {
 	 */
 
 	public static function completeText($body, $replace, $type = 1) {
+        $body = (string)$body;
+        foreach ($replace as $key => $value) {
+            $body = str_replace('{' . $key .'}', $value, $body);
+        }
 
-
-		$body = isset($replace['name']) ? str_replace('{name}', $replace['name'], (string)$body) : $body;
-
-		if ($type == 3) {
-		    $body = isset($replace['email_gift_recipient']) ? str_replace('{emailgiftrecipient}', $replace['email_gift_recipient'], $body) : $body;
-        $body = isset($replace['name_gift_recipient']) ? str_replace('{namegiftrecipient}', $replace['name_gift_recipient'], $body) : $body;
-        $body = isset($replace['name_gift_sender']) ? str_replace('{namegiftbuyer}', $replace['name_gift_sender'], $body) : $body;
-        // Valid To variable is limited only to first gift card, because when the variable is replaced by first gift card, it cannot be set for next gift cards
-        $body = isset($replace['valid_to_gift']) ? str_replace('{giftvalidto}', $replace['valid_to_gift'], $body) : $body;
-        } else if ($type == 2) {
-			$body = isset($replace['email_others']) ? str_replace('{emailothers}', $replace['email_others'], $body) : $body;
-		} else if ($type == 1){
-			$body = isset($replace['email']) ? str_replace('{email}', $replace['email'], $body) : $body;
-		}
-
-
-		$body = isset($replace['downloadlink']) 			? str_replace('{downloadlink}', $replace['downloadlink'], $body) 					: $body;
-        $body = isset($replace['downloadlinkforce']) 		? str_replace('{downloadlinkforce}', $replace['downloadlinkforce'], $body) 					: $body;
-		$body = isset($replace['orderlink'])				? str_replace('{orderlink}', $replace['orderlink'], $body)							: $body;
-		$body = isset($replace['orderlinktoken'])			? str_replace('{orderlinktoken}', $replace['orderlinktoken'], $body)				: $body;
-		$body = isset($replace['ordertoken'])				? str_replace('{ordertoken}', $replace['ordertoken'], $body)						: $body;
-		$body = isset($replace['trackinglink'])				? str_replace('{trackinglink}', $replace['trackinglink'], $body)					: $body;
-		$body = isset($replace['trackingnumber'])			? str_replace('{trackingnumber}', $replace['trackingnumber'], $body)				: $body;
-        $body = isset($replace['trackingdescription'])		? str_replace('{trackingdescription}', $replace['trackingdescription'], $body)		: $body;
-		$body = isset($replace['shippingtitle'])			? str_replace('{shippingtitle}', $replace['shippingtitle'], $body)					: $body;
-        $body = isset($replace['shippingdescriptioninfo'])	? str_replace('{shippingdescriptioninfo}', $replace['shippingdescriptioninfo'], $body): $body;
-
-        // Shipping Branch Info
-        $body = isset($replace['shippingbranchname'])	? str_replace('{shippingbranchname}', $replace['shippingbranchname'], $body): $body;
-        $body = isset($replace['shippingbranchcode'])	? str_replace('{shippingbranchcode}', $replace['shippingbranchcode'], $body): $body;
-        $body = isset($replace['shippingbranchid'])	? str_replace('{shippingbranchid}', $replace['shippingbranchid'], $body): $body;
-        $body = isset($replace['shippingbranchcountry'])	? str_replace('{shippingbranchcountry}', $replace['shippingbranchcountry'], $body): $body;
-        $body = isset($replace['shippingbranchcity'])	? str_replace('{shippingbranchcity}', $replace['shippingbranchcity'], $body): $body;
-        $body = isset($replace['shippingbranchstreet'])	? str_replace('{shippingbranchstreet}', $replace['shippingbranchstreet'], $body): $body;
-        $body = isset($replace['shippingbranchzip'])	? str_replace('{shippingbranchzip}', $replace['shippingbranchzip'], $body): $body;
-        $body = isset($replace['shippingbranchurl'])	? str_replace('{shippingbranchurl}', $replace['shippingbranchurl'], $body): $body;
-        $body = isset($replace['shippingbranchthumbnail'])	? str_replace('{shippingbranchthumbnail}', $replace['shippingbranchthumbnail'], $body): $body;
-        $body = isset($replace['shippingbranchcurrency'])	? str_replace('{shippingbranchcurrency}', $replace['shippingbranchcurrency'], $body): $body;
-
-        $body = isset($replace['paymenttitle'])			    ? str_replace('{paymenttitle}', $replace['paymenttitle'], $body)					: $body;
-        $body = isset($replace['paymentdescriptioninfo'])	? str_replace('{paymentdescriptioninfo}', $replace['paymentdescriptioninfo'], $body): $body;
-		$body = isset($replace['dateshipped'])				? str_replace('{dateshipped}', $replace['dateshipped'], $body)						: $body;
-
-		$body = isset($replace['customercomment'])			? str_replace('{customercomment}', $replace['customercomment'], $body)				: $body;
-		$body = isset($replace['websitename'])				? str_replace('{websitename}', $replace['websitename'], $body)						: $body;
-		$body = isset($replace['websiteurl'])				? str_replace('{websiteurl}', $replace['websiteurl'], $body)						: $body;
-
-		$body = isset($replace['orderid'])					? str_replace('{orderid}', $replace['orderid'], $body)								: $body;
-		$body = isset($replace['ordernumber'])				? str_replace('{ordernumber}', $replace['ordernumber'], $body)						: $body;
-		$body = isset($replace['invoicenumber'])			? str_replace('{invoicenumber}', $replace['invoicenumber'], $body)					: $body;
-		$body = isset($replace['receiptnumber'])			? str_replace('{receiptnumber}', $replace['receiptnumber'], $body)					: $body;
-		$body = isset($replace['queuenumber'])			    ? str_replace('{queuenumber}', $replace['queuenumber'], $body)					    : $body;
-		$body = isset($replace['paymentreferencenumber'])	? str_replace('{paymentreferencenumber}', $replace['paymentreferencenumber'], $body): $body;
-		$body = isset($replace['invoiceduedate'])			? str_replace('{invoiceduedate}', $replace['invoiceduedate'], $body)				: $body;
-		$body = isset($replace['invoicedate'])				? str_replace('{invoicedate}', $replace['invoicedate'], $body)						: $body;
-		$body = isset($replace['invoicetimeofsupply'])		? str_replace('{invoicetimeofsupply}', $replace['invoicetimeofsupply'], $body)		: $body;
-
-		$body = isset($replace['invoicedueyear'])			? str_replace('{invoicedueyear}', $replace['invoicedueyear'], $body)				: $body;
-		$body = isset($replace['invoiceduemonth'])			? str_replace('{invoiceduemonth}', $replace['invoiceduemonth'], $body)				: $body;
-		$body = isset($replace['invoicedueday'])			? str_replace('{invoicedueday}', $replace['invoicedueday'], $body)					: $body;
-		$body = isset($replace['invoiceyear'])				? str_replace('{invoiceyear}', $replace['invoiceyear'], $body)						: $body;
-		$body = isset($replace['invoicemonth'])				? str_replace('{invoicemonth}', $replace['invoicemonth'], $body)					: $body;
-		$body = isset($replace['invoiceday'])				? str_replace('{invoiceday}', $replace['invoiceday'], $body)						: $body;
-        $body = isset($replace['invoiceqr'])				? str_replace('{invoiceqr}', $replace['invoiceqr'], $body)						: $body;
-
-		$body = isset($replace['orderdate'])				? str_replace('{orderdate}', $replace['orderdate'], $body)						    : $body;
-
-
-		$body = isset($replace['totaltopay'])				? str_replace('{totaltopay}', $replace['totaltopay'], $body)						: $body;
-
-
-		$body = isset($replace['orderyear'])				? str_replace('{orderyear}', $replace['orderyear'], $body)							: $body;
-		$body = isset($replace['ordermonth'])				? str_replace('{ordermonth}', $replace['ordermonth'], $body)						: $body;
-		$body = isset($replace['orderday'])					? str_replace('{orderday}', $replace['orderday'], $body)							: $body;
-
-		$body = isset($replace['ordernumbertxt'])			? str_replace('{ordernumbertxt}', $replace['ordernumbertxt'], $body)				: $body;
-
-
-		$body = isset($replace['bankaccountnumber'])		? str_replace('{bankaccountnumber}', $replace['bankaccountnumber'], $body)			: $body;
-		$body = isset($replace['iban'])						? str_replace('{iban}', $replace['iban'], $body)									: $body;
-		$body = isset($replace['bicswift'])					? str_replace('{bicswift}', $replace['bicswift'], $body)							: $body;
-		$body = isset($replace['totaltopaynoformat'])		? str_replace('{totaltopaynoformat}', $replace['totaltopaynoformat'], $body)		: $body;
-        $body = isset($replace['totaltopaynoformatcomma'])	? str_replace('{totaltopaynoformatcomma}', $replace['totaltopaynoformatcomma'], $body)	: $body;
-		$body = isset($replace['currencycode'])				? str_replace('{currencycode}', $replace['currencycode'], $body)		            : $body;
-
-
-        $body = isset($replace['totaltopaynoformatcurrency'])	? str_replace('{totaltopaynoformatcurrency}', $replace['totaltopaynoformatcurrency'], $body)	: $body;
-        $body = isset($replace['totaltopaynoformatcommacurrency'])	? str_replace('{totaltopaynoformatcommacurrency}', $replace['totaltopaynoformatcommacurrency'], $body)	: $body;
-        $body = isset($replace['totaltopaycurrency'])	? str_replace('{totaltopaycurrency}', $replace['totaltopaycurrency'], $body)	: $body;
-
-
-        $body = isset($replace['openingtimesinfo'])			? str_replace('{openingtimesinfo}', $replace['openingtimesinfo'], $body)		    : $body;
-
-        $body = isset($replace['vendorname'])			    ? str_replace('{vendorname}', $replace['vendorname'], $body)		                : $body;
-        $body = isset($replace['vendorusername'])			? str_replace('{vendorusername}', $replace['vendorusername'], $body)		        : $body;
-
-
-		return $body;
+        return $body;
 	}
 
 
 	//public static function completeTextFormFields($body, $bas, $type = 1) {
-    public static function completeTextFormFields($body, $basB, $basS) {
-
-
+    public static function completeTextFormFields($body, $basB, $basS)
+    {
 	    $bas = array_merge($basB, $basS);
-
-
-
-        /*if ($type == 1) {
-			$prefix = 'b_';
-		} else {
-			$prefix = 's_';
-		}
-		$commonprefix = 'bs_';
-		*/
 
 		// Common prefix means that if you set:
         // {b_name} ... billing name will be displayed
@@ -169,10 +65,7 @@ class PhocacartText {
 
 
 			foreach($bas as $k => $v) {
-
-
                 if (isset($basB[$k]) && $basB[$k] != '') {
-
                     $body = str_replace('{b_' . $k . '}', $basB[$k], $body);
                     $body = str_replace('{bs_' . $k . '}', $basB[$k], $body);
                 } else if (isset($basS[$k]) && $basS[$k] != '') {
@@ -182,10 +75,8 @@ class PhocacartText {
 
 
                 if (isset($basS[$k]) && $basS[$k] != '') {
-
                     $body = str_replace('{s_' . $k . '}', $basS[$k], $body);
                     $body = str_replace('{sb_' . $k . '}', $basS[$k], $body);
-
                 } else if (isset($basB[$k]) && $basB[$k] != '') {
                     // sb_item: the value is not in shipping, try to find it in billing
                     $body = str_replace('{sb_' . $k . '}', $basB[$k], $body);
@@ -196,23 +87,6 @@ class PhocacartText {
                 $body = str_replace('{bs_' . $k . '}', '', $body);
                 $body = str_replace('{s_' . $k . '}', '', $body);
                 $body = str_replace('{sb_' . $k . '}', '', $body);
-
-
-                /*if ($v != '') {
-                    // Replace the values
-                    $body = str_replace('{'.$prefix.$k.'}', $v, $body);
-                    // Replace common values
-                    $body = str_replace('{'.$commonprefix.$k.'}', $v, $body);
-                } else {
-                    // Hide the empty variable (in case the value is empty, don't display variable name)
-                    $body = str_replace('{'.$prefix.$k.'}', '', $body);
-                    if ($type != 1) {
-                        // Don't remove this common variable in billing cycle because we wait if it will be not transformed in shipping cycle
-                        // And if it is not in billing even not in shipping then remove it.
-                        $body = str_replace('{'.$commonprefix.$k.'}', '', $body);
-                    }
-                }*/
-
             }
 		}
 
@@ -220,10 +94,8 @@ class PhocacartText {
 		return $body;
 	}
 
-	public static function prepareReplaceText($order, $orderId, $common, $bas, $status = []){
-
-
-
+	public static function prepareReplaceText($order, $orderId, $common, $bas, $status = [])
+    {
 		$pC				= PhocacartUtils::getComponentParameters();
 		$config 		= Factory::getConfig();
 		$price			= new PhocacartPrice();
