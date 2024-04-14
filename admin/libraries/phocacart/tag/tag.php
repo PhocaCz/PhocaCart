@@ -14,9 +14,9 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Language\Text;
-use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 use Phoca\PhocaCart\Constants\TagType;
+use Phoca\PhocaCart\Container\Container;
 use Phoca\PhocaCart\I18n\I18nHelper;
 
 class PhocacartTag
@@ -31,9 +31,8 @@ class PhocacartTag
         }
     }
 
-    private static function getProductTags(array $type, $itemId, $select = 0, $checkPublish = 0) {
-        /** @var DatabaseInterface $db */
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
+    private static function getProductTags(int $type, $itemId, $select = 0, $checkPublish = 0) {
+        $db = Container::getDbo();
 
         if ($select == 1) {
             $query = 'SELECT r.tag_id';
@@ -47,7 +46,7 @@ class PhocacartTag
             . ' LEFT JOIN ' . self::getRelatedTable($type) . ' AS r ON a.id = r.tag_id';
 
         $query .= I18nHelper::sqlJoin('#__phocacart_tags_i18n');
-        $query .= ' WHERE a.type in (' . implode(', ', $type) . ')'
+        $query .= ' WHERE a.type = ' . $type
             . ' AND r.item_id = ' . (int)$itemId;
 
         if ($checkPublish == 1) {
@@ -119,7 +118,7 @@ class PhocacartTag
      * @return mixed|void|mixed[]
      */
     public static function getTags($itemId, $select = 0, $checkPublish = 0) {
-        return self::getProductTags([TagType::Tag], $itemId, $select, $checkPublish);
+        return self::getProductTags(TagType::Tag, $itemId, $select, $checkPublish);
     }
 
     /*
@@ -140,7 +139,7 @@ class PhocacartTag
      * @return mixed|void|mixed[]
      */
     public static function getTagLabels($itemId, $select = 0, $checkPublish = 0) {
-        return self::getProductTags([TagType::Label], $itemId, $select, $checkPublish);
+        return self::getProductTags(TagType::Label, $itemId, $select, $checkPublish);
     }
 
     /*
@@ -371,7 +370,10 @@ class PhocacartTag
             $tags = self::getTagLabels($itemId, 0, 1);
         } else if ($types == 3) {
             // Tags and Labels together (they can be displayed as labels in category/items view)
-            $tags = self::getProductTags([TagType::Tag], $itemId, 0, 1);
+            $tags = array_merge(
+                self::getTags($itemId, 0, 1),
+                self::getTagLabels($itemId, 0, 1)
+            );
         } else {
             return '';
         }
