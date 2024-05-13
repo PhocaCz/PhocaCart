@@ -168,6 +168,7 @@ class PhocaCartControllerCheckout extends FormController
                         $d['typeview']            = $typeView;
                         $d['stock_status_class']	= isset($stockStatus['stock_status_class']) ? $stockStatus['stock_status_class'] : '';
                         $d['stock_status_output'] = PhocacartStock::getStockStatusOutput($stockStatus);
+                        $d['ajax']                 = 1;
 
                         $oA['stock'] = $layoutS->render($d);
 

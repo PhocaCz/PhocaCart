@@ -770,7 +770,9 @@ class PhocacartShipping
 				$valuesString 	= '';
 
 				foreach($shippingsArray as $k => $v) {
-					$values[] = ' ('.(int)$id.', '.(int)$v[0].')';
+					//$values[] = ' ('.(int)$id.', '.(int)$v[0].')';
+					// No multidimensional in J4
+					$values[] = ' ('.(int)$id.', '.(int)$v.')';
 				}
 
 				if (!empty($values)) {
