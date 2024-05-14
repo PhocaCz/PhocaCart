@@ -233,7 +233,9 @@ class PhocaCartViewCheckout extends HtmlView
                     $this->a->addressedit       = 1;
                     $scrollTo                   = 'phcheckoutaddressedit';
                     $this->form                 = $this->get('FormGuest');
+
                     $this->t['dataaddressform'] = PhocacartUser::getAddressDataForm($this->form, $this->fields['array'], '', '', '_phs', 1);
+
                 }
                 // REGISTERED
             } else {

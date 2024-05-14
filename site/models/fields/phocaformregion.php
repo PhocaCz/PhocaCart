@@ -37,6 +37,20 @@ class JFormFieldPhocaFormRegion extends FormField
 			$countryId = (int)$countryPhb;
 		}
 
+		// If we load the form in checkout, and there is only set default value for country but still not selected by user
+		// Test to filter by default value
+		if ((int)$countryId == 0) {
+			if ($this->id == 'jform_region' && isset($this->form->getField('country')->value) &&  (int)$this->form->getField('country')->value > 0) {
+				$countryId = (int)$this->form->getField('country')->value;
+			}
+			if ($this->id == 'jform_region_phs' && isset($this->form->getField('country_phs')->value) &&  (int)$this->form->getField('country_phs')->value > 0) {
+				$countryId = (int)$this->form->getField('country_phs')->value;
+			}
+			if ($this->id == 'jform_region_phb' && isset($this->form->getField('country_phb')->value) &&  (int)$this->form->getField('country_phb')->value > 0) {
+				$countryId = (int)$this->form->getField('country_phb')->value;
+			}
+		}
+
 
 
 		$query = 'SELECT a.title AS text, a.id AS value'
