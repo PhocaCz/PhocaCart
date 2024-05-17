@@ -1139,7 +1139,7 @@ table.ph-comparison-table tr td.ph-middle {
 ul.ph-filter-module-category-tree {
     list-style-type: none;
     padding: 0;
-    padding-left: 1em;
+    /*padding-left: 1em;*/
 }
 
 ul.ph-filter-module-category-tree li .checkbox {
@@ -2591,3 +2591,5 @@ form.ph-form-placeholder .ph-checkout-billing-row {
     text-align: center;
     margin-bottom: 1em;
 }
+
+

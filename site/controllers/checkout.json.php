@@ -42,7 +42,7 @@ class PhocaCartControllerCheckout extends FormController
 
             $o .= '<option value="">-&nbsp;' . Text::_('COM_PHOCACART_SELECT_REGION') . '&nbsp;-</option>';
             foreach ($options as $k => $v) {
-                $o .= '<option value="' . $v->id . '">' . htmlspecialchars($v->title) . '</option>';
+                $o .= '<option value="' . $v->id . '">' . $v->title . '</option>';
             }
         }
         $response = array(
@@ -168,6 +168,7 @@ class PhocaCartControllerCheckout extends FormController
                         $d['typeview']            = $typeView;
                         $d['stock_status_class']	= isset($stockStatus['stock_status_class']) ? $stockStatus['stock_status_class'] : '';
                         $d['stock_status_output'] = PhocacartStock::getStockStatusOutput($stockStatus);
+                        $d['ajax']                 = 1;
 
                         $oA['stock'] = $layoutS->render($d);
 
