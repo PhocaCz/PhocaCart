@@ -412,7 +412,7 @@ class PhocacartShipping
 			$region = (int)$dataAddress['bregion'];
 		}*/
 
-		$shippingMethods	= $this->getPossibleShippingMethods($totalFinal['netto'], $totalFinal['brutto'], $totalFinal['quantity'], $country, $region, $zip, $totalFinal['weight'], $totalFinal['length'], $totalFinal['width'], $totalFinal['height'], $selectedShippingId, $selected);
+		$shippingMethods	= $this->getPossibleShippingMethods($totalFinal['subtotalnetto'], $totalFinal['subtotalbrutto'], $totalFinal['quantity'], $country, $region, $zip, $totalFinal['weight'], $totalFinal['length'], $totalFinal['width'], $totalFinal['height'], $selectedShippingId, $selected);
 
 
 		if (!empty($shippingMethods)) {
