@@ -1375,6 +1375,10 @@ class PhocacartProduct
                 $additionalDownloadFiles = $data['additional_download_files'];
             }
 
+            if ($data['related'] == '') {
+                $data['related'] = [];
+            }
+
             PhocacartRelated::storeRelatedItems((int)$table->id, $data['related']);
             PhocacartImageAdditional::storeImagesByProductId((int)$table->id, $data['images']);
             PhocacartAttribute::storeAttributesById((int)$table->id, $data['attributes']);
