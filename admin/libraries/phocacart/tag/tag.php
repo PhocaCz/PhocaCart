@@ -31,7 +31,7 @@ class PhocacartTag
         }
     }
 
-    private static function getProductTags(array $type, $itemId, $select = 0, $checkPublish = 0) {
+    private static function getProductTags($type, $itemId, $select = 0, $checkPublish = 0) {
         /** @var DatabaseInterface $db */
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
@@ -47,14 +47,18 @@ class PhocacartTag
             . ' LEFT JOIN ' . self::getRelatedTable($type) . ' AS r ON a.id = r.tag_id';
 
         $query .= I18nHelper::sqlJoin('#__phocacart_tags_i18n');
-        $query .= ' WHERE a.type in (' . implode(', ', $type) . ')'
+        //$query .= ' WHERE a.type in (' . implode(', ', $type) . ')'
+            $query .= ' WHERE a.type in (' . (int)$type. ')'
             . ' AND r.item_id = ' . (int)$itemId;
+
+
 
         if ($checkPublish == 1) {
             $query .= ' AND a.published = 1';
         }
 
         $query .= ' ORDER BY a.id';
+
         $db->setQuery($query);
         if ($select == 1) {
             $tags = $db->loadColumn();
@@ -119,7 +123,7 @@ class PhocacartTag
      * @return mixed|void|mixed[]
      */
     public static function getTags($itemId, $select = 0, $checkPublish = 0) {
-        return self::getProductTags([TagType::Tag], $itemId, $select, $checkPublish);
+        return self::getProductTags(TagType::Tag, $itemId, $select, $checkPublish);
     }
 
     /*
@@ -140,7 +144,7 @@ class PhocacartTag
      * @return mixed|void|mixed[]
      */
     public static function getTagLabels($itemId, $select = 0, $checkPublish = 0) {
-        return self::getProductTags([TagType::Label], $itemId, $select, $checkPublish);
+        return self::getProductTags(TagType::Label, $itemId, $select, $checkPublish);
     }
 
     /*
@@ -231,6 +235,7 @@ class PhocacartTag
     }
 
     private static function storeProductTags($type, $tagsArray, $itemId) {
+
         if ((int)$itemId <= 0) {
             return;
         }
@@ -294,7 +299,7 @@ class PhocacartTag
             $tags = self::getTagLabels($itemId, 0, 1);
         } else if ($types == 3) {
             // Tags and Labels together (they can be displayed as labels in category/items view)
-            $tags = self::getProductTags([TagType::Tag], $itemId, 0, 1);
+            $tags = self::getProductTags(TagType::Tag, $itemId, 0, 1);
         } else {
             return '';
         }

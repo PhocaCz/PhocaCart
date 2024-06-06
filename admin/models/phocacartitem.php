@@ -241,6 +241,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 			$item->set('catid_multiple', PhocacartCategoryMultiple::getCategories((int)$item->id, 1));
 			$item->set('tags', PhocacartTag::getTags((int)$item->id, 1));
 			$item->set('taglabels', PhocacartTag::getTagLabels((int)$item->id, 1));
+
 			$groups = PhocacartGroup::getGroupsById((int)$item->id, 3, 1);
 			if (!$groups)
 				$groups = PhocacartGroup::getDefaultGroup(1);
@@ -577,6 +578,8 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 			}
 
 			$previousLabels = PhocacartTag::getTagLabels((int)$table->getId(), 1);
+
+
 			PhocacartTag::storeTagLabels($data['taglabels'], (int)$table->getId());
 			$allLabels = array_unique(array_merge($previousLabels, $data['taglabels']));
 			PhocacartCount::setProductCount($allLabels, 'label', 1);// We need to update product count even for values which were removed when editing ($allLabels)
