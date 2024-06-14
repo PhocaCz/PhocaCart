@@ -649,7 +649,7 @@ class PhocacartRenderAdmincolumns
             'class'  => 'ph-manufacturer',
             'title'  => 'COM_PHOCACART_FIELD_MANUFACTURER_LABEL',
             'tool'   => 'searchtools.sort',
-            'column' => 'pm.title'
+            'column' => 'pm.title as manufacturer'
         ], $options);
     }
 
@@ -1044,7 +1044,7 @@ class PhocacartRenderAdmincolumns
 
 
         $pC                        = PhocacartUtils::getComponentParameters();
-        $admin_columns_info_column = $pC->get('admin_columns_info_column', '');
+        $admin_columns_info_column = $pC->get('admin_columns_info_column', []);
 
 
         $o = [];
@@ -1203,4 +1203,5 @@ metakey
 metadesc
 special_parameter
 phoca_action
+phoca_info
 */
