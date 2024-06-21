@@ -28,7 +28,6 @@ class PhocaCartCpViewPhocaCartCp extends HtmlView
 
 	function display($tpl = null) {
 
-
 		$this->t	= PhocacartUtils::setVars();
 		$this->s    = PhocacartRenderStyle::getStyles();
 		$this->r	= new PhocacartRenderAdminview();
