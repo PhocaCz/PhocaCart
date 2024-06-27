@@ -908,7 +908,7 @@ class PhocacartCart
 
     public function getTotal() {
 
-        $items = array('netto', 'brutto', 'quantity', 'weight', 'length', 'width', 'height');
+        $items = array('netto', 'brutto', 'subtotalnetto', 'subtotalbrutto', 'wdnetto','quantity', 'weight', 'length', 'width', 'height');
         foreach ($items as $k => $v) {
             if (!isset($this->total[0][$v])) {
                 $this->total[0][$v] = 0;

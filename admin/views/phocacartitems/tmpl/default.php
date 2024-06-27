@@ -78,7 +78,6 @@ $parentsStr     = "";
 $j              = 0;
 
 $price = new PhocacartPrice();
-
 if (is_array($this->items)) {
     foreach ($this->items as $i => $item) {
         $j++;
@@ -116,6 +115,7 @@ if (is_array($this->items)) {
                 $itemColumn['params']         = [];
                 $itemColumn['params']['edit'] = false;
                 $v                            = PhocacartText::parseDbColumnParameter($v, $itemColumn['params']);
+
                 $itemColumn['name']           = $v;
                 $itemColumn['value']          = $item->{$v} ?? '';
                 $itemColumn['id']             = $item->id ?? 0;
@@ -155,7 +155,6 @@ if (is_array($this->items)) {
                     $itemColumn['value']->language_title = $item->language_title;
                     $itemColumn['value']->language_image = $item->language_image;
                 }
-
                 echo $c->item($v, $itemColumn, $options);
             }
         }

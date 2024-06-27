@@ -372,7 +372,7 @@ class PhocacartPayment
 			$currencyId = (int)$currency->id;
 		}
 
-		$paymentMethods	= $this->getPossiblePaymentMethods($totalFinal['netto'], $totalFinal['brutto'], $country, $region, $currentShippingId, $selectedPaymentId, $selected, $currencyId);
+		$paymentMethods	= $this->getPossiblePaymentMethods($totalFinal['subtotalnetto'], $totalFinal['subtotalbrutto'], $country, $region, $currentShippingId, $selectedPaymentId, $selected, $currencyId);
 
 
 		if (!empty($paymentMethods)) {

@@ -61,6 +61,7 @@ class JFormFieldPhocaSelectFilenameImage extends FormField
 
 
 		HTMLHelper::_('jquery.framework');
+		HTMLHelper::_('bootstrap.renderModal', 'collapseModal');
 
 		// 1) phocacartform.js - loads click event to run modal window - NO NEED TO DEFINE EVENT HERE
         // 2) phocacartform.js - creates modal window, then loads the iframe with url - NO NEED TO LOAD MODAL WINDOW AND TO BUILD IT HERE

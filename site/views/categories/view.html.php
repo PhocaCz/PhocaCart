@@ -25,7 +25,6 @@ class PhocaCartViewCategories extends HtmlView
 
 	public function display($tpl = null) {
 
-
 		$app									= Factory::getApplication();
 		$model									= $this->getModel();
 		$this->p 								= $app->getParams();

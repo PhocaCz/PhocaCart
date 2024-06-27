@@ -444,8 +444,7 @@ class PhocacartOrder
             //    - check if this method even exists
             //	  - and check if the selected method meets every criteria and rules to be selected
             //$shippingMethods	= $shippingClass->checkAndGetShippingMethod($shippingId); CANNOT BE USED BECAUSE OF DIFFERENT VARIABLES IN ORDER
-            $shippingMethods = $shippingClass->getPossibleShippingMethods($total[0]['netto'], $total[0]['brutto'], $total[0]['quantity'], $country, $region, $zip, $total[0]['weight'], $total[0]['length'], $total[0]['width'], $total[0]['height'], $shippingId, 0);
-
+            $shippingMethods = $shippingClass->getPossibleShippingMethods($total[0]['subtotalnetto'], $total[0]['subtotalbrutto'], $total[0]['quantity'], $country, $region, $zip, $total[0]['weight'], $total[0]['length'], $total[0]['width'], $total[0]['height'], $shippingId, 0);
 
         } else {
             // 2) No shipping method selected
@@ -465,7 +464,9 @@ class PhocacartOrder
             // Cooperates with components/com_phocacart/views/checkout/view.html.php 230
 
             // Find all possible shipping methods (without shipping method selected) to see if there is really no rule to display any method
-            $shippingtMethodsAllPossible = $shippingClass->getPossibleShippingMethods($total[0]['netto'], $total[0]['brutto'], $total[0]['quantity'], $country, $region, $zip, $total[0]['weight'], $total[0]['length'], $total[0]['width'], $total[0]['height'], 0, 0);
+            $shippingtMethodsAllPossible = $shippingClass->getPossibleShippingMethods($total[0]['subtotalnetto'], $total[0]['subtotalbrutto'], $total[0]['quantity'], $country, $region, $zip, $total[0]['weight'], $total[0]['length'], $total[0]['width'], $total[0]['height'], 0, 0);
+
+
             if (empty($shippingtMethodsAllPossible)) {
                 $shippingNotFoundAllowProceed = true;
             }
@@ -504,7 +505,7 @@ class PhocacartOrder
             //    - check if this method even exists
             //	  - and check if the selected method meets every criteria and rules to be selected
             //$paymentMethods	= $paymentClass->checkAndGetPaymentMethod($payment['id']); CANNOT BE USED BECAUSE OF DIFFERENT VARIABLES IN ORDER
-            $paymentMethods = $paymentClass->getPossiblePaymentMethods($total[0]['netto'], $total[0]['brutto'], $country, $region, $shippingId, $payment['id'], 0, $d['currency_id']);
+            $paymentMethods = $paymentClass->getPossiblePaymentMethods($total[0]['subtotalnetto'], $total[0]['subtotalbrutto'], $country, $region, $shippingId, $payment['id'], 0, $d['currency_id']);
 
 
         } else {
@@ -524,7 +525,7 @@ class PhocacartOrder
             // Cooperates with components/com_phocacart/views/checkout/view.html.php 270
 
             // Find all possible payments methods (without payment method selected) to see if there is really no rule to display any method
-            $paymentMethodsAllPossible = $paymentClass->getPossiblePaymentMethods($total[0]['netto'], $total[0]['brutto'], $country, $region, $shippingId, 0, 0, $d['currency_id']);
+            $paymentMethodsAllPossible = $paymentClass->getPossiblePaymentMethods($total[0]['subtotalnetto'], $total[0]['subtotalbrutto'], $country, $region, $shippingId, 0, 0, $d['currency_id']);
             if (empty($paymentMethodsAllPossible)) {
                 $paymentNotFoundAllowProceed = true;
             }
@@ -1291,7 +1292,7 @@ class PhocacartOrder
             }
 
             // UPDATE NEWSLETTER INFO
-            if ((int)$d['newsletter'] > 0 && (int)$user->id > 0) {
+            if ((int)$d['newsletter'] > 0 ) {
 
                 $name    = '';
                 $email   = '';
@@ -1331,7 +1332,10 @@ class PhocacartOrder
                 }
 
 
-                PhocacartNewsletter::updateNewsletterInfoByUser((int)$user->id, 1);// Internal Phoca Cart Table
+               if  ((int)$user->id > 0) {
+                    PhocacartNewsletter::updateNewsletterInfoByUser((int)$user->id, 1);// Internal Phoca Cart Table
+               }
+
                 if ($name != '' && $email != '') {
                     PhocacartNewsletter::storeSubscriber($name, $email, $privacy);// External Phoca Email Table
                 }
