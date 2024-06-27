@@ -79,7 +79,6 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_products` (
   `features` text,
   `price` DECIMAL( 15, 4 ) NOT NULL DEFAULT '0',
   `price_original` DECIMAL( 15, 4 ) NOT NULL DEFAULT '0',
-  `price_min` DECIMAL(15, 4),
   `discount_percent` DECIMAL(15,2) AS (if(price_original <> 0, (price_original - price) / price_original * 100, 0)) VIRTUAL,
   `length` DECIMAL( 10, 4 ) NOT NULL DEFAULT '0',
   `width` DECIMAL( 10, 4 ) NOT NULL DEFAULT '0',
@@ -2035,7 +2034,7 @@ INSERT INTO `#__phocacart_groups` (`id`, `title`, `published`, `display_price`, 
 
 -- INSERT -> REPLACE
 REPLACE INTO `#__mail_templates` (`template_id`, `extension`, `language`, `subject`, `body`, `htmlbody`, `attachments`, `params`) VALUES
-    ('com_phocacart.watchdog', 'com_phocacart', '', 'COM_PHOCACART_EMAIL_WATCHDOG_SUBJECT', 'COM_PHOCACART_EMAIL_WATCHDOG_BODY', 'COM_PHOCACART_EMAIL_WATCHDOG_HTMLBODY', '', '{"tags":["user_name","user_username","user_email","products","product_title","product_sku","product_url","site_name","site_url"]}');
+    ('com_phocacart.watchdog', 'com_phocacart', '', 'COM_PHOCACART_EMAIL_WATCHDOG_SUBJECT', 'COM_PHOCACART_EMAIL_WATCHDOG_BODY', 'COM_PHOCACART_EMAIL_WATCHDOG_HTMLBODY', '', '{"tags":["user_name","user_username","user_email","product_title","product_sku","product_url","site_name","site_url"]}');
 
 INSERT INTO `#__phocacart_content_types` (`id`, `title`, `context`, `published`, `ordering`, `params`)
     VALUES (1, 'COM_PHOCACART_CONTENT_TYPE_CATEGORY_DEFAULT', 'category', 1, 1, '{}');

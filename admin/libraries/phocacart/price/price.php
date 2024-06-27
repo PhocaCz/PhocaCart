@@ -302,31 +302,31 @@ class PhocacartPrice
         return $tax;
     }
 
-    public function loadItemPrice(object $item, array $attributes = [])
-    {
-        $priceItems = $this->getPriceItems($item->price, $item->taxid, $item->taxrate, $item->taxcalculationtype, $item->taxtitle, $item->unit_amount, $item->unit_unit, 1, 1, $item->group_price, $item->taxhide, $item->price_min);
-        if ($attributes) {
-            $this->getPriceItemsChangedByAttributes($priceItems, $attributes, $this, $item);
-        }
-        return $priceItems;
-    }
-
-    public function loadItemPriceOriginal(object $item)
-    {
-        return $this->getPriceItems($item->price_original, $item->taxid, $item->taxrate, $item->taxcalculationtype, '', 0, '', 0, 1, null, $item->taxhide, $item->price_min);
-    }
-
     /*
      * param format - format the price or not (add currency symbol, price decimals thousands separator, ...)
      */
-    public function getPriceItems($price, $taxId, $tax, $taxCalculationType, $taxTitle = '', $baseAmount = 0, $baseUnit = '', $zeroPrice = 0, $round = 1, $groupPrice = null, $taxHide = [], $minPrice = 0)
-    {
+
+    public function getPriceItems($price, $taxId, $tax, $taxCalculationType, $taxTitle = '', $baseAmount = 0, $baseUnit = '', $zeroPrice = 0, $round = 1, $groupPrice = null, $taxHide = []) {
+
+
+
+
         // We need to round because if not
         // BRUTTO          0.15  ... 0.15
         // TAX             0.025 ... 0.03
         // NETTO           0.125 ... 0.13
         // BRUTTO IS WRONG 0.15  ... 0.16
 
+        // External extensions - backward compatibility
+        /*if (!is_array($taxHide)) {
+			if ($taxHide != '') {
+                $registry = new Registry;
+                $registry->loadString($taxHide);
+                $taxHide = $registry->toArray();
+            } else {
+                $taxHide = [];
+            }
+		}*/
         if (!is_array($taxHide)) {
             $registry = new Registry($taxHide);
             $taxHide = $registry->toArray();
@@ -337,10 +337,6 @@ class PhocacartPrice
             $price = $groupPrice;
         }
 
-
-        if ($price < $minPrice) {
-            $price = $minPrice;
-        }
 
         if ($round == 1) {
             $price = $this->roundPrice($price);
@@ -354,9 +350,14 @@ class PhocacartPrice
         $taxTitle    = Text::_($taxTitle);
 
         $priceO = array();
+        $app    = Factory::getApplication();
+        //$paramsC 					= PhocacartUtils::getComponentParameters();
         $paramsC            = PhocacartUtils::getComponentParameters();
         $tax_calculation    = $paramsC->get('tax_calculation', 0);
         $display_unit_price = $paramsC->get('display_unit_price', 1);
+        //$zero_price_text			= $paramsC->get( 'zero_price_text', '' );
+        //$zero_price_label			= $paramsC->get( 'zero_price_label', '' );
+
 
         $priceO['taxtxt']      = $taxTitle;
         $priceO['taxcalc']     = $tax_calculation;   // Set in Options: Brutto, Netto, None
@@ -377,8 +378,11 @@ class PhocacartPrice
             $priceO['brutto']    = $price;
             $priceO['bruttotxt'] = Text::_('COM_PHOCACART_PRICE');
             $priceO['nettotxt']  = Text::_('COM_PHOCACART_PRICE');
+
+
             // EXCLUSIVE TAX
         } else if ($tax_calculation == 1) {
+
             $priceO['netto'] = $price;
             if ($taxCalculationType == 2) { // FIX
                 $priceO['tax']    = $tax;
@@ -417,6 +421,12 @@ class PhocacartPrice
                 }
                 $priceO['netto'] = $priceO['brutto'] - $priceO['tax'];
 
+
+                //$priceO['netto']	= $priceO['brutto'] * 100 / ($tax + 100);
+                //$priceO['tax']	= $priceO['brutto'] - $priceO['netto'];
+                //$coefficient		= $tax / ($tax + 100);
+                //$priceO['tax']	= $priceO['brutto'] * $coefficient; // POSIBLE TO DO - round e.g. to 4
+                //$priceO['netto']	= $priceO['brutto'] - $priceO['tax'];
                 $priceO['taxtxt'] = $taxTitle . ' (' . $this->getTaxFormat($tax, $taxCalculationType, 0) . ')';
 
             }
@@ -456,6 +466,23 @@ class PhocacartPrice
             $priceO['baseformat'] = $this->getPriceFormat($priceO['base']) . '/' . $baseUnit;
         }
 
+        // MOVED TO TEMPLATE BECAUSE CAN BE INFLUENCED BY ATTRIBUTES
+        // Must be different in comparison to payment and shipping method because product price can be changed by attributes
+        /*
+        if ($price == 0 && $zeroPrice == 1) {
+
+            if ($zero_price_text != '') {
+                $priceO['zeronettoformat'] = $priceO['bruttoformat'] = $priceO['taxformat'] = Text::_($zero_price_text);
+            }
+
+            if ($zero_price_label == '0') {
+                $priceO['nettotxt'] = $priceO['bruttotxt'] = $priceO['taxtxt'] = '';
+            } else if ($zero_price_label != '') {
+                $priceO['nettotxt'] = $priceO['bruttotxt'] = $priceO['taxtxt'] = Text::_($zero_price_label);
+            }
+
+        }*/
+
         if ($priceO['brutto'] == 0 && $priceO['netto'] == 0) {
             $priceO['zero'] = 1;// Zero for basic price but this can be changed by attribute price
         }
@@ -467,6 +494,7 @@ class PhocacartPrice
                 $priceO['tax'] = $this->roundPrice($priceO['tax']);
             }
         }
+
 
         return $priceO;
     }

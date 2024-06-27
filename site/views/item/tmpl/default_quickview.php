@@ -246,7 +246,7 @@ action="'.$this->t['linkcheckout'].'" method="post">';
 // because Quick View = Items, Category View and there are more products listed, not like in item id
 
 // ATTRIBUTES, OPTIONS
-$displayData = array();
+$d							= array();
 $d['s']      = $this->s;
 $d['attr_options']			= $this->t['attr_options'];
 $d['hide_attributes']		= $this->t['hide_attributes_item'];

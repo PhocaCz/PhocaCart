@@ -123,7 +123,7 @@ $h          = 400;
 echo '<div class="row">';
 echo '<div class="col-lg-9">';
 
-$formArray = array('price', 'price_original', 'price_min', 'tax_id', 'catid_multiple', 'catid', 'manufacturer_id', 'title_long', 'sku', 'upc', 'ean', 'jan', 'mpn', 'isbn', 'serial_number', 'registration_key', 'external_id', 'external_key', 'external_link', 'external_text', 'external_link2', 'external_text2', 'access', 'group', 'featured', 'featured_background_image', 'video', 'public_download_file', 'public_download_text', 'public_play_file', 'public_play_text', 'condition', 'type_feed', 'type_category_feed');
+$formArray = array('price', 'price_original', 'tax_id', 'catid_multiple', 'catid', 'manufacturer_id', 'title_long', 'sku', 'upc', 'ean', 'jan', 'mpn', 'isbn', 'serial_number', 'registration_key', 'external_id', 'external_key', 'external_link', 'external_text', 'external_link2', 'external_text2', 'access', 'group', 'featured', 'featured_background_image', 'video', 'public_download_file', 'public_download_text', 'public_play_file', 'public_play_text', 'condition', 'type_feed', 'type_category_feed');
 echo $r->group($this->form, $formArray);
 $formArray = array('description');
 echo $r->group($this->form, $formArray, 1);

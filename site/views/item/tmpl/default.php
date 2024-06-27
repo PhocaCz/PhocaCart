@@ -212,7 +212,10 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 
 	$priceItems = array();
 	if ($this->t['can_display_price']) {
-		$priceItems	= $price->loadItemPrice($x, $this->t['attr_options']);
+
+		$priceItems	= $price->getPriceItems($x->price, $x->taxid, $x->taxrate, $x->taxcalculationtype, $x->taxtitle, $x->unit_amount, $x->unit_unit, 1, 1, $x->group_price, $x->taxhide);
+		// Can change price and also SKU OR EAN (Advanced Stock and Price Management)
+		$price->getPriceItemsChangedByAttributes($priceItems, $this->t['attr_options'], $price, $x);
 
 		$d					= array();
 		$d['s']				= $this->s;
@@ -221,7 +224,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 
 		$d['priceitemsorig']= array();
 		if ($x->price_original != '' && $x->price_original > 0) {
-			$d['priceitemsorig'] = $price->loadItemPriceOriginal($x);
+			$d['priceitemsorig'] = $price->getPriceItems($x->price_original, $x->taxid, $x->taxrate, $x->taxcalculationtype, '', 0, '', 0, 1, null, $x->taxhide);
 		}
 		$d['class']			= 'ph-item-price-box';
 		$d['product_id']	= (int)$x->id;
@@ -237,8 +240,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 		$d['priceitemsdiscountcart']	= $d['priceitemsdiscount'];
 		$d['discountcart']				= PhocacartDiscountCart::getCartDiscountPriceForProduct($x->id, $x->catid, $d['priceitemsdiscountcart']);
 
-		$d['zero_price']		= 1;// Apply zero price rule if possible
-
+		$d['zero_price']		= 1;// Apply zero price if possible
 		echo $layoutP->render($d);
 	}
 
