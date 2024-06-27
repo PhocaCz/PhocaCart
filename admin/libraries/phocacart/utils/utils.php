@@ -518,11 +518,18 @@ class PhocacartUtils
 		return $value;
 	}
 
-	public static function getDateFromString($string) {
+	public static function getDateFromString($string, $currentDate = false) {
 
+        if (empty($string) && $currentDate) {
+            return Factory::getDate()->toSql();
+        }
 
-		if (empty($string)) {
-			return '0000-00-00';
+        if (empty($string)) {
+			return '0000-00-00 00:00:00';
+		}
+
+        if ($string == '0' || $string == '') {
+			return '0000-00-00 00:00:00';
 		}
 
 		return $string;

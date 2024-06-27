@@ -299,7 +299,7 @@ class PhocaCartViewCheckout extends HtmlView
                 // and redirect outside the editing mode
                 if ($this->t['automatic_shipping_method_setting'] == 1) {
                     //- $shipping					= new PhocacartShipping();
-                    $this->t['shippingmethods'] = $shipping->getPossibleShippingMethods($total[0]['netto'], $total[0]['brutto'], $total[0]['quantity'], $country, $region, $zip, $total[0]['weight'], $total[0]['length'], $total[0]['width'], $total[0]['height'], 0, $shippingId);
+                    $this->t['shippingmethods'] = $shipping->getPossibleShippingMethods($total[0]['subtotalnetto'], $total[0]['subtotalbrutto'], $total[0]['quantity'], $country, $region, $zip, $total[0]['weight'], $total[0]['length'], $total[0]['width'], $total[0]['height'], 0, $shippingId);
                     if (!empty($this->t['shippingmethods']) && count($this->t['shippingmethods']) == 1) {
                         $this->a->shippingdisplayeditbutton = 0;
                     }
@@ -328,7 +328,7 @@ class PhocaCartViewCheckout extends HtmlView
                 $this->cart->roundTotalAmount();
                 $total = $this->cart->getTotal();
 
-                $this->t['shippingmethods'] = $shipping->getPossibleShippingMethods($total[0]['netto'], $total[0]['brutto'], $total[0]['quantity'], $country, $region, $zip, $total[0]['weight'], $total[0]['length'], $total[0]['width'], $total[0]['height'], 0, $shippingId);//$shippingId = 0 so all possible shipping methods will be listed
+                $this->t['shippingmethods'] = $shipping->getPossibleShippingMethods($total[0]['subtotalnetto'], $total[0]['subtotalbrutto'], $total[0]['quantity'], $country, $region, $zip, $total[0]['weight'], $total[0]['length'], $total[0]['width'], $total[0]['height'], 0, $shippingId);//$shippingId = 0 so all possible shipping methods will be listed
 
 
                 // If there is only one valid shipping method and it is set in parameter we can directly store this method so user does not need to add it
@@ -417,7 +417,7 @@ class PhocaCartViewCheckout extends HtmlView
                 if ($this->t['automatic_payment_method_setting'] == 1) {
                     //$payment					= new PhocacartPayment();
                     $shippingId                = $this->cart->getShippingId();// Shipping stored in cart or not?
-                    $this->t['paymentmethods'] = $payment->getPossiblePaymentMethods($total[0]['netto'], $total[0]['brutto'], $country, $region, $shippingId, 0, $paymentMethodId, $currencyId);
+                    $this->t['paymentmethods'] = $payment->getPossiblePaymentMethods($total[0]['subtotalnetto'], $total[0]['subtotalbrutto'], $country, $region, $shippingId, 0, $paymentMethodId, $currencyId);
                     if (!empty($this->t['paymentmethods']) && count($this->t['paymentmethods']) == 1) {
                         $this->a->paymentdisplayeditbutton = 0;
                     }
@@ -446,8 +446,7 @@ class PhocaCartViewCheckout extends HtmlView
                 $this->cart->roundTotalAmount();
                 $total = $this->cart->getTotal();
 
-                $this->t['paymentmethods'] = $payment->getPossiblePaymentMethods($total[0]['netto'], $total[0]['brutto'], $country, $region, $shippingId, 0, $paymentMethodId, $currencyId);
-
+                $this->t['paymentmethods'] = $payment->getPossiblePaymentMethods($total[0]['subtotalnetto'], $total[0]['subtotalbrutto'], $country, $region, $shippingId, 0, $paymentMethodId, $currencyId);
 
                 // If there is only one valid payment method and it is set in parameter we can directly store this method so user does not need to add it
                 // When setting the payment method then the cart needs to be "refreshed", payment costs needs to be added and info about shpping id
