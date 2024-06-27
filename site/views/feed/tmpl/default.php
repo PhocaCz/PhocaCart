@@ -10,24 +10,19 @@ defined('_JEXEC') or die();
 use Joomla\Registry\Registry;
 use Joomla\CMS\Language\Text;
 
-$o		= array();
-$l		= '<';
-$r		= '>';
-$e		= '</';
-
-
+if (!$this->pageIndex) {
 // HEADER
-if (isset($this->t['feed']['header']) && $this->t['feed']['header'] != '') {
-    $o['header'] = $this->t['feed']['header'];
-} else {
-    $o['header'] = '<?xml version="1.0" encoding="utf-8"?>';
-}
-
+    if (isset($this->t['feed']['header']) && $this->t['feed']['header'] != '') {
+        $this->output($this->t['feed']['header']);
+    }
+    else {
+        $this->output('<?xml version="1.0" encoding="utf-8"?>');
+    }
 // ROOT START
-if (isset($this->t['feed']['root']) && $this->t['feed']['root'] != '') {
-    $o['rootstart'] = $l.$this->t['feed']['root'].$r;
+    if (isset($this->t['feed']['root']) && $this->t['feed']['root'] != '') {
+        $this->output('<' . $this->t['feed']['root'] . '>');
+    }
 }
-
 
 // PREPARE FUNCTIONS BEFORE FOREACH, so we save memory
 // E.g. currency - to get info about default currency we need to ask sql but we should to it only
@@ -44,14 +39,8 @@ if (isset($this->t['feed']['currency_id']) && (int)$this->t['feed']['currency_id
 
 
 // START FOREACH OF PRODUCTS
-$o['items'] = '';
-$o['params'] = '';
-if (!empty($this->t['products'])) {
-
-
-    foreach ($this->t['products'] as $k => $v) {
-
-
+if (!empty($this->products)) {
+    foreach ($this->products as $k => $v) {
         // PRODUCT - Specific FEED plugin
         $feedName = trim($this->t['feed']['feed_plugin']);
          $paramsFeedA = array();
@@ -60,6 +49,7 @@ if (!empty($this->t['products'])) {
             $registry = new Registry;
             $registry->loadString($v->params_feed);
             $paramsFeedA = $registry->toArray();
+            unset($registry);
 
             if (isset($paramsFeedA[$feedName]['pcf_param_published']) && $paramsFeedA[$feedName]['pcf_param_published'] == 0) {
                 // The product is unpublished from feed
@@ -74,18 +64,17 @@ if (!empty($this->t['products'])) {
             $registry = new Registry;
             $registry->loadString($v->params_feed_category);
             $paramsFeedCA = $registry->toArray();
-
+            unset($registry);
         }
 
 
-        $oI     = array();
         // PRODUCT START
         if (isset($this->t['feed']['item']) && $this->t['feed']['item'] != '') {
-            $oI['itemstart'] = $l.$this->t['feed']['item'].$r;
+            $this->output('<'.$this->t['feed']['item'].'>');
         }
 
         if ($this->p['item_id'] != '' && isset($v->id) && $v->id != '') {
-            $oI['item_id'] = $l.$this->p['item_id'].$r.$v->id.$e.$this->p['item_id'].$r;
+            $this->output('<'.$this->p['item_id'].'>'.$v->id.'</'.$this->p['item_id'].'>');
         }
 
         if ($this->p['item_title']) {
@@ -100,12 +89,12 @@ if (!empty($this->t['products'])) {
             }
 
             if ($title !== '') {
-                $oI['item_title'] = $l . $this->p['item_title'] . $r . htmlspecialchars($title) . $e . $this->p['item_title'] . $r;
+                $this->output('<' . $this->p['item_title'] . '>' . htmlspecialchars($title) . '</' . $this->p['item_title'] . '>');
             }
         }
 
         if ($this->p['item_title_extended'] != '' && isset($v->title) && $v->title != '') {
-            $oI['item_title_extended'] = $l.$this->p['item_title_extended'].$r.htmlspecialchars($v->title).$e.$this->p['item_title_extended'].$r;
+            $this->output('<'.$this->p['item_title_extended'].'>'.htmlspecialchars($v->title).'</'.$this->p['item_title_extended'].'>');
         }
 
         if ($this->p['item_description_short'] != '' && isset($v->description) && $v->description != '') {
@@ -113,7 +102,7 @@ if (!empty($this->t['products'])) {
             if ($this->p['strip_html_tags_desc'] == 1) {
                 $v->description = strip_tags($v->description);
             }
-            $oI['item_description_short'] = $l.$this->p['item_description_short'].$r.'<![CDATA['.$v->description.']]>'.$e.$this->p['item_description_short'].$r;
+            $this->output('<'.$this->p['item_description_short'].'>'.'<![CDATA['.$v->description.']]>'.'</'.$this->p['item_description_short'].'>');
         }
 
         if ($this->p['item_description_long'] != '' && isset($v->description_long) && $v->description_long != '') {
@@ -122,15 +111,15 @@ if (!empty($this->t['products'])) {
                 $v->description_long = strip_tags($v->description_long);
             }
 
-            $oI['item_description_long'] = $l.$this->p['item_description_long'].$r.'<![CDATA['.$v->description_long.']]>'.$e.$this->p['item_description_long'].$r;
+            $this->output('<'.$this->p['item_description_long'].'>'.'<![CDATA['.$v->description_long.']]>'.'</'.$this->p['item_description_long'].'>');
         }
 
         if ($this->p['item_sku'] != '' && isset($v->sku) && $v->sku != '') {
-            $oI['item_sku'] = $l.$this->p['item_sku'].$r.$v->sku.$e.$this->p['item_sku'].$r;
+            $this->output('<'.$this->p['item_sku'].'>'.$v->sku.'</'.$this->p['item_sku'].'>');
         }
 
         if ($this->p['item_ean'] != '' && isset($v->ean) && $v->ean != '') {
-            $oI['item_ean'] = $l.$this->p['item_ean'].$r.$v->ean.$e.$this->p['item_ean'].$r;
+            $this->output('<'.$this->p['item_ean'].'>'.$v->ean.'</'.$this->p['item_ean'].'>');
         }
 
 
@@ -162,10 +151,10 @@ if (!empty($this->t['products'])) {
             }
 
             if ($this->p['item_original_price_without_vat'] != '' && isset($priceO['netto']) && (int)$priceO['netto'] > 0) {
-                $oI['item_original_price_without_vat'] = $l.$this->p['item_original_price_without_vat'].$r.$priceO['netto'].$e.$this->p['item_original_price_without_vat'].$r;
+                $this->output('<'.$this->p['item_original_price_without_vat'].'>'.$priceO['netto'].'</'.$this->p['item_original_price_without_vat'].'>');
             }
             if ($this->p['item_original_price_with_vat'] != '' && isset($priceO['brutto']) && (int)$priceO['brutto'] > 0) {
-                $oI['item_original_price_with_vat'] = $l.$this->p['item_original_price_with_vat'].$r.$priceO['brutto'].$e.$this->p['item_original_price_with_vat'].$r;
+                $this->output('<'.$this->p['item_original_price_with_vat'].'>'.$priceO['brutto'].'</'.$this->p['item_original_price_with_vat'].'>');
             }
         }
 
@@ -200,21 +189,21 @@ if (!empty($this->t['products'])) {
             }
 
             if ($this->p['item_final_price_without_vat'] != '' && isset($priceF['netto']) && (int)$priceF['netto'] > 0) {
-                $oI['item_final_price_without_vat'] = $l.$this->p['item_final_price_without_vat'].$r.$priceF['netto'].$e.$this->p['item_final_price_without_vat'].$r;
+                $this->output('<'.$this->p['item_final_price_without_vat'].'>'.$priceF['netto'].'</'.$this->p['item_final_price_without_vat'].'>');
             }
 
             if ($this->p['item_final_price_with_vat'] != '' && isset($priceF['brutto']) && (int)$priceF['brutto'] > 0) {
-                $oI['item_final_price_with_vat'] = $l.$this->p['item_final_price_with_vat'].$r.$priceF['brutto'].$e.$this->p['item_final_price_with_vat'].$r;
+                $this->output('<'.$this->p['item_final_price_with_vat'].'>'.$priceF['brutto'].'</'.$this->p['item_final_price_with_vat'].'>');
             }
 
             if ($this->p['item_vat'] != '' && isset($priceF['tax']) && (int)$priceF['tax'] > 0) {
-                $oI['item_vat'] = $l.$this->p['item_vat'].$r.$priceF['tax'].$e.$this->p['item_vat'].$r;
+                $this->output('<'.$this->p['item_vat'].'>'.$priceF['tax'].'</'.$this->p['item_vat'].'>');
             }
         }
 
         // PRODUCT CURRENCY (DEFAULT)
         if ($this->p['item_currency'] != '' && $cur != '') {
-            $oI['item_currency'] = $l.$this->p['item_currency'].$r.htmlspecialchars($cur).$e.$this->p['item_currency'].$r;
+            $this->output('<'.$this->p['item_currency'].'>'.htmlspecialchars($cur).'</'.$this->p['item_currency'].'>');
         }
 
 
@@ -223,7 +212,7 @@ if (!empty($this->t['products'])) {
 
             $itemUrl 	= PhocacartRoute::getItemRoute($v->id, $v->catid, $v->alias, $v->catalias);
             $itemUrl	= PhocacartRoute::getFullUrl($itemUrl);
-            $oI['item_url'] = $l.$this->p['item_url'].$r.$itemUrl.$e.$this->p['item_url'].$r;
+            $this->output('<'.$this->p['item_url'].'>'.$itemUrl.'</'.$this->p['item_url'].'>');
         }
 
         // IMAGE URL
@@ -231,20 +220,20 @@ if (!empty($this->t['products'])) {
             $image 	= PhocacartImage::getThumbnailName($this->t['pathitem'], $v->image, 'large');
             if (isset($image->rel) && $image->rel != '') {
                 $imageUrl	= PhocacartRoute::getFullUrl($image->rel);
-                $oI['item_url_image'] = $l.$this->p['item_url_image'].$r.$imageUrl.$e.$this->p['item_url_image'].$r;
+                $this->output('<'.$this->p['item_url_image'].'>'.$imageUrl.'</'.$this->p['item_url_image'].'>');
             }
         }
 
         // VIDEO URL
         if ($this->p['item_url_video'] != '' && isset($v->video) && $v->video != '') {
             if (PhocacartUtils::isURLAddress($v->video)) {
-                $oI['item_url_video'] = $l.$this->p['item_url_video'].$r.$v->video.$e.$this->p['item_url_video'].$r;
+                $this->output('<'.$this->p['item_url_video'].'>'.$v->video.'</'.$this->p['item_url_video'].'>');
             }
         }
 
         // CATEGORY
         if ($this->p['item_category'] != '' && isset($v->cattitle) && $v->cattitle != '') {
-            $oI['item_category'] = $l.$this->p['item_category'].$r.htmlspecialchars($v->cattitle).$e.$this->p['item_category'].$r;
+            $this->output('<'.$this->p['item_category'].'>'.htmlspecialchars($v->cattitle).'</'.$this->p['item_category'].'>');
         }
 
         // CATEGORIES
@@ -254,12 +243,12 @@ if (!empty($this->t['products'])) {
                 $this->p['category_separator'] = ' ';
             }
             $categories = str_replace('|', $this->p['category_separator'], $v->categories);
-            $oI['item_categories'] = $l.$this->p['item_categories'].$r.htmlspecialchars($categories).$e.$this->p['item_categories'].$r;
+            $this->output('<'.$this->p['item_categories'].'>'.htmlspecialchars($categories).'</'.$this->p['item_categories'].'>');
         }
 
         // CATEGORY FEED
         if ($this->p['feed_category'] != '' && isset($v->cattitlefeed) && $v->cattitlefeed != '') {
-            $oI['feed_category'] = $l.$this->p['feed_category'].$r.htmlspecialchars($v->cattitlefeed).$e.$this->p['feed_category'].$r;
+            $this->output('<'.$this->p['feed_category'].'>'.htmlspecialchars($v->cattitlefeed).'</'.$this->p['feed_category'].'>');
         }
 
         // CATEGORY TYPE OR PRODUCT CATEGORY TYPE
@@ -268,35 +257,35 @@ if (!empty($this->t['products'])) {
             if (isset($v->type_category_feed) && $v->type_category_feed != '') {
 
                 // 1) Product - the one you can set in product edit in first tab
-                $oI['item_category_type_feed'] = $l.$this->p['item_category_type_feed'].$r.htmlspecialchars($v->type_category_feed).$e.$this->p['item_category_type_feed'].$r;
+                $this->output('<'.$this->p['item_category_type_feed'].'>'.htmlspecialchars($v->type_category_feed).'</'.$this->p['item_category_type_feed'].'>');
 
             } else if (isset($v->feedcategories ) && $v->feedcategories  != '') {
 
                 // 2) Categories - loaded by db - generated by categories set in Phoca Cart
                 $v->feedcategories = str_replace('|', $this->p['category_separator'], htmlspecialchars($v->feedcategories));
                 if ($v->feedcategories != '') {
-                    $oI['item_category_type_feed'] = $l . $this->p['item_category_type_feed'] . $r . htmlspecialchars($v->feedcategories) . $e . $this->p['item_category_type_feed'] . $r;
+                    $this->output('<' . $this->p['item_category_type_feed'] . '>' . htmlspecialchars($v->feedcategories) . '</' . $this->p['item_category_type_feed'] . '>');
                 }
                 // Only one category possible e.g. in Google Products, so this can be customized
                 //$this->t['feed']categories = explode('|', $v->feedcategories);
                 //if (isset($this->t['feed']categories[0]) && $this->t['feed']categories[0] != '') {
-                //	$oI['item_category_type_feed'] = $l.$this->p['item_category_type_feed'].$r.htmlspecialchars($this->t['feed']categories[0]).$e.$this->p['item_category_type_feed'].$r;
+                //	$this->output('<'.$this->p['item_category_type_feed'].'>'.htmlspecialchars($this->t['feed']categories[0]).'</'.$this->p['item_category_type_feed'].'>');
                 //}
 
             } else if (isset($v->cattypefeed) && $v->cattypefeed != '') {
                 // 3) Category - if not 2) loaded - the one you can set in category
-                $oI['item_category_type_feed'] = $l.$this->p['item_category_type_feed'].$r.htmlspecialchars($v->cattypefeed).$e.$this->p['item_category_type_feed'].$r;
+                $this->output('<'.$this->p['item_category_type_feed'].'>'.htmlspecialchars($v->cattypefeed).'</'.$this->p['item_category_type_feed'].'>');
             }
         }
 
         // MANUFACTURER
         if ($this->p['item_manufacturer'] != '' && isset($v->manufacturertitle) && $v->manufacturertitle != '') {
-            $oI['item_manufacturer'] = $l.$this->p['item_manufacturer'].$r.htmlspecialchars($v->manufacturertitle).$e.$this->p['item_manufacturer'].$r;
+            $this->output('<'.$this->p['item_manufacturer'].'>'.htmlspecialchars($v->manufacturertitle).'</'.$this->p['item_manufacturer'].'>');
         }
 
         // STOCK (Product edit - Stock Options - In Stock)
         if ($this->p['item_stock'] != '' && isset($v->stock) && $v->stock != '') {
-            $oI['item_stock'] = $l.$this->p['item_stock'].$r.$v->stock.$e.$this->p['item_stock'].$r;
+            $this->output('<'.$this->p['item_stock'].'>'.$v->stock.'</'.$this->p['item_stock'].'>');
         }
 
         // STOCK DELIVERY_DATE (Product edit - Stock Options - Stock Status)
@@ -307,13 +296,13 @@ if (!empty($this->t['products'])) {
 
             //$stockText		= PhocacartStock::getStockStatusOutput($stockStatus);
             if (isset($stockStatus['stock_status']) && $stockStatus['stock_status'] != '') {
-                $oI['item_delivery_date'] = $l.$this->p['item_delivery_date'].$r.htmlspecialchars($stockStatus['stock_status']).$e.$this->p['item_delivery_date'].$r;
+                $this->output('<'.$this->p['item_delivery_date'].'>'.htmlspecialchars($stockStatus['stock_status']).'</'.$this->p['item_delivery_date'].'>');
             }
         }
 
         // STOCK DELIVERY_DATE - REAL DATE (Product edit - Stock Options - Product Delivery Date)
         if ($this->p['item_delivery_date_date'] != '' && isset($v->delivery_date) && $v->delivery_date != '' && $v->delivery_date != '0000-00-00 00:00:00') {
-            $oI['item_delivery_date_date'] = $l.$this->p['item_delivery_date_date'].$r.$v->delivery_date.$e.$this->p['item_delivery_date_date'].$r;
+            $this->output('<'.$this->p['item_delivery_date_date'].'>'.$v->delivery_date.'</'.$this->p['item_delivery_date_date'].'>');
         }
 
         // STOCK DELIVERY_DATE FEED (Stock Status Edit - Title (XML Feed))
@@ -322,7 +311,7 @@ if (!empty($this->t['products'])) {
 
 
             if (isset($stockStatus['stock_status_feed']) && $stockStatus['stock_status_feed'] != '') {
-                $oI['stock_status_feed'] = $l.$this->p['feed_delivery_date'].$r.htmlspecialchars($stockStatus['stock_status_feed']).$e.$this->p['feed_delivery_date'].$r;
+                $this->output('<'.$this->p['feed_delivery_date'].'>'.htmlspecialchars($stockStatus['stock_status_feed']).'</'.$this->p['feed_delivery_date'].'>');
             }
         }
 
@@ -334,13 +323,12 @@ if (!empty($this->t['products'])) {
             // RENDERING can take a lot of memory
             // THE FORMAT can be not correct
             $attributes = PhocacartAttribute::getAttributesAndOptions((int)$v->id);
-            $oIA = array();
             if (!empty($attributes)) {
                 foreach ($attributes as $k2 => $v2) {
                     if (isset($v2->title) && $v2->title != '') {
 
-                        $oIA[] = $l.$this->p['item_attribute'].$r;
-                        $oIA[] = $l.$this->p['item_attribute_name'].$r.htmlspecialchars($v2->title).$e.$this->p['item_attribute_name'].$r;
+                        $this->output('<'.$this->p['item_attribute'].'>');
+                        $this->output('<'.$this->p['item_attribute_name'].'>'.htmlspecialchars($v2->title).'</'.$this->p['item_attribute_name'].'>');
 
                         if (!empty($v2->options)) {
                             $opt = array();
@@ -348,14 +336,13 @@ if (!empty($this->t['products'])) {
                                 $opt[] = $v3->title;
                             }
                             $optText = implode(';', $opt);
-                            $oIA[] = $l.$this->p['item_attribute_value'].$r.htmlspecialchars($optText).$e.$this->p['item_attribute_value'].$r;
+                            $this->output('<'.$this->p['item_attribute_value'].'>'.htmlspecialchars($optText).'</'.$this->p['item_attribute_value'].'>');
                         }
-                        $oIA[] = $e.$this->p['item_attribute'].$r;
+                        $this->output('</'.$this->p['item_attribute'].'>');
                     }
 
                 }
             }
-            $oI['attributes'] = implode("\n", $oIA);
         }
 
 
@@ -393,30 +380,24 @@ if (!empty($this->t['products'])) {
 
                         if (!empty($specGroup) && !empty($specItems)) {
 
-                            //$oIS[] = $l . $this->p['item_specification'] . $r;
-                            //$oIS[] = $l . $this->p['item_specification_group_name'] . $r . htmlspecialchars($v2[0]) . $e . $this->p['item_specification_group_name'] . $r;
-
                             foreach ($specItems as $k3 => $v3) {
 
-                                $oIS[] = $l . $this->p['item_specification'] . $r;
+                                $this->output('<' . $this->p['item_specification'] . '>');
 
                                 if (isset($v3['title']) && $v3['title'] != '') {
-                                    $oIS[] = $l . $this->p['item_specification_name'] . $r . htmlspecialchars($v3['title']) . $e . $this->p['item_specification_name'] . $r;
+                                    $this->output('<' . $this->p['item_specification_name'] . '>' . htmlspecialchars($v3['title']) . '</' . $this->p['item_specification_name'] . '>');
                                 }
                                 if (isset($v3['value']) && $v3['value'] != '') {
-                                    $oIS[] = $l . $this->p['item_specification_value'] . $r . htmlspecialchars($v3['value']) . $e . $this->p['item_specification_value'] . $r;
+                                    $this->output('<' . $this->p['item_specification_value'] . '>' . htmlspecialchars($v3['value']) . '</' . $this->p['item_specification_value'] . '>');
                                 }
 
-                                $oIS[] = $e . $this->p['item_specification'] . $r;
+                                $this->output('</' . $this->p['item_specification'] . '>');
                             }
-
-                            //$oIS[] = $e . $this->p['item_specification'] . $r;
                         }
 
                     }
                 }
             }
-            $oI['specifications'] = implode("\n", $oIS);
         }
 
 
@@ -424,31 +405,28 @@ if (!empty($this->t['products'])) {
         // PRODUCT CONDITION
         if ($this->p['item_condition'] != '' && isset($v->condition)) {
             $condition = PhocacartUtilsSettings::getProductConditionValues($v->condition);
-            $oI['item_condition'] = $l.$this->p['item_condition'].$r.htmlspecialchars($condition).$e.$this->p['item_condition'].$r;
+            $this->output('<'.$this->p['item_condition'].'>'.htmlspecialchars($condition).'</'.$this->p['item_condition'].'>');
 
         }
 
         // PRODUCT REWARD POINTS
         if ($this->p['item_reward_points'] != '' && isset($v->points_received) && (int)$v->points_received > 0) {
-
-            $oIRP = array();
             if ($this->p['item_reward_points_name'] != '' && $this->p['item_reward_points_value'] != '') {
-                $oIRP[] = $l.$this->p['item_reward_points'].$r;
+                $this->output('<'.$this->p['item_reward_points'].'>');
 
-                $oIRP[] = $l.$this->p['item_reward_points_name'].$r.Text::_('COM_PHOCACART_FEED_TXT_PRODUCT_REWARD_POINTS').$e.$this->p['item_reward_points_name'].$r;
-                $oIRP[] = $l.$this->p['item_reward_points_value'].$r.(int)$v->points_received.$e.$this->p['item_reward_points_value'].$r;
+                $this->output('<'.$this->p['item_reward_points_name'].'>'.Text::_('COM_PHOCACART_FEED_TXT_PRODUCT_REWARD_POINTS').'</'.$this->p['item_reward_points_name'].'>');
+                $this->output('<'.$this->p['item_reward_points_value'].'>'.(int)$v->points_received.'</'.$this->p['item_reward_points_value'].'>');
                 // Possible RATION value
 
-                $oIRP[] = $e.$this->p['item_reward_points'].$r;
+                $this->output('</'.$this->p['item_reward_points'].'>');
             } else {
-                $oIRP[] = $l.$this->p['item_reward_points'].$r.(int)$v->points_received.$e.$this->p['item_reward_points'].$r;
+                $this->output('<'.$this->p['item_reward_points'].'>'.(int)$v->points_received.'</'.$this->p['item_reward_points'].'>');
             }
-            $oI['reward_points'] = implode("\n", $oIRP);
         }
 
         // PRODUCT TYPE FEED
         if ($this->p['item_type_feed'] != '' && isset($v->type_feed) && $v->type_feed != '') {
-            $oI['item_type_feed'] = $l.$this->p['item_type_feed'].$r.htmlspecialchars($v->type_feed).$e.$this->p['item_type_feed'].$r;
+            $this->output('<'.$this->p['item_type_feed'].'>'.htmlspecialchars($v->type_feed).'</'.$this->p['item_type_feed'].'>');
         }
 
 
@@ -456,15 +434,12 @@ if (!empty($this->t['products'])) {
         // First try to set parameters by category feed options
         // Second try to check if the parameter by product has value and if yes, set the product feed options value
         // PRODUCT - Specific FEED plugin
-        $oIP = array();
-
         if (!empty($paramsFeedCA)) {
-            foreach ($paramsFeedCA as $k => $v) {
-                if (trim($k) == trim($this->t['feed']['feed_plugin'])) {
+            foreach ($paramsFeedCA as $kCA => $v) {
+                if (trim($kCA) == trim($this->t['feed']['feed_plugin'])) {
 
                     if (!empty($v)) {
                         foreach ($v as $k2 => $v2) {
-
                             // display items except the parameter items
                             $pos = strpos($k2, 'pcf_param');
                             if ($pos !== false) {
@@ -476,7 +451,10 @@ if (!empty($this->t['products'])) {
                                 // so internaly they are stored as e.g.: EXTRA_MESSAGE{1}, EXTRA_MESSAGE{2}
                                 // in XML the {1} and {2} are removed and there is only one parameter EXTRA_MESSAGE on different places
                                 $k2       = preg_replace("/\{[^}]+\}/", "", $k2);
-                                $oIP[$k2] = $l . $k2 . $r . htmlspecialchars($v2) . $e . $k2 . $r;
+                                if ($k2 == 'HEUREKA_CPC') {
+                                    $v2 = str_replace(',', '.', $v2);
+                                }
+                                $this->output('<' . $k2 . '>' . htmlspecialchars($v2) . '</' . $k2 . '>');
                             }
                         }
                     }
@@ -485,8 +463,8 @@ if (!empty($this->t['products'])) {
         }
 
         if (!empty($paramsFeedA)) {
-            foreach ($paramsFeedA as $k => $v) {
-                if (trim($k) == trim($this->t['feed']['feed_plugin'])) {
+            foreach ($paramsFeedA as $kA => $v) {
+                if (trim($kA) == trim($this->t['feed']['feed_plugin'])) {
 
                     if (!empty($v)) {
                         foreach ($v as $k2 => $v2) {
@@ -502,7 +480,10 @@ if (!empty($this->t['products'])) {
                                 // so internaly they are stored as e.g.: EXTRA_MESSAGE{1}, EXTRA_MESSAGE{2}
                                 // in XML the {1} and {2} are removed and there is only one parameter EXTRA_MESSAGE on different places
                                 $k2       = preg_replace("/\{[^}]+\}/", "", $k2);
-                                $oIP[$k2] = $l . $k2 . $r . htmlspecialchars($v2) . $e . $k2 . $r;
+                                if ($k2 == 'HEUREKA_CPC') {
+                                    $v2 = str_replace(',', '.', $v2);
+                                }
+                                $this->output('<' . $k2 . '>' . htmlspecialchars($v2) . '</' . $k2 . '>');
                             }
                         }
                     }
@@ -510,49 +491,36 @@ if (!empty($this->t['products'])) {
             }
         }
 
-
-
-        $oI['params'] = implode("\n", $oIP);
-
-
-
-
-
         // PRODUCT - Fixed XML Elements
         if ($this->p['item_fixed_elements'] != '') {
-            $oI['item_fixed_elements'] = $this->p['item_fixed_elements'];
+            $this->output($this->p['item_fixed_elements']);
         }
 
 
 
         // PRODUCT END
         if (isset($this->t['feed']['item']) && $this->t['feed']['item'] != '') {
-            $oI['itemend'] = $e.$this->t['feed']['item'].$r;
+            $this->output('</'.$this->t['feed']['item'].'>');
         }
 
-
-        $o['items'] .= implode("\n", $oI) . "\n";
-
+        unset($v);
+        unset($paramsFeedCA);
+        unset($paramsFeedA);
     }
 
 }
 
+if ($this->justClose) {
+    $this->output('<!-- Memory: ' . memory_get_usage(true) . ', Peak Memory ' . memory_get_peak_usage(true) . ' -->');
 
 // ROOT END
-if (isset($this->t['feed']['root']) && $this->t['feed']['root'] != '') {
-    $o['rootend'] = $e.$this->t['feed']['root'].$r;
-}
+    if (isset($this->t['feed']['root']) && $this->t['feed']['root'] != '') {
+        $this->output('</' . $this->t['feed']['root'] . '>');
+    }
 
 
 // FOOTER
-if (isset($this->t['feed']['footer']) && $this->t['feed']['footer'] != '') {
-    $o['footer'] = $this->t['feed']['footer'];
+    if (isset($this->t['feed']['footer']) && $this->t['feed']['footer'] != '') {
+        $this->output($this->t['feed']['footer']);
+    }
 }
-
-
-
-echo implode( "\n", $o );
-
-
-
-?>

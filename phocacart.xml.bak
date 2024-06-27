@@ -91,7 +91,6 @@
 				<menu img="class:fields" alt="JGLOBAL_FIELDS" view="phocacartfields" link="option=com_fields&amp;context=com_phocacart.phocacartitem">JGLOBAL_FIELDS</menu>
 				<menu img="class:feeds" alt="COM_PHOCACART_XML_FEEDS" view="phocacartfeeds" link="option=com_phocacart&amp;view=phocacartfeeds">COM_PHOCACART_XML_FEEDS</menu>
 				<menu img="class:wishlists" alt="COM_PHOCACART_WISH_LISTS" view="phocacartwishlists" link="option=com_phocacart&amp;view=phocacartwishlists">COM_PHOCACART_WISH_LISTS</menu>
-				<menu img="class:contenttypes" alt="COM_PHOCACART_CONTENT_TYPES" view="phocacartcontenttypes" link="option=com_phocacart&amp;view=phocacartcontenttypes">COM_PHOCACART_CONTENT_TYPES</menu>
 				<menu img="class:questions" alt="COM_PHOCACART_QUESTIONS" view="phocacartquestions" link="option=com_phocacart&amp;view=phocacartquestions">COM_PHOCACART_QUESTIONS</menu>
 				<menu img="class:times" alt="COM_PHOCACART_OPENING_TIMES" view="phocacarttimes" link="option=com_phocacart&amp;view=phocacarttimes">COM_PHOCACART_OPENING_TIMES</menu>
 				<menu img="class:submititems" alt="COM_PHOCACART_SUBMITTED_ITEMS" view="phocacartsubmititems" link="option=com_phocacart&amp;view=phocacartsubmititems">COM_PHOCACART_SUBMITTED_ITEMS</menu>

@@ -9,58 +9,51 @@
 
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
+
+use Joomla\CMS\Filesystem\Path;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
-
-jimport('joomla.application.component.view');
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
 
 class PhocaCartViewFeed extends HtmlView
 {
-
     protected $t;
     protected $r;
     protected $p;
+    protected $tempFile;
+    protected $pageIndex;
+    protected $products = null;
+    protected $justClose = false;
 
     function display($tpl = null) {
-
         $app  = Factory::getApplication();
         $id   = $app->input->get('id', 0, 'int');
         $this->t['feed'] = PhocacartFeed::getFeed((int)$id);
 
-
-
         if ($this->t['feed']) {
-            $fP = new Registry;
-            $iP = new Registry;
-
-
-            if (isset($this->t['feed']['feed_params']) && $this->t['feed']['feed_params'] != '') {
-                $fP->loadString($this->t['feed']['feed_params']);
-            }
-
-            if (isset($this->t['feed']['item_params']) && $this->t['feed']['item_params'] != '') {
-                $iP->loadString($this->t['feed']['item_params']);
-            }
-
+            $fP = new Registry($this->t['feed']['feed_params'] ?? '');
+            $iP = new Registry($this->t['feed']['item_params'] ?? '');
 
             $this->t['pathitem'] = PhocacartPath::getPath('productimage');
 
             // Feed Params
-            $this->p['export_published_only'] = $fP->get('export_published_only', 1);
-            $this->p['export_in_stock_only']  = $fP->get('export_in_stock_only', 0);
-            $this->p['export_price_only']     = $fP->get('export_price_only', 1);
-            $this->p['strip_html_tags_desc']  = $fP->get('strip_html_tags_desc', 1);
-            $this->p['item_limit']            = $fP->get('item_limit', 0);
-            $this->p['item_ordering']         = $fP->get('item_ordering', 1);
-            $this->p['category_ordering']     = $fP->get('category_ordering', 0);
-            $this->p['display_attributes']    = $fP->get('display_attributes', 0);
+            $this->p['export_published_only'] = $fP->get('export_published_only', true);
+            $this->p['export_in_stock_only']  = $fP->get('export_in_stock_only', false);
+            $this->p['export_price_only']     = $fP->get('export_price_only', true);
+            $this->p['strip_html_tags_desc']  = $fP->get('strip_html_tags_desc', true);
+            $this->p['item_limit']            = $fP->get('item_limit', false);
+            $this->p['item_ordering']         = $fP->get('item_ordering', true);
+            $this->p['category_ordering']     = $fP->get('category_ordering', false);
+            $this->p['display_attributes']    = $fP->get('display_attributes', false);
             $this->p['specification_groups_id']= $fP->get('specification_groups_id', '');
             $this->p['category_separator']    = $fP->get('category_separator', '');
-            $this->p['load_all_categories']   = $fP->get('load_all_categories', 0);
+            $this->p['load_all_categories']   = $fP->get('load_all_categories', false);
 
             $this->p['price_decimals']           = $fP->get('price_decimals', '');
-            $this->p['price_including_currency'] = $fP->get('price_including_currency', 0);
+            $this->p['price_including_currency'] = $fP->get('price_including_currency', false);
 
             if ($this->p['category_separator'] == '\n') {
                 $this->p['category_separator'] = "\n";
@@ -110,8 +103,7 @@ class PhocaCartViewFeed extends HtmlView
             $this->p['item_reward_points_value']        = $iP->get('item_reward_points_value', '');
             $this->p['item_type_feed']                  = $iP->get('item_type_feed', '');
             $this->p['item_category_type_feed']         = $iP->get('item_category_type_feed', '');
-
-            $this->p['item_fixed_elements'] = $iP->get('item_fixed_elements', '');
+            $this->p['item_fixed_elements']             = $iP->get('item_fixed_elements', '');
 
             /*
             // We can find specific feed and customize it for specific needs
@@ -129,20 +121,122 @@ class PhocaCartViewFeed extends HtmlView
                 $forceLang = $this->t['feed']['language'];
             }
 
-
             // Load all categories for a product or only one
             // This influences two parameters: Categories and Product Category Type
             $categoriesList = 0;
-            if ($this->p['load_all_categories'] == 1) {
+            if ($this->p['load_all_categories']) {
                 $categoriesList = 5;
             }
 
-            // Possible feature - accept languages
-            $this->t['products'] = PhocacartProduct::getProducts(0, (int)$this->p['item_limit'], $this->p['item_ordering'], $this->p['category_ordering'], $this->p['export_published_only'], $this->p['export_in_stock_only'], $this->p['export_price_only'], $categoriesList, array(), 0, array(0, 1), '', '', false, $forceLang );
 
+            // Possible feature - accept languages
+            $filename = $app->getConfig()->get('cache_path') . '/tmpfeed.xml';
+            $this->tempFile = fopen($filename, "w");
+
+            $this->products = PhocacartProduct::getProducts(0, 1000, $this->p['item_ordering'], $this->p['category_ordering'], $this->p['export_published_only'], $this->p['export_in_stock_only'], $this->p['export_price_only'], $categoriesList, array(), 0, array(0, 1), '', '', false, $forceLang);
+            $this->pageIndex = 0;
+            gc_disable();
+            while ($this->products) {
+                parent::display($tpl);
+
+                $this->products = null;
+                gc_collect_cycles();
+
+                $this->pageIndex++;
+                $this->products = PhocacartProduct::getProducts($this->pageIndex * 1000, 1000, $this->p['item_ordering'], $this->p['category_ordering'], $this->p['export_published_only'], $this->p['export_in_stock_only'], $this->p['export_price_only'], $categoriesList, array(), 0, array(0, 1), '', '', false, $forceLang);
+            }
+            $this->justClose = true;
             parent::display($tpl);
+            gc_collect_cycles();
+            gc_enable();
+
+            fclose($this->tempFile);
+            readfile($filename);
+            unlink($filename);
+            //$this->t['products'] = PhocacartProduct::getProducts(0, (int)$this->p['item_limit'], $this->p['item_ordering'], $this->p['category_ordering'], $this->p['export_published_only'], $this->p['export_in_stock_only'], $this->p['export_price_only'], $categoriesList, array(), 0, array(0, 1), '', '', false, $forceLang);
+
+
+            //$result = Dispatcher::dispatch(new Event\Feed\Render('', $this->t['products']));
+            /*$result = [];
+            if (!in_array(true, $result)) {
+                $filename = $app->getConfig()->get('cache_path') . '/tmpfeed.xml';
+                $this->tempFile = fopen($filename, "w");
+                parent::display($tpl);
+                fclose($this->tempFile);
+                readfile($filename);
+                unlink($filename);
+            }*/
         }
     }
-}
 
-?>
+    public function loadTemplate($tpl = null)
+    {
+        // Clear prior output
+        $this->_output = null;
+
+        $template       = Factory::getApplication()->getTemplate(true);
+        $layout         = $this->getLayout();
+        $layoutTemplate = $this->getLayoutTemplate();
+
+        // Create the template file name based on the layout
+        $file = isset($tpl) ? $layout . '_' . $tpl : $layout;
+
+        // Clean the file name
+        $file = preg_replace('/[^A-Z0-9_\.-]/i', '', $file);
+        $tpl  = isset($tpl) ? preg_replace('/[^A-Z0-9_\.-]/i', '', $tpl) : $tpl;
+
+        try {
+            // Load the language file for the template
+            $lang = $this->getLanguage();
+        } catch (\UnexpectedValueException $e) {
+            $lang = Factory::getApplication()->getLanguage();
+        }
+
+        $lang->load('tpl_' . $template->template, JPATH_BASE)
+        || $lang->load('tpl_' . $template->parent, JPATH_THEMES . '/' . $template->parent)
+        || $lang->load('tpl_' . $template->template, JPATH_THEMES . '/' . $template->template);
+
+        // Change the template folder if alternative layout is in different template
+        if (isset($layoutTemplate) && $layoutTemplate !== '_' && $layoutTemplate != $template->template) {
+            $this->_path['template'] = str_replace(
+                JPATH_THEMES . DIRECTORY_SEPARATOR . $template->template . DIRECTORY_SEPARATOR,
+                JPATH_THEMES . DIRECTORY_SEPARATOR . $layoutTemplate . DIRECTORY_SEPARATOR,
+                $this->_path['template']
+            );
+        }
+
+        // Load the template script
+        $filetofind      = $this->_createFileName('template', ['name' => $file]);
+        $this->_template = Path::find($this->_path['template'], $filetofind);
+
+        // If alternate layout can't be found, fall back to default layout
+        if ($this->_template == false) {
+            $filetofind      = $this->_createFileName('', ['name' => 'default' . (isset($tpl) ? '_' . $tpl : $tpl)]);
+            $this->_template = Path::find($this->_path['template'], $filetofind);
+        }
+
+        if ($this->_template != false) {
+            // Unset so as not to introduce into template scope
+            unset($tpl, $file);
+
+            // Never allow a 'this' property
+            if (isset($this->this)) {
+                unset($this->this);
+            }
+
+            // Include the requested template filename in the local scope
+            // (this will execute the view logic).
+            include $this->_template;
+            $this->_output = '';
+
+            return $this->_output;
+        }
+
+        throw new \Exception(Text::sprintf('JLIB_APPLICATION_ERROR_LAYOUTFILE_NOT_FOUND', $file), 500);
+    }
+
+    public function output(string $value)
+    {
+        fwrite($this->tempFile, $value . "\n");
+    }
+}

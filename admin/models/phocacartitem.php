@@ -216,6 +216,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 			// it has no influence on saving it to db
 			$item->price 			= PhocacartPrice::cleanPrice($item->price);
 			$item->price_original 	= PhocacartPrice::cleanPrice($item->price_original);
+            $item->price_min     	= PhocacartPrice::cleanPrice($item->price_min);
 			$item->length 			= PhocacartPrice::cleanPrice($item->length);
 			$item->width 			= PhocacartPrice::cleanPrice($item->width);
 			$item->height 			= PhocacartPrice::cleanPrice($item->height);
@@ -301,6 +302,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 		$table->alias					= ApplicationHelper::stringURLSafe($table->alias);
 		$table->price 					= PhocacartUtils::replaceCommaWithPoint($table->price);
 		$table->price_original 			= PhocacartUtils::replaceCommaWithPoint($table->price_original);
+        $table->price_min   			= PhocacartUtils::replaceCommaWithPoint($table->price_min);
 		$table->length 					= PhocacartUtils::replaceCommaWithPoint($table->length);
 		$table->width 					= PhocacartUtils::replaceCommaWithPoint($table->width);
 		$table->height 					= PhocacartUtils::replaceCommaWithPoint($table->height);

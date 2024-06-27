@@ -42,6 +42,8 @@
 
         <field name="price_original" type="text" label="COM_PHOCACART_FIELD_ORIGINAL_PRICE_LABEL" description="COM_PHOCACART_FIELD_ORIGINAL_PRICE_DESC"/>
 
+        <field name="price_min" type="text" label="COM_PHOCACART_FIELD_PRICE_MIN_LABEL" description="COM_PHOCACART_FIELD_PRICE_MIN_DESC" />
+
         <field name="tax_id" type="phocatax" label="COM_PHOCACART_FIELD_TAX_LABEL" description="COM_PHOCACART_FIELD_TAX_DESC"/>
 
         <field name="catid_multiple" type="phocacartcategory" splitCategoryTypes="true" multiple="true" required="true" label="COM_PHOCACART_FIELD_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_DESC" />
