@@ -128,7 +128,7 @@ if ($this->a->confirm == 1) {
 		echo '<div class="'.$this->s['c']['pull-right'].' ph-checkout-confirm">';
 		echo '<button class="'.$this->s['c']['btn.btn-primary'].' ph-btn">';
 		//echo '<span class="'.$this->s['i']['ok'].'"></span> ';
-		echo PhocacartRenderIcon::icon($d['s']['i']['ok'], '', ' ');
+		echo PhocacartRenderIcon::icon($this->s['i']['ok'], '', ' ');
 		echo $this->t['confirm_order_text'];
 		echo '</button>';
 		echo '</div>';
