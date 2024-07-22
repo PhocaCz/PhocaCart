@@ -444,7 +444,6 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 			$dL['labels'] .= $tagLabelsOutput;
 		}
 
-
 		// REVIEW - STAR RATING
 		$dL['review'] = '';
 		if ((int)$this->t['display_star_rating'] > 0) {

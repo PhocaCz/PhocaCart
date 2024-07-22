@@ -299,7 +299,10 @@ class PhocacartTag
             $tags = self::getTagLabels($itemId, 0, 1);
         } else if ($types == 3) {
             // Tags and Labels together (they can be displayed as labels in category/items view)
-            $tags = self::getProductTags(TagType::Tag, $itemId, 0, 1);
+            //$tags = self::getProductTags(TagType::Tag, $itemId, 0, 1);
+            $t 	= self::getTags($itemId);
+		    $l 	= self::getTagLabels($itemId);
+		    $tags = array_merge($t, $l);
         } else {
             return '';
         }
@@ -369,7 +372,9 @@ class PhocacartTag
                     }
                 } else if ($tagsLinks == 3) {
                     $link = PhocacartRoute::getItemsRoute();
-                    if ($types == 2 || $types == 3) {
+                    //if ($types == 2 || $types == 3) {
+                    // Even if the tag is displayed in label area, the link still needs to go to tag output, not label output
+                    if ($tag->type == 1){
                         $link = $link . PhocacartRoute::getItemsRouteSuffix('label', $tag->id, $tag->alias);
                     } else {
                         $link = $link . PhocacartRoute::getItemsRouteSuffix('tag', $tag->id, $tag->alias);
