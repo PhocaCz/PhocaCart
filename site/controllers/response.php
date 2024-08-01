@@ -18,7 +18,7 @@ use Phoca\PhocaCart\Event;
 
 jimport('joomla.log.log');
 
-JLog::addLogger( array('text_file' => 'com_phocacart_error_log.php'), JLog::ALL, array('com_phocacart'));
+Log::addLogger( array('text_file' => 'com_phocacart_error_log.php'), Log::ALL, array('com_phocacart'));
 
 class PhocaCartControllerResponse extends FormController
 {

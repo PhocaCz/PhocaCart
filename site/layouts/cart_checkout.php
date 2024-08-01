@@ -116,20 +116,20 @@ if (!empty($d['fullitems'][1])) {
 
 	// HEADER
 	echo '<div class="'.$r.' ph-checkout-cart-row-header">';
-	echo '<div class="'.$cI.' ph-checkout-cart-image">'.Text::_('COM_PHOCACART_IMAGE').'</div>';
-	echo '<div class="'.$cP.' ph-checkout-cart-product">'.Text::_('COM_PHOCACART_PRODUCT').'</div>';
+	echo '<div class="'.$cI.' ph-checkout-cart-image" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_IMAGE')).'">'.Text::_('COM_PHOCACART_IMAGE').'</div>';
+	echo '<div class="'.$cP.' ph-checkout-cart-product" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_PRODUCT')).'">'.Text::_('COM_PHOCACART_PRODUCT').'</div>';
 
 	if ((int)$p['tax_calculation'] > 0 && $displayTax) {
-		echo '<div class="'.$cN.' ph-checkout-cart-netto">'.Text::_('COM_PHOCACART_PRICE_EXCL_TAX').'</div>';
+		echo '<div class="'.$cN.' ph-checkout-cart-netto" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_PRICE_EXCL_TAX')).'">'.Text::_('COM_PHOCACART_PRICE_EXCL_TAX').'</div>';
 	}
 
-	echo '<div class="'.$cQ.' ph-checkout-cart-quantity">'.Text::_('COM_PHOCACART_QUANTITY').'</div>';
+	echo '<div class="'.$cQ.' ph-checkout-cart-quantity" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_QUANTITY')).'">'.Text::_('COM_PHOCACART_QUANTITY').'</div>';
 
 	if ((int)$p['tax_calculation'] > 0 && $displayTax) {
-		echo '<div class="'.$cT.' ph-checkout-cart-tax">'.Text::_('COM_PHOCACART_TAX').'</div>';
+		echo '<div class="'.$cT.' ph-checkout-cart-tax" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_TAX')).'">'.Text::_('COM_PHOCACART_TAX').'</div>';
 	}
 
-	echo '<div class="'.$cB.' ph-checkout-cart-brutto">'.Text::_('COM_PHOCACART_PRICE').'</div>';
+	echo '<div class="'.$cB.' ph-checkout-cart-brutto" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_PRICE')).'">'.Text::_('COM_PHOCACART_PRICE').'</div>';
 	echo '</div>'. "\n"; // end row
 
 
@@ -273,15 +273,15 @@ if (!empty($d['fullitems'][1])) {
 
 				echo '<div class="'.$r.$cV.' ph-checkout-discount-row ph-checkout-cart-row-discount-reward">';
 				echo '<div class="'.$cI.$cVRow.'"></div>';
-				echo '<div class="'.$cP.$cVRow.' ph-checkout-cart-title">'.$discountTitle.' '.$d['fullitems'][5][$k]['rewardproducttxtsuffix'].'</div>';
+				echo '<div class="'.$cP.$cVRow.' ph-checkout-cart-title" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_TITLE')).'">'.$discountTitle.' '.$d['fullitems'][5][$k]['rewardproducttxtsuffix'].'</div>';
 				if ((int)$p['tax_calculation'] > 0 && $displayTax) {
-					echo '<div class="'.$cN.$cVRow.' ph-checkout-cart-netto">'.$rewardNetto.'</div>';
+					echo '<div class="'.$cN.$cVRow.' ph-checkout-cart-netto" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_PRICE_EXCL_TAX')).'">'.$rewardNetto.'</div>';
 				}
 				echo '<div class="'.$cQ.$cVRow.' ph-checkout-cart-quantity"></div>';
 				if ((int)$p['tax_calculation'] > 0 && $displayTax) {
-					echo '<div class="'.$cT.$cVRow.' ph-checkout-cart-tax">'.$rewardTax.'</div>';
+					echo '<div class="'.$cT.$cVRow.' ph-checkout-cart-tax" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_TAX')).'">'.$rewardTax.'</div>';
 				}
-				echo '<div class="'.$cB.$cVRow.' ph-checkout-cart-brutto">'.$rewardFinal.'</div>';
+				echo '<div class="'.$cB.$cVRow.' ph-checkout-cart-brutto" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_PRICE_INCL_TAX')).'">'.$rewardFinal.'</div>';
 				echo '</div>'. "\n"; // end row
 			}
 
@@ -307,15 +307,15 @@ if (!empty($d['fullitems'][1])) {
 
 				echo '<div class="'.$r.$cV.' ph-checkout-discount-row ph-checkout-cart-row-discount-product">';
 				echo '<div class="'.$cI.$cVRow.'"></div>';
-				echo '<div class="'.$cP.$cVRow.' ph-checkout-cart-title">'.$discountTitle.'</div>';
+				echo '<div class="'.$cP.$cVRow.' ph-checkout-cart-title" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_TITLE')).'">'.$discountTitle.'</div>';
 				if ((int)$p['tax_calculation'] > 0 && $displayTax) {
-					echo '<div class="'.$cN.$cVRow.' ph-checkout-cart-netto">'.$productNetto.'</div>';
+					echo '<div class="'.$cN.$cVRow.' ph-checkout-cart-netto" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_PRICE_EXCL_TAX')).'">'.$productNetto.'</div>';
 				}
 				echo '<div class="'.$cQ.$cVRow.' ph-checkout-cart-quantity"></div>';
 				if ((int)$p['tax_calculation'] > 0 && $displayTax) {
-					echo '<div class="'.$cT.$cVRow.' ph-checkout-cart-tax">'.$productTax.'</div>';
+					echo '<div class="'.$cT.$cVRow.' ph-checkout-cart-tax" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_TAX')).'">'.$productTax.'</div>';
 				}
-				echo '<div class="'.$cB.$cVRow.' ph-checkout-cart-brutto">'.$productFinal.'</div>';
+				echo '<div class="'.$cB.$cVRow.' ph-checkout-cart-brutto" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_PRICE_INCL_TAX')).'">'.$productFinal.'</div>';
 				echo '</div>'. "\n"; // end row
 			}
 
@@ -340,15 +340,15 @@ if (!empty($d['fullitems'][1])) {
 
 				echo '<div class="'.$r.$cV.' ph-checkout-discount-row ph-checkout-cart-row-discount-cart">';
 				echo '<div class="'.$cI.$cVRow.'"></div>';
-				echo '<div class="'.$cP.$cVRow.' ph-checkout-cart-title">'.$discountTitle.'</div>';
+				echo '<div class="'.$cP.$cVRow.' ph-checkout-cart-title" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_TITLE')).'">'.$discountTitle.'</div>';
 				if ((int)$p['tax_calculation'] > 0 && $displayTax) {
-					echo '<div class="'.$cN.$cVRow.' ph-checkout-cart-netto">'.$cartNetto.'</div>';
+					echo '<div class="'.$cN.$cVRow.' ph-checkout-cart-netto" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_PRICE_EXCL_TAX')).'">'.$cartNetto.'</div>';
 				}
 				echo '<div class="'.$cQ.$cVRow.' ph-checkout-cart-quantity"></div>';
 				if ((int)$p['tax_calculation'] > 0 && $displayTax) {
-					echo '<div class="'.$cT.$cVRow.' ph-checkout-cart-tax">'.$cartTax.'</div>';
+					echo '<div class="'.$cT.$cVRow.' ph-checkout-cart-tax" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_TAX')).'">'.$cartTax.'</div>';
 				}
-				echo '<div class="'.$cB.$cVRow.' ph-checkout-cart-brutto">'.$cartFinal.'</div>';
+				echo '<div class="'.$cB.$cVRow.' ph-checkout-cart-brutto" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_PRICE_INCL_TAX')).'">'.$cartFinal.'</div>';
 				echo '</div>'. "\n"; // end row
 			}
 
@@ -372,15 +372,15 @@ if (!empty($d['fullitems'][1])) {
 
 				echo '<div class="'.$r.$cV.' ph-checkout-discount-row ph-checkout-cart-row-discount-coupon">';
 				echo '<div class="'.$cI.$cVRow.'"></div>';
-				echo '<div class="'.$cP.$cVRow.' ph-checkout-cart-title">'.$couponTitle.'</div>';
+				echo '<div class="'.$cP.$cVRow.' ph-checkout-cart-title" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_TITLE')).'">'.$couponTitle.'</div>';
 				if ((int)$p['tax_calculation'] > 0 && $displayTax) {
-					echo '<div class="'.$cN.$cVRow.' ph-checkout-cart-netto">'.$couponNetto.'</div>';
+					echo '<div class="'.$cN.$cVRow.' ph-checkout-cart-netto" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_PRICE_EXCL_TAX')).'">'.$couponNetto.'</div>';
 				}
 				echo '<div class="'.$cQ.$cVRow.' ph-checkout-cart-quantity"></div>';
 				if ((int)$p['tax_calculation'] > 0 && $displayTax) {
-					echo '<div class="'.$cT.$cVRow.' ph-checkout-cart-tax">'.$couponTax.'</div>';
+					echo '<div class="'.$cT.$cVRow.' ph-checkout-cart-tax" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_TAX')).'">'.$couponTax.'</div>';
 				}
-				echo '<div class="'.$cB.$cVRow.' ph-checkout-cart-brutto">'.$couponFinal.'</div>';
+				echo '<div class="'.$cB.$cVRow.' ph-checkout-cart-brutto" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_PRICE_INCL_TAX')).'">'.$couponFinal.'</div>';
 				echo '</div>'. "\n"; // end row
 			}
 		}
