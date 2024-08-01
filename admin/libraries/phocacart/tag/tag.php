@@ -299,7 +299,10 @@ class PhocacartTag
             $tags = self::getTagLabels($itemId, 0, 1);
         } else if ($types == 3) {
             // Tags and Labels together (they can be displayed as labels in category/items view)
-            $tags = self::getProductTags(TagType::Tag, $itemId, 0, 1);
+            //$tags = self::getProductTags(TagType::Tag, $itemId, 0, 1);
+            $t 	= self::getTags($itemId);
+		    $l 	= self::getTagLabels($itemId);
+		    $tags = array_merge($t, $l);
         } else {
             return '';
         }
@@ -313,79 +316,81 @@ class PhocacartTag
             foreach ($tags as $tag) {
                 $tag->params = new Registry($tag->params);
 
-        $class = ' ph-tag-' . $tag->alias;
-        $style = '';
-        if ($tag->params->get('background')) {
-            $style .= 'background-color: ' . $tag->params->get('background') . ' !important;';
-        }
-        if ($tag->params->get('foreground')) {
-            $style .= 'color: ' . $tag->params->get('foreground') . ' !important;';
-        }
-        if ($tag->params->get('class')) {
-            $class .= ' ' . $tag->params->get('class');
-        }
-        $style = $style ? ' style="' . $style . '"' : '';
+                $class = ' ph-tag-' . $tag->alias;
+                $style = '';
+                if ($tag->params->get('background')) {
+                    $style .= 'background-color: ' . $tag->params->get('background') . ' !important;';
+                }
+                if ($tag->params->get('foreground')) {
+                    $style .= 'color: ' . $tag->params->get('foreground') . ' !important;';
+                }
+                if ($tag->params->get('class')) {
+                    $class .= ' ' . $tag->params->get('class');
+                }
+                $style = $style ? ' style="' . $style . '"' : '';
 
                 if ($types == 2 || $types == 3) {
                     $html[$i] = '<div class="ph-corner-icon-wrapper"><div class="ph-corner-icon ph-corner-icon-' . $tag->alias . $class . '"' . $style . '>';
-        } else {
+                } else {
                     $html[$i] = '<span class="' . PhocacartRenderStyle::class('label.label-info') . $class . '"' . $style . '>';
-        }
+                }
 
                 $dO = htmlspecialchars($tag->title);
 
-        if ($tag->display_format == 2) {
-            if ($tag->icon_class != '') {
+                if ($tag->display_format == 2) {
+                    if ($tag->icon_class != '') {
                         $dO = '<span class="' . htmlspecialchars(strip_tags($tag->icon_class)) . '"></span>';
-            } else {
+                    } else {
                         $dO = $tag->title;
-            }
-        } else if ($tag->display_format == 3) {
-            if ($tag->icon_class != '') {
+                    }
+                } else if ($tag->display_format == 3) {
+                    if ($tag->icon_class != '') {
                         $dO = '<span class="' . htmlspecialchars(strip_tags($tag->icon_class)) . '"></span>';
-            }
+                    }
                     $dO .= $tag->title;
-        }
+                }
 
-        if ($tagsLinks == 0) {
+                if ($tagsLinks == 0) {
                     $html[$i] .= $dO;
-        } else if ($tagsLinks == 1) {
+                } else if ($tagsLinks == 1) {
                     if ($tag->link_ext != '') {
                         $html[$i] .= '<a href="' . $tag->link_ext . '">' . $dO . '</a>';
-            } else {
+                    } else {
                         $html[$i] .= $dO;
-            }
-        } else if ($tagsLinks == 2) {
-            if ($tag->link_cat != '') {
-                $category = PhocacartCategory::getCategoryById($tag->link_cat);
-                if ($category) {
-                    $link  = PhocacartRoute::getCategoryRoute($category->id, $category->alias);
+                    }
+                } else if ($tagsLinks == 2) {
+                    if ($tag->link_cat != '') {
+                        $category = PhocacartCategory::getCategoryById($tag->link_cat);
+                        if ($category) {
+                            $link  = PhocacartRoute::getCategoryRoute($category->id, $category->alias);
                             $html[$i] .= '<a href="' . $link . '">' . $dO . '</a>';
-                } else {
+                        } else {
                             $html[$i] .= $dO;
-                }
-            } else {
+                        }
+                    } else {
                         $html[$i] .= $dO;
-            }
-        } else if ($tagsLinks == 3) {
-            $link = PhocacartRoute::getItemsRoute();
-                    if ($types == 2 || $types == 3) {
-                $link = $link . PhocacartRoute::getItemsRouteSuffix('label', $tag->id, $tag->alias);
-            } else {
-                $link = $link . PhocacartRoute::getItemsRouteSuffix('tag', $tag->id, $tag->alias);
-            }
+                    }
+                } else if ($tagsLinks == 3) {
+                    $link = PhocacartRoute::getItemsRoute();
+                    //if ($types == 2 || $types == 3) {
+                    // Even if the tag is displayed in label area, the link still needs to go to tag output, not label output
+                    if ($tag->type == 1){
+                        $link = $link . PhocacartRoute::getItemsRouteSuffix('label', $tag->id, $tag->alias);
+                    } else {
+                        $link = $link . PhocacartRoute::getItemsRouteSuffix('tag', $tag->id, $tag->alias);
+                    }
 
                     $html[$i] .= '<a href="' . Route::_($link) . '">' . $dO . '</a>';
-        }
+                }
 
                 if ($types == 2 || $types == 3) {
                     $html[$i] .= '</div></div>';
-        } else {
+                } else {
                     $html[$i] .= '</span>';
-        }
+                }
 
                 $i++;
-    }
+            }
 
         }
 
