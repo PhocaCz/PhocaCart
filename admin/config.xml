@@ -1823,6 +1823,12 @@
             <option value="1">JYES</option>
           </field>
 
+            <field name="barcode_scanning_product_list" type="list" label="COM_PHOCACART_FIELD_BARCODE_SCANNING_PRODUCT_LIST_ADMINISTRATION_LABEL" description="COM_PHOCACART_FIELD_BARCODE_SCANNING_PRODUCT_LIST_ADMINISTRATION_DESC" default="0">
+            <option value="0">JNO</option>
+            <option value="1">COM_PHOCACART_YES_ONLY_SEARCH</option>
+            <option value="2">COM_PHOCACART_YES_FIND_REDIRECT_PRODUCT_EDIT</option>
+          </field>
+
             <field name="phocahead33" type="phocahead" default="COM_PHOCACART_MULTILINGUAL_OPTIONS_LABEL" label="" description=""/>
 
             <field name="order_language" type="list" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_ORDER_LANGUAGE_LABEL"

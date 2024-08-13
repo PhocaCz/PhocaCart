@@ -975,10 +975,6 @@ class PhocacartRenderAdmincolumns
             $o[] = '<br /><span class="smallsub">(<span>' . Text::_('COM_PHOCACART_FIELD_FIELD_ALIAS_LABEL') . ':</span>' . PhocacartText::filterValue($item['valuealias'], 'text') . ')</span>';
         }
 
-        if ($item['tags'] ?? '') {
-            $o[] = '<div class="ph-items-tags">' . $item['tags'] . '</div>';
-        }
-
         return $this->r->td(implode("\n", $o), 'small');
     }
 

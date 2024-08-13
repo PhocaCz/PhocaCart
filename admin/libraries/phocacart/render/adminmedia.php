@@ -34,8 +34,9 @@ class PhocacartRenderAdminmedia
 		$this->document		= Factory::getDocument();
 		$this->view			= $app->input->get('view');
 		$this->option 		= 'com_phocacart';
-
+		$paramsC 			= PhocacartUtils::getComponentParameters();
 		$wa 				= $app->getDocument()->getWebAssetManager();
+
 
 		HTMLHelper::_('jquery.framework');
 
@@ -54,7 +55,10 @@ class PhocacartRenderAdminmedia
 		));
 		$this->document->addScriptOptions('phVars', array('token' => Session::getFormToken(), 'urleditinplace' => Uri::base(true).'/index.php?option=com_phocacart&task=phocacarteditinplace.editinplacetext&format=json&'. Session::getFormToken().'=1'));
 
-		//$this->document->getDocument()->addScriptOptions('phParams', array());
+		$phParams = [];
+		$phParams['barcode_scanning_product_list'] = $paramsC->get('barcode_scanning_product_list', 0);
+
+		$this->document->addScriptOptions('phParams', $phParams);
         ///HTMLHelper::_('script', 'media/com_phocacart/js/administrator/phocacartform.js', array('version' => 'auto'));
 		$wa->registerAndUseScript('com_phocacart.phocacartform', 'media/com_phocacart/js/administrator/phocacartform.js', ['version' => 'auto']);
 

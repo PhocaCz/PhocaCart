@@ -549,3 +549,71 @@ const phocaAjax = () => {
 document.addEventListener('DOMContentLoaded', function() {
 	phocaAjax();
 });
+
+/* Barcode Scanning */
+
+let phVars = Joomla.getOptions('phVars');
+let phParams = Joomla.getOptions('phParams');
+let phScannerInput = '';
+let phLastScannerClear = 0;
+let urlItem = 'index.php?option=com_phocacart&view=phocacartitema&format=json&tmpl=component&' + phVars['token'] + '=1';
+let urlItemEdit = 'index.php?option=com_phocacart&task=phocacartitem.edit';
+let phListenScanner = false;
+
+jQuery(document).ready(function() {
+
+	if (phParams['barcode_scanning_product_list'] > 0) {
+		if (document.getElementById('phocacartitems') && document.getElementById('filter_search')) {
+			phListenScanner = true;
+		}
+	}
+	console.log(phListenScanner);
+
+	if (phListenScanner) {
+		document.addEventListener('keydown', (ev) => {
+						
+			if (ev.ctrlKey || ev.altKey) {
+				// Ignore command-like keys
+				return;
+			}
+
+			clearTimeout(phLastScannerClear);
+			phLastScannerClear = window.setTimeout(function(){
+				phScannerInput = '';
+			}, 500);
+
+			if (ev.key == 'Enter') {
+				// Submit
+				document.getElementById('filter_search').value = phScannerInput;
+
+				if (phParams['barcode_scanning_product_list'] == 2) {
+					jQuery.ajax({
+						url: urlItem + '&q=' + phScannerInput,
+						type: 'POST',
+						data: [],
+						dataType: 'JSON',
+						success:function(response){
+							if ( response.status == 1 ){
+								if (typeof response.items[0] !== 'undefined') {
+									if (response.items[0].id > 0) {
+										window.location.href = urlItemEdit + '&id=' + response.items[0].id;
+									}
+								}
+
+							}
+						}
+					});
+				}
+
+				// If product not found, set it to standard search where user gets info about not finding it
+				document.getElementById('filter_search').form.submit();
+			} else if (ev.key == 'Space') {
+				// IE
+				phScannerInput += ' '; 
+			} else if (ev.key.length == 1) {
+				// A character not a key like F12 or Backspace
+				phScannerInput += ev.key; 
+			}
+		});
+	}
+})
