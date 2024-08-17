@@ -812,5 +812,14 @@ class PhocacartUtils
 
 		return $array;
 	}
+
+    public static function realCleanImageUrl($img) {
+
+		$imgClean = HTMLHelper::cleanImageURL($img);
+		if ($imgClean->url != '') {
+			$img =  $imgClean->url;
+		}
+		return $img;
+	}
 }
 

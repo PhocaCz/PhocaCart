@@ -82,6 +82,8 @@ $display_reward_points_pos				= $d['params']->get( 'display_reward_points_pos', 
 $display_time_of_supply_invoice			= $d['params']->get( 'display_time_of_supply_invoice', 0 );
 
 
+$store_logo = PhocacartUtils::realCleanImageUrl($store_logo);
+$store_logo_pos = PhocacartUtils::realCleanImageUrl($store_logo_pos);
 
 if($d['type'] == 1 && $d['common']->order_number == '') {
 	echo $layoutAl->render(array('type' => 'error', 'text' => Text::_('COM_PHOCACART_ORDER_DOES_NOT_EXIST')));
