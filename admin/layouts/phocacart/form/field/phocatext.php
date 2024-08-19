@@ -107,13 +107,13 @@ $attributes = [
 ];
 
 $defLangAttributes = $attributes;
-$attributes[] = !empty($class) ? 'class="form-control ' . $class . $charcounterclass . '"' : 'class="form-control' . $charcounterclass . '"';
+$attributes[] = !empty($class) ? 'class="form-control ' . $class . $charcounterclass . ($i18n ? ' phocacart-i18n' : '') . '"' : 'class="form-control' . $charcounterclass . ($i18n ? ' phocacart-i18n' : '') . '"';
 
 $requiredClass = '';
 if ($required) {
     $requiredClass = ' required';
 }
-$defLangAttributes[] = !empty($class) ? 'class="form-control ' . $class . $charcounterclass . $requiredClass . '"' : 'class="form-control' . $charcounterclass . $requiredClass . '"';
+$defLangAttributes[] = !empty($class) ? 'class="form-control ' . $class . $charcounterclass . $requiredClass . ($i18n ? ' phocacart-i18n-def' : '') . '"' : 'class="form-control' . $charcounterclass . $requiredClass . ($i18n ? ' phocacart-i18n-def' : '') . '"';
 $defLangAttributes[] = $required ? 'required' : '';
 
 $addonBeforeHtml = '';
@@ -154,7 +154,9 @@ if ($showTranslation) {
         id="<?php echo $id . ($i18n ? '-' . $language->lang_code : ''); ?>"
         value="<?php echo htmlspecialchars($i18n ? $value[$language->lang_code] ?? '' : $value, ENT_COMPAT, 'UTF-8'); ?>"
         <?php echo $dirname; ?>
-        <?php echo implode(' ', !$i18n || $language->lang_code !== $defLanguage ? $attributes : $defLangAttributes); ?>>
+        <?php echo implode(' ', !$i18n || $language->lang_code !== $defLanguage ? $attributes : $defLangAttributes); ?>
+        <?php echo $i18n ? ' data-phocacart-i18n-lang="' . $language->lang_code . '"' : ''; ?>
+    >
 
     <?php if ($i18n) : ?>
       <span class="input-group-text input-group-i18n bg-light text-dark border-primary-subtle" title="<?php echo I18nHelper::getEditorIconTitle($language->lang_code, $value); ?>">
