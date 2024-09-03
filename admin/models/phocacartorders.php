@@ -140,7 +140,7 @@ class PhocaCartCpModelPhocacartOrders extends ListModel
 
 				$query->where('('.implode(' OR ', $searchInP).')');
 			} else {
-				$searchInUser = array('name_first', 'name_middle', 'name_last', 'name_degree', 'company', 'vat_1', 'vat_2', 'address_1', 'address_2', 'city', 'zip', 'email', 'email_contact', 'phone_1', 'phone_2', 'phone_mobile', 'fax' );
+				$searchInUser = array('name_first', 'name_middle', 'name_last', 'name_degree', 'company', 'vat_1', 'vat_2', 'address_1', 'address_2', 'city', 'zip', 'email', 'email_contact', 'phone_1', 'phone_2', 'phone_mobile' );
 
 				$searchInP =  [];
 				$searchInP[] = 'a.id in (' .
