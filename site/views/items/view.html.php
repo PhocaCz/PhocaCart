@@ -147,6 +147,10 @@ class PhocaCartViewItems extends HtmlView
         $this->items = $model->getItemList();
 
         $this->t['pagination']       = $model->getPagination();
+
+
+
+
         $this->t['ordering']         = $model->getOrdering();
         $this->t['layouttype']       = $model->getLayoutType();
         $this->t['layouttypeactive'] = PhocacartRenderFront::setActiveLayoutType($this->t['layouttype']);
