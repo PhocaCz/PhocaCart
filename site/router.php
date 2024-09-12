@@ -33,7 +33,6 @@ class PhocacartRouter extends RouterView
     $params = ComponentHelper::getParams('com_phocacart');;
     $this->noIDs = (bool)$params->get('remove_sef_ids');
 
-
     // Is the main menu type categories view or items view - does categories view exist?
     $component 		    = ComponentHelper::getComponent('com_phocacart');
     $attributes 	    = array('component_id');

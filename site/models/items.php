@@ -108,6 +108,49 @@ class PhocaCartModelItems extends BaseDatabaseModel
 			jimport('joomla.html.pagination');
 			$this->pagination = new PhocacartPagination( $this->getTotal(), $this->getState('limitstart'), $this->getState('limit') );
 		}
+
+		// Joomla 5.1.3 4.4.7 ???
+		// Default:     format option view layout tpl id Itemid
+		$app 		= Factory::getApplication();
+		$state      = $this->getState();
+
+		$paramsC 			= $app->getParams();
+		$manufacturer_alias	= $paramsC->get( 'manufacturer_alias', 'manufacturer');
+		$manufacturer_alias	= $manufacturer_alias != '' ? trim(PhocacartText::filterValue($manufacturer_alias, 'alphanumeric'))  : 'manufacturer';
+
+		if (!empty($this->pagination)) {
+			if ($state->get('price_from') != '') { $this->pagination->setAdditionalUrlParam('price_from', $state->get('price_from'));}
+			if ($state->get('price_to') != '') { $this->pagination->setAdditionalUrlParam('price_to', $state->get('price_to'));}
+			//if ($state->get('limit') != '') { $this->pagination->setAdditionalUrlParam('limit', $state->get('limit'));}
+			//if ($state->get('limitstart') != '') { $this->pagination->setAdditionalUrlParam('limitstart', $state->get('limitstart'));}
+			if ($state->get('tag') != '') { $this->pagination->setAdditionalUrlParam('tag', $state->get('tag'));}
+			if ($state->get('label') != '') { $this->pagination->setAdditionalUrlParam('label', $state->get('label'));}
+			if ($state->get('manufacturer') != '') { $this->pagination->setAdditionalUrlParam($manufacturer_alias, $state->get('manufacturer'));}
+			if ($state->get('c') != '') { $this->pagination->setAdditionalUrlParam('c', $state->get('c'));}
+			if ($state->get('a') != '') { $this->pagination->setAdditionalUrlParam('a', $state->get('a'));}
+			if ($state->get('s') != '') { $this->pagination->setAdditionalUrlParam('s', $state->get('s'));}
+			//if ($state->get('parameter') != '') { $this->pagination->setAdditionalUrlParam('parameter', $state->get('parameter'));}
+			if ($this->getState('parameter')) {
+				foreach ($this->getState('parameter') as $k => $v) {
+					$alias = trim(PhocacartText::filterValue($v->alias, 'alphanumeric'));
+					$parameter = $app->input->get($alias, '', 'string');
+					if($parameter != '') {
+						$this->pagination->setAdditionalUrlParam($v->alias, $parameter);
+					}
+				}
+			}
+			if ($state->get('search') != '') { $this->pagination->setAdditionalUrlParam('search', $state->get('search'));}
+
+			if ($state->get('id') == 0 || $state->get('id') == '') {
+				$this->pagination->setAdditionalUrlParam('id', null);
+			}
+			if ($state->get('id') != '') { $this->pagination->setAdditionalUrlParam('id', $state->get('id'));}
+
+			// Format is sent per POST - can be removed if needed, works only with patch: https://issues.joomla.org/tracker/joomla-cms/44023
+			$this->pagination->setAdditionalUrlParam('format', null);
+		}
+
+
 		return $this->pagination;
 	}
 
