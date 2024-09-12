@@ -137,8 +137,7 @@ class PhocaCartCpModelPhocacartRegion extends AdminModel
 				if ($query != '' && $query[0] != '#'){
 					$db->setQuery($query);
 					if (!$db->execute()){
-						//Log::add(Text::_('JLIB_INSTALLER_ERROR_SQL_ERROR'), Log::WARNING);
-						throw new Exception('Database Error: Importing regions', 500);
+						Log::add(Text::_('JLIB_INSTALLER_ERROR_SQL_ERROR'), Log::WARNING);
 						return false;
 					}
 				}

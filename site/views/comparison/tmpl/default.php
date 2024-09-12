@@ -134,12 +134,7 @@ if (!empty($this->t['items'])) {
 		$c['remove'] .= '</form>';
 		$c['remove'] .= '</td>';
 
-		if ($v['description']) {
-			$c['desc'] .= '<td>'.HTMLHelper::_('content.prepare', $v['description']).'</td>';
-		} else {
-			$c['desc'] .= '<td></td>';
-		}
-
+		$c['desc'] .= '<td>'.HTMLHelper::_('content.prepare', $v['description']).'</td>';
 		$c['man'] .= '<td class="ph-center">'.$v['manufacturer_title'].'</td>';
 
 		if ($this->t['value']['stock'] == 1)	{ $c['stock'] 	.= '<td class="ph-center">'.Text::_($v['stock']).'</td>';}
@@ -200,6 +195,8 @@ if (!empty($this->t['items'])) {
 	foreach($c as $k => $v) {
 		echo $v;
 	}
+
+
 
 	foreach($this->t['spec'] as $k => $v) {
 		if($k != '') {

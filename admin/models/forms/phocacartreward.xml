@@ -13,7 +13,7 @@
 
 <field name="user_id" type="user" default="0" label="COM_PHOCACART_USER_ID_LABEL" description="COM_PHOCACART_USER_ID_DESC" required="true"  />
 
-<field name="published" type="list" label="COM_PHOCACART_FIELD_APPROVED_LABEL" description="COM_PHOCACART_FIELD_APPROVED_DESC" size="1" default="1">
+<field name="published" type="list" label="COM_PHOCACART_FIELD_APPROVED_LABEL" description="COM_PHOCACART_FIELD_APPROVED_DESC" class="form-control" size="1" default="1">
 	<option value="1">COM_PHOCACART_APPROVED</option>
 	<option	value="0">COM_PHOCACART_NOT_APPROVED</option>
 </field>

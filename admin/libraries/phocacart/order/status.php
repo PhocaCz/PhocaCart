@@ -16,8 +16,6 @@ use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Plugin\PluginHelper;
-use Phoca\PhocaCart\Dispatcher\Dispatcher;
-
 /*
 phocacart import('phocacart.path.route');
 */
@@ -799,7 +797,6 @@ class PhocacartOrderStatus
 
 		$gifts = array();
 		$activateGifts = array();
-
 		if ((int)$status['email_gift'] > 0 || (isset($status['activate_gift']) && $status['activate_gift'] == 1)) {
 
 			// Get all Gifts stored for this order
@@ -842,7 +839,6 @@ class PhocacartOrderStatus
 		}
 
 		$giftVoucherText = Text::_('COM_PHOCACART_GIFT_VOUCHER');
-
 		// Build email or paste gift vouchers - do them when at least one should get the email with gift voucher
 		if (!empty($gifts) && ($buyerEmail != ''|| !empty($recipientsEmails))) {
 
@@ -1108,6 +1104,7 @@ class PhocacartOrderStatus
 				}
 			}
 		}
+
 
 		// --------------------------------
 		// BACK TO MAIN NOTIFY FUNCTION
@@ -1384,33 +1381,31 @@ class PhocacartOrderStatus
 
 		// CUSTOMER
 		if (isset($common->user_lang) && $common->user_lang != '' && $common->user_lang != '*') {
+
 			$pLang->setLanguage($common->user_lang);
 
-            if ($object) {
-                // Run content plugins e.g. because of translation
-                // Disable emailclock for PDF | MAIL
-                //if ($d['format'] == 'pdf' || $d['format'] == 'mail') {
-                $object = '{emailcloak=off}' . $object;
-                //}
-                $object = HTMLHelper::_('content.prepare', $object);
-            }
+			// Run content plugins e.g. because of translation
+			// Disable emailclock for PDF | MAIL
+			//if ($d['format'] == 'pdf' || $d['format'] == 'mail') {
+				$object = '{emailcloak=off}' . $object;
+			//}
+			$object = HTMLHelper::_('content.prepare', $object);
 
-			Dispatcher::dispatchChangeText($object);
+			Factory::getApplication()->triggerEvent('onChangeText', array(&$object));
 
 			// Set language back to default
 			$pLang->setLanguageBack();
 
 		} else {
-            if ($object) {
-                // Run content plugins e.g. because of translation
-                // Disable emailclock for PDF | MAIL
-                //if ($d['format'] == 'pdf' || $d['format'] == 'mail') {
-                $object = '{emailcloak=off}' . $object;
-                //}
-                $object = HTMLHelper::_('content.prepare', $object);
-            }
 
-			Dispatcher::dispatchChangeText($object);
+			// Run content plugins e.g. because of translation
+			// Disable emailclock for PDF | MAIL
+			//if ($d['format'] == 'pdf' || $d['format'] == 'mail') {
+				$object = '{emailcloak=off}' . $object;
+			//}
+			$object = HTMLHelper::_('content.prepare', $object);
+
+			Factory::getApplication()->triggerEvent('onChangeText', array(&$object));
 		}
 	}
 
@@ -1418,15 +1413,14 @@ class PhocacartOrderStatus
 		PluginHelper::importPlugin( 'system' );
 		PluginHelper::importPlugin('plgSystemMultilanguagesck');
 
-        if ($object) {
-            // Run content plugins e.g. because of translation
-            // Disable emailclock for PDF | MAIL
-            //if ($d['format'] == 'pdf' || $d['format'] == 'mail') {
-            $object = '{emailcloak=off}' . $object;
-            //}
-            $object = HTMLHelper::_('content.prepare', $object);
-        }
+		// Run content plugins e.g. because of translation
+		// Disable emailclock for PDF | MAIL
+		//if ($d['format'] == 'pdf' || $d['format'] == 'mail') {
+			$object = '{emailcloak=off}' . $object;
+		//}
+		$object = HTMLHelper::_('content.prepare', $object);
 
-		Dispatcher::dispatchChangeText($object);
+		Factory::getApplication()->triggerEvent('onChangeText', array(&$object));
 	}
 }
+?>

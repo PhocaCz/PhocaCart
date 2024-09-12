@@ -56,7 +56,7 @@ class PhocaCartCpViewPhocacartPayments extends HtmlView
 		$class	= ucfirst($this->t['tasks']).'Helper';
 		$canDo	= $class::getActions($this->t, $state->get('filter.payment_id'));
 
-		ToolbarHelper::title( Text::_( $this->t['l'].'_PAYMENT_METHODS' ), 'credit' );
+		ToolbarHelper::title( Text::_( $this->t['l'].'_PAYMENT_METHODS' ), 'credit-card' );
 
 		if ($canDo->get('core.create')) {
 			ToolbarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');

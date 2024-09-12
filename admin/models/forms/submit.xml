@@ -86,7 +86,7 @@
                    cols="30" filter="string"/>
 
             <field name="delivery_date" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_PRODUCT_DELIVERY_DATE_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_DELIVERY_DATE_DESC"
-                   filter="user_utc" showtime="true" translateformat="true" />
+                   filter="user_utc" showtime="true" format="%Y-%m-%d %H:%M:%S" translateformat="true" />
 
 
             <field name="metatitle" type="text"

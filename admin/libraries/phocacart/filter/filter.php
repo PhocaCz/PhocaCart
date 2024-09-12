@@ -258,7 +258,8 @@ class PhocacartFilter
 
         $f['p'] = PhocacartParameter::getActiveParameterValues($pA, $this->ordering_parameter);
         $f['a'] = PhocacartAttribute::getActiveAttributeValues($aA, $this->ordering_attribute);
-        $f['s'] = PhocacartSpecification::getActiveSpecificationValues($sA, $this->ordering_specification);
+        $f['s'] = PhocacartSpecification::getActiveSpecificationValues($aA, $this->ordering_specification);
+
 
         return $f;
 
@@ -636,7 +637,7 @@ class PhocacartFilter
         // -ATTRIBUTES- AVAILABLE PRODUCTS ONLY - Yes
         if ($this->attributes) {
             /*phocacart import('phocacart.attribute.attribute');*/
-            $attributes = PhocacartAttribute::getAllAttributesAndOptions($this->ordering_attribute, $this->check_available_products, $language, $activeProductsAttributes, true);
+            $attributes = PhocacartAttribute::getAllAttributesAndOptions($this->ordering_attribute, $this->check_available_products, $language, $activeProductsAttributes);
 
             if (!empty($attributes)) {
                 foreach ($attributes as $k => $v) {

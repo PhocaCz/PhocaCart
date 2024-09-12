@@ -273,7 +273,7 @@ class PhocacartRegion
 		$imgObject = $db->loadObjectList();
 
 		if (!$db->query()) {
-			echo PhocacartUtilsException::renderErrorInfo($db->getError());
+			echo PhocacartUtilsException::renderErrorInfo($db->getErrorMsg());
 			return false;
 		}
 
@@ -311,7 +311,7 @@ class PhocacartRegion
 					$category = $db->loadObject();
 
 					if (!$db->query()) {
-						echo PhocacartUtilsException::renderErrorInfo($db->getError());
+						echo PhocacartUtilsException::renderErrorInfo($db->getErrorMsg());
 						return false;
 					}
 					if (isset($category->id) && isset($category->alias)) {

@@ -50,7 +50,7 @@ class PhocaCartCpViewPhocaCartHits extends HtmlView
         $user  = Factory::getUser();
         $bar   = Toolbar::getInstance('toolbar');
 
-        ToolbarHelper::title(Text::_($this->t['l'] . '_HITS'), 'mouse-pointer-highlighter');
+        ToolbarHelper::title(Text::_($this->t['l'] . '_HITS'), 'equalizer');
         /*if ($canDo->get('core.create')) {
             ToolbarHelper::addNew( $this->t['task'].'.add','JTOOLBAR_NEW');
 

@@ -80,7 +80,6 @@ class PhocaCartCpViewPhocaCartThumbA extends HtmlView
 			case 'gif':
 			case 'jpeg':
 			case 'webp':
-			case 'avif':
 				$thumbnail = PhocacartFileThumbnail::getOrCreateThumbnail($fileName, '', 1, 1, 1, 0, $manager);
 
 				//DO THUMBNAILS and return if true or false
@@ -100,7 +99,6 @@ class PhocaCartCpViewPhocaCartThumbA extends HtmlView
 
 
 		$msg = $string;
-
 		$response = array(
 		'status' => '1',
 		'error' => '',

@@ -7,14 +7,12 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-use Joomla\CMS\Session\Session;
 use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\Session\Session;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
-use Phoca\PhocaCart\Dispatcher\Dispatcher;
-use Phoca\PhocaCart\Event;
 
 class PhocaCartControllerCheckout extends FormController
 {
@@ -966,10 +964,11 @@ class PhocaCartControllerCheckout extends FormController
                 $paymentO       = $payment->getPaymentMethod((int)$paymentMethod['id']);
 
                 if (isset($paymentO->method)) {
+                    PluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($paymentO->method)));
+                    $eventData 					= array();
                     $proceed 					= '';
-                    Dispatcher::dispatch(new Event\Payment\BeforeEmptyCartAfterOrder($proceed, $pluginData, $pC, $paymentO->params, $order, [
-                      'pluginname' 	=> $paymentO->method,
-                    ]));
+                    $eventData['pluginname'] 	= htmlspecialchars(strip_tags($paymentO->method));
+                    Factory::getApplication()->triggerEvent('onPCPbeforeEmptyCartAfterOrder', array(&$proceed, &$pluginData, $pC, $paymentO->params, $order, $eventData));
                 }
             }
 

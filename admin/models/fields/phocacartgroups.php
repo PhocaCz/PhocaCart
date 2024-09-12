@@ -21,7 +21,7 @@ class JFormFieldPhocacartGroups extends ListField
 		if ($this->value) {
 			$data['value']      = $this->value;
 		} else {
-			$tableType	= (int)$this->element['table'];
+			$tableType	= (string)$this->element['table'];
 
 			switch($tableType) {
 				case 1:
@@ -33,21 +33,23 @@ class JFormFieldPhocacartGroups extends ListField
 					$id	= (int) $this->form->getValue('id');
 					break;
 			}
-			$activeGroups = [];
+			$activeGroups = array();
 
 
-			if ($id > 0) {
+			if ((int)$id > 0) {
 				$activeGroups	= PhocacartGroup::getGroupsById($id, $tableType, 1);
 			}
 
-			if (empty($activeGroups) && (string)$this->element['addempty'] !== 'false') {
+			if (empty($activeGroups)) {
 				$activeGroups	= PhocacartGroup::getDefaultGroup(1);
 			}
 
 			$data['value'] = $activeGroups;
 		}
 
-		return $this->getRenderer($this->layout)->render($data);
+    return $this->getRenderer($this->layout)->render($data);
+
+		//return PhocacartGroup::getAllGroupsSelectBox($this->name.'[]', $this->id, $activeGroups, NULL, 'id' );
 	}
 }
-
+?>

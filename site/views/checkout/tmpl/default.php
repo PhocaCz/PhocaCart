@@ -8,16 +8,20 @@
  */
 defined('_JEXEC') or die();
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use Phoca\PhocaCart\Dispatcher\Dispatcher;
-use Phoca\PhocaCart\Event;
+use Joomla\CMS\Plugin\PluginHelper;
 
+$pluginLayout 	= PluginHelper::importPlugin('pct');
 $classByTaxPlugin = '';
-$results = Dispatcher::dispatch(new Event\Tax\StartCheckoutView('com_phocacart.checkout', $this->data));
-if (!empty($results)) {
-	foreach ($results as $k => $v) {
-		if ($v != false && isset($v['checkout_class']) && $v['checkout_class'] != '') {
-			$classByTaxPlugin = ' '. $v['checkout_class'];
+if ($pluginLayout) {
+	$eventData	= [];
+	$results = Factory::getApplication()->triggerEvent('onPCTonStartCheckoutView', array('com_phocacart.checkout', &$this->data, $eventData));
+	if (!empty($results)) {
+		foreach ($results as $k => $v) {
+			if ($v != false && isset($v['checkout_class']) && $v['checkout_class'] != '') {
+				$classByTaxPlugin = ' '. $v['checkout_class'];
+			}
 		}
 	}
 }

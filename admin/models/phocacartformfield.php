@@ -162,8 +162,7 @@ class PhocaCartCpModelPhocaCartFormfield extends AdminModel
 							$db->setQuery($query11);
 
 							if (!$db->execute()){
-								//$this->setError($db->getErrorMsg());
-								throw new Exception('Database Error: Alter Phoca Cart User table', 500);
+								$this->setError($db->getErrorMsg());
 								return false;
 							}
 
@@ -177,8 +176,7 @@ class PhocaCartCpModelPhocaCartFormfield extends AdminModel
 							$query21 = 'ALTER TABLE #__phocacart_order_users ADD '.$db->quoteName($data['title']).' '.$type.'';
 							$db->setQuery($query21);
 							if (!$db->execute()){
-								//$this->setError($db->getErrorMsg());
-								throw new Exception('Database Error: Alter Phoca Cart Order User table', 500);
+								$this->setError($db->getErrorMsg());
 								return false;
 							}
 						}
@@ -247,8 +245,7 @@ class PhocaCartCpModelPhocaCartFormfield extends AdminModel
 				. ' WHERE id IN ( '.$cidsOK.' )';
 				$db->setQuery( $query2 );
 				if (!$db->execute()) {
-					//$this->setError($row->getError());
-					throw new Exception('Database Error: Delete items in form fields', 500);
+					$this->setError($row->getError());
 					return false;
 				};
 

@@ -8,14 +8,11 @@
  */
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Text;
 use Joomla\CMS\Session\Session;
 use Joomla\Utilities\ArrayHelper;
 
 defined('_JEXEC') or die();
-
 require_once JPATH_COMPONENT.'/controllers/phocacartcommons.php';
-
 class PhocaCartCpControllerPhocaCartCategories extends PhocaCartCpControllerPhocaCartCommons
 {
 
@@ -65,3 +62,4 @@ class PhocaCartCpControllerPhocaCartCategories extends PhocaCartCpControllerPhoc
 		$this->setRedirect('index.php?option=com_phocacart&view=phocacartcategories');
 	}
 }
+?>

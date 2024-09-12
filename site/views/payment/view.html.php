@@ -12,9 +12,6 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Language\Text;
-use Phoca\PhocaCart\Dispatcher\Dispatcher;
-use Phoca\PhocaCart\Event;
-
 jimport( 'joomla.application.component.view');
 class PhocaCartViewPayment extends HtmlView
 {
@@ -51,19 +48,23 @@ class PhocaCartViewPayment extends HtmlView
 			$o['total'] 	= $order->getItemTotal($id);
 
 
-			$form = '';
 			if (isset($o['common']->payment_id) && (int)$o['common']->payment_id > 0) {
 				$paymentO = $payment->getPaymentMethod((int)$o['common']->payment_id );
 
 				if (isset($paymentO->method)) {
-					Dispatcher::dispatch(new Event\Payment\BeforeSetPaymentForm($form, $this->p, $paymentO->params, $o, [
-						'pluginname' => $paymentO->method,
-					]));
+					//$dispatcher = J EventDispatcher::getInstance();
+					PluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($paymentO->method)));
+					$eventData 					= array();
+					$proceed 					= '';
+					$eventData['pluginname'] 	= htmlspecialchars(strip_tags($paymentO->method));
+					Factory::getApplication()->triggerEvent('onPCPbeforeSetPaymentForm', array(&$proceed, $this->p, $paymentO->params, $o, $eventData));
+
+
 				}
 			}
 
 			//$session->set('proceedpayment', array(), 'phocaCart');
-			$this->t['o'] = $form;
+			$this->t['o'] = $proceed;
 		} else {
 			// No order set, no payment - this should not happen but if, then just repeat thank you
 			//$this->t['o'] =  '<div>'.Text::_('COM_PHOCACART_ORDER_SUCCESSFULLY_PROCESSED').'</div>';

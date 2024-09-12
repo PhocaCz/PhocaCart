@@ -245,7 +245,6 @@ function phSetAttributeUrl(phSetValueByUser) {
 				if (jQuery(this).find(':selected').data('value-alias') !== undefined) {
 					valueAlias = jQuery(this).find(':selected').data('value-alias');
 					phHashNew = phHashNew + 'a[' + jQuery(this).data('alias') + ']=' + valueAlias;
-
 				}
 
 				// CHECKBOX
@@ -261,7 +260,6 @@ function phSetAttributeUrl(phSetValueByUser) {
 					if (valuesAlias != '') {
 						phHashNew = phHashNew + 'a[' + jQuery(this).data('alias') + ']=' + valuesAlias;
 					}
-
 				}
 			}
 
@@ -285,7 +283,6 @@ function phSetAttributeUrl(phSetValueByUser) {
 	if (phHashNew.lastIndexOf('&') == (phHashNew.length - 1)) {
 		phHashNew = phHashNew.slice(0, -1);
 	}
-
 	// Update URL after #
 	if (phSetValueByUser == 0 && phHashNew != '') {
 		phHashNew = '#' + phHashNew;
@@ -321,14 +318,7 @@ jQuery(document).ready(function() {
 
 		const phParams = Joomla.getOptions('phParamsPC');
 		if (phParams['dynamicChangePrice'] == 0 && phParams['dynamicChangeStock'] == 0 && phParams['dynamicChangeId'] == 0 && (phParams['dynamicChangeImage'] == 0 || phParams['dynamicChangeImage'] == 1)) {
-
-			// Interactive Change is disabled (ajax)
-			// But interactive URL change can be enabled
-			if (phParams['dynamicChangeUrlAttributes'] == 1) {
-				phSetAttributeUrl(1);
-			}
-
-			return false;
+			return false;// Interactive Change is disabled
 		}
 
 		//jQuery(this).off("change");';
@@ -395,14 +385,7 @@ jQuery(document).ready(function() {
 		const phParams = Joomla.getOptions('phParamsPC');
 
 		if (phParams['dynamicChangePrice'] == 0 && phParams['dynamicChangeStock'] == 0 && phParams['dynamicChangeId'] == 0 && (phParams['dynamicChangeImage'] == 0 || phParams['dynamicChangeImage'] == 1)) {
-
-			// Interactive Change is disabled (ajax)
-			// But interactive URL change can be enabled
-			if (phParams['dynamicChangeUrlAttributes'] == 1) {
-				phSetAttributeUrl(1);
-			}
-
-			return;
+			return;// Interactive Change is disabled
 		}
 
 		if (e.target.tagName.toUpperCase() === "LABEL") { return;}// Prevent from twice running

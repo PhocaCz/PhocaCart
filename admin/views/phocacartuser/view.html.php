@@ -70,7 +70,7 @@ class PhocaCartCpViewPhocacartUser extends HtmlView
 		$canDo		= $class::getActions($this->t, $this->state->get('filter.user_id'));
 
 		$text = $isNew ? Text::_( $this->t['l'] . '_NEW' ) : Text::_($this->t['l'] . '_EDIT');
-		ToolbarHelper::title(   Text::_( $this->t['l'] . '_CUSTOMER' ).': <small><small>[ ' . $text.' ]</small></small>' , 'users');
+		ToolbarHelper::title(   Text::_( $this->t['l'] . '_CUSTOMER' ).': <small><small>[ ' . $text.' ]</small></small>' , 'user');
 
 		// If not checked out, can save the item.
 		if (!$checkedOut && $canDo->get('core.edit')){

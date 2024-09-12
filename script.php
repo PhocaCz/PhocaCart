@@ -25,31 +25,9 @@ class com_phocacartInstallerScript
 	protected $extensiontext= 'COM_PHOCACART';
 	protected $configuretext= 'COM_PHOCACART_CONFIGURE';
 
-	private $enablePlugins = [
-		'plg_pcp_cash_on_delivery',
-		'plg_pcp_paypal_standard',
-		'plg_pcs_shipping_standard',
-		'plg_pcp_pos_cash',
-		'plg_system_phocacart',
-	];
-
-	private $createFolders = [
-		'images/phocacartcategories',
-		'images/phocacartproducts',
-		'phocacartdownload',
-		'phocacartdownloadpublic',
-		'phocacartattachment',
-		'plugins/pcs',
-		'plugins/pcs',
-		'plugins/pcs',
-		'plugins/pcs',
-		'plugins/pcs',
-		'plugins/pcs',
-	];
-
 	function createFolders() {
 
-        $folder[0][0]	=	'images/phocacartcategories' ;
+        $folder[0][0]	=	'images' . '/phocacartcategories' ;
         $folder[0][1]	= 	JPATH_ROOT . '/' . $folder[0][0];
 
         $folder[1][0]	=	'images' . '/phocacartproducts' ;
@@ -80,34 +58,42 @@ class com_phocacartInstallerScript
         $folder[9][1]	= 	JPATH_ROOT . '/' . $folder[9][0];
 
 		$msg = '';
-		foreach ($this->createFolders as $folder) {
-			if (!Folder::exists( JPATH_ROOT . '/' . $folder)) {
-				if (Folder::create( JPATH_ROOT . '/' . $folder )) {
+		foreach ($folder as $k => $v) {
+			if (!Folder::exists( $v[1])) {
+				if (Folder::create( $v[1], 0755 )) {
 					$data = "<html>\n<body bgcolor=\"#FFFFFF\">\n</body>\n</html>";
-					File::write(JPATH_ROOT . '/' . $folder . '/' . "index.html", $data);
-					$msg .= '<div><b><span style="color:#009933">Folder</span> ' . $folder
-						.' <span style="color:#009933">created!</span></b></div>';
+					File::write($v[1].'/'."index.html", $data);
+					$msg .= '<div><b><span style="color:#009933">Folder</span> ' . $v[0]
+						 .' <span style="color:#009933">created!</span></b></div>';
 				} else {
-					$msg .= '<div><b><span style="color:#CC0033">Folder</span> ' . $folder
-						.' <span style="color:#CC0033">creation failed!</span></b> Please create it manually.</div>';
+					$msg .= '<div><b><span style="color:#CC0033">Folder</span> ' . $v[0]
+						 .' <span style="color:#CC0033">creation failed!</span></b> Please create it manually.</div>';
 				}
 			} else {
 				// Folder exists
-				$msg .= '<div><b><span style="color:#009933">Folder</span> ' . $folder
-					.' <span style="color:#009933">exists!</span></b></div>';
+				$msg .= '<div><b><span style="color:#009933">Folder</span> ' . $v[0]
+					 .' <span style="color:#009933">exists!</span></b></div>';
 			}
 		}
-
 		return $msg;
 	}
 
 	function enablePlugins() {
+
         // Enable plugins
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $query->update('#__extensions');
         $query->set($db->quoteName('enabled') . ' = 1');
-        $query->whereIn($db->quoteName('name'), $this->enablePlugins, \Joomla\Database\ParameterType::STRING);
+        $query->where(
+            '(' . $db->quoteName('name') . ' = ' . $db->quote('plg_pcp_cash_on_delivery')
+            . ' OR '
+            . $db->quoteName('name') . ' = ' . $db->quote('plg_pcp_paypal_standard')
+            . ' OR '
+            . $db->quoteName('name') . ' = ' . $db->quote('plg_pcs_shipping_standard')
+            . ' OR '
+            . $db->quoteName('name') . ' = ' . $db->quote('plg_pcp_pos_cash')
+            . ')');
         $query->where($db->quoteName('type') . ' = ' . $db->quote('plugin'));
         $db->setQuery($query);
         $db->execute();
@@ -121,12 +107,13 @@ class com_phocacartInstallerScript
 		Factory::getApplication()->enqueueMessage($msg, 'message');
 		return true;
 	}
-
 	function uninstall($parent) {
+		//$this->loadLanguage($parent);
 		return true;
 	}
 
 	function update($parent) {
+		//$this->loadLanguage($parent);
 		$msg = $this->createFolders();
 		Factory::getApplication()->enqueueMessage($msg, 'message');
 		return true;
@@ -223,15 +210,6 @@ class com_phocacartInstallerScript
 
             $pathImg = 'media/com_phocacart/images/administrator/';
 
-            $o .= '<div class="phTemplateItemsInfo">'.Text::_('COM_PHOCACART_ADMIN_BOOK_INFO1'). '</div>';
-
-            $o .= '<div class="phTemplateItems">';
-
-            $o .= '<div class="phTemplateItem"><a href="https://www.phoca.cz/books/1317-phoca-cart-user-manual" target="_blank">'.HTMLHelper::_('image', $pathImg . 'book-phoca-cart-user-manual.webp', 'Phoca Cart - User Manual ' ) .'</a><div class="phTemplateItemTitle">Phoca Cart - User Manual </div></div>';
-            $o .= '<div class="phTemplateItem"><a href="https://www.phoca.cz/books/1318-creating-an-e-commerce-website-using-joomla-and-phoca-cart" target="_blank">'.HTMLHelper::_('image', $pathImg . 'book-phoca-cart-ecommerce-website.webp', 'Creating an E-Commerce Website Using Joomla! and Phoca Cart' ) .'</a><div class="phTemplateItemTitle">Creating an E-Commerce Website Using Joomla! and Phoca Cart</div></div>';
-
-            $o .= '</div>';
-
             $o .= '<div class="phTemplateItemsBox">';
             $o .= '<div class="phTemplateItemsInfo">'.Text::_('COM_PHOCACART_ADMIN_TEMPLATE_INFO1'). '</div>';
 
@@ -239,19 +217,13 @@ class com_phocacartInstallerScript
 
             $o .= '<div class="phTemplateItems">';
 
-$o .= '<div class="phTemplateItem"><a href="https://www.phoca.cz/phocacart-extensions/3-templates" target="_blank">'.HTMLHelper::_('image', $pathImg . 'thumb-template-toys.webp', 'Phoca Cart - Cassiopeia - Toys Child Template' ) .'</a><div class="phTemplateItemTitle">Cassiopeia Child Template - Phoca Cart <b>Toys</b></div></div>';
+            $o .= '<div class="phTemplateItem"><a href="https://www.phoca.cz/phocacart-extensions/3-templates" target="_blank">'.HTMLHelper::_('image', $pathImg . 'thumb-template-fashion.jpg', 'Phoca Cart - Cassiopeia - Fashion Child Template' ) .'</a><div class="phTemplateItemTitle">Cassiopeia Child Template - Phoca Cart <b>Fashion</b></div></div>';
 
-$o .= '<div class="phTemplateItem"><a href="https://www.phoca.cz/phocacart-extensions/3-templates" target="_blank">'.HTMLHelper::_('image', $pathImg . 'thumb-template-tools.webp', 'Phoca Cart - Cassiopeia - Tools Child Template' ) .'</a><div class="phTemplateItemTitle">Cassiopeia Child Template - Phoca Cart <b>Tools</b></div></div>';
+            $o .= '<div class="phTemplateItem"><a href="https://www.phoca.cz/phocacart-extensions/3-templates" target="_blank">'.HTMLHelper::_('image', $pathImg . 'thumb-template-food.jpg', 'Phoca Cart - Cassiopeia - Food Child Template' ) .'</a><div class="phTemplateItemTitle">Cassiopeia Child Template - Phoca Cart <b>Food</b></div></div>';
 
-$o .= '<div class="phTemplateItem"><a href="https://www.phoca.cz/phocacart-extensions/3-templates" target="_blank">'.HTMLHelper::_('image', $pathImg . 'thumb-template-furniture.webp', 'Phoca Cart - Cassiopeia - Furniture Child Template' ) .'</a><div class="phTemplateItemTitle">Cassiopeia Child Template - Phoca Cart <b>Furniture</b></div></div>';
+            $o .= '<div class="phTemplateItem"><a href="https://www.phoca.cz/phocacart-extensions/3-templates" target="_blank">'.HTMLHelper::_('image', $pathImg . 'thumb-template-furniture.jpg', 'Phoca Cart - Cassiopeia - Furniture Child Template' ) .'</a><div class="phTemplateItemTitle">Cassiopeia Child Template - Phoca Cart <b>Furniture</b></div></div>';
 
-$o .= '<div class="phTemplateItem"><a href="https://www.phoca.cz/phocacart-extensions/3-templates" target="_blank">'.HTMLHelper::_('image', $pathImg . 'thumb-template-beauty.webp', 'Phoca Cart - Cassiopeia - Beauty Child Template' ) .'</a><div class="phTemplateItemTitle">Cassiopeia Child Template - Phoca Cart <b>Beauty</b></div></div>';
-
-$o .= '<div class="phTemplateItem"><a href="https://www.phoca.cz/phocacart-extensions/3-templates" target="_blank">'.HTMLHelper::_('image', $pathImg . 'thumb-template-fashion.webp', 'Phoca Cart - Cassiopeia - Fashion Child Template' ) .'</a><div class="phTemplateItemTitle">Cassiopeia Child Template - Phoca Cart <b>Fashion</b></div></div>';
-
-            $o .= '<div class="phTemplateItem"><a href="https://www.phoca.cz/phocacart-extensions/3-templates" target="_blank">'.HTMLHelper::_('image', $pathImg . 'thumb-template-food.webp', 'Phoca Cart - Cassiopeia - Food Child Template' ) .'</a><div class="phTemplateItemTitle">Cassiopeia Child Template - Phoca Cart <b>Food</b></div></div>';
-
-$o .= '</div>';
+            $o .= '</div>';
 
 
             $o .= '<div class="phTemplateItemsInfo">'.Text::_('COM_PHOCACART_ADMIN_TEMPLATE_INFO3'). '</div>';

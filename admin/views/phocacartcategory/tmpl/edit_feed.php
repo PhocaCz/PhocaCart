@@ -8,11 +8,10 @@
  */
 defined('_JEXEC') or die();
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\PluginHelper;
-use Phoca\PhocaCart\Dispatcher\Dispatcher;
-use Phoca\PhocaCart\Event;
 
 $fieldSets = $this->form->getFieldsets();
 
@@ -38,7 +37,7 @@ foreach($fieldSets as $name => $fieldSet) {
                     $subform  = $field->loadSubform();          // e.g. zbozi_cz
                     $nameFeed = str_replace('feed_', '', $name);// we have created dynamically the field as feed_zbozi_cz to differentiate from other fields, now return back to plugin name
 
-                    Dispatcher::dispatch(new Event\Feed\Category\BeforeRender('com_phocacart.category', $nameFeed, $subform));
+                    Factory::getApplication()->triggerEvent('onPCFonCategoryBeforeRender', array('com_phocacart.category', $nameFeed, &$subform));
 
                     if (isset($this->item->params_feed[$nameFeed])) {
                         $subform->bind($this->item->params_feed[$nameFeed]);// bind the data from $this->item->param_feed['zbozi_cz'] to the subform

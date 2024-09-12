@@ -45,14 +45,9 @@ class JFormFieldPhocaCouponProduct extends FormField
 
 		$document = Factory::getDocument();
 		HTMLHelper::_('jquery.framework', false);
-		$app = Factory::getApplication();
-		$wa = $app->getDocument()->getWebAssetManager();
-		$wa->registerAndUseScript('com_phocacart.select2', 'media/com_phocacart/js/administrator/select2/select2.js', ['version' => 'auto']);
-		$wa->registerAndUseScript('com_phocacart.phocaselect2', 'media/com_phocacart/js/phoca/jquery.phocaselect2.js', ['version' => 'auto']);
-		$wa->registerAndUseStyle('com_phocacart.select2', 'media/com_phocacart/js/administrator/select2/select2.css', ['version' => 'auto']);
-		///HTMLHelper::_('script', 'media/com_phocacart/js/administrator/select2/select2.js', array('version' => 'auto'));
-		///HTMLHelper::_('script', 'media/com_phocacart/js/phoca/jquery.phocaselect2.js', array('version' => 'auto'));
-		///HTMLHelper::_('stylesheet', 'media/com_phocacart/js/administrator/select2/select2.css', array('version' => 'auto'));
+		HTMLHelper::_('script', 'media/com_phocacart/js/administrator/select2/select2.js', array('version' => 'auto'));
+		HTMLHelper::_('script', 'media/com_phocacart/js/phoca/jquery.phocaselect2.js', array('version' => 'auto'));
+		HTMLHelper::_('stylesheet', 'media/com_phocacart/js/administrator/select2/select2.css', array('version' => 'auto'));
 
 		$document->addScriptOptions('phLang', array(
 			'COM_PHOCACART_NO_MATCHES_FOUND' => Text::_('COM_PHOCACART_NO_MATCHES_FOUND'),

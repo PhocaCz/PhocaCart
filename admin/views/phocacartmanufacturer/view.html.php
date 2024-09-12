@@ -9,12 +9,13 @@
 defined('_JEXEC') or die();
 
 use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Language\Associations;
 use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Toolbar\ToolbarHelper;
-use Phoca\PhocaCart\I18n\I18nHelper;
+jimport( 'joomla.application.component.view' );
 
 class PhocaCartCpViewPhocacartManufacturer extends HtmlView
 {
@@ -59,7 +60,7 @@ class PhocaCartCpViewPhocacartManufacturer extends HtmlView
 		$canDo		= $class::getActions($this->t, $this->state->get('filter.manufacturer_id'));
 
 		$text = $isNew ? Text::_( $this->t['l'] . '_NEW' ) : Text::_($this->t['l'] . '_EDIT');
-		ToolbarHelper::title(   Text::_( $this->t['l'] . '_MANUFACTURER' ).': <small><small>[ ' . $text.' ]</small></small>' , 'wrench');
+		ToolbarHelper::title(   Text::_( $this->t['l'] . '_MANUFACTURER' ).': <small><small>[ ' . $text.' ]</small></small>' , 'home');
 
 		// If not checked out, can save the item.
 		if (!$checkedOut && $canDo->get('core.edit')){
@@ -75,12 +76,11 @@ class PhocaCartCpViewPhocacartManufacturer extends HtmlView
 			ToolbarHelper::cancel($this->t['task'].'.cancel', 'JTOOLBAR_CLOSE');
 		}
 
-		if (!$isNew && I18nHelper::associationsEnabled() && ComponentHelper::isEnabled('com_associations')) {
+		if (!$isNew && Associations::isEnabled() && ComponentHelper::isEnabled('com_associations')) {
 			ToolbarHelper::custom($this->t['task'] . '.editAssociations', 'contract', 'contract', 'JTOOLBAR_ASSOCIATIONS', false, false);
 		}
 
 		ToolbarHelper::divider();
-        ToolbarHelper::inlinehelp();
-		ToolbarHelper::help( 'screen.'.$this->t['c'], true);
+		ToolbarHelper::help( 'screen.'.$this->t['c'], true );
 	}
 }

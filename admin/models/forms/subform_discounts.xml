@@ -8,7 +8,7 @@
 
 <field name="alias" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" />
 
-<field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" description="JFIELD_ACCESS_DESC"  size="1"/>
+<field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" description="JFIELD_ACCESS_DESC" class="form-control" size="1"/>
 
 <field name="discount" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_DISCOUNT_LABEL"  />
 

@@ -7,9 +7,9 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
-use Phoca\PhocaCart\Dispatcher\Dispatcher;
-use Phoca\PhocaCart\Event;
+use Joomla\CMS\Plugin\PluginHelper;
 
 defined('_JEXEC') or die();
 use Joomla\CMS\Language\Text;
@@ -23,16 +23,25 @@ if ( $this->t['info_view_description'] != '') {
 
 
 // Run view event, for conversions
-$results = Dispatcher::dispatch(new Event\View\Info\DisplayContent('com_phocacart.info', $this->t['infodata'], $this->t['infoaction']));
-if (!empty($results)) {
-	foreach ($results as $k => $v) {
-		if ($v != false && isset($v['content']) && $v['content'] != '') {
-			echo '<div class="ph-info-view-content">'.$v['content'].'</div>';
+$pluginView = PluginHelper::importPlugin('pcv');
+if ($pluginView) {
+	$eventData               = array();
+	$results = Factory::getApplication()->triggerEvent('onPCVonInfoViewDisplayContent', array('com_phocacart.info', &$this->t['infodata'], &$this->t['infoaction'], $eventData));
+	if (!empty($results)) {
+		foreach ($results as $k => $v) {
+			if ($v != false && isset($v['content']) && $v['content'] != '') {
+				echo '<div class="ph-info-view-content">'.$v['content'].'</div>';
+			}
 		}
 	}
 }
 
+
+
+
+
 switch($this->t['infoaction']) {
+
 	case 1:
 		// ORDER PROCESSED - STANDARD PRODUCTS (ORDER/NO DOWNLOAD)
 		echo $this->loadTemplate('order_nodownload');
@@ -57,6 +66,7 @@ switch($this->t['infoaction']) {
 		// PAYMENT CANCELED
 		echo $this->loadTemplate('payment_canceled');
 	break;
+
 }
 
 // Display Shipping Method Info Description
@@ -64,10 +74,6 @@ if (isset($this->t['infodata']['shipping_id']) && (int)$this->t['infodata']['shi
 
     $shippingDescription = PhocacartShipping::getInfoDescriptionById((int)$this->t['infodata']['shipping_id']);
     if ($shippingDescription != '') {
-
-        if ($this->t['preparereplace']) {
-            $shippingDescription = PhocacartText::completeText($shippingDescription, $this->t['preparereplace'], 1);
-        }
         echo '<div class="ph-info-shipping-description">'.HTMLHelper::_('content.prepare', $shippingDescription).'</div>';
     }
 
@@ -75,14 +81,21 @@ if (isset($this->t['infodata']['shipping_id']) && (int)$this->t['infodata']['shi
 
 // Run shipping method event
 if (isset($this->t['infodata']['shipping_method']) && $this->t['infodata']['shipping_method'] != '') {
-	$results = Dispatcher::dispatch(new Event\Shipping\InfoViewDisplayContent($this->t['infodata'], [
-		'pluginname' => $this->t['infodata']['shipping_method'],
-	]));
+	$pluginView = PluginHelper::importPlugin('pcs');
+	if ($pluginView) {
 
-	if (!empty($results)) {
-		foreach ($results as $k => $v) {
-			if ($v != false && isset($v['content']) && $v['content'] != '') {
-				echo '<div class="ph-info-shipping-content">'.$v['content'].'</div>';
+		PluginHelper::importPlugin('pcs', htmlspecialchars(strip_tags($this->t['infodata']['shipping_method'])));
+		$eventData               = array();
+		$eventData['pluginname'] = htmlspecialchars(strip_tags($this->t['infodata']['shipping_method']));
+		$results = Factory::getApplication()->triggerEvent('onPCSonInfoViewDisplayContent', array($this->t['infodata'], $eventData));
+		/*if (isset($results[0]['content']) && $results[0]['content'] != '') {
+			echo '<div class="ph-info-shipping-content">'.$results[0]['content'].'</div>';
+		}*/
+		if (!empty($results)) {
+			foreach ($results as $k => $v) {
+				if ($v != false && isset($v['content']) && $v['content'] != '') {
+					echo '<div class="ph-info-shipping-content">'.$v['content'].'</div>';
+				}
 			}
 		}
 	}
@@ -90,27 +103,32 @@ if (isset($this->t['infodata']['shipping_method']) && $this->t['infodata']['ship
 
 // Display Payment Method Info Description
 if (isset($this->t['infodata']['payment_id']) && (int)$this->t['infodata']['payment_id'] > 0) {
+
     $paymentDescription = PhocacartPayment::getInfoDescriptionById((int)$this->t['infodata']['payment_id']);
     if ($paymentDescription != '') {
-
-        if ($this->t['preparereplace']) {
-            $paymentDescription = PhocacartText::completeText($paymentDescription, $this->t['preparereplace'], 1);
-        }
-
         echo '<div class="ph-info-payment-description">'.HTMLHelper::_('content.prepare', $paymentDescription).'</div>';
     }
+
 }
 
 // Run payment method event
 if (isset($this->t['infodata']['payment_method']) && $this->t['infodata']['payment_method'] != '') {
-	$results = Dispatcher::dispatch(new Event\Payment\InfoViewDisplayContent($this->t['infodata'], [
-		'pluginname' => $this->t['infodata']['payment_method'],
-	]));
+	$pluginPayment = PluginHelper::importPlugin('pcp');
+	if ($pluginPayment) {
 
-	if (!empty($results)) {
-		foreach ($results as $k => $v) {
-			if ($v != false && isset($v['content']) && $v['content'] != '') {
-				echo '<div class="ph-info-payment-content">'.$v['content'].'</div>';
+
+
+		PluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($this->t['infodata']['payment_method'])));
+		$eventData               = array();
+		$eventData['pluginname'] = htmlspecialchars(strip_tags($this->t['infodata']['payment_method']));
+
+		$results = Factory::getApplication()->triggerEvent('onPCPonInfoViewDisplayContent', array($this->t['infodata'], $eventData));
+
+		if (!empty($results)) {
+			foreach ($results as $k => $v) {
+				if ($v != false && isset($v['content']) && $v['content'] != '') {
+					echo '<div class="ph-info-payment-content">'.$v['content'].'</div>';
+				}
 			}
 		}
 	}
@@ -119,3 +137,4 @@ if (isset($this->t['infodata']['payment_method']) && $this->t['infodata']['payme
 echo '</div>';// end ph-pc-info-box
 echo '<div>&nbsp;</div>';
 echo PhocacartUtilsInfo::getInfo();
+?>

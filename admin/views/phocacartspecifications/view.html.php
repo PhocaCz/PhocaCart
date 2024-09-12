@@ -56,7 +56,7 @@ class PhocaCartCpViewPhocacartSpecifications extends HtmlView
 		$class	= ucfirst($this->t['tasks']).'Helper';
 		$canDo	= $class::getActions($this->t, $state->get('filter.specification_id'));
 
-		ToolbarHelper::title( Text::_( $this->t['l'].'_SPECIFICATION_GROUPS' ), 'equalizer' );
+		ToolbarHelper::title( Text::_( $this->t['l'].'_SPECIFICATION_GROUPS' ), 'list' );
 
 		if ($canDo->get('core.create')) {
 			ToolbarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');

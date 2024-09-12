@@ -38,14 +38,12 @@
 
 		<field name="hide_categories" type="phocacartcategory" section="com_phocacart" showon="show_categories:1" default="0" label="COM_PHOCACART_FIELD_HIDE_CATEGORIES_LABEL" description="COM_PHOCACART_FIELD_HIDE_CATEGORIES_DESC" multiple="true" />
 
-		<field name="show_pagination" type="radio"  default="" filter="integer" label="COM_PHOCACART_FIELD_SHOW_PAGINATION_LABEL" description="COM_PHOCACART_FIELD_SHOW_PAGINATION_DESC">
-			<option value="">JGLOBAL_USE_GLOBAL</option>
+		<field name="show_pagination" type="radio" layout="joomla.form.field.radio.switcher" default="1" filter="integer" label="COM_PHOCACART_FIELD_SHOW_PAGINATION_LABEL" description="COM_PHOCACART_FIELD_SHOW_PAGINATION_DESC">
 			<option value="0">COM_PHOCACART_HIDE</option>
 			<option value="1">COM_PHOCACART_DISPLAY</option>
 		</field>
 
-		<field name="show_pagination_top" type="radio"  default="" filter="integer" label="COM_PHOCACART_FIELD_SHOW_PAGINATION_TOP_LABEL" description="COM_PHOCACART_FIELD_SHOW_PAGINATION_TOP_DESC">
-			<option value="">JGLOBAL_USE_GLOBAL</option>
+		<field name="show_pagination_top" type="radio" layout="joomla.form.field.radio.switcher" default="1" filter="integer" label="COM_PHOCACART_FIELD_SHOW_PAGINATION_TOP_LABEL" description="COM_PHOCACART_FIELD_SHOW_PAGINATION_TOP_DESC">
 			<option value="0">COM_PHOCACART_HIDE</option>
 			<option value="1">COM_PHOCACART_DISPLAY</option>
 		</field>

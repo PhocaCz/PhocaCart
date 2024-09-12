@@ -523,12 +523,9 @@ if($xml) {
 
 
 				// correct simple xml
-				foreach($data as $k2 => $v2) {
-
-					if (!isset($v2)) {
-						$data[$k2] = '';
-					} else if (is_array($v2) && empty($v2)) {
-						$data[$k2] = '';
+				foreach($data as $k => $v) {
+					if (empty($v)) {
+						$data[$k] = '';
 					}
 				}
 				$a[] = $data;

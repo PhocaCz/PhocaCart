@@ -11,7 +11,6 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Factory;
-use Joomla\Registry\Registry;
 
 
 //=========
@@ -306,13 +305,9 @@ class PhocacartUtilsSettings
 
 	public static function isFullGroupBy() {
 
-		/*$pC							= PhocacartUtils::getComponentParameters();
+		$pC							= PhocacartUtils::getComponentParameters();
 		$sql_only_full_group_by		= $pC->get( 'sql_only_full_group_by', 0 );
-		return (bool)$sql_only_full_group_by;*/
-
-        // Joomla does not require full group by now
-        // This can be enabled in future but then all SQL Queries must be revised
-        return false;
+		return (bool)$sql_only_full_group_by;
 	}
 
 	public static function getShopType() {
@@ -369,65 +364,43 @@ class PhocacartUtilsSettings
 	}
 
 
-	public static function getOrderStatusClass($status, string $extraClass = '') {
-	    $status = str_replace('COM_PHOCACART_STATUS_', '', $status ?? '');
+	public static function getOrderStatusClass($status) {
+
+
+	    $status = str_replace('COM_PHOCACART_STATUS_', '', $status);
+
 
         switch ($status) {
             case 'CANCELED':
-                $class = 'badge bg-warning ph-order-status-canceled';
-                break;
+                $class = 'label label-warning badge bg-warning ph-order-status-canceled';
+            break;
 
             case 'COMPLETED':
-                $class = 'badge bg-success ph-order-status-completed';
-                break;
+                $class = 'label label-success badge bg-success ph-order-status-completed';
+            break;
 
             case 'CONFIRMED':
-                $class = 'badge bg-success ph-order-status-confirmed';
-                break;
+                $class = 'label label-success badge bg-success ph-order-status-confirmed';
+            break;
 
             case 'PENDING':
-                $class = 'badge bg-info ph-order-status-pending';
-                break;
+                $class = 'label label-info badge bg-info label-primary ph-order-status-pending';
+            break;
 
             case 'REFUNDED':
-                $class = 'badge bg-danger ph-order-status-refunded';
-                break;
+                $class = 'label label-important label-danger badge bg-danger ph-order-status-refunded';
+            break;
 
             case 'SHIPPED':
-                $class = 'badge bg-info ph-order-status-shipped';
-                break;
+                $class = 'label label-info badge bg-info ph-order-status-shipped';
+            break;
 
-			default:
-                $class = 'badge bg-secondary ph-order-status-default';
-                break;
+            default:
+                $class = 'label label-default ph-order-status-default';
+            break;
+
         }
-
-		if ($extraClass) {
-			$class .= ' ' . $extraClass;
-		}
         return $class;
     }
-
-	public static function getOrderStatusBadge($title, $params, string $extraClass = '') {
-		$params = new Registry($params);
-
-		$statusClass = PhocacartUtilsSettings::getOrderStatusClass($title, $params->get('class') . ' ' . $extraClass);
-
-		$style = '';
-		if ($params->get('background')) {
-			$style .= 'background: ' . $params->get('background') . ' !important;';
-		}
-
-		if ($params->get('foreground')) {
-			$style .= 'color: ' . $params->get('foreground') . ' !important;';
-		}
-
-		if ($style) {
-			$style = ' style="' . $style . '"';
-		}
-
-		return '<span class="' . $statusClass . '"' . $style . '>' . Text::_($title) . '</span>';
-	}
-
 }
-
+?>

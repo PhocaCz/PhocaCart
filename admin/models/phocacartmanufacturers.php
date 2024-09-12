@@ -10,13 +10,12 @@ defined( '_JEXEC' ) or die();
 
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Factory;
-use Phoca\PhocaCart\I18n\I18nHelper;
-use Phoca\PhocaCart\I18n\I18nListModelTrait;
+use Joomla\CMS\Language\Associations;
+
+jimport('joomla.application.component.modellist');
 
 class PhocaCartCpModelPhocacartManufacturers extends ListModel
 {
-    use I18nListModelTrait;
-
 	protected $option 	= 'com_phocacart';
 
 	public function __construct($config = array()) {
@@ -35,7 +34,7 @@ class PhocaCartCpModelPhocacartManufacturers extends ListModel
 		}
 
 		// ASSOCIATION
-		if (I18nHelper::associationsEnabled()){
+		if (Associations::isEnabled()){
 			$config['filter_fields'][] = 'association';
 		}
 
@@ -119,7 +118,7 @@ class PhocaCartCpModelPhocacartManufacturers extends ListModel
 		$query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
 
 
-		if (I18nHelper::associationsEnabled()) {
+		if (Associations::isEnabled()) {
 			$subQuery = $db->getQuery(true)
 				->select('COUNT(' . $db->quoteName('asso2.id') . ')')
 				->from($db->quoteName('#__associations', 'asso'))

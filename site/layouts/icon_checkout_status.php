@@ -25,7 +25,7 @@ if ($d['type'] == 1) {
 } else {
 
 ?><div class="<?php echo $d['s']['c']['pull-right'] ?> ph-checkout-icon-spec-box">
-	<?php echo PhocacartRenderIcon::icon($d['class']); ?>
+	<span class="<?php echo $d['class']; ?>"></span>
 </div><?php
 
 }

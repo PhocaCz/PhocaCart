@@ -18,9 +18,6 @@ use Joomla\Registry\Registry;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
-use Phoca\PhocaCart\Dispatcher\Dispatcher;
-use Phoca\PhocaCart\Event;
-use Phoca\PhocaCart\I18n\I18nHelper;
 
 class PhocacartShipping
 {
@@ -44,8 +41,10 @@ class PhocacartShipping
 	 */
 
 	public function getPossibleShippingMethods($amountNetto, $amountBrutto, $quantity, $country, $region, $zip, $weight, $length, $width, $height, $id = 0, $selected = 0) {
-		$paramsC = PhocacartUtils::getComponentParameters();
-		$shipping_amount_rule = $paramsC->get( 'shipping_amount_rule', 0 );
+
+		$app			= Factory::getApplication();
+		$paramsC 		= PhocacartUtils::getComponentParameters();
+		$shipping_amount_rule	= $paramsC->get( 'shipping_amount_rule', 0 );
 
 		$user 			= PhocacartUser::getUser();
 		$userLevels		= implode (',', $user->getAuthorisedViewLevels());
@@ -73,37 +72,23 @@ class PhocacartShipping
 
 		}
 
-		$columns = 's.id, s.tax_id, s.cost, s.cost_additional, s.calculation_type, s.image, s.access, s.method, s.zip,'
-			. ' s.active_amount, s.active_quantity, s.active_zone, s.active_country, s.active_region, s.active_zip,'
-			. ' s.active_weight, s.active_size,'
-			. ' s.lowest_amount, s.highest_amount, s.minimal_quantity, s.maximal_quantity, s.lowest_weight,'
-			. ' s.highest_weight, s.default,'
-			. ' s.minimal_length, s.minimal_width, s.minimal_height, s.maximal_length, s.maximal_width, s.maximal_height, s.params,'
-			. ' t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.tax_hide as taxhide,'
-			. ' GROUP_CONCAT(DISTINCT r.region_id) AS region,'
-			. ' GROUP_CONCAT(DISTINCT c.country_id) AS country,'
-			. ' GROUP_CONCAT(DISTINCT z.zone_id) AS zone';
-
-		$groupsFull = 's.id, s.tax_id, s.cost, s.cost_additional, s.calculation_type, s.image, s.access, s.method, s.zip,'
-			. ' s.active_amount, s.active_quantity, s.active_zone, s.active_country, s.active_region, s.active_zip,'
-			. ' s.active_weight, s.active_size,'
-			. ' s.lowest_amount, s.highest_amount, s.minimal_quantity, s.maximal_quantity, s.lowest_weight,'
-			. ' s.minimal_length, s.minimal_width, s.minimal_height, s.maximal_length, s.maximal_width, s.maximal_height, s.params,'
-			. ' s.highest_weight, s.default,'
-			. ' t.id, t.title, t.tax_rate, t.calculation_type, t.tax_hide as taxhide';
-
-		/*if (I18nHelper::useI18n()) {
-			$columns .= ', coalesce(i18n_s.title, s.title) as title, coalesce(i18n_s.description, s.description) as description';
-			$groupsFull .= ', coalesce(i18n_s.title, s.title), coalesce(i18n_s.description, s.description)';
-		} else {
-			$columns .= ', s.title, s.description';
-			$groupsFull .= ', s.title, s.description';
-		}*/
-
-		$columns .= I18nHelper::sqlCoalesce(['title', 'description'], 's', '', '', ',');
-		$columns .= I18nHelper::sqlCoalesce(['title'], 't', 'tax', '', ',');
-
-		$groupsFull .= ', s.title, s.description';
+		$columns		= 's.id, s.tax_id, s.cost, s.cost_additional, s.calculation_type, s.title, s.description, s.image, s.access, s.method, s.zip,'
+		.' s.active_amount, s.active_quantity, s.active_zone, s.active_country, s.active_region, s.active_zip,'
+		.' s.active_weight, s.active_size,'
+		.' s.lowest_amount, s.highest_amount, s.minimal_quantity, s.maximal_quantity, s.lowest_weight,'
+		.' s.highest_weight, s.default,'
+		.' s.minimal_length, s.minimal_width, s.minimal_height, s.maximal_length, s.maximal_width, s.maximal_height, s.params,'
+		.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.tax_hide as taxhide,'
+		.' GROUP_CONCAT(DISTINCT r.region_id) AS region,'
+		.' GROUP_CONCAT(DISTINCT c.country_id) AS country,'
+		.' GROUP_CONCAT(DISTINCT z.zone_id) AS zone';
+		$groupsFull		= 's.id, s.tax_id, s.cost, s.cost_additional, s.calculation_type, s.title, s.description, s.image, s.access, s.method, s.zip,'
+		.' s.active_amount, s.active_quantity, s.active_zone, s.active_country, s.active_region, s.active_zip,'
+		.' s.active_weight, s.active_size,'
+		.' s.lowest_amount, s.highest_amount, s.minimal_quantity, s.maximal_quantity, s.lowest_weight,'
+		.' s.minimal_length, s.minimal_width, s.minimal_height, s.maximal_length, s.maximal_width, s.maximal_height, s.params,'
+		.' s.highest_weight, s.default,'
+		.' t.id, t.title, t.tax_rate, t.calculation_type, t.tax_hide as taxhide';
 		$groupsFast		= 's.id';
 		$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
 
@@ -113,12 +98,10 @@ class PhocacartShipping
 
 		$query = ' SELECT '.$columns
 				.' FROM #__phocacart_shipping_methods AS s'
-				. I18nHelper::sqlJoin('#__phocacart_shipping_methods_i18n', 's')
 				.' LEFT JOIN #__phocacart_shipping_method_regions AS r ON r.shipping_id = s.id'
 				.' LEFT JOIN #__phocacart_shipping_method_countries AS c ON c.shipping_id = s.id'
 				.' LEFT JOIN #__phocacart_shipping_method_zones AS z ON z.shipping_id = s.id'
 				.' LEFT JOIN #__phocacart_taxes AS t ON t.id = s.tax_id'
-				. I18nHelper::sqlJoin('#__phocacart_taxes_i18n', 't')
 				.' LEFT JOIN #__phocacart_item_groups AS ga ON s.id = ga.item_id AND ga.type = 7'// type 8 is payment
 				. $where
 				. ' GROUP BY '.$groups
@@ -305,14 +288,22 @@ class PhocacartShipping
 					}
 				} else {
 					// Shipping is active but shipping method plugin can deactivate it
-					$active = true;
-					Dispatcher::dispatch(new Event\Shipping\BeforeShowPossibleShippingMethod($active, $v, [
-						'pluginname' => $v->method,
-					]));
+					$pluginShipping 	= PluginHelper::importPlugin('pcs');
+					if ($pluginShipping) {
 
-					if (!$active && isset($shippings[$i])) {
-						unset($shippings[$i]);
+						PluginHelper::importPlugin('pcs', htmlspecialchars(strip_tags($v->method)));
+						$eventData 					= array();
+                    	$active 					= true;
+						$eventData['pluginname'] 	= htmlspecialchars(strip_tags($v->method));
+                    	Factory::getApplication()->triggerEvent('onPCSbeforeShowPossibleShippingMethod', array(&$active, $v, $eventData));
+
+                    	if ($active == false) {
+                    		if (isset($shippings[$i])) {
+								unset($shippings[$i]);
+							}
+						}
 					}
+
 				}
 
 				// Try to set default for frontend form
@@ -412,7 +403,7 @@ class PhocacartShipping
 			$region = (int)$dataAddress['bregion'];
 		}*/
 
-		$shippingMethods	= $this->getPossibleShippingMethods($totalFinal['subtotalnetto'], $totalFinal['subtotalbrutto'], $totalFinal['quantity'], $country, $region, $zip, $totalFinal['weight'], $totalFinal['length'], $totalFinal['width'], $totalFinal['height'], $selectedShippingId, $selected);
+		$shippingMethods	= $this->getPossibleShippingMethods($totalFinal['netto'], $totalFinal['brutto'], $totalFinal['quantity'], $country, $region, $zip, $totalFinal['weight'], $totalFinal['length'], $totalFinal['width'], $totalFinal['height'], $selectedShippingId, $selected);
 
 
 		if (!empty($shippingMethods)) {
@@ -591,25 +582,18 @@ class PhocacartShipping
 
 
 
-	public function getShippingMethod($shippingId)
-	{
+	public function getShippingMethod($shippingId) {
+
+		//$app			= Factory::getApplication();
+		//$paramsC 		= PhocacartUtils::getComponentParameters();
+		//$shipping_amount_rule	= $paramsC->get( 'shipping_amount_rule', 0 );
+
 		$db = Factory::getDBO();
 
-		/*if (I18nHelper::useI18n()) {
-			$columns = 'coalesce(i18n_s.title, s.title) as title, coalesce(i18n_s.description, s.description) as description';
-		} else {
-			$columns = 's.title, s.description';
-		}*/
-
-		$columns = I18nHelper::sqlCoalesce(['title', 'description'], 's');
-
-		$query = ' SELECT s.id, s.tax_id, s.cost, s.cost_additional, s.calculation_type, s.method, s.params, s.image,'
-				.' t.id as taxid, '.I18nHelper::sqlCoalesce(['title'], 't', 'tax').', t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.tax_hide as taxhide'
-				.', ' . $columns
+		$query = ' SELECT s.id, s.tax_id, s.cost, s.cost_additional, s.calculation_type, s.title, s.method, s.params, s.description, s.image,'
+				.' t.id as taxid, t.title as taxtitle, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.tax_hide as taxhide'
 				.' FROM #__phocacart_shipping_methods AS s'
 				.' LEFT JOIN #__phocacart_taxes AS t ON t.id = s.tax_id'
-				. I18nHelper::sqlJoin('#__phocacart_taxes_i18n', 't')
-				. I18nHelper::sqlJoin('#__phocacart_shipping_methods_i18n', 's')
 				.' WHERE s.id = '.(int)$shippingId
 				.' ORDER BY s.id'
 				.' LIMIT 1';
@@ -770,9 +754,7 @@ class PhocacartShipping
 				$valuesString 	= '';
 
 				foreach($shippingsArray as $k => $v) {
-					//$values[] = ' ('.(int)$id.', '.(int)$v[0].')';
-					// No multidimensional in J4
-					$values[] = ' ('.(int)$id.', '.(int)$v.')';
+					$values[] = ' ('.(int)$id.', '.(int)$v[0].')';
 				}
 
 				if (!empty($values)) {

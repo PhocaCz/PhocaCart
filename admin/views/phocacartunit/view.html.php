@@ -49,7 +49,7 @@ class PhocaCartCpViewPhocacartUnit extends HtmlView
 		$canDo		= $class::getActions($this->t, $this->state->get('filter.unit_id'));
 
 		$text = $isNew ? Text::_( $this->t['l'] . '_NEW' ) : Text::_($this->t['l'] . '_EDIT');
-		ToolbarHelper::title(   Text::_( $this->t['l'] . '_UNIT' ).': <small><small>[ ' . $text.' ]</small></small>' , 'menu');
+		ToolbarHelper::title(   Text::_( $this->t['l'] . '_UNIT' ).': <small><small>[ ' . $text.' ]</small></small>' , 'modal-window');
 
 		// If not checked out, can save the item.
 		if (!$checkedOut && $canDo->get('core.edit')){

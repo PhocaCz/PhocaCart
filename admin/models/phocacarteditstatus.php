@@ -7,16 +7,17 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
-
-use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+jimport( 'joomla.application.component.modellist' );
 
-class PhocaCartCpModelPhocaCartEditStatus extends AdminModel
+class PhocaCartCpModelPhocaCartEditStatus extends ListModel
 {
 	protected	$option 		= 'com_phocacart';
 
 	public function getData() {
+
 		$app	= Factory::getApplication();
 		$id		= $app->input->get('id', 0, 'int');
 
@@ -27,17 +28,18 @@ class PhocaCartCpModelPhocaCartEditStatus extends AdminModel
 		. ' LIMIT 1';
 		$db->setQuery( $query );
 		$item = $db->loadObject();
-		if ($item->status_id > 0) {
+		if (isset($item->status_id) && (int)$item->status_id > 0) {
 			$status = PhocacartOrderStatus::getStatus($item->status_id);
 
 			$status['select'] = HTMLHelper::_('select.genericlist',  $status['data'],  'jform[status_id]', 'class="form-select"', 'value', 'text', $item->status_id, 'jform_status_id' );
 			return $status;
 		}
+		return array();
 
-		return [];
 	}
 
 	public function getHistoryData() {
+
 		$app	= Factory::getApplication();
 		$id		= $app->input->get('id', 0, 'int');
 
@@ -45,7 +47,7 @@ class PhocaCartCpModelPhocaCartEditStatus extends AdminModel
 			$db = Factory::getDBO();
 			$query = 'SELECT h.*,'
 			. ' u.name AS user_name, u.username AS user_username,'
-			. ' o.title as statustitle, o.params as status_params'
+			. ' o.title as statustitle'
 			. ' FROM #__phocacart_order_history AS h'
 			. ' LEFT JOIN #__users AS u ON u.id = h.user_id'
 			. ' LEFT JOIN #__phocacart_order_statuses AS o ON o.id = h.order_status_id'
@@ -58,105 +60,81 @@ class PhocaCartCpModelPhocaCartEditStatus extends AdminModel
 	}
 
 	public function editStatus($data) {
-        $order = $this->getTable('PhocacartOrder', 'Table');
-        if (!$order->load(['id' => (int)$data['id']])) {
-            return false;
-        }
 
-        $statusChanged = $data['status_id'] !== '';
-        $commentChanged = !!trim($data['comment_history']);
-        $trackingChanged = !!trim($data['tracking_number']);
-        $trackingDateChanged = !!trim($data['tracking_date_shipped']);
+		$data['id']					= (int)$data['id'];
+		$data['status_id']			= (int)$data['status_id'];
+		$data['email_send']			= (int)$data['email_send'];
+		$data['email_send_format']	= (int)$data['email_send_format'];
+		$data['email_gift']			= isset($data['email_gift']) ? (int)$data['email_gift'] : 0;
+		$row 				= $this->getTable('PhocacartOrder', 'Table');
+		$user 				= Factory::getUser();
 
-        if ($statusChanged || $commentChanged || $trackingChanged || $trackingDateChanged) {
-            if ($statusChanged) {
-                $status = PhocacartOrderStatus::getStatus($data['status_id']);
-            } else {
-                $status = PhocacartOrderStatus::getStatus($order->status_id);
-            }
+		if(isset($data['id']) && $data['id'] > 0) {
+			if (!$row->load(array('id' => (int)$data['id']))) {
+				// No data yet
+			}
+		}
+		//$row->bind($data);
 
-            $orderData = [];
-            if ($statusChanged || $commentChanged) {
-                $orderData['status_id']         = $status['id'];
-                $orderData['email_send']        = $data['email_send'] !== '' ? $data['email_send'] : $status['email_send'];
-                $orderData['email_send_format'] = $data['email_send_format'] !== '' ? $data['email_send_format'] : $status['email_send_format'];
-                $orderData['email_gift']        = $status['email_gift'];
-            }
-
-            if ($trackingChanged) {
-                $orderData['tracking_number']        = $data['tracking_number'];
-            }
-
-            if ($trackingDateChanged) {
-                $orderData['tracking_date_shipped'] = $data['tracking_date_shipped'];
-            }
-
-            if (!$order->bind($orderData)) {
-                $this->setError($order->getError());
-
-                return false;
-            }
-
-            $order->modified = gmdate('Y-m-d H:i:s');
-
-
-            if (!$order->check()) {
-                $this->setError($order->getError());
-
-                return false;
-            }
-
-            if (!$order->store()) {
-                $this->setError($order->getError());
-
-                return false;
-            }
-
-            if ($statusChanged || $commentChanged) {
-                PhocacartOrder::storeOrderReceiptInvoiceId($order->id, false, $status['id'], ['I']);
-                
-                $notifyUser           = $data['notify_customer'] !== '' ? !!$data['notify_customer'] : !!$status['email_customer'];
-                $notifyOther          = $data['notify_others'] !== '' ? !!$data['notify_others'] : !!$status['email_others'];
-                $emailSend            = $data['email_send'] !== '' ? $data['email_send'] : $status['email_send'];
-                $stockMovements       = $data['stock_movements'] !== '' ? $data['stock_movements'] : $status['stock_movements'];
-                $changeUserGroup      = $data['change_user_group'] !== '' ? $data['change_user_group'] : $status['change_user_group'];
-                $changePointsNeeded   = $data['change_points_needed'] !== '' ? $data['change_points_needed'] : $status['change_points_needed'];
-                $changePointsReceived = $data['change_points_received'] !== '' ? $data['change_points_received'] : $status['change_points_received'];
-                $emailSendFormat      = $data['email_send_format'] !== '' ? $data['email_send_format'] : $status['email_send_format'];
-
-                $notify = PhocacartOrderStatus::changeStatus($order->id, $status['id'], '', $notifyUser, $notifyOther,
-                    $emailSend, $stockMovements, $changeUserGroup, $changePointsNeeded, $changePointsReceived, $emailSendFormat
-                );
-
-                PhocacartOrderStatus::setHistory($order->id, $status['id'], (int) $notify, trim($data['comment_history']));
-            }
-        }
-
-        return true;
-	}
-
-	public function emptyHistory($id): bool {
-		if ((int)$id > 0) {
-			$db = Factory::getDBO();
-			$db->setQuery('DELETE FROM #__phocacart_order_history WHERE order_id = '.(int)$id);
-
-			return $db->execute();
+		if (!$row->bind($data)) {
+			$this->setError($row->getError());
+			return false;
 		}
 
-		return false;
+		$row->modified = $date = gmdate('Y-m-d H:i:s');
+
+
+		if (!$row->check()) {
+			$this->setError($row->getError());
+			return false;
+		}
+
+		// Store the table to the database
+		if (!$row->store()) {
+			$this->setError($row->getError());
+			return false;
+		}
+
+		// Store the history
+		$db = Factory::getDBO();
+
+		// EMAIL
+		$notifyUser 	= 0;
+		$notifyOther 	= 0;
+		if (isset($data['notify_customer'])) {
+			$notifyUser = 1;
+		}
+		if (isset($data['notify_others'])) {
+			$notifyOther = 1;
+		}
+
+		// Set invoice data in case status can set invoice ID (before notify)
+		PhocacartOrder::storeOrderReceiptInvoiceId((int)$data['id'], false, (int)$data['status_id'], array('I'));
+
+		$notify = PhocacartOrderStatus::changeStatus((int)$data['id'], (int)$data['status_id'], '', $notifyUser, $notifyOther, (int)$data['email_send'], $data['stock_movements'], $data['change_user_group'], $data['change_points_needed'], $data['change_points_received'], (int)$data['email_send_format']);
+
+		PhocacartOrderStatus::setHistory((int)$data['id'], (int)$data['status_id'], (int)$notify, $data['comment_history']);
+
+
+
+
+		return $row->id;
 	}
 
-	public function getForm($data = [], $loadData = true)
-	{
-		return $this->loadForm('com_phocacart.phocacartorderstatus', 'phocacartorderstatus', ['control' => 'jform', 'load_data' => $loadData]);
+	public function emptyHistory($id) {
+
+		if ((int)$id > 0) {
+
+			$db = Factory::getDBO();
+			$query = 'DELETE FROM #__phocacart_order_history WHERE order_id = '.(int)$id;
+			$db->setQuery( $query );
+
+			if ($db->execute()) {
+				return true;
+			} else {
+				return false;
+			}
+		}
 	}
-
-    protected function loadFormData() {
-        $app	= Factory::getApplication();
-        $id		= $app->input->get('id', 0, 'int');
-
-        return [
-            'id' => $id,
-        ];
-    }
 }
+?>

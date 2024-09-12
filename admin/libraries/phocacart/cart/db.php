@@ -10,7 +10,6 @@
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
 use Joomla\CMS\Factory;
-use Phoca\PhocaCart\I18n\I18nHelper;
 
 class PhocacartCartDb
 {
@@ -23,29 +22,17 @@ class PhocacartCartDb
 	}
 
 	public static function getCartDb($userId, $vendorId = 0, $ticketId = 0, $unitId = 0, $sectionId = 0) {
-		if(!isset(self::$cart[$userId][$vendorId][$ticketId][$unitId][$sectionId])) {
+
+		if(!isset(self::$cart[$userId][$vendorId][$ticketId][$unitId][$sectionId])){
+
 			$db 	= Factory::getDBO();
-
-			/*if (I18nHelper::useI18n()) {
-				$columns = 'coalesce(i18n_s.title, s.title) as shippingtitle, coalesce(i18n_p.title, p.title) as paymenttitle, coalesce(i18n_co.title, co.title) as coupontitle';
-			} else {
-				$columns = 's.title as shippingtitle, p.title as paymenttitle, co.title as coupontitle';
-			}*/
-
-			$columns = I18nHelper::sqlCoalesce(['title'], 's', 'shipping');
-			$columns .= I18nHelper::sqlCoalesce(['title'], 'p', 'payment', '', ',');
-			$columns .= I18nHelper::sqlCoalesce(['title'], 'co', 'coupon', '', ',');
-
 			$query = ' SELECT c.cart, c.shipping, c.params_shipping, c.payment, c.params_payment, c.coupon, c.reward, c.loyalty_card_number,'
-					.' s.method as shippingmethod, s.image as shippingimage, p.method as paymentmethod, p.image as paymentimage,'
-					.' co.code as couponcode, ' . $columns
+					.' s.title as shippingtitle, s.method as shippingmethod, s.image as shippingimage, p.title as paymenttitle, p.method as paymentmethod, p.image as paymentimage,'
+					.' co.title as coupontitle, co.code as couponcode'
 					.' FROM #__phocacart_cart_multiple AS c'
 					.' LEFT JOIN #__phocacart_shipping_methods AS s ON c.shipping = s.id'
 					.' LEFT JOIN #__phocacart_payment_methods AS p ON c.payment = p.id'
 					.' LEFT JOIN #__phocacart_coupons AS co ON c.coupon = co.id'
-					. I18nHelper::sqlJoin('#__phocacart_shipping_methods_i18n', 's')
-					. I18nHelper::sqlJoin('#__phocacart_payment_methods_i18n', 'p')
-					. I18nHelper::sqlJoin('#__phocacart_coupons_i18n', 'co')
 					.' WHERE c.user_id = '.(int)$userId
 					.' AND c.vendor_id = '.(int)$vendorId
 					.' AND c.ticket_id = '.(int)$ticketId
@@ -67,6 +54,7 @@ class PhocacartCartDb
 				$pos_payment_force = 0;
 				$pos_shipping_force = 0;
 				if (PhocacartPos::isPos()) {
+					$app					= Factory::getApplication();
 					$paramsC 				= PhocacartUtils::getComponentParameters();
 					$pos_payment_force	= $paramsC->get( 'pos_payment_force', 0 );
 					$pos_shipping_force	= $paramsC->get( 'pos_shipping_force', 0 );

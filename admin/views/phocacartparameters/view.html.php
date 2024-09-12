@@ -56,7 +56,7 @@ class PhocaCartCpViewPhocacartParameters extends HtmlView
 		$class	= ucfirst($this->t['tasks']).'Helper';
 		$canDo	= $class::getActions($this->t, $state->get('filter.tag_id'));
 
-		ToolbarHelper::title( Text::_( $this->t['l'].'_PARAMETERS' ), 'ellipsis-h' );
+		ToolbarHelper::title( Text::_( $this->t['l'].'_PARAMETERS' ), 'align-justify' );
 
 		if ($canDo->get('core.create')) {
 			ToolbarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');

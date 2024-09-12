@@ -35,19 +35,14 @@ class PhocacartImageMagic
 	*/
 	public static function imageMagic($fileIn, $fileOut = null, $width = null, $height = null, $crop = null, $typeOut = null, $watermarkParams = array(), $frontUpload = 0, $manager = '', &$errorMsg = '') {
 
-		$params 		= PhocacartUtils::getComponentParameters();
-		$jfile_thumbs	= $params->get( 'jfile_thumbs', 1 );
-		$jpeg_quality	= $params->get( 'thumbnail_quality', 100 );
-		$jpeg_quality	= PhocacartImage::getJpegQuality($jpeg_quality);
-		$webp_quality	= $params->get( 'thumbnail_quality', 100 );
-		$webp_quality	= PhocacartImage::getJpegQuality($webp_quality);
-		$avif_quality	= $params->get( 'thumbnail_quality', 100 );
-		$avif_quality	= PhocacartImage::getJpegQuality($avif_quality);
-
-		$png_quality	= $params->get( 'thumbnail_quality', 100 );
-		$png_quality	= PhocacartImage::getPngQuality($png_quality);
-
+		$params 			= PhocacartUtils::getComponentParameters();
+		$jfile_thumbs		= $params->get( 'jfile_thumbs', 1 );
+		$jpeg_quality		= $params->get( 'jpeg_quality', 100 );
+		$jpeg_quality		= PhocacartImage::getJpegQuality($jpeg_quality);
 		$create_webp_copy	= $params->get( 'create_webp_copy', 0);
+
+		$thumb_name_prefix = $params->get('thumb_name_prefix', 'phoca_thumb');
+
 
 		$fileWatermark = '';
 
@@ -111,165 +106,42 @@ class PhocacartImageMagic
 					$thumbnailSmall		= false;
 					$thumbnailMedium	= false;
 					$thumbnailLarge		= false;
-					$thumb_name_prefix = 'phoca_thumb';
-
 
 					$thumbnailMedium	= preg_match("/".$thumb_name_prefix."_m_/i", $fileOut);
 					$thumbnailLarge 	= preg_match("/".$thumb_name_prefix."_l_/i", $fileOut);
 
 					$path				= PhocacartPath::getPath($manager);
-					$fileName 			= PhocacartFile::getTitleFromFilenameWithExt($fileIn);
+					$fileName 			= PhocacartFile::getTitleFromFile($fileIn, 1);
 
 					// Which Watermark will be used
 					// If watermark is in current directory use it else use Default
-					$fileWatermarkMedium		= false;
-					$fileWatermarkLarge			= false;
-					$fileWatermarkMediumPng  	= str_replace($fileName, 'watermark-medium.png', $fileIn);
-					$fileWatermarkLargePng  	= str_replace($fileName, 'watermark-large.png', $fileIn);
-					$fileWatermarkMediumWebp  	= str_replace($fileName, 'watermark-medium.webp', $fileIn);
-					$fileWatermarkLargeWebp  	= str_replace($fileName, 'watermark-large.webp', $fileIn);
-					$fileWatermarkMediumAvif  	= str_replace($fileName, 'watermark-medium.avif', $fileIn);
-					$fileWatermarkLargeAvif  	= str_replace($fileName, 'watermark-large.avif', $fileIn);
-
-					$fileWatermarkMediumRoot		= false;
-					$fileWatermarkLargeRoot			= false;
-					$fileWatermarkMediumPngRoot  	= $path['orig_abs_ds'] . 'watermark-medium.png';
-					$fileWatermarkLargePngRoot  	= $path['orig_abs_ds'] . 'watermark-large.png';
-					$fileWatermarkMediumWebpRoot  	= $path['orig_abs_ds'] . 'watermark-medium.webp';
-					$fileWatermarkLargeWebpRoot  	= $path['orig_abs_ds'] . 'watermark-large.webp';
-					$fileWatermarkMediumAvifRoot  	= $path['orig_abs_ds'] . 'watermark-medium.avif';
-					$fileWatermarkLargeAvifRoot  	= $path['orig_abs_ds'] . 'watermark-large.avif';
-
-					if ($type == IMAGETYPE_WEBP) {
-						if (File::exists($fileWatermarkMediumWebp)) {
-							$fileWatermarkMedium = $fileWatermarkMediumWebp;
-						} else if (File::exists($fileWatermarkMediumPng)) {
-							$fileWatermarkMedium = $fileWatermarkMediumPng;
-						} else if (File::exists($fileWatermarkMediumAvif)) {
-							$fileWatermarkMedium = $fileWatermarkMediumAvif;
-						}
-
-						if (File::exists($fileWatermarkMediumWebpRoot)) {
-							$fileWatermarkMediumRoot = $fileWatermarkMediumWebpRoot;
-						} else if (File::exists($fileWatermarkMediumPngRoot)) {
-							$fileWatermarkMediumRoot = $fileWatermarkMediumPngRoot;
-						} else if (File::exists($fileWatermarkMediumAvifRoot)) {
-							$fileWatermarkMediumRoot = $fileWatermarkMediumAvifRoot;
-						}
-
-						if (File::exists($fileWatermarkLargeWebp)) {
-							$fileWatermarkLarge = $fileWatermarkLargeWebp;
-						} else if (File::exists($fileWatermarkLargePng)) {
-							$fileWatermarkLarge = $fileWatermarkLargePng;
-						} else if (File::exists($fileWatermarkLargeAvif)) {
-							$fileWatermarkLarge = $fileWatermarkLargeAvif;
-						}
-
-						if (File::exists($fileWatermarkLargeWebpRoot)) {
-							$fileWatermarkLargeRoot = $fileWatermarkLargeWebpRoot;
-						} else if (File::exists($fileWatermarkLargePngRoot)) {
-							$fileWatermarkLargeRoot = $fileWatermarkLargePngRoot;
-						} else if (File::exists($fileWatermarkLargeAvifRoot)) {
-							$fileWatermarkLargeRoot = $fileWatermarkLargeAvifRoot;
-						}
-
-					} else if ($type ==  IMAGETYPE_AVIF){
-						if (File::exists($fileWatermarkMediumAvif)) {
-							$fileWatermarkMedium = $fileWatermarkMediumAvif;
-						} else if (File::exists($fileWatermarkMediumPng)) {
-							$fileWatermarkMedium = $fileWatermarkMediumPng;
-						} else if (File::exists($fileWatermarkMediumWebp)) {
-							$fileWatermarkMedium = $fileWatermarkMediumWebp;
-						}
-
-						if (File::exists($fileWatermarkMediumAvifRoot)) {
-							$fileWatermarkMediumRoot = $fileWatermarkMediumAvifRoot;
-						} else if (File::exists($fileWatermarkMediumPngRoot)) {
-							$fileWatermarkMediumRoot = $fileWatermarkMediumPngRoot;
-						} else if (File::exists($fileWatermarkMediumWebpRoot)) {
-							$fileWatermarkMediumRoot = $fileWatermarkMediumWebpRoot;
-						}
-
-						if (File::exists($fileWatermarkLargeAvif)) {
-							$fileWatermarkLarge = $fileWatermarkLargeAvif;
-						} else if (File::exists($fileWatermarkLargePng)) {
-							$fileWatermarkLarge = $fileWatermarkLargePng;
-						} else if (File::exists($fileWatermarkLargeWebp)) {
-							$fileWatermarkLarge = $fileWatermarkLargeWebp;
-						}
-
-						if (File::exists($fileWatermarkLargeAvifRoot)) {
-							$fileWatermarkLargeRoot = $fileWatermarkLargeAvifRoot;
-						} else if (File::exists($fileWatermarkLargePngRoot)) {
-							$fileWatermarkLargeRoot = $fileWatermarkLargePngRoot;
-						} else if (File::exists($fileWatermarkLargeWebpRoot)) {
-							$fileWatermarkLargeRoot = $fileWatermarkLargeWebpRoot;
-						}
-
-					} else {
-						if (File::exists($fileWatermarkMediumPng)) {
-							$fileWatermarkMedium = $fileWatermarkMediumPng;
-						} else if (File::exists($fileWatermarkMediumWebp)) {
-							$fileWatermarkMedium = $fileWatermarkMediumWebp;
-						} else if (File::exists($fileWatermarkMediumAvif)) {
-							$fileWatermarkMedium = $fileWatermarkMediumAvif;
-						}
-
-						if (File::exists($fileWatermarkMediumPngRoot)) {
-							$fileWatermarkMediumRoot = $fileWatermarkMediumPngRoot;
-						} else if (File::exists($fileWatermarkMediumWebpRoot)) {
-							$fileWatermarkMediumRoot = $fileWatermarkMediumWebpRoot;
-						} else if (File::exists($fileWatermarkMediumAvifRoot)) {
-							$fileWatermarkMediumRoot = $fileWatermarkMediumAvifRoot;
-						}
-
-						if (File::exists($fileWatermarkLargePng)) {
-							$fileWatermarkLarge = $fileWatermarkLargePng;
-						} else if (File::exists($fileWatermarkLargeWebp)) {
-							$fileWatermarkLarge = $fileWatermarkLargeWebp;
-						} else if (File::exists($fileWatermarkLargeAvif)) {
-							$fileWatermarkLarge = $fileWatermarkLargeAvif;
-						}
-
-						if (File::exists($fileWatermarkLargePngRoot)) {
-							$fileWatermarkLargeRoot = $fileWatermarkLargePngRoot;
-						} else if (File::exists($fileWatermarkLargeWebpRoot)) {
-							$fileWatermarkLargeRoot = $fileWatermarkLargeWebpRoot;
-						} else if (File::exists($fileWatermarkLargeAvifRoot)) {
-							$fileWatermarkLargeRoot = $fileWatermarkLargeAvifRoot;
-						}
-					}
-
-
+					$fileWatermarkMedium  	= str_replace($fileName, 'watermark-medium.png', $fileIn);
+					$fileWatermarkLarge  	= str_replace($fileName, 'watermark-large.png', $fileIn);
 					clearstatcache();
 
 					// Which Watermark will be used
 					if ($thumbnailMedium) {
-						if ($watermarkParams['create'] == 1 && $fileWatermarkMedium) {
-							$fileWatermark  = $fileWatermarkMedium;
-						} else if ($watermarkParams['create'] == 2 && $fileWatermarkMediumRoot) {
-							$fileWatermark = $fileWatermarkMediumRoot;
-						} else if ($fileWatermarkMedium) {
-							$fileWatermark = $fileWatermarkMedium;
-						} else if ($fileWatermarkMediumRoot) {
-							$fileWatermark = $fileWatermarkMediumRoot;
+						if (File::exists($fileWatermarkMedium)) {
+								$fileWatermark  = $fileWatermarkMedium;
 						} else {
-							$fileWatermark	= '';
+							if ($watermarkParams['create'] == 2) {
+								$fileWatermark  = $path['orig_abs_ds'].'watermark-medium.png';
+							} else {
+								$fileWatermark	= '';
+							}
 						}
 					} else if ($thumbnailLarge) {
-						if ($watermarkParams['create'] == 1 && $fileWatermarkLarge) {
-							$fileWatermark  = $fileWatermarkLarge;
-						} else if ($watermarkParams['create'] == 2 && $fileWatermarkLargeRoot) {
-							$fileWatermark = $fileWatermarkLargeRoot;
-						} else if ($fileWatermarkLarge) {
-							$fileWatermark = $fileWatermarkLarge;
-						} else if ($fileWatermarkLargeRoot) {
-							$fileWatermark = $fileWatermarkLargeRoot;
+						if (File::exists($fileWatermarkLarge)) {
+								$fileWatermark  = $fileWatermarkLarge;
 						} else {
-							$fileWatermark	= '';
+							if ($watermarkParams['create'] == 2) {
+								$fileWatermark  = $path['orig_abs_ds'].'watermark-large.png';
+							} else {
+								$fileWatermark	= '';
+							}
 						}
 					} else {
-						$fileWatermark  = '';
+							$fileWatermark  = '';
 					}
 
 
@@ -327,37 +199,12 @@ class PhocacartImageMagic
 
 			// Watemark
 			if ($fileWatermark != '') {
-
-				$ext = File::getExt($fileWatermark);
-
-				if ($ext == 'webp') {
-					if (!function_exists('ImageCreateFromWEBP')) {
-						$errorMsg = 'ErrorNoWEBPFunction';
-						return false;
-					}
-					$waterImage1=ImageCreateFromWEBP($fileWatermark);
-					//imagealphablending($waterImage1, false);
-					//imagesavealpha($waterImage1, true);
-				} else if ($ext == 'avif') {
-					if (!function_exists('ImageCreateFromAVIF')) {
-						$errorMsg = 'ErrorNoAVIFFunction';
-						return false;
-					}
-					$waterImage1=ImageCreateFromAVIF($fileWatermark);
-					//imagealphablending($waterImage1, false);
-					//imagesavealpha($waterImage1, true);
-				} else {
-					if (!function_exists('ImageCreateFromPNG')) {
-						$errorMsg = 'ErrorNoPNGFunction';
-						return false;
-					}
-					$waterImage1=ImageCreateFromPNG($fileWatermark);
-					//imagealphablending($waterImage1, false);
-					//imagesavealpha($waterImage1, true);
+				if (!function_exists('ImageCreateFromPNG')) {
+					$errorMsg = 'ErrorNoPNGFunction';
+					return false;
 				}
-
+				$waterImage1=ImageCreateFromPNG($fileWatermark);
 			}
-
 			// End Watermark - - - - - - - - - - - - - - - - - -
 
 	        switch($type) {
@@ -366,7 +213,6 @@ class PhocacartImageMagic
 						$errorMsg = 'ErrorNoJPGFunction';
 						return false;
 					}
-					//$image1 = ImageCreateFromJPEG($fileIn);
 					try {
 					    $image1 = ImageCreateFromJPEG($fileIn);
                     } catch(\Exception $exception) {
@@ -380,7 +226,6 @@ class PhocacartImageMagic
 						$errorMsg = 'ErrorNoPNGFunction';
 						return false;
 					}
-					//$image1 = ImageCreateFromPNG($fileIn);
 					try {
                         $image1 = ImageCreateFromPNG($fileIn);
                     } catch(\Exception $exception) {
@@ -394,7 +239,6 @@ class PhocacartImageMagic
 						$errorMsg = 'ErrorNoGIFFunction';
 						return false;
 					}
-					//$image1 = ImageCreateFromGIF($fileIn);
 					try {
                         $image1 = ImageCreateFromGIF($fileIn);
                     } catch(\Exception $exception) {
@@ -416,25 +260,11 @@ class PhocacartImageMagic
                         return false;
                     }
                 break;
-					case IMAGETYPE_AVIF:
-					if (!function_exists('imagecreatefromavif')) {
-						$errorMsg = 'ErrorNoAVIFFunction';
-						return false;
-					}
-					//$image1 = ImageCreateFromGIF($fileIn);
-					try {
-						$image1 = imagecreatefromavif($fileIn);
-					} catch(\Exception $exception) {
-						$errorMsg = 'ErrorAVIFFunction';
-						return false;
-					}
-				break;
 	            case IMAGETYPE_WBMP:
 					if (!function_exists('ImageCreateFromWBMP')) {
 						$errorMsg = 'ErrorNoWBMPFunction';
 						return false;
 					}
-					//$image1 = ImageCreateFromWBMP($fileIn);
 					try{
 					    $image1 = ImageCreateFromWBMP($fileIn);
                     } catch(\Exception $exception) {
@@ -459,7 +289,7 @@ class PhocacartImageMagic
 				switch($type) {
 					case IMAGETYPE_PNG:
                     case IMAGETYPE_WEBP:
-					case IMAGETYPE_AVIF:
+
 						// Possible FR FR1
 						$correctWhite = 0;
 						if ($correctWhite == 1) {
@@ -489,17 +319,7 @@ class PhocacartImageMagic
 
 				// Watermark - - - - - -
 				if ($fileWatermark != '') {
-
-
-					//imagecolortransparent($waterImage1, imagecolorallocate($waterImage1, 0, 0, 0));
-					//imagepalettetotruecolor($waterImage1);
-                	//imagealphablending($waterImage1, true);
-                	//imagesavealpha($waterImage1, true);
-					//imagecolortransparent($image2, imagecolorallocate($image2, 0, 0, 0));
-					//imagepalettetotruecolor($image2);
-                	imagealphablending($image2, true);// Needed for webp and avif transparency
-                	//imagesavealpha($image2, true);
-					ImageCopy($image2, $waterImage1, (int)$locationX, (int)$locationY, 0, 0, (int)$wW, (int)$hW);
+					ImageCopy($image2, $waterImage1, $locationX, $locationY, 0, 0, $wW, $hW);
 				}
 				// End Watermark - - - -
 
@@ -609,7 +429,7 @@ class PhocacartImageMagic
 
 						if ($jfile_thumbs == 1) {
 							ob_start();
-							if (!@ImagePNG($image2, NULL, $png_quality)) {
+							if (!@ImagePNG($image2, NULL )) {
 								ob_end_clean();
 								$errorMsg = 'ErrorWriteFile';
 								return false;
@@ -622,7 +442,7 @@ class PhocacartImageMagic
 								return false;
 							}
 						} else {
-							if (!@ImagePNG($image2, $fileOut, $png_quality)) {
+							if (!@ImagePNG($image2, $fileOut)) {
 								$errorMsg = 'ErrorWriteFile';
 								return false;
 							}
@@ -678,7 +498,7 @@ class PhocacartImageMagic
 
                         if ($jfile_thumbs == 1) {
                             ob_start();
-                            if (!@imagewebp($image2, NULL, $webp_quality)) {
+                            if (!@imagewebp($image2, NULL)) {
                                 ob_end_clean();
                                 $errorMsg = 'ErrorWriteFile';
                                 return false;
@@ -691,46 +511,11 @@ class PhocacartImageMagic
                                 return false;
                             }
                         } else {
-							if (!@imagewebp($image2, $fileOut, $webp_quality)) {
-								$errorMsg = 'ErrorWriteFile';
-								return false;
-							}
-						}
-					break;
-
-					case IMAGETYPE_AVIF :
-						if (!function_exists('ImageAVIF')) {
-							$errorMsg = 'ErrorNoAVIFFunction';
-							return false;
-						}
-
-						if ($jfile_thumbs == 1) {
-							ob_start();
-							if (!@imageavif($image2, NULL, $avif_quality)) {
-								ob_end_clean();
-								$errorMsg = 'ErrorWriteFile';
-								return false;
-							}
-							$imgAVIFToWrite = ob_get_contents();
-							ob_end_clean();
-
-							if(!File::write( $fileOut, $imgAVIFToWrite)) {
-								$errorMsg = 'ErrorWriteFile';
-								return false;
-							}
-						} else {
-							if (!@imageavif($image2, $fileOut, $avif_quality)) {
+                            if (!@imagewebp($image2, $fileOut)) {
                                 $errorMsg = 'ErrorWriteFile';
                                 return false;
                             }
                         }
-
-						// WEBP COPY
-						if($create_webp_copy == 1) {
-							if (!self::doWebpCopy($image1, $dst, $src, $fileOut, $jfile_thumbs, $errorMsg)) {
-								return false;
-							}
-						}
                     break;
 
 					default:
@@ -768,10 +553,6 @@ class PhocacartImageMagic
 	public static function doWebpCopy($image1, $dst, $src, $fileOut, $jfile_thumbs, &$errorMsg) {
 
 
-		$params 		= PhocacartUtils::getComponentParameters();
-		$jfile_thumbs	= $params->get( 'jfile_thumbs', 1 );
-		$thumb_quality	= $params->get( 'thumbnail_quality', 100 );
-		$thumb_quality	= PhocacartImage::getJpegQuality($thumb_quality);
 
 		$image2 = @ImageCreateTruecolor($dst[2], $dst[3]);
 		if (!$image2) {
@@ -796,7 +577,7 @@ class PhocacartImageMagic
 
 		if ($jfile_thumbs == 1) {
 			ob_start();
-			if (!@imagewebp($image2, NULL, $thumb_quality)) {
+			if (!@imagewebp($image2, NULL)) {
 				ob_end_clean();
 				$errorMsg = 'ErrorWriteFile';
 				return false;
@@ -809,7 +590,7 @@ class PhocacartImageMagic
 				return false;
 			}
 		} else {
-			if (!@imagewebp($image2, $fileOut, $thumb_quality)) {
+			if (!@imagewebp($image2, $fileOut)) {
 				$errorMsg = 'ErrorWriteFile';
 				return false;
 			}

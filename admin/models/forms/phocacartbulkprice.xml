@@ -37,7 +37,7 @@
         </field>
 
 
-		<field name="calculation_type" type="list" label="COM_PHOCACART_FIELD_CALCULATION_TYPE_LABEL" description="COM_PHOCACART_FIELD_CALCULATION_TYPE_DESC" class="form-select" size="1" default="1">
+		<field name="calculation_type" type="list" label="COM_PHOCACART_FIELD_CALCULATION_TYPE_LABEL" description="COM_PHOCACART_FIELD_CALCULATION_TYPE_DESC" class="form-control" size="1" default="1">
 	<option value="1">COM_PHOCACART_PERCENTAGE</option>
 	<option	value="0">COM_PHOCACART_FIXED_AMOUNT</option>
 </field>
@@ -59,7 +59,7 @@
                 <option value="2">COM_PHOCACART_ORIGINAL_PRICE_WILL_BE_EMPTIED</option>
             </field>
 
-			<field name="save_price_history_run" type="list" label="COM_PHOCACART_FIELD_SAVE_PRICE_HISTORY_RUN_OPTIONS_LABEL" description="COM_PHOCACART_FIELD_SAVE_PRICE_HISTORY_RUN_OPTIONS_DESC" class="form-select" size="1" default="1">
+			<field name="save_price_history_run" type="list" label="COM_PHOCACART_FIELD_SAVE_PRICE_HISTORY_RUN_OPTIONS_LABEL" description="COM_PHOCACART_FIELD_SAVE_PRICE_HISTORY_RUN_OPTIONS_DESC" class="form-control" size="1" default="1">
 	<option value="1">COM_PHOCACART_YES</option>
 	<option	value="0">COM_PHOCACART_NO</option>
 </field>
@@ -70,7 +70,7 @@
                 <option value="2">COM_PHOCACART_ORIGINAL_PRICE_WILL_BE_EMPTIED</option>
             </field>
 
-			<field name="save_price_history_revert" type="list" label="COM_PHOCACART_FIELD_SAVE_PRICE_HISTORY_REVERT_OPTIONS_LABEL" description="COM_PHOCACART_FIELD_SAVE_PRICE_HISTORY_REVERT_OPTIONS_DESC" class="form-select" size="1" default="1">
+			<field name="save_price_history_revert" type="list" label="COM_PHOCACART_FIELD_SAVE_PRICE_HISTORY_REVERT_OPTIONS_LABEL" description="COM_PHOCACART_FIELD_SAVE_PRICE_HISTORY_REVERT_OPTIONS_DESC" class="form-control" size="1" default="1">
 	<option value="1">COM_PHOCACART_YES</option>
 	<option	value="0">COM_PHOCACART_NO</option>
 </field>

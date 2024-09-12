@@ -33,7 +33,7 @@ class JFormFieldPhocaSelectFilenameImage extends FormField
 
 		$onchange 		= (string) $this->element['onchange'];
 		$size     		= ($v = $this->element['size']) ? ' size="' . $v . '"' : '';
-		$class    		= ($v = $this->element['class']) ? ' class="' . $v . '"' : 'class="form-control"';
+		$class    		= ($v = $this->element['class']) ? ' class="' . $v . '"' : 'class="text_area"';
 		$required 		= ($v = $this->element['required']) ? ' required="required"' : '';
 		$idA			= 'phImageFile';
 
@@ -61,7 +61,6 @@ class JFormFieldPhocaSelectFilenameImage extends FormField
 
 
 		HTMLHelper::_('jquery.framework');
-		HTMLHelper::_('bootstrap.renderModal', 'collapseModal');
 
 		// 1) phocacartform.js - loads click event to run modal window - NO NEED TO DEFINE EVENT HERE
         // 2) phocacartform.js - creates modal window, then loads the iframe with url - NO NEED TO LOAD MODAL WINDOW AND TO BUILD IT HERE
@@ -82,8 +81,7 @@ class JFormFieldPhocaSelectFilenameImage extends FormField
 			. ' value="' . $this->value . '"' . $size . $class . $dataManager . $dataPathImage . $dataRequestUrl . $dataRequestMsg .' />';
 
 		// data-id does not work by dynamically added form fields so we need to get the id which is stored in input before the button
-		// removed data-bs-toggle="modal"
-		$html[] = ' <a href="#'.$idAC.'" role="button" class="btn btn-primary '.$idA.'ModalButton" title="' . Text::_($textButton) . '" data-title="' . Text::_($textButton) . '" data-id="' . $this->id . '" data-src="'.$link.'"  data-height="'.$w.'" data-width="'.$h.'">'
+		$html[] = ' <a href="#'.$idAC.'" role="button" class="btn btn-primary '.$idA.'ModalButton" data-bs-toggle="modal" title="' . Text::_($textButton) . '" data-title="' . Text::_($textButton) . '" data-id="' . $this->id . '" data-src="'.$link.'"  data-height="'.$w.'" data-width="'.$h.'">'
 			. '<span class="icon-list icon-white"></span> '
 			. Text::_($textButton) . '</a>';
 

@@ -46,11 +46,6 @@
     margin-bottom: 2em;
 }
 
-.ph-desc-bottom {
-    margin-top: 2em;
-    margin-bottom: 1em;
-}
-
 .pc-item-view .ph-desc {
     margin-top: 1.5em;
     margin-bottom: 1.5em;
@@ -1139,7 +1134,7 @@ table.ph-comparison-table tr td.ph-middle {
 ul.ph-filter-module-category-tree {
     list-style-type: none;
     padding: 0;
-    /*padding-left: 1em;*/
+    padding-left: 1em;
 }
 
 ul.ph-filter-module-category-tree li .checkbox {
@@ -1630,7 +1625,7 @@ h3.gridlist {
 
 @media screen and (max-width: 576px) {
     .ph-row-flex.grid {
-       /* display: block; */
+        display: block;
     }
 }
 
@@ -2351,13 +2346,6 @@ img.ph-lazyload:not([src]) {
     stroke: #5f5f5f;
 }
 
-.pc-si-ok-circle {
-    stroke: var(--ph-success);
-}
-.pc-si-not-ok-circle {
-    stroke: var(--ph-error);
-}
-
 .pc-wishlist-view .pc-si.pc-si-remove,
 .pc-wishlist-view .pc-si.pc-si-search,
 .ph-comparison-table .pc-si.pc-si-remove,
@@ -2570,26 +2558,4 @@ form.ph-form-placeholder .ph-checkout-billing-row {
 .ph-form-group-region {
     width: 50%;
 }
-
-.ph-watchdog {
-    text-align: right;
-    padding: 1em 0;
-}
-
-/* Small Cart Tax Info */
-.ph-cart-small-price.ph-netto,
-.ph-cart-small-price.ph-brutto,
-.ph-cart-small-price.ph-tax {
-    /*white-space:nowrap;*/
-}
-
-.ph-cart-small-price.ph-brutto {
-    font-weight: bold;
-}
-
-.ph-item-subcategory-box {
-    text-align: center;
-    margin-bottom: 1em;
-}
-
 

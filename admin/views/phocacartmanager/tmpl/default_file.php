@@ -75,7 +75,7 @@ if ($this->manager == 'filemultiple') {
 
 
 } else {
-	if (($group['i'] == 1) && ($ext == 'png' || $ext == 'jpg' || $ext == 'gif' || $ext == 'jpeg' || $ext = 'webp' || $ext = 'avif') ) {
+	if (($group['i'] == 1) && ($ext == 'png' || $ext == 'jpg' || $ext == 'gif' || $ext == 'jpeg' || $ext = 'webp') ) {
 
 		echo '<tr>'
 		.'<td></td>'

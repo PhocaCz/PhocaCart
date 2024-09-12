@@ -10,7 +10,7 @@ class AfterTabs extends AbstractEvent
 {
   use ResultAware, ResultTypeStringAware;
 
-  public function __construct(string $context, ?array $item, Registry $appParams) {
+  public function __construct(string $context, array $item, Registry $appParams) {
     parent::__construct('pcv', 'onPCVonItemAfterTabs', [
       'context' => $context,
       'item' => &$item,

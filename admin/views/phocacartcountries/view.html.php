@@ -82,7 +82,7 @@ class PhocaCartCpViewPhocaCartCountries extends HtmlView
 		//dummy gly phicon gly phicon-globe ph-icon-earth
 		//JToolbarHelper::custom($this->t['task'].'.importcountries', 'earth', 'earth', $this->t['l'].'_IMPORT_WORLD_COUNTRIES', false);
 
-		$dhtml = '<joomla-toolbar-button><button onclick="if (confirm(\''.Text::_('COM_PHOCACART_WARNING_IMPORT_COUNTRIES').'\')) { Joomla.submitbutton(\'phocacartcountry.importcountries\'); }" class="btn btn-primary btn-small button-earth"><i class="icon-earth fas fa fa-globe" title="'.Text::_($this->t['l'].'_IMPORT_WORLD_COUNTRIES').'"></i> '.Text::_($this->t['l'].'_IMPORT_WORLD_COUNTRIES').'</button></joomla-toolbar-button>';
+		$dhtml = '<joomla-toolbar-button><button onclick="if (confirm(\''.Text::_('COM_PHOCACART_WARNING_IMPORT_COUNTRIES').'\')) { Joomla.submitbutton(\'phocacartcountry.importcountries\'); }" class="btn btn-small button-earth"><i class="icon-earth fas fa fa-globe" title="'.Text::_($this->t['l'].'_IMPORT_WORLD_COUNTRIES').'"></i> '.Text::_($this->t['l'].'_IMPORT_WORLD_COUNTRIES').'</button></joomla-toolbar-button>';
 		$bar->appendButton('Custom', $dhtml, 'importcountries');
 
 		ToolbarHelper::divider();

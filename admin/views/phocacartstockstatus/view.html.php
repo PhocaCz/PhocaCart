@@ -53,7 +53,7 @@ class PhocaCartCpViewPhocacartStockStatus extends HtmlView
 		$canDo		= $class::getActions($this->t, $this->state->get('filter.stockstatus_id'));
 
 		$text = $isNew ? Text::_( $this->t['l'] . '_NEW' ) : Text::_($this->t['l'] . '_EDIT');
-		ToolbarHelper::title(   Text::_( $this->t['l'] . '_STOCK_STATUS' ).': <small><small>[ ' . $text.' ]</small></small>' , 'components');
+		ToolbarHelper::title(   Text::_( $this->t['l'] . '_STOCK_STATUS' ).': <small><small>[ ' . $text.' ]</small></small>' , 'tasks');
 
 		// If not checked out, can save the item.
 		if (!$checkedOut && $canDo->get('core.edit')){

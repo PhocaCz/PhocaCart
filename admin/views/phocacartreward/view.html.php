@@ -49,7 +49,7 @@ class PhocaCartCpViewPhocacartReward extends HtmlView
 		$canDo		= $class::getActions($this->t, $this->state->get('filter.reward_id'));
 
 		$text = $isNew ? Text::_( $this->t['l'] . '_NEW' ) : Text::_($this->t['l'] . '_EDIT');
-		ToolbarHelper::title(   Text::_( $this->t['l'] . '_REWARD_POINTS' ).': <small><small>[ ' . $text.' ]</small></small>' , 'vcard');
+		ToolbarHelper::title(   Text::_( $this->t['l'] . '_REWARD_POINTS' ).': <small><small>[ ' . $text.' ]</small></small>' , 'certificate');
 
 		// If not checked out, can save the item.
 		if (!$checkedOut && $canDo->get('core.edit')){

@@ -81,7 +81,7 @@ class PhocaCartCpViewPhocacartRegions extends HtmlView
 		}
 
 		//JToolbarHelper::custom($this->t['task'].'.importregions', 'earth', 'earth', $this->t['l'].'_IMPORT_REGIONS', false);
-		$dhtml = '<joomla-toolbar-button><button onclick="if (confirm(\''.Text::_('COM_PHOCACART_WARNING_IMPORT_REGIONS').'\')) { Joomla.submitbutton(\'phocacartregion.importregions\'); }" class="btn btn-primary btn-small button-earth"><i class="icon-earth fas fa fa-globe" title="'.Text::_($this->t['l'].'_IMPORT_REGIONS').'"></i> '.Text::_($this->t['l'].'_IMPORT_REGIONS').'</button></joomla-toolbar-button>';
+		$dhtml = '<joomla-toolbar-button><button onclick="if (confirm(\''.Text::_('COM_PHOCACART_WARNING_IMPORT_REGIONS').'\')) { Joomla.submitbutton(\'phocacartregion.importregions\'); }" class="btn btn-small button-earth"><i class="icon-earth fas fa fa-globe" title="'.Text::_($this->t['l'].'_IMPORT_REGIONS').'"></i> '.Text::_($this->t['l'].'_IMPORT_REGIONS').'</button></joomla-toolbar-button>';
 		$bar->appendButton('Custom', $dhtml, 'importregions');
 
 

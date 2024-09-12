@@ -9,7 +9,6 @@
 defined('_JEXEC') or die();
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Layout\LayoutHelper;
 
 
 $r 			=  $this->r;
@@ -24,9 +23,6 @@ Joomla.submitbutton = function(task) {
 ';
 Factory::getDocument()->addScriptDeclaration($js);
 echo $r->startForm($this->t['o'], $this->t['task'], $this->item->id, 'adminForm', 'adminForm');
-
-echo LayoutHelper::render('joomla.edit.title_alias', $this);
-
 // First Column
 echo '<div class="col-xs-12 col-sm-12 col-md-12 form-horizontal">';
 $tabs = array (
@@ -34,8 +30,8 @@ $tabs = array (
 'publishing' 	=> Text::_($this->t['l'].'_PUBLISHING_OPTIONS'));
 echo $r->navigation($tabs);
 
-//$formArray = array ('title');
-//echo $r->groupHeader($this->form, $formArray);
+$formArray = array ('title');
+echo $r->groupHeader($this->form, $formArray);
 
 echo $r->startTabs();
 

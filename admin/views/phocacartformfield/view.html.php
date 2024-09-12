@@ -56,7 +56,7 @@ class PhocaCartCpViewPhocaCartFormfield extends HtmlView
 		$canDo		= $class::getActions($this->t, $this->state->get('filter.formfield_id'));
 
 		$text = $isNew ? Text::_( $this->t['l'] . '_NEW' ) : Text::_($this->t['l'] . '_EDIT');
-		ToolbarHelper::title(   Text::_( $this->t['l'] . '_FORM_FIELD' ).': <small><small>[ ' . $text.' ]</small></small>' , 'fields');
+		ToolbarHelper::title(   Text::_( $this->t['l'] . '_FORM_FIELD' ).': <small><small>[ ' . $text.' ]</small></small>' , 'list-alt');
 
 		// If not checked out, can save the item.
 		if (!$checkedOut && $canDo->get('core.edit')){

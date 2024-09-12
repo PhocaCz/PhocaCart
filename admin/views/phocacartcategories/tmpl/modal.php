@@ -51,6 +51,7 @@ if ($saveOrder && !empty($this->items)) {
 	$saveOrderingUrl = $r->saveOrder($this->t, $listDirn);
 }
 
+$sortFields = $this->getSortFields();
 echo $r->jsJorderTable($listOrder);
 
 //echo '<div class="clearfix"></div>';
@@ -59,6 +60,31 @@ echo $r->jsJorderTable($listOrder);
 echo $r->startFormModal($this->t['o'], $this->t['tasks'], 'adminForm', 'adminForm', $function);
 
 echo $r->startMainContainerNoSubmenu();
+/*
+echo $r->startFilterNoSubmenu();
+echo $r->endFilter();
+
+echo $r->startMainContainerNoSubmenu();
+
+if ($this->t['search']) {
+	echo '<div class="alert alert-message">' . Text::_('COM_PHOCACART_SEARCH_FILTER_IS_ACTIVE') .'</div>';
+}
+
+echo $r->startFilterBar();
+echo $r->inputFilterSearch($this->t['l'].'_FILTER_SEARCH_LABEL', $this->t['l'].'_FILTER_SEARCH_DESC',
+	$this->escape($this->state->get('filter.search')));
+echo $r->inputFilterSearchClear('JSEARCH_FILTER_SUBMIT', 'JSEARCH_FILTER_CLEAR');
+echo $r->inputFilterSearchLimit('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC', $this->pagination->getLimitBox());
+echo $r->selectFilterDirection('JFIELD_ORDERING_DESC', 'JGLOBAL_ORDER_ASCENDING', 'JGLOBAL_ORDER_DESCENDING', $listDirn);
+echo $r->selectFilterSortBy('JGLOBAL_SORT_BY', $sortFields, $listOrder);
+
+echo $r->startFilterBar(2);
+echo $r->selectFilterPublished('JOPTION_SELECT_PUBLISHED', $this->state->get('filter.published'));
+//echo $r->selectFilterLanguage('JOPTION_SELECT_LANGUAGE', $this->state->get('filter.language'));
+echo $r->selectFilterLevels('COM_PHOCACART_SELECT_MAX_LEVELS', $this->state->get('filter.level'));
+echo $r->endFilterBar();
+
+echo $r->endFilterBar();*/
 
 echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 echo $r->startTable('categoryList');

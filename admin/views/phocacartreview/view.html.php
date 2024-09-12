@@ -7,12 +7,12 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-
 use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Toolbar\ToolbarHelper;
+jimport( 'joomla.application.component.view' );
 
 class PhocaCartCpViewPhocacartReview extends HtmlView
 {
@@ -22,15 +22,15 @@ class PhocaCartCpViewPhocacartReview extends HtmlView
 	protected $t;
 	protected $r;
 
-	public function display($tpl = null)
-	{
+	public function display($tpl = null) {
+
 		$this->t		= PhocacartUtils::setVars('review');
 		$this->r		= new PhocacartRenderAdminview();
 		$this->state	= $this->get('State');
 		$this->form		= $this->get('Form');
 		$this->item		= $this->get('Item');
 
-		new PhocacartRenderAdminmedia();
+		$media = new PhocacartRenderAdminmedia();
 
 		$this->addToolbar();
 		parent::display($tpl);
@@ -40,6 +40,7 @@ class PhocaCartCpViewPhocacartReview extends HtmlView
 
 		require_once JPATH_COMPONENT.'/helpers/'.$this->t['tasks'].'.php';
 		Factory::getApplication()->input->set('hidemainmenu', true);
+		$bar 		= Toolbar::getInstance('toolbar');
 		$user		= Factory::getUser();
 		$isNew		= ($this->item->id == 0);
 		$checkedOut	= !($this->item->checked_out == 0 || $this->item->checked_out == $user->get('id'));
@@ -58,11 +59,12 @@ class PhocaCartCpViewPhocacartReview extends HtmlView
 
 		if (empty($this->item->id))  {
 			ToolbarHelper::cancel($this->t['task'].'.cancel', 'JTOOLBAR_CANCEL');
-		} else {
+		}
+		else {
 			ToolbarHelper::cancel($this->t['task'].'.cancel', 'JTOOLBAR_CLOSE');
 		}
 		ToolbarHelper::divider();
-		ToolbarHelper::inlinehelp();
 		ToolbarHelper::help( 'screen.'.$this->t['c'], true );
 	}
 }
+?>

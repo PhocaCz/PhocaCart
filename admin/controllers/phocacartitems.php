@@ -44,8 +44,8 @@ class PhocaCartCpControllerPhocaCartItems extends PhocaCartCpControllerPhocaCart
 			{
 				// Prune items that you can't change.
 				unset($ids[$i]);
-				//$this->setError(Text::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
-				$this->setMessage(Text::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'), 'error');
+				$this->setError(Text::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
+				$this->setMessage($this->getError(), 'error');
 			}
 		}
 

@@ -77,7 +77,7 @@ if ($this->page == 0) { ?>
 			<div class="ph-wizard-start-page-box">
 				<div><?php echo Text::_('COM_PHOCACART_WIZARD_START_QUICK_SETUP_WIZARD');?>.</div>
 				<div>&nbsp;</div>
-				<div class="ph-wizard-center-button"><a class="btn btn-warning ph-btn" href="<?php echo Route::_($linkWizard.'&page=1'); ?>"><span class="glyphicon glyphicon-ok share-alt icon-share"></span> <?php echo Text::_('COM_PHOCACART_START_WIZARD'); ?></a></div>
+				<div class="ph-wizard-center-button"><a class="btn btn-primary ph-btn" href="<?php echo Route::_($linkWizard.'&page=1'); ?>"><span class="glyphicon glyphicon-ok share-alt icon-share"></span> <?php echo Text::_('COM_PHOCACART_START_WIZARD'); ?></a></div>
 			</div>
 		</div>
 	</div>

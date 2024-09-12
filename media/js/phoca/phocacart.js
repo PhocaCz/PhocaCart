@@ -73,7 +73,6 @@ function phUpdatePageAndParts(url, source) {
 
 	const phVars 		= Joomla.getOptions('phVarsPC');
 	const phParamsS 	= Joomla.getOptions('phParamsModPhocacartSearch');
-	const phParamsF 	= Joomla.getOptions('phParamsModPhocacartFilter');
 	let ds = '/';
 	if (phVars['basePath'] == 'undefined' || phVars['basePath'] == '') {
 		ds = '';
@@ -98,7 +97,7 @@ function phUpdatePageAndParts(url, source) {
 		urlMain = '?format=raw';
 	}
 
-	// Remove possible conflict params in URL 
+	// Remove possible conflict params in URL
 	let urlModule	= phRemoveParamFromUrl('option', urlMain);
 	urlModule		= phRemoveParamFromUrl('view', urlModule);
 	urlModule 		= phRemoveParamFromUrl('module', urlModule);
@@ -127,10 +126,8 @@ function phUpdatePageAndParts(url, source) {
 		phRenderPagePart({}, 'phSearchActiveTags', urlSearchModule);// AJAX update search module
 	}
 
-	if (typeof phVars != 'undefined' && phVars['mod_phocacart_filter'] == 1 && typeof phParamsF != 'undefined' && phParamsF['limitToActiveCategory'] == 1 && (source == 1 || source == 2)) {
-		// Update filter when source comes from search filter
-		// But even if Limit To Active Category is enabled in filter module 
-		// ... then the parameters in filter change too based on category
+	if (typeof phVars != 'undefined' && phVars['mod_phocacart_filter'] == 1 && source == 2) {
+		// Update filter only when source comes from search filter
 		phRenderPagePart({}, 'phFilterBox', urlFilterModule);// AJAX update filter module
 	}
 	phRenderPage({},urlMain );// AJAX update main page

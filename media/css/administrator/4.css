@@ -9,7 +9,7 @@
 .ph-extension-info-box {
 	background: #fff;
 	padding: 1em;
-}
+} 
 
 .ph-extension-links-box {
 	margin-top: 1em;
@@ -46,20 +46,10 @@
 
 }
 
-.com_phocacart .table:not(.table-sm) > :not(caption) > * > * {
+.com_phocacart .table > :not(caption) > * > * {
     padding: 0.75rem 0.25rem;
 }
 
 .com_phocacart .ph-multiple-table > :not(caption) > * > * {
 	padding: 0.15rem 0.25rem;
 }
-
-.modal-phoca-batch {
-	--modal-width: 95vw;
-}
-
-.input-group-i18n {
-	justify-content: center;
-	width: 4em;
-}
-

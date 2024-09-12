@@ -24,21 +24,16 @@ use Joomla\CMS\MVC\Model\BaseDatabaseModel;
  */
 abstract class BaseApiController extends ApiController
 {
-    protected function loadFormsPath()
-    {
-        Form::addFormPath(JPATH_ADMINISTRATOR . '/components/com_phocacart/models/forms');
-        Form::addFieldPath(JPATH_ADMINISTRATOR . '/components/com_phocacart/models/fields');
-    }
+  public function edit()
+  {
+    Form::addFormPath(JPATH_ADMINISTRATOR . '/components/com_phocacart/models/forms');
+    Form::addFieldPath(JPATH_ADMINISTRATOR . '/components/com_phocacart/models/fields');
+    return parent::edit();
+  }
 
-    public function edit()
-    {
-        $this->loadFormsPath();
-        return parent::edit();
-    }
-
-    public function getModel($name = '', $prefix = '', $config = [])
-    {
-        BaseDatabaseModel::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_phocacart/models');
-        return BaseDatabaseModel::getInstance('PhocaCart' . $name, 'PhocaCartCpModel', $config);
-    }
+  public function getModel($name = '', $prefix = '', $config = [])
+  {
+    BaseDatabaseModel::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_phocacart/models');
+    return BaseDatabaseModel::getInstance('PhocaCart' . $name, 'PhocaCartCpModel', $config);
+  }
 }

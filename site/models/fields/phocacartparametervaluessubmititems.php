@@ -7,25 +7,24 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-
 use Joomla\CMS\Factory;
-use Joomla\CMS\Form\FormField;
 
-require_once( JPATH_ADMINISTRATOR.'/components/com_phocacart/libraries/bootstrap.php');
+if (! class_exists('PhocacartParameter')) {
+    require_once( JPATH_ADMINISTRATOR.'/components/com_phocacart/libraries/phocacart/parameter/parameter.php');
+}
+
+$lang = Factory::getLanguage();
+$lang->load('com_phocacart');
+
+use Joomla\CMS\Form\FormField;
+defined('_JEXEC') or die();
 
 class JFormFieldPhocaCartParameterValuesSubmitItems extends FormField
 {
 	protected $type 		= 'PhocaCartParameterValuesSubmitItems';
 
-	public function __construct($form = null)
-	{
-		parent::__construct($form);
-
-		$lang = Factory::getApplication()->getLanguage();
-		$lang->load('com_phocacart');
-	}
-
 	protected function getInput() {
+
 		$id = (int) $this->form->getValue('id');
 
 		$parameterId = (int)$this->element['parameterid'];
@@ -45,3 +44,4 @@ class JFormFieldPhocaCartParameterValuesSubmitItems extends FormField
 	}
 
 }
+?>

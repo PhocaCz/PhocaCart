@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
-    <inlinehelp button="show"/>
-
     <fields addfieldpath="/administrator/components/com_phocacart/models/fields">
         <fieldset name="display" label="COM_PHOCACART_CONFIG_HEAD_DISPLAY_LABEL" addfieldprefix="Joomla\Component\Content\Administrator\Field">
 
@@ -16,11 +14,6 @@
                 <option value="4">4</option>
                 <option value="6">6</option>
                 <option value="12">12</option>
-            </field>
-
-            <field name="columns_cats_mobile" type="list" class="form-select" default="1" label="COM_PHOCACART_FIELD_COLUMNS_CATEGORIES_VIEW_MOBILE_LABEL" description="COM_PHOCACART_FIELD_COLUMNS_CATEGORIES_VIEW_MOBILE_DESC">
-                <option value="1">1</option>
-                <option value="2">2</option>
             </field>
 
             <field name="csv_display_subcategories" default="0" size="10" type="text" label="COM_PHOCACART_FIELD_DISPLAY_SUBCATEGORIES_CSV_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_SUBCATEGORIES_CSV_DESC"/>
@@ -115,11 +108,6 @@
                 <option value="12">12</option>
             </field>
 
-             <field name="columns_cat_mobile" type="list" class="form-select" default="1" label="COM_PHOCACART_FIELD_COLUMNS_CATEGORY_ITEMS_VIEW_MOBILE_LABEL" description="COM_PHOCACART_FIELD_COLUMNS_CATEGORY_ITEMS_VIEW_MOBILE_DESC">
-                <option value="1">1</option>
-                <option value="2">2</option>
-            </field>
-
             <field name="cv_display_subcategories" default="0" size="10" type="text" label="COM_PHOCACART_FIELD_DISPLAY_SUBCATEGORIES_CV_ITEMS_LABEL"
                    description="COM_PHOCACART_FIELD_DISPLAY_SUBCATEGORIES_CV_ITEMS_DESC"/>
 
@@ -163,7 +151,7 @@
                 <option value="4">COM_PHOCACART_YES_STANDARD_ICON_ONLY</option>
                 <option value="102">COM_PHOCACART_YES_BUY_NOW_PADDLE</option>
                 <option value="103">COM_PHOCACART_YES_EXTERNAL_LINK</option>
-				        <option value="104">COM_PHOCACART_YES_QUICK_VIEW_BUTTON</option>
+				<option value="104">COM_PHOCACART_YES_QUICK_VIEW_BUTTON</option>
             </field>
 
 
@@ -595,12 +583,6 @@
             </field>
 
 
-          <field name="checkout_separate_by_owner" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_CHECKOUT_SEPARATE_BY_OWNER_LABEL"
-                 description="COM_PHOCACART_FIELD_CHECKOUT_SEPARATE_BY_OWNER_DESC">
-            <option value="0">COM_PHOCACART_NO</option>
-            <option value="1">COM_PHOCACART_YES</option>
-          </field>
-
             <field name="phocahead30" type="phocahead" default="COM_PHOCACART_USER_ACCOUNT_VIEW_LABEL" label="" description=""/>
 
             <field name="display_reward_points_total_info" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DISPLAY_REWARD_POINTS_INFO_USER_ACCOUNT_VIEW_LABEL"
@@ -617,11 +599,6 @@
                 <option value="1">COM_PHOCACART_YES</option>
             </field>
 
-          <field name="display_user_orders_details_style" type="list" default="popup" label="COM_PHOCACART_FIELD_DISPLAY_USER_ORDERS_DETAILS_STYLE_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_USER_ORDERS_DETAILS_STYLE_DESC">
-            <option value="nopopup">COM_PHOCACART_FIELD_DETAILS_STYLE_NOPOPUP</option>
-            <option value="popup">COM_PHOCACART_FIELD_DETAILS_STYLE_POPUP</option>
-            <option value="blank">COM_PHOCACART_FIELD_DETAILS_STYLE_BLANK</option>
-          </field>
 			<field name="phocahead39" type="phocahead" default="COM_PHOCACART_INFO_VIEW_LABEL" label="" description=""/>
 
 			<field name="info_view_description" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control" label="COM_PHOCACART_FIELD_INFO_VIEW_DESCRIPTION_LABEL"
@@ -908,10 +885,10 @@
 
             </field>
 
-            <field name="icon_type" type="list" class="btn-group btn-group-yesno" default="svg" label="COM_PHOCACART_FIELD_ICON_TYPE_LABEL" description="COM_PHOCACART_FIELD_ICON_TYPE_DESC">
+            <field name="icon_type" type="list" class="btn-group btn-group-yesno" default="fa5" label="COM_PHOCACART_FIELD_ICON_TYPE_LABEL" description="COM_PHOCACART_FIELD_ICON_TYPE_DESC">
                 <option value="bs">Bootstrap</option>
                 <option value="fa">Font Awesome</option>
-				        <option value="fa5">Font Awesome 5</option>
+				<option value="fa5">Font Awesome 5</option>
                 <option value="svg">SVG</option>
             </field>
 
@@ -948,28 +925,6 @@
             </field>
 
 
-          <field name="_schemaorg_heading" type="phocahead" default="COM_PHOCACART_CONFIG_SCHEMAORG_OPTIONS_LABEL"/>
-
-          <field name="schema_product" type="radio" layout="joomla.form.field.radio.switcher" default="1" label="COM_PHOCACART_FIELD_SCHEMA_PRODUCT_LABEL" description="COM_PHOCACART_FIELD_SCHEMA_PRODUCT_DESC">
-            <option value="0">COM_PHOCACART_NO</option>
-            <option value="1">COM_PHOCACART_YES</option>
-          </field>
-
-          <field name="schema_cache" type="radio" layout="joomla.form.field.radio.switcher" default="1" showon="schema_product:1" label="COM_PHOCACART_FIELD_SCHEMA_CACHE_LABEL" description="COM_PHOCACART_FIELD_SCHEMA_CACHE_DESC">
-            <option value="0">COM_PHOCACART_NO</option>
-            <option value="1">COM_PHOCACART_YES</option>
-          </field>
-
-          <field name="_watchdog_heading" type="phocahead" default="COM_PHOCACART_CONFIG_WATCHDOG_OPTIONS_LABEL"/>
-
-          <field name="watchdog_enable" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_WATCHDOG_ENABLE_LABEL" description="COM_PHOCACART_FIELD_WATCHDOG_ENABLE_DESC">
-            <option value="0">COM_PHOCACART_NO</option>
-            <option value="1">COM_PHOCACART_YES</option>
-          </field>
-
-          <field name="watchdog_limit" type="number" min="1" default="20" filter="integer" showon="watchdog_enable:1" label="COM_PHOCACART_FIELD_WATCHDOG_LIMIT_LABEL" description="COM_PHOCACART_FIELD_WATCHDOG_LIMIT_DESC" />
-
-          <field name="watchdog_send_limit" type="number" min="1" default="20" filter="integer" showon="watchdog_enable:1" label="COM_PHOCACART_FIELD_WATCHDOG_SEND_LIMIT_LABEL" description="COM_PHOCACART_FIELD_WATCHDOG_SEND_LIMIT_DESC" />
         </fieldset>
 
         <fieldset name="calculation" label="COM_PHOCACART_CONFIG_HEAD_CALCULATION_LABEL">
@@ -1389,8 +1344,6 @@
             <field name="phocahead13" type="phocahead" default="COM_PHOCACART_IMAGES_AND_THUMBNAILS_LABEL" label="" description=""/>
 
 
-            <field name="thumbnail_quality" default="100" size="4" type="text" label="COM_PHOCACART_FIELD_THUMBNAIL_QUALITY_LABEL" description="COM_PHOCACART_FIELD_THUMBNAIL_QUALITY_DESC"/>
-
             <field name="large_image_width" default="640" size="4" type="text" label="COM_PHOCACART_FIELD_LARGE_IMAGE_WIDTH_LABEL" description="COM_PHOCACART_FIELD_LARGE_IMAGE_WIDTH_DESC"/>
 
             <field name="large_image_height" default="480" size="4" type="text" label="COM_PHOCACART_FIELD_LARGE_IMAGE_HEIGHT_LABEL" description="COM_PHOCACART_FIELD_LARGE_IMAGE_HEIGHT_DESC"/>
@@ -1418,22 +1371,6 @@
                 <option value="0">COM_PHOCACART_NO</option>
 				<option value="1">COM_PHOCACART_YES</option>
             </field>
-
-            <field name="create_watermark" type="list" default="0" label="COM_PHOCACART_FIELD_CREATE_WATERMARK_LABEL" description="COM_PHOCACART_FIELD_CREATE_WATERMARK_DESC">
-	<option value="1">COM_PHOCACART_YES_FOLDER</option>
-	<option value="2">COM_PHOCACART_YES_ROOT</option>
-	<option value="0">COM_PHOCACART_NO</option>
-</field>
-<field name="watermark_position_x" type="list" default="center" label="COM_PHOCACART_FIELD_X-POSITION_OF_WATERMARK_LABEL" description="COM_PHOCACART_FIELD_X-POSITION_OF_WATERMARK_DESC">
-	<option value="left">COM_PHOCACART_LEFT</option>
-	<option value="center">COM_PHOCACART_CENTER</option>
-	<option value="right">COM_PHOCACART_RIGHT</option>
-</field>
-<field name="watermark_position_y" type="list" default="middle" label="COM_PHOCACART_FIELD_Y-POSITION_OF_WATERMARK_LABEL" description="COM_PHOCACART_FIELD_Y-POSITION_OF_WATERMARK_DESC">
-	<option value="top">COM_PHOCACART_TOP</option>
-	<option value="middle">COM_PHOCACART_MIDDLE</option>
-	<option value="bottom">COM_PHOCACART_BOTTOM</option>
-</field>
 
 
 			<field name="phocahead36" type="phocahead" default="COM_PHOCACART_HEAD_COPY_PASTE_IMAGES_OPTIONS_LABEL" label="" description=""/>
@@ -1818,17 +1755,6 @@
                    description="COM_PHOCACART_FIELD_DISPLAY_DESCRIPTION_ADMINISTRATION_LISTS_DESC" filter="integer"/>
 
 
-          <field name="custom_fields_enable" type="radio" label="JGLOBAL_CUSTOM_FIELDS_ENABLE_LABEL" layout="joomla.form.field.radio.switcher" default="1">
-            <option value="0">JNO</option>
-            <option value="1">JYES</option>
-          </field>
-
-            <field name="barcode_scanning_product_list" type="list" label="COM_PHOCACART_FIELD_BARCODE_SCANNING_PRODUCT_LIST_ADMINISTRATION_LABEL" description="COM_PHOCACART_FIELD_BARCODE_SCANNING_PRODUCT_LIST_ADMINISTRATION_DESC" default="0">
-            <option value="0">JNO</option>
-            <option value="1">COM_PHOCACART_YES_ONLY_SEARCH</option>
-            <option value="2">COM_PHOCACART_YES_FIND_REDIRECT_PRODUCT_EDIT</option>
-          </field>
-
             <field name="phocahead33" type="phocahead" default="COM_PHOCACART_MULTILINGUAL_OPTIONS_LABEL" label="" description=""/>
 
             <field name="order_language" type="list" class="btn-group btn-group-yesno" default="1" label="COM_PHOCACART_FIELD_ORDER_LANGUAGE_LABEL"
@@ -1843,14 +1769,10 @@
                 <option value="1">COM_PHOCACART_YES</option>
             </field>
 
-          <field name="i18n" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_I18N_LABEL" description="COM_PHOCACART_FIELD_I18N_DESC">
-            <option value="0">JNO</option>
-            <option value="1">JYES</option>
-          </field>
-
-          <field name="i18n_language" type="language" showon="i18n:1" default="" label="COM_PHOCACART_FIELD_I18N_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_I18N_LANGUAGE_DESC">
-            <option value="">COM_PHOCACART_DEFAULT_LANGUAGE_FRONTEND</option>
-          </field>
+             <field name="custom_fields_enable" type="radio" label="JGLOBAL_CUSTOM_FIELDS_ENABLE_LABEL" layout="joomla.form.field.radio.switcher" default="1">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
 
         </fieldset>
 
@@ -2450,9 +2372,9 @@
             </field>
 
 
-			<field name="allowed_file_types_upload_frontend" type="textarea" size="20" default="{gif=image/gif}{jpeg=image/jpeg}{jpg=image/jpeg}{png=image/png}{webp=image/webp}{avif=image/avif}" label="COM_PHOCACART_FIELD_ALLOWED_FILE_TYPES_FRONTEND_UPLOAD_LABEL" description="COM_PHOCACART_FIELD_ALLOWED_FILE_TYPES_FRONTEND_UPLOAD_DESC"/>
+			<field name="allowed_file_types_upload_frontend" type="textarea" size="20" default="{gif=image/gif}{jpeg=image/jpeg}{jpg=image/jpeg}{png=image/png}{webp=image/webp}" label="COM_PHOCACART_FIELD_ALLOWED_FILE_TYPES_FRONTEND_UPLOAD_LABEL" description="COM_PHOCACART_FIELD_ALLOWED_FILE_TYPES_FRONTEND_UPLOAD_DESC"/>
 
-			<field name="allowed_file_types_upload_backend" type="textarea" size="20" default="{gif=image/gif}{jpeg=image/jpeg}{jpg=image/jpeg}{png=image/png}{webp=image/webp}{avif=image/avif}{tar=application/x-tar}{tgz=application/x-tar}{zip=application/x-zip}{rar=application/x-rar-compressed}{tar=application/tar}{tgz=application/tar}{zip=application/zip}{rar=application/rar-compressed}{pdf=application/pdf}{txt=text/plain}{xml=text/xml}{doc=application/msword}{xls=application/vnd.ms-excel}{ppt=application/powerpoint}{odt=application/vnd.oasis.opendocument.text}{ods=application/vnd.oasis.opendocument.spreadsheet}{odp=application/vnd.oasis.opendocument.presentation}{docx=application/vnd.openxmlformats-officedocument.wordprocessingml.document}{xlsx=application/vnd.openxmlformats-officedocument.spreadsheetml.sheet}{pptx=application/vnd.openxmlformats-officedocument.presentationml.presentation}{mp3=audio/mpeg}{mp4=video/mp4}{epub=application/epub+zip}" label="COM_PHOCACART_FIELD_ALLOWED_FILE_TYPES_BACKEND_UPLOAD_LABEL" description="COM_PHOCACART_FIELD_ALLOWED_FILE_TYPES_BACKEND_UPLOAD_DESC"/>
+			<field name="allowed_file_types_upload_backend" type="textarea" size="20" default="{gif=image/gif}{jpeg=image/jpeg}{jpg=image/jpeg}{png=image/png}{webp=image/webp}{tar=application/x-tar}{tgz=application/x-tar}{zip=application/x-zip}{rar=application/x-rar-compressed}{tar=application/tar}{tgz=application/tar}{zip=application/zip}{rar=application/rar-compressed}{pdf=application/pdf}{txt=text/plain}{xml=text/xml}{doc=application/msword}{xls=application/vnd.ms-excel}{ppt=application/powerpoint}{odt=application/vnd.oasis.opendocument.text}{ods=application/vnd.oasis.opendocument.spreadsheet}{odp=application/vnd.oasis.opendocument.presentation}{docx=application/vnd.openxmlformats-officedocument.wordprocessingml.document}{xlsx=application/vnd.openxmlformats-officedocument.spreadsheetml.sheet}{pptx=application/vnd.openxmlformats-officedocument.presentationml.presentation}{mp3=audio/mpeg}{mp4=video/mp4}{epub=application/epub+zip}" label="COM_PHOCACART_FIELD_ALLOWED_FILE_TYPES_BACKEND_UPLOAD_LABEL" description="COM_PHOCACART_FIELD_ALLOWED_FILE_TYPES_BACKEND_UPLOAD_DESC"/>
 
 
 			<field name="upload_maxsize" type="text" size="20" default="3145728" label="COM_PHOCACART_FIELD_MAXIMUM_SIZE_UPLOAD_FILE_LABEL" description="COM_PHOCACART_FIELD_MAXIMUM_SIZE_UPLOAD_FILE_DESC"/>
@@ -2498,7 +2420,6 @@
                 <option value="text-curie-001">text-curie-001</option>
                 <option value="text-babbage-001">text-babbage-001</option>
                 <option value="text-ada-001">text-ada-001</option>
-                <option value="gpt-3.5-turbo-instruct">gpt-3.5-turbo-instruct</option>
             </field>
 
             <field name="ai_premade_question_description" type="text" default="Create a product description based on the following information" label="COM_PHOCACART_AI_PRE_MADE_QUESTION_DESCRIPTION_LABEL" description="COM_PHOCACART_AI_PRE_MADE_QUESTION_DESCRIPTION_DESC" filter="safehtml" />
@@ -2516,15 +2437,13 @@
             <field name="ai_premade_question_metadesc" type="text" default="Create a very short description of the product based on the following information" label="COM_PHOCACART_AI_PRE_MADE_QUESTION_METADESC_LABEL" description="COM_PHOCACART_AI_PRE_MADE_QUESTION_METADESC_DESC" filter="safehtml" />
 
             <field name="ai_parameters_metadesc" type="textarea" default="{&quot;max_tokens&quot;: 50, &quot;temperature&quot;: 0.5}" label="COM_PHOCACART_AI_PARAMETERS_METADESC_LABEL" description="COM_PHOCACART_AI_PARAMETERS_METADESC_DESC" filter="raw" />
+
+
         </fieldset>
 
-        <fieldset name="advanced_permissions" description="JCONFIG_PERMISSIONS_DESC" label="JCONFIG_PERMISSIONS_LABEL">
-          <field name="use_advanced_permissions" type="radio" label="COM_PHOCACART_USE_ADVANCED_PERMISSIONS_LABEL" layout="joomla.form.field.radio.switcher" default="0">
-            <option value="0">JNO</option>
-            <option value="1">JYES</option>
-          </field>
-
-          <field name="rules" type="rules" component="com_phocacart" filter="rules" validate="rules" hiddenLabel="true" label="COM_PHOCACART_FIELD_JCONFIG_PERMISSIONS_LABEL" section="component"/>
+        <fieldset name="permissions" description="JCONFIG_PERMISSIONS_DESC" label="JCONFIG_PERMISSIONS_LABEL">
+            <field name="rules" type="rules" component="com_phocacart" filter="rules" validate="rules" label="COM_PHOCACART_FIELD_JCONFIG_PERMISSIONS_LABEL" section="component"/>
         </fieldset>
+
     </fields>
 </config>

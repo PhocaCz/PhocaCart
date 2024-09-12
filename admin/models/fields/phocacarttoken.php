@@ -22,14 +22,12 @@ class JFormFieldPhocaCartToken extends FormField
 		// Initialize some field attributes.
 		$size		= $this->element['size'] ? ' size="'.(int) $this->element['size'].'"' : '';
 		$maxLength	= $this->element['maxlength'] ? ' maxlength="'.(int) $this->element['maxlength'].'"' : '';
-		$class		= $this->element['class'] ? ' class="'.(string) $this->element['class'].'"' : 'class="form-control"';
+		$class		= $this->element['class'] ? ' class="'.(string) $this->element['class'].'"' : 'class="form-input"';
 		$readonly	= ((string) $this->element['readonly'] == 'true') ? ' readonly="readonly"' : '';
 		$disabled	= ((string) $this->element['disabled'] == 'true') ? ' disabled="disabled"' : '';
 		$manager	= $this->element['manager'] ? $this->element['manager'] : '';
-        $managerPath	= $this->element['managerpath'] ? $this->element['managerpath'] : '';
 
-		$token = PhocacartUtils::getAndCheckToken($manager, PhocacartPath::getPath($managerPath));
-        //$token = PhocacartUtils::getToken($manager);
+		$token = PhocacartUtils::getToken($manager);
 
 		if ($this->value == '') {
 			$this->value = htmlspecialchars((string)$token);
@@ -53,3 +51,4 @@ class JFormFieldPhocaCartToken extends FormField
 
 	}
 }
+?>

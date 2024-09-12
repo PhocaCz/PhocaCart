@@ -36,9 +36,6 @@ if($this->a->login == 0) {
 	$lang = Factory::getLanguage();
 	$lang->load('mod_login');
 
-
-	echo '<div class="ph-checkout-box-login ph-checkout-box-status-'.$d['status'].'">';
-
 	echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-row" >';
 	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-checkout-box-header" id="phcheckoutloginedit">'.$layoutI->render($d).'<h3>'.$this->t['nl'].'. '.Text::_('COM_PHOCACART_LOGIN_REGISTER').'</h3></div>';
 	echo '</div>';
@@ -82,17 +79,13 @@ if($this->a->login == 0) {
 
 
 	echo '</div>'. "\n";// end checkout_login_row_item_register
+
 	echo '</div>'. "\n";// ph-checkout-box-action
-
-	echo '</div>';// end box login
-
 
 
 } else if($this->a->login == 1) {
 
 	$d['status']	= 'finished';
-
-	echo '<div class="ph-checkout-box-login ph-checkout-box-status-'.$d['status'].'">';
 
 	echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-row" >';
 	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-checkout-box-header" id="phcheckoutloginview">'.$layoutI->render($d).'<h3>'.$this->t['nl'].'. '.Text::_('COM_PHOCACART_LOGIN_REGISTER').'</h3></div>';
@@ -105,13 +98,9 @@ if($this->a->login == 0) {
 	echo '</div>';
 	echo '</div>';
 
-	echo '</div>';// end box login
-
 } else if($this->a->login == 2) {
 
 	$d['status']	= 'finished';
-
-	echo '<div class="ph-checkout-box-login ph-checkout-box-status-'.$d['status'].'">';
 
 	echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-row" >';
 	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-checkout-box-header">'.$layoutI->render($d).'<h3>'.$this->t['nl'].'. '.Text::_('COM_PHOCACART_GUEST_CHECKOUT').'</h3></div>';
@@ -147,8 +136,5 @@ if($this->a->login == 0) {
 
 	echo '</div>';
 	echo '</div>';
-
-	echo '</div>';// end box login
-
 }
 ?>

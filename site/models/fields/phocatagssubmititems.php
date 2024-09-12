@@ -9,9 +9,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License version 2 or later;
  */
 defined('_JEXEC') or die();
-
 use Joomla\CMS\Form\FormField;
-
 class JFormFieldPhocaTagsSubmitItems extends FormField
 {
 	protected $type 		= 'PhocaTagsSubmitItems';

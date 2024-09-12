@@ -18,8 +18,6 @@ use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Language\Associations;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Language\Multilanguage;
-use Phoca\PhocaCart\I18n\I18nHelper;
-
 // ASSOCIATION
 HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
@@ -111,7 +109,7 @@ $options['listdirn']    = $listDirn;
 $options['listorder']   = $listOrder;
 $options['count']       = 2;
 $options['type']        = 'render';
-$options['association'] = I18nHelper::associationsEnabled();
+$options['association'] = Associations::isEnabled();
 $options['tasks']       = $this->t['tasks'];
 
 $c = new PhocacartRenderAdmincolumns();

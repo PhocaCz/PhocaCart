@@ -31,7 +31,7 @@ class PhocacartUtilsAdmindescription
 
     public function getAdminDescription($description) {
 
-        $description = strip_tags($description ?? '');
+        $description = strip_tags($description);
 
         if (StringHelper::strlen($description) < $this->display_admin_description || StringHelper::strlen($description) == $this->display_admin_description) {
             return $description;
@@ -40,4 +40,4 @@ class PhocacartUtilsAdmindescription
         }
     }
 }
-
+?>

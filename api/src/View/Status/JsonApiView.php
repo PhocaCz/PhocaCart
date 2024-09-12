@@ -21,20 +21,13 @@ use Tobscure\JsonApi\Resource;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
- * The status view
+ * The banners view
  *
- * @since  5.0.0
+ * @since  4.0.0
  */
 class JsonApiView extends BaseJsonApiView
 {
 
-  /**
-   * @param $tpl
-   * @return string
-   * @throws \Exception
-   *
-   * @since 5.0.0
-   */
   public function displayStatus($tpl = null)
   {
     $data = (object)[

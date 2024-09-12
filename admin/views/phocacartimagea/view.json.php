@@ -69,9 +69,8 @@ class PhocaCartCpViewPhocaCartImageA extends HtmlView
 		$imgFormat = 'png';
 		if (strpos($format, 'image/jpg') !== false || strpos($format, 'image/jpeg') !== false) {
 			$imgFormat = 'jpg';
-		} else if (strpos($format, 'image/avif') !== false) {
-			$imgFormat = 'avif';
 		} else if (strpos($format, 'image/webp') !== false) {
+
 			$imgFormat = 'webp';
 		}
 
@@ -189,22 +188,6 @@ class PhocaCartCpViewPhocaCartImageA extends HtmlView
 								return;
 							}
 						break;
-
-						case IMAGETYPE_AVIF:
-							if (!function_exists('ImageCreateFromAVIF')) {
-								$response = array('status' => '0', 'error' => $sE . Text::_('COM_PHOCACART_ERROR') . ': ErrorNoAVIFFunction' . $eE);
-								echo json_encode($response);
-								return;
-							}
-							try {
-								$image1 = ImageCreateFromAVIF($fileIn);
-							} catch(\Exception $exception) {
-								$response = array('status' => '0', 'error' => $sE . Text::_('COM_PHOCACART_ERROR') . ': ErrorNoAVIFFunction' . $eE);
-								echo json_encode($response);
-								return;
-							}
-						break;
-
 						default:
 							$response = array('status' => '0', 'error' => $sE . Text::_('COM_PHOCACART_ERROR') . ': ErrorNotSupportedImage' . $eE);
 							echo json_encode($response);
@@ -264,20 +247,6 @@ class PhocaCartCpViewPhocaCartImageA extends HtmlView
 								}
 
 								if (!@imagewebp($image2, $fileOut)) {
-									$response = array('status' => '0', 'error' => $sE . Text::_('COM_PHOCACART_ERROR_WRITING_IMAGE_FILE') . $eE);
-									echo json_encode($response);
-									return;
-								}
-							break;
-
-							case IMAGETYPE_AVIF :
-								if (!function_exists('ImageAVIF')) {
-									$response = array('status' => '0', 'error' => $sE . Text::_('COM_PHOCACART_ERROR') . ': ErrorNoAVIFFunction' . $eE);
-									echo json_encode($response);
-									return;
-								}
-
-								if (!@imageavif($image2, $fileOut)) {
 									$response = array('status' => '0', 'error' => $sE . Text::_('COM_PHOCACART_ERROR_WRITING_IMAGE_FILE') . $eE);
 									echo json_encode($response);
 									return;

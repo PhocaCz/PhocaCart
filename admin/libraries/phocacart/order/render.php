@@ -151,10 +151,8 @@ class PhocacartOrderRender
 
 		// QR CODE IN PDF
 		$d['qrcode']	= '';
-		// QR code can be rendered even outsite PDF
-		$d['qrcode'] 	= PhocacartText::completeText($pdf_invoice_qr_code, $d['preparereplace'], 1);
 		if ($type == 2 && $format == 'pdf') {
-			//$d['qrcode'] 	= PhocacartText::completeText($pdf_invoice_qr_code, $d['preparereplace'], 1);
+			$d['qrcode'] 	= PhocacartText::completeText($pdf_invoice_qr_code, $d['preparereplace'], 1);
 			/*if (isset($d['bas']['b'])) {
 				$d['qrcode'] 	= PhocacartText::completeTextFormFields($d['qrcode'], $d['bas']['b'], 1);
 			}

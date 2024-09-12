@@ -7,8 +7,6 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
-
-use Joomla\CMS\Event\Model\BeforeBatchEvent;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Table\Table;
@@ -22,44 +20,15 @@ use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\LanguageHelper;
+jimport('joomla.application.component.modeladmin');
 use Joomla\String\StringHelper;
-use Phoca\PhocaCart\Dispatcher\Dispatcher;
-use Phoca\PhocaCart\Event;
-use Phoca\PhocaCart\I18n\I18nAdminModelTrait;
-use Phoca\PhocaCart\I18n\I18nHelper;
 
 class PhocaCartCpModelPhocacartCategory extends AdminModel
 {
-	use I18nAdminModelTrait;
-
-	protected $option = 'com_phocacart';
-	protected $text_prefix = 'com_phocacart';
-	public $typeAlias = 'com_phocacart.phocacartcategory';
-	protected $associationsContext = 'com_phocacart.category';
-
-	protected $batch_commands = [
-		'assetgroup_id'             => 'batchAccess',
-		'language_id'               => 'batchLanguage',
-		'category_type'             => 'batchCategoryType',
-	];
-
-	public function __construct($config = [], \Joomla\CMS\MVC\Factory\MVCFactoryInterface $factory = null, \Joomla\CMS\Form\FormFactoryInterface $formFactory = null)
-	{
-		parent::__construct($config, $factory, $formFactory);
-
-		$this->i18nTable = '#__phocacart_categories_i18n';
-		$this->i18nFields = [
-			'title',
-			'alias',
-			'title_long',
-			'title_feed',
-            'description',
-			'description_bottom',
-            'metatitle',
-            'metakey',
-            'metadesc',
-		];
-	}
+	protected	$option 		    = 'com_phocacart';
+	protected 	$text_prefix	        = 'com_phocacart';
+	public $typeAlias 			        = 'com_phocacart.phocacartcategory';
+    protected   $associationsContext    = 'com_phocacart.category';	// ASSOCIATION
 
 	protected function canDelete($record) {
 		$user = Factory::getUser();
@@ -85,10 +54,14 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 		return Table::getInstance($type, $prefix, $config);
 	}
 
-	public function getForm($data = array(), $loadData = true)
-	{
-		$form = $this->loadForm('com_phocacart.phocacartcategory', 'phocacartcategory', array('control' => 'jform', 'load_data' => $loadData));
-		return $this->prepareI18nForm($form);
+	public function getForm($data = array(), $loadData = true) {
+
+		$app	= Factory::getApplication();
+		$form 	= $this->loadForm('com_phocacart.phocacartcategory', 'phocacartcategory', array('control' => 'jform', 'load_data' => $loadData));
+		if (empty($form)) {
+			return false;
+		}
+		return $form;
 	}
 
 	protected function loadFormData() {
@@ -97,9 +70,7 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 
 		if (empty($data)) {
 			$data = $this->getItem();
-			$this->loadI18nItem($data);
 		}
-
 		return $data;
 	}
 
@@ -119,12 +90,13 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 			}
 
             // ASSOCIATION
-            // Load associated Phoca Cart categories
-            if (I18nHelper::associationsEnabled()) {
-                $item->associations = [];
+            // Load associated Phoca Cart items
+            $assoc = Associations::isEnabled();
+            if ($assoc) {
+                $item->associations = array();
 
                 if ($item->id != null){
-                    $associations = Associations::getAssociations('com_phocacart', '#__phocacart_categories', 'com_phocacart.category', $item->id, 'id', 'alias', null);
+                    $associations = Associations::getAssociations('com_phocacart', '#__phocacart_categories', 'com_phocacart.category', $item->id, 'id', 'alias', false);
 
                     foreach ($associations as $tag => $association){
                         $item->associations[$tag] = $association->id;
@@ -132,12 +104,16 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
                 }
             }
 		}
-
 		return $item;
 	}
 
-	protected function prepareTable($table)
-	{
+	protected function prepareTable($table){
+
+
+		jimport('joomla.filter.output');
+		$date = Factory::getDate();
+		$user = Factory::getUser();
+
 		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
 		$table->alias		= ApplicationHelper::stringURLSafe($table->alias);
 
@@ -162,6 +138,11 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 				$table->ordering = $max+1;
 			}
 		}
+		else {
+			// Set the values
+			//$table->modified	= $date->toSql();
+			//$table->modified_by	= $user->get('id');
+		}
 	}
 
 	protected function getReorderConditions($table = null)
@@ -173,7 +154,8 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 	}
 
 	public function save($data) {
-		$i18nData = $this->prepareI18nData($data);
+
+
 		$app		= Factory::getApplication();
 		$input  	= Factory::getApplication()->input;
 		//$dispatcher = JDispatcher::getInstance();
@@ -210,6 +192,7 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 		if (!empty($data['feed'])) {
 			PluginHelper::importPlugin('pcf');
 			$registry 	= new Registry($data['feed']);
+			//$registry 	= new JRegistry($dataPh);
 			$dataFeed 	= $registry->toString();
 			if($dataFeed != '') {
 				$data['params_feed'] = $dataFeed;
@@ -270,24 +253,23 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 			}
 
 			// Trigger the before save event.
-			$result = Dispatcher::dispatch(new Event\Admin\Category\BeforeSave('com_phocacart.category', $table, $isNew, $data));
+			$result = Factory::getApplication()->triggerEvent('onPCAonCategoryBeforeSave', array('com_phocacart.category', &$table, $isNew, $data));
 
 			if (in_array(false, $result, true)) {
 				$this->setError($table->getError());
 				return false;
 			}
 
-
 			if (!$table->store()) {
 				$this->setError($table->getError());
 				return false;
 			}
 
-			$this->saveI18nData($table->id, $i18nData);
 			$this->cleanCache();
 
 			// Trigger the after save event.
-			Dispatcher::dispatch(new Event\Admin\Category\AfterSave('com_phocacart.category', $table, $isNew, $data));
+			Factory::getApplication()->triggerEvent('onPCAonCategoryAfterSave', array('com_phocacart.category', &$table, $isNew, $data));
+
 		} catch (\Exception $e) {
 			$this->setError($e->getMessage());
 			return false;
@@ -317,7 +299,7 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 
 
         // ASSOCIATION
-        if ((int)$savedId > 0 && $this->associationsContext && I18nHelper::associationsEnabled() && !empty($data['associations'])) {
+        if ((int)$savedId > 0 && $this->associationsContext && Associations::isEnabled() && !empty($data['associations'])) {
             $associations = $data['associations'];
             // Unset any invalid associations
             $associations = ArrayHelper::toInteger($associations);
@@ -389,113 +371,145 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 		return true;
 	}
 
-	public function delete(&$pks = [])
-	{
-		$app = Factory::getApplication();
-		$db  = $this->getDatabase();
+	public function delete(&$cid = array()) {
+		$app	= Factory::getApplication();
+		$db 	= Factory::getDBO();
 
-		ArrayHelper::toInteger($pks);
+		$result = false;
+		if (count( $cid )) {
+			ArrayHelper::toInteger($cid);
+			$cids = implode( ',', $cid );
 
-		$table = $this->getTable();
-		if (!$this->canDelete($table)) {
-			if ($error = $this->getError()) {
-				Log::add($error, Log::WARNING);
-			}
-			else {
-				Log::add(Text::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), Log::WARNING);
-			}
-
-			return false;
-		}
-
-		// FIRST - if there are subcategories - - - - -
-		$query = 'SELECT c.id, c.title, COUNT( s.parent_id ) AS numcat'
-			. ' FROM #__phocacart_categories AS c'
-			. ' LEFT JOIN #__phocacart_categories AS s ON s.parent_id = c.id'
-			. ' WHERE c.id IN ( ' . implode(',', $pks) . ' )'
-			. ' GROUP BY c.id, c.title';
-		$db->setQuery($query);
-
-		if (!($subcategories = $db->loadObjectList())) {
-			throw new Exception(Text::_('COM_PHOCACART_ERROR_PROBLEM_LOADING_DATA'), 500);
-		}
-
-		// Add new CID without categories which have subcategories (we don't delete categories with subcat)
-		$errHasSubactegories = [];
-		$pks                 = [];
-		foreach ($subcategories as $row) {
-			if ($row->numcat == 0) {
-				$pks[] = $row->id;
-			} else {
-				$errHasSubactegories[] = $row->title;
-			}
-		}
-
-		$errHasItems = [];
-		if ($pks) {
-			// Select id's from product table, if there are some items, don't delete it.
-			$query = 'SELECT c.id, c.title, COUNT( s.category_id ) AS numproduct'
-				. ' FROM #__phocacart_categories AS c'
-				. ' LEFT JOIN #__phocacart_product_categories AS s ON s.category_id = c.id'
-				. ' WHERE c.id IN ( ' . implode(',', $pks) . ' )'
-				. ' GROUP BY c.id, c.title';
-
-			$db->setQuery($query);
-
-			if (!($rows = $db->loadObjectList())) {
-				throw new Exception(Text::_('COM_PHOCACART_ERROR_PROBLEM_LOADING_DATA'), 500);
-			}
-
-
-			$pks = [];
-			foreach ($rows as $row) {
-				if ($row->numproduct == 0) {
-					$pks[] = $row->id;
+			$table = $this->getTable();
+			if (!$this->canDelete($table)){
+				$error = $this->getError();
+				if ($error){
+					Log::add($error, Log::WARNING);
+					return false;
 				} else {
-					$errHasItems[] = $row->title;
+					Log::add(Text::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), Log::WARNING);
+					return false;
 				}
 			}
-		}
 
-		if ($pks) {
-			$cids  = implode(',', $pks);
-			$query = 'DELETE FROM #__phocacart_categories WHERE id IN ( ' . implode(',', $pks) . ' )';
-			$db->setQuery($query);
+			// FIRST - if there are subcategories - - - - -
+			$query = 'SELECT c.id, c.title, COUNT( s.parent_id ) AS numcat'
+			. ' FROM #__phocacart_categories AS c'
+			. ' LEFT JOIN #__phocacart_categories AS s ON s.parent_id = c.id'
+			. ' WHERE c.id IN ( '.$cids.' )'
+			. ' GROUP BY c.id, c.title, s.parent_id'
+			;
+			$db->setQuery( $query );
 
-			if (!$db->execute()) {
-				throw new Exception('Database Error: Delete items in category', 500);
+			if (!($rows2 = $db->loadObjectList())) {
+				throw new Exception( Text::_('COM_PHOCACART_ERROR_PROBLEM_LOADING_DATA'), 500 );
+				return false;
 			}
 
-			// DELETE PRODUCT CUSTOMER GROUPS
-			$query = 'DELETE FROM #__phocacart_item_groups WHERE item_id IN ( ' . $cids . ' ) AND type = 2';
-			$db->setQuery($query);
-			$db->execute();
+			// Add new CID without categories which have subcategories (we don't delete categories with subcat)
+			$err_cat = array();
+			$cid 	 = array();
+			foreach ($rows2 as $row) {
+				if ($row->numcat == 0) {
+					$cid[] = (int) $row->id;
+				} else {
+					$err_cat[] = $row->title;
+				}
+			}
+			// - - - - - - - - - - - - - - -
 
-			$this->deleteI18nData($pks);
-		}
+			// Product with new cid - - - - -
+			$err_img = array();
+			if (count( $cid )) {
+				ArrayHelper::toInteger($cid);
+				$cids = implode( ',', $cid );
+
+				// Select id's from product table, if there are some items, don't delete it.
+				$query = 'SELECT c.id, c.title, COUNT( s.category_id ) AS numproduct'
+				. ' FROM #__phocacart_categories AS c'
+				. ' LEFT JOIN #__phocacart_product_categories AS s ON s.category_id = c.id'
+				. ' WHERE c.id IN ( '.$cids.' )'
+				. ' GROUP BY c.id, c.title, s.category_id';
+
+				$db->setQuery( $query );
+
+				if (!($rows = $db->loadObjectList())) {
+					throw new Exception( Text::_('COM_PHOCACART_ERROR_PROBLEM_LOADING_DATA'), 500 );
+					return false;
+				}
 
 
-		// There are some items or subcategries in the category - don't delete it
-		$msg = '';
-		if ($errHasSubactegories || $errHasItems) {
-			if ($errHasSubactegories) {
-				$msg .= Text::plural('COM_PHOCACART_ERROR_DELETE_CONTAIN_CATEGORY', implode(", ", $errHasSubactegories));
+
+				$cid 	 = array();
+				foreach ($rows as $row) {
+					if ($row->numproduct == 0) {
+						$cid[] = (int) $row->id;
+					} else {
+						$err_img[] = $row->title;
+					}
+				}
+
+				if (count( $cid )) {
+					$cids = implode( ',', $cid );
+					$query = 'DELETE FROM #__phocacart_categories'
+					. ' WHERE id IN ( '.$cids.' )';
+					$db->setQuery( $query );
+					if (!$db->execute()) {
+						$this->setError($db->getErrorMsg());
+						return false;
+					}
+
+					// 7. DELETE CATEGORY RELATIONSHIP (should not happen as this should be deleted when products are deleted)
+					$query = 'DELETE FROM #__phocacart_product_categories'
+						. ' WHERE category_id IN ( '.$cids.' )';
+					$db->setQuery( $query );
+					$db->execute();
+
+					// Delete items in phocadownload_user_category
+				/*	$query = 'DELETE FROM #__phocadownload_user_category'
+					. ' WHERE catid IN ( '.$cids.' )';
+					$db->setQuery( $query );
+					if (!$db->query()) {
+						$this->setError($row->getError());
+						return false;
+					}*/
+
+					// 9. DELETE PRODUCT CUSTOMER GROUPS
+					$query = 'DELETE FROM #__phocacart_item_groups'
+						. ' WHERE item_id IN ( '.$cids.' )'
+						. ' AND type = 2';
+					$db->setQuery( $query );
+					$db->execute();
+				}
 			}
 
-			if (!empty($errHasItems)) {
-				$msg .= Text::plural('COM_PHOCACART_ERROR_DELETE_CONTAIN_PRODUCT', implode(", ", $errHasItems));
-			}
-			$app->enqueueMessage($msg, 'error');
-		}
+			// There are some images in the category - don't delete it
+			$msg = '';
+			if (!empty( $err_cat ) || !empty( $err_img )) {
+				if (!empty( $err_cat )) {
+					$cids_cat = implode( ", ", $err_cat );
+					$msg .= Text::plural( 'COM_PHOCACART_ERROR_DELETE_CONTAIN_CATEGORY', $cids_cat );
+				}
 
+				if (!empty( $err_img )) {
+					$cids_img = implode( ", ", $err_img );
+					$msg .= Text::plural( 'COM_PHOCACART_ERROR_DELETE_CONTAIN_PRODUCT', $cids_img );
+				}
+				$link = 'index.php?option=com_phocacart&view=phocacartcategories';
+				$app->enqueueMessage($msg, 'error');
+				$app->redirect($link);
+			}
+		}
 		return true;
 	}
 
 	protected function batchCopy($value, $pks, $contexts)
 	{
-		$categoryId	= (int)$value;
+		$categoryId	= (int) $value;
+
 
 		$table	= $this->getTable();
+		$db		= $this->getDbo();
 
 		// Check that the category exists
 		if ($categoryId) {
@@ -514,6 +528,7 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 			}
 		}
 
+		//if (empty($categoryId)) {
 		if (!isset($categoryId)) {
 			$this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_MOVE_CATEGORY_NOT_FOUND'));
 			return false;
@@ -526,6 +541,8 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 			$this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));
 			return false;
 		}
+
+		//$i		= 0;
 
 		// Parent exists so we let's proceed
 		while (!empty($pks))
@@ -585,6 +602,9 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 			$newIds[$pk]	= $newId;
 			// Store other new information
 			PhocacartUtilsBatchhelper::storeCategoryItems($pk, (int)$newId);
+
+
+			//$i++;
 		}
 
 		// Clean the cache
@@ -598,6 +618,7 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 		$categoryId	= (int) $value;
 
 		$table	= $this->getTable();
+		//$db		= $this->getDbo();
 		$app	= Factory::getApplication();
 
 		// Check that the category exists
@@ -616,6 +637,7 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 			}
 		}
 
+		//if (empty($categoryId)) {
 		if (!isset($categoryId)) {
 			$this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_MOVE_CATEGORY_NOT_FOUND'));
 			return false;
@@ -687,13 +709,98 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 	}
 
 
-	public function increaseOrdering($categoryId)
-    {
+	public function increaseOrdering($categoryId) {
+
+		$ordering = 1;
 		$this->_db->setQuery('SELECT MAX(ordering) FROM #__phocacart_categories WHERE parent_id='.(int)$categoryId);
 		$max = $this->_db->loadResult();
 		$ordering = $max + 1;
 		return $ordering;
 	}
+
+
+	public function batch($commands, $pks, $contexts)
+	{
+
+		// Sanitize user ids.
+		$pks = array_unique($pks);
+		ArrayHelper::toInteger($pks);
+
+		// Remove any values of zero.
+		if (array_search(0, $pks, true)) {
+			unset($pks[array_search(0, $pks, true)]);
+		}
+
+		if (empty($pks)) {
+			$this->setError(Text::_('JGLOBAL_NO_ITEM_SELECTED'));
+			return false;
+		}
+
+		$done = false;
+
+		if (!empty($commands['assetgroup_id'])) {
+			if (!$this->batchAccess($commands['assetgroup_id'], $pks)) {
+				return false;
+			}
+
+			$done = true;
+		}
+
+		//PHOCAEDIT - Parent is by Phoca 0 not 1 like by Joomla!
+		$comCat =false;
+		if ($commands['category_id'] == '') {
+			$comCat = false;
+		} else if ( $commands['category_id'] == '0') {
+			$comCat = true;
+		} else if ((int)$commands['category_id'] > 0) {
+			$comCat = true;
+		}
+
+		if ($comCat)
+		//if (isset($commands['category_id']))
+		{
+			$cmd = ArrayHelper::getValue($commands, 'move_copy', 'c');
+
+			if ($cmd == 'c')
+			{
+				$result = $this->batchCopy($commands['category_id'], $pks, $contexts);
+				if (is_array($result))
+				{
+					$pks = $result;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			elseif ($cmd == 'm' && !$this->batchMove($commands['category_id'], $pks, $contexts))
+			{
+				return false;
+			}
+			$done = true;
+		}
+
+		if (!empty($commands['language_id']))
+		{
+			if (!$this->batchLanguage($commands['language_id'], $pks, $contexts))
+			{
+				return false;
+			}
+
+			$done = true;
+		}
+
+		if (!$done) {
+			$this->setError(Text::_('JLIB_APPLICATION_ERROR_INSUFFICIENT_BATCH_INFORMATION'));
+			return false;
+		}
+
+		// Clear the cache
+		$this->cleanCache();
+
+		return true;
+	}
+
 
 	protected function generateNewTitle($category_id, $alias, $title)
 	{
@@ -776,18 +883,25 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 
     // ASSOCIATION
     protected function preprocessForm(Form $form, $data, $group = 'content'){
-        // Association Phoca Cart Categories
-        if (I18nHelper::associationsEnabled()){
+        /*if ($this->canCreateCategory())
+        {
+            $form->setFieldAttribute('catid', 'allowAdd', 'true');
+        }*/
+
+        // Association Phoca Cart items
+        if (Associations::isEnabled()){
             $languages = LanguageHelper::getContentLanguages(false, true, null, 'ordering', 'asc');
 
-            if (count($languages) > 1) {
+            if (count($languages) > 1){
                 $addform = new SimpleXMLElement('<form />');
                 $fields = $addform->addChild('fields');
                 $fields->addAttribute('name', 'associations');
                 $fieldset = $fields->addChild('fieldset');
                 $fieldset->addAttribute('name', 'item_associations');
 
-                foreach ($languages as $language) {
+                foreach ($languages as $language)
+                {
+
                     $field = $fieldset->addChild('field');
                     $field->addAttribute('name', $language->lang_code);
                     $field->addAttribute('type', 'Modal_Phocacartcategory');
@@ -805,15 +919,18 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
             }
         }
 
+
 		// Load Feed Forms - by Plugin
 		$feedPlugins = PhocacartFeed::getFeedPluginMethods();
 
 		if (!empty($feedPlugins)) {
-			foreach ($feedPlugins as $v) {
+			foreach ($feedPlugins as $k => $v) {
+
 				$element = htmlspecialchars($v->element, ENT_QUOTES, 'UTF-8');
 				$addformF = new SimpleXMLElement('<form />');
 				$fields = $addformF->addChild('fields');
 				$fields->addAttribute('name', 'feed');
+				//$fields->addAttribute('addfieldpath', 'associations');
 				$fieldset = $fields->addChild('fieldset');
 				$fieldset->addAttribute('name', 'feed_'.$element);
 				$fieldset->addAttribute('group', 'pcf');
@@ -830,6 +947,8 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 				$field->addAttribute('propagate', 'true');
 				$form->load($addformF, false);
 			}
+
+
 		}
 
         parent::preprocessForm($form, $data, $group);
@@ -838,7 +957,7 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 
 	public function featured($pks, $value = 0) {
 		// Sanitize the ids.
-		$pks = (array)$pks;
+		$pks = (array) $pks;
 		ArrayHelper::toInteger($pks);
 
 		if (empty($pks))
@@ -846,6 +965,10 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 			$this->setError(Text::_('COM_PHOCACART_NO_ITEM_SELECTED'));
 			return false;
 		}
+
+		//$table = $this->getTable('PhocacartCategoryFeatured', 'Table');
+
+
 
 		try
 		{
@@ -856,6 +979,50 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 						->where('id IN (' . implode(',', $pks) . ')');
 			$db->setQuery($query);
 			$db->execute();
+
+			/*if ((int) $value == 0)
+			{
+				// Adjust the mapping table.
+				// Clear the existing features settings.
+				$query = $db->getQuery(true)
+							->delete($db->quoteName('#__phocacart_category_featured'))
+							->where('product_id IN (' . implode(',', $pks) . ')');
+				$db->setQuery($query);
+				$db->execute();
+			}
+			else
+			{
+				// first, we find out which of our new featured articles are already featured.
+				$query = $db->getQuery(true)
+					->select('f.product_id')
+					->from('#__phocacart_category_featured AS f')
+					->where('product_id IN (' . implode(',', $pks) . ')');
+				//echo $query;
+				$db->setQuery($query);
+
+				$old_featured = $db->loadColumn();
+
+				// we diff the arrays to get a list of the articles that are newly featured
+				$new_featured = array_diff($pks, $old_featured);
+
+				// Featuring.
+				$tuples = array();
+				foreach ($new_featured as $pk)
+				{
+					$tuples[] = $pk . ', 0';
+				}
+				if (count($tuples))
+				{
+					$db = $this->getDbo();
+					$columns = array('product_id', 'ordering');
+					$query = $db->getQuery(true)
+						->insert($db->quoteName('#__phocacart_category_featured'))
+						->columns($db->quoteName($columns))
+						->values($tuples);
+					$db->setQuery($query);
+					$db->execute();
+				}
+			}*/
 		}
 		catch (Exception $e)
 		{
@@ -863,56 +1030,12 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 			return false;
 		}
 
+		//$table->reorder();
+
 		$this->cleanCache();
 
 		return true;
-	}
-
-	private function batchDBField(string $fieldname, $value, $pks, $contexts): bool
-	{
-		$this->initBatch();
-
-		foreach ($pks as $pk) {
-			if ($this->user->authorise('core.edit', $contexts[$pk])) {
-				$this->table->reset();
-				$this->table->load($pk);
-				$this->table->$fieldname = $value;
-
-				$event = new BeforeBatchEvent(
-					$this->event_before_batch,
-					['src' => $this->table, 'type' => $fieldname]
-				);
-				$this->dispatchEvent($event);
-
-				// Check the row.
-				if (!$this->table->check()) {
-					$this->setError($this->table->getError());
-
-					return false;
-				}
-
-				if (!$this->table->store()) {
-					$this->setError($this->table->getError());
-
-					return false;
-				}
-			} else {
-				$this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
-
-				return false;
-			}
-		}
-
-		// Clean the cache
-		$this->cleanCache();
-
-		return true;
-	}
-
-	protected function batchCategoryType($value, $pks, $contexts): bool
-	{
-		return $this->batchDBField('category_type', (int)$value, $pks, $contexts);
 	}
 
 }
-
+?>

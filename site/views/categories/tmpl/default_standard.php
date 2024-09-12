@@ -11,12 +11,11 @@ use Joomla\CMS\Layout\FileLayout;
 $layoutC	= new FileLayout('categories_category', null, array('component' => 'com_phocacart'));
 
 echo '<div class="'.PhocacartRenderFront::completeClass(array($this->s['c']['row'], $this->t['class_row_flex'], 'grid', 'ph-row-cats', $this->t['class_lazyload'])).'">';
-$col		= 12/(int)$this->p->get('columns_cats', 3);
-$colMobile	= 12/(int)$this->p->get('columns_cats_mobile', 1);
+$col	= 12/(int)$this->p->get('columns_cats', 3);
 
 foreach ($this->t['categories'] as $v) {
 
-	echo '<div class="'.$this->s['c']["col.xs{$colMobile}.sm{$col}.md{$col}"].' row-item">';
+	echo '<div class="'.$this->s['c']["col.xs12.sm{$col}.md{$col}"].' row-item">';
 	echo '<div class="'.$this->s['c']['grid'].' ph-item-box">';
 	echo '<div class="'.$this->s['c']['thumbnail'].' b-thumbnail ph-thumbnail ph-thumbnail-c">';
 	echo '<div class="ph-item-content">';

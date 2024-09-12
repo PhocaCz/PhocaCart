@@ -71,3 +71,4 @@ class PhocaCartViewOrders extends HtmlView
 	}
 
 }
+?>

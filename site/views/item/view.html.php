@@ -8,15 +8,16 @@
  */
 defined('_JEXEC') or die();
 
-use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Layout\FileLayout;
+use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
-use Phoca\PhocaCart\Dispatcher\Dispatcher;
-use Phoca\PhocaCart\Event;
-use Phoca\PhocaCart\Product;
+use Joomla\CMS\Plugin\PluginHelper;
+jimport( 'joomla.application.component.view');
+jimport( 'joomla.filesystem.folder' );
+jimport( 'joomla.filesystem.file' );
 
 class PhocaCartViewItem extends HtmlView
 {
@@ -120,34 +121,16 @@ class PhocaCartViewItem extends HtmlView
 		// ------------------------------------------------------------
 
 		if (!isset($this->item[0]->id) || (isset($this->item[0]->id) && $this->item[0]->id < 1)) {
-            $app->setHeader('status',  '404 Not found');
+
+			header("HTTP/1.0 404 ".Text::_('COM_PHOCACART_NO_PRODUCT_FOUND'));
 			echo $layoutAl->render(array('type' => 'error', 'text' => Text::_('COM_PHOCACART_NO_PRODUCT_FOUND')));
+
+
+
 		} else {
-
-            // Possible redirect, by ID or by URL
-			$currentUrl = Uri::current();
-			if ($this->item[0]->redirect_product_id && $this->item[0]->redirect_product_id != $this->item[0]->id) {
-				$redirectProduct = PhocacartProduct::getProductByProductId($this->item[0]->redirect_product_id);
-				$linkPreview     = PhocacartRoute::getItemRoute($redirectProduct->id, $redirectProduct->catid, '', '', [$redirectProduct->language]);
-				$app->redirect(Route::_($linkPreview));
-            } else if ($this->item[0]->redirect_url && $currentUrl != $this->item[0]->redirect_url && $currentUrl != Route::_($this->item[0]->redirect_url)) {
-				// Possible TO DO - there can be more checks to prevent from redirect loop
-				$app->redirect(Route::_($this->item[0]->redirect_url));
-			}
-
-            if ($this->item[0]->published !== 1) {
-                // Archived product
-                $this->t['can_display_price'] = false;
-                $this->t['display_stock_status'] = false;
-                $this->t['item_display_delivery_date'] = false;
-                $this->item[0]->type = PhocacartProduct::PRODUCT_TYPE_PRICE_ON_DEMAND_PRODUCT;
-            }
 
 			$this->t['add_images']			= PhocacartImage::getAdditionalImages((int)$id);
 			$this->t['rel_products']		= PhocacartRelated::getRelatedItemsById((int)$id, 0, 1);
-            if ($this->item[0]->type == PhocacartProduct::PRODUCT_TYPE_BUNDLE) {
-                $this->t['child_products'] = Product\Bundled::getBundledItemsById((int)$id, Product\Bundled::SELECT_COMPLETE_WITH_CATEGORY, true);
-            }
 
 			$this->t['tags_output']			= PhocacartTag::getTagsRendered((int)$id, $this->t['item_display_tags'], ' ');
 			$this->t['taglabels_output']	= PhocacartTag::getTagsRendered((int)$id, $this->t['item_display_labels'], ' ');
@@ -168,8 +151,7 @@ class PhocaCartViewItem extends HtmlView
 			$this->t['parameters_output']	= PhocacartParameter::getParametersRendered((int)$id, $this->t['item_display_parameters']);
 
 			$this->t['action']				= $uri->toString();
-			//$this->t['action+
-            //0']		= base64_encode(htmlspecialchars($this->t['action']));
+			//$this->t['actionbase64']		= base64_encode(htmlspecialchars($this->t['action']));
 			$this->t['actionbase64']		= base64_encode($this->t['action']);
 			$this->t['linkcheckout']		= Route::_(PhocacartRoute::getCheckoutRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
 			$this->t['linkitem']			= Route::_(PhocacartRoute::getItemRoute((int)$this->item[0]->id, (int)$this->category[0]->id));
@@ -201,12 +183,14 @@ class PhocaCartViewItem extends HtmlView
 				$media->loadWindowPopup();
 			}
 
+
 			// Possible change of image_popup_method parameter in plugin - to no load e.g. magnific or prettyphoto if not needed
-			$pluginData = [
-				'image_popup_method' => $this->t['image_popup_method'],
-			];
-			$result = Dispatcher::dispatch(new Event\View\Item\BeforeLoadImageLibrary($pluginData));
-			if ($result) {
+			$pluginData     = array();
+            $pluginData['image_popup_method'] = $this->t['image_popup_method'];
+			PluginHelper::importPlugin('pcv');
+			$eventData 					= array();
+			$result = Factory::getApplication()->triggerEvent('onPCVonItemImageBeforeLoadingImageLibrary', array(&$pluginData, $eventData));
+            if ($result) {
 				$this->t['image_popup_method'] = $pluginData['image_popup_method'];
 			}
 
@@ -258,49 +242,52 @@ class PhocaCartViewItem extends HtmlView
 			$this->t['pathpublicfile'] 	= PhocacartPath::getPath('publicfile');
 
 		}
-
 		$model->hit((int)$id);
 		PhocacartStatisticsHits::productHit((int)$id);
 
 		// Plugins ------------------------------------------
+		PluginHelper::importPlugin('pcv');
+		//$this->t['dispatcher']	= J EventDispatcher::getInstance();
 		$this->t['event']		= new stdClass;
 
-		$results = Dispatcher::dispatch(new Event\View\Item\BeforeHeader('com_phocacart.item', $this->item, $this->p));
+		$results = Factory::getApplication()->triggerEvent('onPCVonItemBeforeHeader', array('com_phocacart.item', &$this->item, &$this->p));
 		$this->t['event']->onItemBeforeHeader = trim(implode("\n", $results));
-        if ($this->item) {
-            $results = Dispatcher::dispatch(new Event\View\Item\AfterAddToCart('com_phocacart.item', $this->item, $this->p));
-            $this->t['event']->onItemAfterAddToCart = trim(implode("\n", $results));
 
-            $results = Dispatcher::dispatch(new Event\View\Item\BeforeEndPricePanel('com_phocacart.item', $this->item, $this->p));
-            $this->t['event']->onItemBeforeEndPricePanel = trim(implode("\n", $results));
+		$results = Factory::getApplication()->triggerEvent('onPCVonItemAfterAddToCart', array('com_phocacart.item', &$this->item, &$this->p));
+		$this->t['event']->onItemAfterAddToCart = trim(implode("\n", $results));
 
-            $results = Dispatcher::dispatch(new Event\View\Item\InsideTabPanel('com_phocacart.item', $this->item, $this->p));
-            $this->t['event']->onItemInsideTabPanel = [];
-            foreach ($results as $result) {
-                if (!is_array($result)) {
-                    continue;
-                }
+		$results = Factory::getApplication()->triggerEvent('onPCVonItemBeforeEndPricePanel', array('com_phocacart.item', &$this->item, &$this->p));
+		$this->t['event']->onItemBeforeEndPricePanel = trim(implode("\n", $results));
 
-                if (isset($result['alias']) && isset($result['title']) && isset($result['content'])) {
-                    $this->t['event']->onItemInsideTabPanel[] = $result;
-                    continue;
-                }
+		$results = Factory::getApplication()->triggerEvent('onPCVonItemInsideTabPanel', array('com_phocacart.item', &$this->item, &$this->p));
+		$this->t['event']->onItemInsideTabPanel = [];
+		foreach($results as $result) {
+			if (!is_array($result)) {
+				continue;
+			}
 
-                foreach ($result as $subresult) {
-                    if (is_array($subresult) && isset($subresult['alias']) && isset($subresult['title']) && isset($subresult['content'])) {
-                        $this->t['event']->onItemInsideTabPanel[] = $subresult;
-                    }
-                }
-            }
+			if (isset($result['alias']) && isset($result['title']) && isset($result['content'])) {
+				$this->t['event']->onItemInsideTabPanel[] = $result;
+				continue;
+			}
 
-            $results = Dispatcher::dispatch(new Event\View\Item\AfterTabs('com_phocacart.item', $this->item, $this->p));
-            $this->t['event']->onItemAfterTabs = trim(implode("\n", $results));
+			foreach ($result as $subresult) {
+				if (is_array($subresult) && isset($subresult['alias']) && isset($subresult['title']) && isset($subresult['content'])) {
+					$this->t['event']->onItemInsideTabPanel[] = $subresult;
+				}
+			}
+		}
 
-            // Some payment plugins want to display specific information in detail view
-            $results = Dispatcher::dispatch(new Event\Payment\ItemBeforeEndPricePanel('com_phocacart.item', $this->item, $this->p));
-            $this->t['event']->PCPonItemBeforeEndPricePanel = trim(implode("\n", $results));
-        }
+		$results = Factory::getApplication()->triggerEvent('onPCVonItemAfterTabs', array('com_phocacart.item', &$this->item, &$this->p));
+		$this->t['event']->onItemAfterTabs = trim(implode("\n", $results));
+
+		// Some payment plugins want to display specific information in detail view
+		PluginHelper::importPlugin('pcp');
+		$results = Factory::getApplication()->triggerEvent('onPCPonItemBeforeEndPricePanel', array('com_phocacart.item', &$this->item, &$this->p));
+		$this->t['event']->PCPonItemBeforeEndPricePanel = trim(implode("\n", $results));
+
 		// END Plugins --------------------------------------
+
 
 		parent::display($tpl);
 	}
@@ -319,3 +306,4 @@ class PhocaCartViewItem extends HtmlView
 		PhocacartRenderFront::prepareDocument($this->document, $this->p, $category, $item);
 	}
 }
+?>

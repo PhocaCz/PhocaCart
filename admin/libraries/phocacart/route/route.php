@@ -16,16 +16,14 @@ use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Menu\AbstractMenu;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
-use Joomla\Database\DatabaseInterface;
-use Phoca\PhocaCart\I18n\I18nHelper;
 
 jimport('joomla.application.component.helper');
 
 
 class PhocacartRoute
 {
-	public static function getCategoriesRoute($lang = [])
-	{
+	public static function getCategoriesRoute($lang = array()) {
+
 		$app 		= Factory::getApplication();
 		$menu 		= $app->getMenu();
 		$active 	= $menu->getActive();
@@ -60,33 +58,29 @@ class PhocacartRoute
 				$link .= '&Itemid='.$item->id;
 			} else if ((int)$itemId > 0) {
 				$link .= '&Itemid='.(int)$itemId;
-            }
-
-            if (Multilanguage::isEnabled() || I18nHelper::useI18n()) {
-                if (!empty($lang) && isset($lang[0]) && $lang[0] != '' && $lang[0] != '*'){
-                    $link .= '&lang='.$lang[0];
-                }
-            }
-		}
-
+			}
+		};
 		return $link;
 	}
 
-	public static function cleanUrlItemsView ($url)
-	{
-		if (Factory::getApplication()->getConfig()->get('sef', 1)) {
+	public static function cleanUrlItemsView ($url) {
+		$config 					= Factory::getConfig();
+		$sef						= $config->get('sef', 1);
+
+		if ($sef) {
 			$url  = str_replace(':', '-', $url);
 		}
-
 		$url  = str_replace('?id=0', '', $url);
 		$url  = str_replace('id=0', '', $url);
-
 		return $url;
+
 	}
 
 
-	public static function getCategoryRoute($catid, $catidAlias = '', $lang = [])
-	{
+
+	public static function getCategoryRoute($catid, $catidAlias = '', $lang = array()) {
+
+
 		$pC = PhocacartUtils::getComponentParameters();
         $skip_category_view = $pC->get('skip_category_view', 0);
 
@@ -128,8 +122,8 @@ class PhocacartRoute
 	}
 
 
-	public static function getCategoryRouteByTag($tagId)
-	{
+	public static function getCategoryRouteByTag($tagId) {
+
 		$app 		= Factory::getApplication();
 		$menu 		= $app->getMenu();
 		$active 	= $menu->getActive();
@@ -173,12 +167,13 @@ class PhocacartRoute
 
 	/* Items route can be without id or with id, if id, then it is a category id
 	*/
-	public static function getItemsRoute($catid = '', $catidAlias = '', $parameter = '', $value = '', string $lang = '')
-	{
+	public static function getItemsRoute($catid = '', $catidAlias = '', $parameter = '', $value = '') {
+
 		$app 		= Factory::getApplication();
 		$menu 		= $app->getMenu();
 		$active 	= $menu->getActive();
 		$option		= $app->input->get( 'option', '', 'string' );
+		$view		= $app->input->get( 'view', '', 'string' );
 
 		$activeId 	= 0;
 		if (isset($active->id)){
@@ -228,12 +223,11 @@ class PhocacartRoute
 		} else {
 			$link = 'index.php?option=com_phocacart&view=items';
 		}
-
-		return self::_buildLink($link, $needles, [$lang]);
+		return self::_buildLink($link, $needles);
 	}
 
-	public static function getItemRoute($id, $catid = 0, $idAlias = '', $catidAlias = '', $lang = array(), $forceView = 0)
-	{
+	public static function getItemRoute($id, $catid = 0, $idAlias = '', $catidAlias = '', $lang = array(), $forceView = 0) {
+
 		$app 			= Factory::getApplication();
 		$menu 			= $app->getMenu();
 		$active 		= $menu->getActive();
@@ -243,7 +237,11 @@ class PhocacartRoute
 		if ($forceView == 1) {
 			$view = 'item';// We link the view from administration - to preview the product
 		}
+		/*$catidCurrent	= $app->input->get( 'id', 0, 'int' );
 
+		if ($catidCurrent > 0) {
+			$catid = $catidCurrent;
+		}*/
 		$activeId 	= 0;
 		if (isset($active->id)){
 			$activeId    = $active->id;
@@ -275,11 +273,14 @@ class PhocacartRoute
 
 		$link = 'index.php?option=com_phocacart&view=item&id='. $id.'&catid='.$catid;
 
+
+
+
 		return self::_buildLink($link, $needles, $lang);
+		//return self::_buildLink($link, $needles). '#'.$idAlias;
 	}
 
-	public static function getCheckoutRoute($id = 0, $catid = 0, string $lang = '')
-	{
+	public static function getCheckoutRoute($id = 0, $catid = 0) {
 		$needles = array(
 			'checkout' => '',
 			'item'  => (int) $id,
@@ -290,11 +291,10 @@ class PhocacartRoute
 
 		$link = 'index.php?option=com_phocacart&view=checkout';
 
-		return self::_buildLink($link, $needles, [$lang]);
+		return self::_buildLink($link, $needles);
 	}
 
-	public static function getPosRoute($ticketId = 1, $unitId = 0, $sectionId = 0, $page = '', $id = 0, $catid = 0)
-	{
+	public static function getPosRoute($ticketId = 1, $unitId = 0, $sectionId = 0, $page = '', $id = 0, $catid = 0) {
 		$needles = array(
 			'pos' => '',
 			'item'  => (int) $id,
@@ -323,8 +323,7 @@ class PhocacartRoute
 		return self::_buildLink($link, $needles);
 	}
 
-	public static function getAccountRoute($id = 0, $catid = 0, string $lang = '')
-	{
+	public static function getAccountRoute($id = 0, $catid = 0) {
 		$needles = array(
 			'account' => '',
 			'item'  => (int) $id,
@@ -334,12 +333,11 @@ class PhocacartRoute
 		);
 
 		$link = 'index.php?option=com_phocacart&view=account';
-		return self::_buildLink($link, $needles, [$lang]);
+		return self::_buildLink($link, $needles);
 	}
 
 
-	public static function getComparisonRoute($id = 0, $catid = 0, string $lang = '')
-	{
+	public static function getComparisonRoute($id = 0, $catid = 0) {
 		$needles = array(
 			'comparison' => '',
 			'item'  => (int) $id,
@@ -349,11 +347,10 @@ class PhocacartRoute
 		);
 
 		$link = 'index.php?option=com_phocacart&view=comparison';
-		return self::_buildLink($link, $needles, [$lang]);
+		return self::_buildLink($link, $needles);
 	}
 
-	public static function getWishListRoute($id = 0, $catid = 0, string $lang = '')
-	{
+	public static function getWishListRoute($id = 0, $catid = 0) {
 		$needles = array(
 			'wishlist' => '',
 			'item'  => (int) $id,
@@ -363,11 +360,10 @@ class PhocacartRoute
 		);
 
 		$link = 'index.php?option=com_phocacart&view=wishlist';
-		return self::_buildLink($link, $needles, [$lang]);
+		return self::_buildLink($link, $needles);
 	}
 
-	public static function getPaymentRoute($id = 0, $catid = 0, string $lang = '')
-	{
+	public static function getPaymentRoute($id = 0, $catid = 0) {
 		$needles = array(
 			//'payment' => '',
 			'item'  => (int) $id,
@@ -377,11 +373,10 @@ class PhocacartRoute
 		);
 
 		$link = 'index.php?option=com_phocacart&view=payment';
-		return self::_buildLink($link, $needles, [$lang]);
+		return self::_buildLink($link, $needles);
 	}
 
-	public static function getDownloadRoute($id = 0, $catid = 0, string $lang = '')
-	{
+	public static function getDownloadRoute($id = 0, $catid = 0) {
 		$needles = array(
 			'download' => '',
 			'item'  => (int) $id,
@@ -391,11 +386,10 @@ class PhocacartRoute
 		);
 
 		$link = 'index.php?option=com_phocacart&view=download';
-		return self::_buildLink($link, $needles, [$lang]);
+		return self::_buildLink($link, $needles);
 	}
 
-	public static function getOrdersRoute($id = 0, $catid = 0, string $lang = '')
-	{
+	public static function getOrdersRoute($id = 0, $catid = 0) {
 		$needles = array(
 			'orders' => '',
 			'item'  => (int) $id,
@@ -405,11 +399,10 @@ class PhocacartRoute
 		);
 
 		$link = 'index.php?option=com_phocacart&view=orders';
-		return self::_buildLink($link, $needles, [$lang]);
+		return self::_buildLink($link, $needles);
 	}
 
-	public static function getTermsRoute($id = 0, $catid = 0, $suffix = '', string $lang = '')
-	{
+	public static function getTermsRoute($id = 0, $catid = 0, $suffix = '') {
 		$needles = array(
 			'terms' => '',
 			'item'  => (int) $id,
@@ -423,11 +416,12 @@ class PhocacartRoute
 			$link .= '&'.$suffix;
 		}
 
-		return self::_buildLink($link, $needles, [$lang]);
+		return self::_buildLink($link, $needles);
 	}
 
-	public static function getInfoRoute($id = 0, $catid = 0, string $lang = '')
-	{
+
+
+	public static function getInfoRoute($id = 0, $catid = 0) {
 		$needles = array(
 			//'info' => '',
 			'item'  => (int) $id,
@@ -437,11 +431,12 @@ class PhocacartRoute
 		);
 
 		$link = 'index.php?option=com_phocacart&view=info';
-		return self::_buildLink($link, $needles, $lang);
+		return self::_buildLink($link, $needles);
 	}
 
-	public static function getFeedRoute($id = 0, $idAlias = '', $noSEF = 0, string $lang = '')
-	{
+	public static function getFeedRoute($id = 0, $idAlias = '', $noSEF = 0) {
+
+
 		$needles = array(
 			'feed'  => (int) $id,
 			'categories' => '',
@@ -457,15 +452,15 @@ class PhocacartRoute
 			return $link;
 		}
 
-		$xml = self::_buildLink($link, $needles, [$lang]);
+		$xml = self::_buildLink($link, $needles);
 
 
 		return $xml;
 	}
 
 
-	public static function getQuestionRoute($id = 0, $catid = 0, $idAlias = '', $catidAlias = '', $suffix = '', string $lang = '')
-	{
+	public static function getQuestionRoute($id = 0, $catid = 0, $idAlias = '', $catidAlias = '', $suffix = '') {
+
 		$app 			= Factory::getApplication();
 		$menu 			= $app->getMenu();
 		$active 		= $menu->getActive();
@@ -520,13 +515,13 @@ class PhocacartRoute
 			$link .= '&'.$suffix;
 		}
 
-		return self::_buildLink($link, $needles, [$lang]);
+		return self::_buildLink($link, $needles);
 	}
 
 
 
-	protected static function _buildLink($link, $needles, $lang = [])
-	{
+	protected static function _buildLink($link, $needles, $lang = array()) {
+
 		if($item = self::_findItem($needles, 0, $lang)) {
 			if(isset($item->query['layout'])) {
 				$link .= '&layout='.$item->query['layout'];
@@ -536,28 +531,48 @@ class PhocacartRoute
 				$link .= '&Itemid='.$item->id;
 			}
 
-			if (Multilanguage::isEnabled() || I18nHelper::useI18n()) {
-                $lang = $lang[0] ?? '';
-				if ($lang && $lang !== '*'){
-					$link .= '&lang='.$lang;
+
+			/*if (Multilanguage::isEnabled()) {
+				$app    = Factory::getApplication();
+				$menu   = $app->getMenu();
+				$itemId = $app->input->get('Itemid', 0, '', 'int');
+				$item   = $menu->getItem($itemId);
+				$lang   = !is_null($item) && $item->language != '*' ? '&lang=' . $item->language : '';
+				if ($lang != '') {
+					$link .= $lang;
+				}
+
+			}*/
+
+			if (Multilanguage::isEnabled()) {
+
+				if (!empty($lang) && isset($lang[0]) && $lang[0] != '' && $lang[0] != '*'){
+					$link .= '&lang='.$lang[0];
 				}
 			}
+
+
+
 		}
+
 
 		return $link;
 	}
 
 
 
-	protected static function _findItem($needles, $notCheckId = 0, $lang = [])
-	{
-		$app = Factory::getApplication();
-		$menus = AbstractMenu::getInstance('site');
-		$active = $menus->getActive();
+	protected static function _findItem($needles, $notCheckId = 0, $lang = array())  {
 
-		$component = ComponentHelper::getComponent('com_phocacart');
-		$attributes = ['component_id'];
-		$values = [$component->id];
+
+		$app = Factory::getApplication();
+		//$menus	= $app->getMenu('site', array());// Problems in indexer
+		$menus    = AbstractMenu::getInstance('site');
+		$active 	= $menus->getActive();
+		//$items	= $menus->getItems('component', 'com_phocacart');
+
+		$component 		= ComponentHelper::getComponent('com_phocacart');
+		$attributes 	= array('component_id');
+		$values     	= array($component->id);
 
 		// Find menu items of current language
 		$items = $menus->getItems($attributes, $values);
@@ -565,16 +580,24 @@ class PhocacartRoute
 		// Multilanguage feature - find only items of selected language (e.g. when language module displays flags of different language - each language can have own menu item)
 		if (!empty($lang)) {
 			$attributes[] 	= 'language';
-			$values[]     	= $lang;
+
+			//if (isset($lang[0])) {
+			//	$values[]     	= $lang[0];//$langTag
+			//} else {
+				$values[]     	= $lang;
+			//}
+
 
 			// If multilanguage feature enabled and specific lang set then set menu item of such language
 			$itemsLang = $menus->getItems($attributes, $values);
+
 
 			// If no language items try to find items of current lang and if not found set the current Itemid
 			if ($itemsLang) {
 				$items = $itemsLang;
 			}
 		} else if (Multilanguage::isEnabled()) {
+
 			// Just prioritize the current language menu item
 			$langCurrent = Factory::getLanguage();
 			$langTag = $langCurrent->getTag();
@@ -587,9 +610,11 @@ class PhocacartRoute
 					$items = $itemsLang;
 				}
 			}
+
 		}
 
 		// Don't check ID for specific views. e.g. categories view does not have ID
+		//$notCheckIdArray =  array('categories');
 		$notCheckIdArray = ['categories', 'checkout', 'comparison', 'download', 'terms', 'account', 'orders', 'payment', 'info', 'wishlist', 'pos', 'submit'];
 
 		if(!$items) {
@@ -624,6 +649,7 @@ class PhocacartRoute
 		//          of ID for categories view with OR: in_array($needle, $notCheckIdArray) ||
 		foreach($needles as $needle => $id) {
 			foreach($items as $item) {
+
 				// Correct problems when system returns differently null or 0
 				if (!isset($item->query['id'])) {
 					$item->query['id'] = 0;
@@ -633,7 +659,10 @@ class PhocacartRoute
 					&& isset($item->query['view']) && $item->query['view'] == $needle
 					&& (in_array($needle, $notCheckIdArray) || (isset($item->query['id']) && $item->query['id'] == $id ))
 				) {
+
+
 					$match = $item;
+
 				}
 			}
 
@@ -642,7 +671,32 @@ class PhocacartRoute
 			}
 		}
 
+		// THIRD - Not testing ID
+		/*foreach($needles as $needle => $id) {
+
+			foreach($items as $item) {
+
+
+				if (isset($item->query['option']) && $item->query['option'] == $component->option
+					&& isset($item->query['view']) && $item->query['view'] == $needle
+					&& (in_array($needle, $notCheckIdArray)  || (isset($item->query['id']) /*&& $item->query['id'] == $id )*//*))
+				) {
+					$match = $item;
+
+
+				}
+			}
+
+			if(isset($match)) {
+				break;
+			}
+		}
+ 		*/
+
+
+
 		if (!$match) {
+
 			// Nothing found, try to set back "categories menu link" so e.g. menu links in module to some category
 			// gets no ID from another category which do have a menu link
 			// Category A have menu link
@@ -662,8 +716,8 @@ class PhocacartRoute
 		return $match;
 	}
 
-	public static function getItemsRouteSuffix($type, $id, $alias)
-	{
+	public static function getItemsRouteSuffix($type, $id, $alias) {
+
 		$o = '&'.$type.'='.(int)$id.'-'.urlencode($alias);
 		return $o;
 	}
@@ -680,16 +734,21 @@ class PhocacartRoute
 	 *
 	 * 4) GetAliasFromId it tool function only to get separated alias and id from SEF url
 	 */
-	public static function isItemsView()
-	{
-		$app	= Factory::getApplication();
 
-		return $app->input->get( 'option', '', 'string') == 'com_phocacart'
-			&& $app->input->get( 'view', '', 'string') == 'items';
+	public static function isItemsView() {
+
+		$app	= Factory::getApplication();
+		$option	= $app->input->get( 'option', '', 'string' );
+		$view	= $app->input->get( 'view', '', 'string' );
+
+		if ($option == 'com_phocacart' && $view == 'items') {
+			return true;
+		}
+		return false;
 	}
 
-	public static function getJsItemsRoute($activeCategory = 0)
-	{
+	public static function getJsItemsRoute($activeCategory = 0) {
+
 		$a				= PhocacartRoute::getIdForItemsRoute();
 
 		// Three cases
@@ -698,6 +757,7 @@ class PhocacartRoute
 			// allow to include category filtering (deselecting category)
 			// so don't include category
 			$urlItemsView	= Route::_(PhocacartRoute::getItemsRoute());
+
 		} else {
 			// 2) We want to include category filter and user stays on page where category is active
 			// Then he/she will be re-directed to items view but it will include category filtering
@@ -705,17 +765,27 @@ class PhocacartRoute
 			// 3) But if user stays on site where there is no active category, he gets ID = 0 (id of category)
 			// so no filtering of category will be done - it is active but user didn't stay on category active page
 			$urlItemsView	= Route::_(PhocacartRoute::getItemsRoute($a['id'], $a['alias']));
+
 		}
 
 		$urlItemsView 	= str_replace('&amp;', '&', $urlItemsView);
 
+
+		// Cause URL problems
+		//$urlItemsView	= str_replace(Uri::root(true), '', $urlItemsView);
+		//$urlItemsView	= ltrim($urlItemsView, '/');
+
 		return $urlItemsView;
 	}
 
-	public static function getJsItemsRouteWithoutParams()
-	{
+	public static function getJsItemsRouteWithoutParams() {
+
 		$urlItemsView	= Route::_(PhocacartRoute::getItemsRoute());
 		$urlItemsView 	= str_replace('&amp;', '&', $urlItemsView);
+
+		// Cause URL problems
+		//$urlItemsView	= str_replace(Uri::root(true), '', $urlItemsView);
+		//$urlItemsView	= ltrim($urlItemsView, '/');
 
 		return $urlItemsView;
 	}
@@ -725,11 +795,13 @@ class PhocacartRoute
 	 * If we are in category route or items route and we add ID, this means a category ID
 	 * So we need to paste this ID to the URL of items route
 	 */
-	public static function getIdForItemsRoute()
-	{
+	public static function getIdForItemsRoute() {
+
 		$app			= Factory::getApplication();
 		$option			= $app->input->get( 'option', '', 'string' );
 		$view			= $app->input->get( 'view', '', 'string' );
+
+
 
 		$a['id']		= '';
 		$a['alias']		= '';
@@ -771,14 +843,18 @@ class PhocacartRoute
 
 		}
 
+
+
+
+
 		return $a;
 	}
 
 	/*
 	 * Return only alias from ID url: 25:category-alias (25-category-alias) ==> "category-alias" (ID: 25, ALIAS: category-alias)
 	 */
-	public static function getAliasFromId($idAndAlias)
-	{
+	public static function getAliasFromId($idAndAlias) {
+
 		$alias = '';
 		if ($idAndAlias != '') {
 			$aliasA	= explode(':', $idAndAlias);
@@ -790,8 +866,8 @@ class PhocacartRoute
 		return $alias;
 	}
 
-	public static function isFilterActive()
-	{
+	public static function isFilterActive() {
+
 		$app			= Factory::getApplication();
 		$option			= $app->input->get( 'option', '', 'string' );
 		$view			= $app->input->get( 'view', '', 'string' );
@@ -818,24 +894,25 @@ class PhocacartRoute
 		return false;
 	}
 
-	public static function getFullUrl($url)
-	{
+	public static function getFullUrl($url) {
+
 		$url = Route::_($url);
 
 		$frontendUrl 	= str_replace(Uri::root(true).'/administrator/', '',$url);
 		$frontendUrl 	= str_replace(Uri::root(true), '', $frontendUrl);
 		$frontendUrl 	= str_replace('\\', '/', $frontendUrl);
+		//$frontendUrl 	= Uri::root(false). str_replace('//', '/', $frontendUrl);
 		$frontendUrl 	= preg_replace('/([^:])(\/{2,})/', '$1/', Uri::root(false). $frontendUrl);
 
 		return $frontendUrl;
 	}
 
 
-	public static function getProductCanonicalLink($id, $catid, $idAlias, $catidAlias, $preferredCatid = 0, string $lang = '')
-    {
+	public static function getProductCanonicalLink($id, $catid, $idAlias, $catidAlias, $preferredCatid = 0 ) {
+
 		if ((int)$preferredCatid > 0) {
-            /** @var DatabaseInterface $db */
-			$db    = Factory::getContainer()->get(DatabaseInterface::class);
+
+			$db    = Factory::getDBO();
 			$query = 'SELECT c.id, c.alias'
 				. ' FROM #__phocacart_categories AS c'
 				. ' WHERE c.id = ' . (int)$preferredCatid
@@ -848,6 +925,58 @@ class PhocacartRoute
 			}
 		}
 
-		return self::getItemRoute($id, $catid, $idAlias, $catidAlias, [$lang]);
+		return self::getItemRoute($id, $catid, $idAlias, $catidAlias);
 	}
+
+
+/*
+		$app 		= Factory::getApplication();
+		$menu 		= $app->getMenu();
+		$active 	= $menu->getActive();
+		$option		= $app->input->get( 'option', '', 'string' );
+
+		$activeId 	= 0;
+		if (isset($active->id)){
+			$activeId    = $active->id;
+		}
+		if ((int)$activeId > 0 && $option == 'com_phocacart') {
+			$needles 	= array(
+				'category' => '',
+				'categories' => (int)$activeId
+			);
+		} else {
+			$needles = array(
+				'category' => '',
+				'categories' => ''
+			);
+		}
+
+		$db = Factory::getDBO();
+
+		$query = 'SELECT a.id, a.title, a.link_ext, a.link_cat'
+		.' FROM #__phocacart_tags AS a'
+		.' WHERE a.id = '.(int)$tagId
+		.' ORDER BY a.id';
+
+		$db->setQuery($query, 0, 1);
+		$tag = $db->loadObject();
+
+
+		if (isset($tag->id)) {
+			$link = 'index.php?option=com_phocacart&view=category&id=tag&tagid='.(int)$tag->id;
+		} else {
+			$link = 'index.php?option=com_phocacart&view=category&id=tag&tagid=0';
+		}
+		return self::_buildLink($link, $needles);*/
+
+	/*
+	public static function getCompleteAlias($id, $alias = '') {
+
+		$aliasC = '';
+		if ($alias != '') {
+			$aliasC	= (int)$id '-'.htmlspecialchars($alias);
+		}
+		return $aliasC;
+	} */
 }
+?>

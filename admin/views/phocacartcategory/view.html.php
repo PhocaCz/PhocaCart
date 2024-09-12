@@ -7,7 +7,6 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-
 use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Toolbar\Toolbar;
@@ -15,7 +14,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\CMS\Language\Associations;
 use Joomla\CMS\Component\ComponentHelper;
-use Phoca\PhocaCart\I18n\I18nHelper;
+jimport( 'joomla.application.component.view' );
 
 class PhocaCartCpViewPhocacartCategory extends HtmlView
 {
@@ -79,10 +78,11 @@ class PhocaCartCpViewPhocacartCategory extends HtmlView
 	}
 
 
-	protected function addToolbar()
-	{
+	protected function addToolbar() {
+
 		require_once JPATH_COMPONENT.'/helpers/'.$this->t['tasks'].'.php';
 		Factory::getApplication()->input->set('hidemainmenu', true);
+		$bar 		= Toolbar::getInstance('toolbar');
 		$user		= Factory::getUser();
 		$isNew		= ($this->item->id == 0);
 		$checkedOut	= !($this->item->checked_out == 0 || $this->item->checked_out == $user->get('id'));
@@ -104,7 +104,7 @@ class PhocaCartCpViewPhocacartCategory extends HtmlView
 			//JToolbarHelper::custom($this->t['c'].'cat.save2copy', 'copy.png', 'copy_f2.png', 'JTOOLBAR_SAVE_AS_COPY', false);
 		}
 
-		if (!$isNew && I18nHelper::associationsEnabled() && ComponentHelper::isEnabled('com_associations')) {
+		if (!$isNew && Associations::isEnabled() && ComponentHelper::isEnabled('com_associations')) {
 			ToolbarHelper::custom($this->t['task'] . '.editAssociations', 'contract', 'contract', 'JTOOLBAR_ASSOCIATIONS', false, false);
 		}
 
@@ -119,10 +119,9 @@ class PhocaCartCpViewPhocacartCategory extends HtmlView
 
 
 		ToolbarHelper::divider();
-		ToolbarHelper::inlinehelp();
 		ToolbarHelper::help( 'screen.'.$this->t['c'], true );
 
 		PhocacartRenderAdminview::renderWizardButton('back');
 	}
 }
-
+?>

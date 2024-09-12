@@ -80,7 +80,7 @@ class PhocaCartModelOrders extends BaseDatabaseModel
 
 		$ordering = $this->getOrderOrdering();
 		$query = ' SELECT o.*,'
-		.' os.title AS status_title, os.params AS status_params,'
+		.' os.title AS status_title,'
 		.' t.amount AS total_amount,'
 		.' s.id AS shippingid, s.title AS shippingtitle, s.tracking_link as shippingtrackinglink, s.tracking_description as shippingtrackingdescription, os.orders_view_display as ordersviewdisplay'
 		.' FROM #__phocacart_orders AS o'

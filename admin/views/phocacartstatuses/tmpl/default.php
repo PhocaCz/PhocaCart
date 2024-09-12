@@ -30,8 +30,27 @@ echo $r->jsJorderTable($listOrder);
 
 
 echo $r->startForm($this->t['o'], $this->t['tasks'], 'adminForm');
-echo $r->startMainContainer();
+//echo $r->startFilter();
+//echo $r->selectFilterPublished('JOPTION_SELECT_PUBLISHED', $this->state->get('filter.published'));
+//echo $r->selectFilterLanguage('JOPTION_SELECT_LANGUAGE', $this->state->get('filter.language'));
+//echo $r->selectFilterCategory(PhocaDownloadCategory::options($this->t['o']), 'JOPTION_SELECT_CATEGORY', $this->state->get('filter.category_id'));
+//echo $r->endFilter();
 
+echo $r->startMainContainer();
+/*
+echo $r->startFilterBar();
+echo $r->inputFilterSearch($this->t['l'].'_FILTER_SEARCH_LABEL', $this->t['l'].'_FILTER_SEARCH_DESC',
+							$this->escape($this->state->get('filter.search')));
+echo $r->inputFilterSearchClear('JSEARCH_FILTER_SUBMIT', 'JSEARCH_FILTER_CLEAR');
+echo $r->inputFilterSearchLimit('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC', $this->pagination->getLimitBox());
+echo $r->selectFilterDirection('JFIELD_ORDERING_DESC', 'JGLOBAL_ORDER_ASCENDING', 'JGLOBAL_ORDER_DESCENDING', $listDirn);
+echo $r->selectFilterSortBy('JGLOBAL_SORT_BY', $sortFields, $listOrder);
+
+echo $r->startFilterBar(2);
+echo $r->selectFilterPublished('JOPTION_SELECT_PUBLISHED', $this->state->get('filter.published'));
+echo $r->endFilterBar();
+
+echo $r->endFilterBar();*/
 echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 
 echo $r->startTable('categoryList');
@@ -41,7 +60,6 @@ echo $r->startTblHeader();
 echo $r->firstColumnHeader($listDirn, $listOrder);
 echo $r->secondColumnHeader($listDirn, $listOrder);
 echo '<th class="ph-title">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_TITLE', 'a.title', $listDirn, $listOrder) . '</th>' . "\n";
-echo '<th class="ph-preview ph-center">' . Text::_('COM_PHOCACART_PREVIEW') . '</th>' . "\n";
 echo '<th class="ph-published">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_PUBLISHED', 'a.published', $listDirn, $listOrder) . '</th>' . "\n";
 echo '<th class="ph-movements ph-center">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_STOCK_MOVEMENTS', 'a.stock_movements', $listDirn, $listOrder) . '</th>' . "\n";
 echo '<th class="ph-download ph-center">' . HTMLHelper::_('searchtools.sort', $this->t['l'] . '_DOWNLOAD', 'a.download', $listDirn, $listOrder) . '</th>' . "\n";
@@ -58,6 +76,7 @@ $j              = 0;
 
 if (is_array($this->items)) {
     foreach ($this->items as $i => $item) {
+        //if ($i >= (int)$this->pagination->limitstart && $j < (int)$this->pagination->limit) {
         $j++;
 
         $urlEdit    = 'index.php?option=' . $this->t['o'] . '&task=' . $this->t['task'] . '.edit&id=';
@@ -81,23 +100,22 @@ if (is_array($this->items)) {
             $checkO .= HTMLHelper::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'] . '.', $canCheckin);
         }
         if ($canCreate || $canEdit) {
-            $checkO .= '<a href="' . Route::_($linkEdit) . '">' . $this->escape(Text::_($item->title)) . '</a>' . ' <span class="small">(' . $this->escape($item->title) . ')</span>';
+            $checkO .= '<a href="' . Route::_($linkEdit) . '">' . $this->escape(Text::_($item->title)) . '</a>' . ' <small>(' . $this->escape($item->title) . ')</small>';
         } else {
-            $checkO .= $this->escape(Text::_($item->title)) . ' <span class="small">(' . $this->escape($item->title) . ')</span>';
+            $checkO .= $this->escape(Text::_($item->title)) . ' <small>(' . $this->escape($item->title) . ')</small>';
         }
-        $checkO .= '<br /><span class="small">(' . Text::_('COM_PHOCACART_FIELD_ALIAS_LABEL') . ': ' . $item->alias . ')</span>';
         echo $r->td($checkO, "small", 'th');
 
-        echo $r->td(PhocacartUtilsSettings::getOrderStatusBadge($item->title, $item->params), "small ph-center");
 
         echo $r->td(HTMLHelper::_('jgrid.published', $item->published, $i, $this->t['tasks'] . '.', $canChange), "small");
+
 
         echo $r->td($this->escape($item->stock_movements), "small ph-center");
 
         if ($item->download == 1) {
-            $download = '<span class="badge bg-success">' . Text::_('COM_PHOCACART_YES') . '</span>';
+            $download = '<span class="label label-success badge bg-success">' . Text::_('COM_PHOCACART_YES') . '</span>';
         } else {
-            $download = '<span class="badge bg-danger">' . Text::_('COM_PHOCACART_NO') . '</span>';
+            $download = '<span class="label label-important label-danger badge bg-danger">' . Text::_('COM_PHOCACART_NO') . '</span>';
         }
         echo $r->td($download, "small ph-center");
 
@@ -110,13 +128,16 @@ if (is_array($this->items)) {
         echo $r->td($item->id, "small ph-center");
 
         echo $r->endTr();
+
+        //}
     }
 }
 echo $r->endTblBody();
 
-echo $r->tblFoot($this->pagination->getListFooter(), 9);
+echo $r->tblFoot($this->pagination->getListFooter(), 8);
 echo $r->endTable();
 
 echo $r->formInputsXML($listOrder, $listDirn, $originalOrders);
 echo $r->endMainContainer();
 echo $r->endForm();
+?>

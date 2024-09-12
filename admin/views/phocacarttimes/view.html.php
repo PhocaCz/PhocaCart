@@ -56,7 +56,7 @@ class PhocaCartCpViewPhocacartTimes extends HtmlView
 		$class	= ucfirst($this->t['tasks']).'Helper';
 		$canDo	= $class::getActions($this->t, $state->get('filter.time_id'));
 
-		ToolbarHelper::title( Text::_( $this->t['l'].'_OPENING_TIMES' ), 'clock-alt' );
+		ToolbarHelper::title( Text::_( $this->t['l'].'_OPENING_TIMES' ), 'time' );
 
 		if ($canDo->get('core.create')) {
 			ToolbarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');

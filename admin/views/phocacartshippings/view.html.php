@@ -56,7 +56,7 @@ class PhocaCartCpViewPhocacartShippings extends HtmlView
 		$class	= ucfirst($this->t['tasks']).'Helper';
 		$canDo	= $class::getActions($this->t, $state->get('filter.shipping_id'));
 
-		ToolbarHelper::title( Text::_( $this->t['l'].'_SHIPPING_METHODS' ), 'cube' );
+		ToolbarHelper::title( Text::_( $this->t['l'].'_SHIPPING_METHODS' ), 'barcode' );
 
 		if ($canDo->get('core.create')) {
 			ToolbarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');

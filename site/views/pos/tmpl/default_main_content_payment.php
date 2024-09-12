@@ -9,11 +9,9 @@
 defined('_JEXEC') or die();
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
-use Phoca\PhocaCart\Dispatcher\Dispatcher;
-use Phoca\PhocaCart\Event;
-
 $price		= new PhocacartPrice();
 
 
@@ -54,9 +52,11 @@ echo '<form class="form-inline" action="'.$this->t['action'].'" method="post">';
 $output 	= '';
 $payment	= $this->cart->getPaymentMethod();
 if (isset($payment['method'])) {
-	Dispatcher::dispatch(new Event\Payment\DisplayPaymentPos($output, $this->t, [
-		'pluginname' => $payment['method'],
-	]));
+	//$dispatcher = J EventDispatcher::getInstance();
+	PluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($payment['method'])));
+	$eventData               = array();
+	$eventData['pluginname'] = htmlspecialchars(strip_tags($payment['method']));
+	Factory::getApplication()->triggerEvent('onPCPonDisplayPaymentPos', array(&$output, $this->t, $eventData));
 	echo $output;
 }
 // END PLUGIN

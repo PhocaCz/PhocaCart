@@ -53,6 +53,7 @@ class PhocaCartViewWishList extends HtmlView
 		$wishlist = new PhocacartWishlist();
 		$this->t['items'] = $wishlist->getFullItems();
 
+
 		if (!empty($this->t['items'])) {
 
 			foreach ($this->t['items'] as $k => $v) {

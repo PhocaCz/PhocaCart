@@ -17,7 +17,7 @@ class PhocaCartController extends BaseController
 	public function display($cachable = false, $urlparams = false)
 	{
 
-
+	
 
 		if ( ! Factory::getApplication()->input->get('view') ) {
 			Factory::getApplication()->input->set('view', 'categories' );

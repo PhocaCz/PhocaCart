@@ -22,13 +22,13 @@
 		formatSearching: function () { return phLang['COM_PHOCACART_SEARCHING'] + " ..."; }
   });
 })(jQuery);
-
+ 
 function phSearchItemsMultiple(element, url, id, multiple, splitChar, maxSize) {
-
+	
 	var maxSizeValue = 0;
 	if (typeof maxSize !== 'undefined') {
 		maxSizeValue = maxSize;
-	}
+	} 
 
 	jQuery(element).select2({
 		//dropdownAutoWidth : true,
@@ -80,32 +80,18 @@ function phSearchItemsMultiple(element, url, id, multiple, splitChar, maxSize) {
 	})
 
 }
-
+ 
 function formatResult(item) {
+
 	var phVars = Joomla.getOptions('phVars');
-	let line = '<div class="ph-select-search-result"><span class="ph-select-search-result-image">';
-	if (item.image ?? null) {
-		line += '<img src="' + phVars['uriRoot'] + item.image + '"/>';
-	}
-	line += '</span>';
-	line += '<span class="ph-select-search-result-title">' + (item.title ?? '') + '</span>';
-	line += '<span class="ph-select-search-result-codes">';
-	if (item.sku ?? null) {
-		line += Joomla.Text._('COM_PHOCACART_SKU') + ': ' + item.sku;
-	}
-	if (item.ean ?? null) {
-		if (item.sku ?? null) {
-			line += ', ';
-		}
-		line += Joomla.Text._('COM_PHOCACART_EAN') + ': ' + item.ean;
-	}
-	line += '</span>';
-	line += '<span class="ph-select-search-result-categories">' + (item.categories_title ?? '') + '</span>';
-	line += '</div>';
 
-	return line;
+	if (item.image !== undefined) {
+		return '<div><img src="' + phVars['uriRoot'] + item.image + '" />' + item.title + '</div>';
+  	} else {
+  		return '<div>' + item.title + '</div>';
+  	}
 }
-
+ 
 function formatSelection(data) {
 
 	// Menu link - we need to select category in menu link too
@@ -124,4 +110,4 @@ function formatSelection(data) {
 
     return data.title;
  };
-
+ 

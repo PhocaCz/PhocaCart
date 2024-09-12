@@ -9,9 +9,8 @@
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Utilities\ArrayHelper;
-use Phoca\PhocaCart\Dispatcher\Dispatcher;
-use Phoca\PhocaCart\Event;
 
 defined('_JEXEC') or die();
 require_once JPATH_COMPONENT.'/controllers/phocacartcommons.php';
@@ -43,11 +42,19 @@ class PhocaCartCpControllerPhocacartOrders extends PhocaCartCpControllerPhocaCar
 		$shippingId = $app->getUserStateFromRequest('com_phocacart.phocacartorders.filter.shipping_id', 'filter_shipping_id', '');
 
 		$shippingInfo = $shipping->getShippingMethod($shippingId);
+
+
+
 		if ($shippingId > 0 && isset($shippingInfo->method) && $shippingInfo->method != '') {
-			$result = Dispatcher::dispatch(new Event\Shipping\ExportShippingBranchInfo('com_phocacart.phocacartorders', $pks, $shippingInfo, [
-				'pluginname' => $shippingInfo->method
-			]));
-			echo trim(implode("\n", $result->getArgument('result', [])));
+
+			PluginHelper::importPlugin('pcs', htmlspecialchars(strip_tags($shippingInfo->method)));
+			$eventData               = array();
+			$eventData['pluginname'] = htmlspecialchars(strip_tags($shippingInfo->method));
+			$results                 = Factory::getApplication()->triggerEvent('onPCSexportShippingBranchInfo', array('com_phocacart.phocacartorders', $pks, $shippingInfo, $eventData));
+
+			if (!empty($results)) {
+				echo trim(implode("\n", $results));
+			}
 		}
 
 		/*
@@ -58,3 +65,4 @@ class PhocaCartCpControllerPhocacartOrders extends PhocaCartCpControllerPhocaCar
 		 */
     }
 }
+?>

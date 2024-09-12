@@ -7,44 +7,67 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Layout\LayoutHelper;
 
-$r = $this->r;
+
+$r 			=  $this->r;
+$js ='
+Joomla.submitbutton = function(task) {
+	if (task == "'. $this->t['task'] .'.cancel" || document.formvalidator.isValid(document.getElementById("adminForm"))) {
+		Joomla.submitform(task, document.getElementById("adminForm"));
+	} else {
+		Joomla.renderMessages({"error": ["'. Text::_('JGLOBAL_VALIDATION_FORM_FAILED', true).'"]});
+	}
+}
+';
+Factory::getDocument()->addScriptDeclaration($js);
 
 echo $r->startForm($this->t['o'], $this->t['task'], $this->item->id, 'adminForm', 'adminForm');
+// First Column
+echo '<div class="col-xs-12 col-sm-12 col-md-12 form-horizontal">';
+$tabs = array (
+'general' 		=> Text::_($this->t['l'].'_GENERAL_OPTIONS'),
+'rules' 		=> Text::_($this->t['l'].'_RULES'),
+'publishing' 	=> Text::_($this->t['l'].'_PUBLISHING_OPTIONS'));
+echo $r->navigation($tabs);
 
-echo LayoutHelper::render('joomla.edit.title_alias', $this);
-
-echo '<div class="main-card">';
-
-$skipFieldsets = ['title', 'publish'];
+$formArray = array ('title');
+echo $r->groupHeader($this->form, $formArray);
 
 echo $r->startTabs();
-foreach ($this->form->getFieldSets() as $fieldset) {
-	if (in_array($fieldset->name, $skipFieldsets)) {
-		continue;
+
+echo $r->startTab('general', $tabs['general'], 'active');
+$formArray = array ('discount', 'calculation_type', 'access', 'group');
+echo $r->group($this->form, $formArray);
+$formArray = array('description');
+echo $r->group($this->form, $formArray, 1);
+echo $r->endTab();
+
+
+echo $r->startTab('rules', $tabs['rules']);
+$formArray = array ('total_amount', 'quantity_from', 'product_ids', 'product_filter', 'cat_ids', 'category_filter', 'free_shipping', 'free_payment');
+echo $r->group($this->form, $formArray);
+echo $r->endTab();
+
+
+echo $r->startTab('publishing', $tabs['publishing']);
+foreach($this->form->getFieldset('publish') as $field) {
+	echo '<div class="control-group">';
+	if (!$field->hidden) {
+		echo '<div class="control-label">'.$field->label.'</div>';
 	}
-	echo $r->startTab($fieldset->name, Text::_($fieldset->label));
-	if ($fieldset->name == 'general') {
-		echo '<div class="row">';
-		echo '<div class="col-md-9">';
-	}
-	echo $this->form->renderFieldset($fieldset->name);
-	if ($fieldset->name == 'general') {
-		echo '</div>';
-		echo '<div class="col-md-3">';
-		echo $this->form->renderFieldset('publish');
-		echo '</div>';
-		echo '</div>';
-	}
-	echo $r->endTab();
+	echo '<div class="controls">';
+	echo $field->input;
+	echo '</div></div>';
 }
+echo $r->endTab();
 
 echo $r->endTabs();
-echo '</div>';
-
-echo $r->formInputs($this->t['task']);
+echo '</div>';//end span10
+// Second Column
+//echo '<div class="col-xs-12 col-sm-2 col-md-2"></div>';//end span2
+echo $r->formInputs();
 echo $r->endForm();
+?>
+

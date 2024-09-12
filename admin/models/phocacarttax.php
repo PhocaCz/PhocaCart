@@ -17,27 +17,12 @@ use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Language\Text;
-use Phoca\PhocaCart\I18n\I18nAdminModelTrait;
-
 jimport('joomla.application.component.modeladmin');
 
 class PhocaCartCpModelPhocacartTax extends AdminModel
 {
-	use I18nAdminModelTrait;
-
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
-
-	public function __construct($config = [], MVCFactoryInterface $factory = null, FormFactoryInterface $formFactory = null)
-	{
-		parent::__construct($config, $factory, $formFactory);
-
-		$this->i18nTable = '#__phocacart_taxes_i18n';
-		$this->i18nFields = [
-			'title',
-			'alias'
-		];
-	}
 
 	protected function canDelete($record)
 	{
@@ -58,8 +43,12 @@ class PhocaCartCpModelPhocacartTax extends AdminModel
 
 	public function getForm($data = array(), $loadData = true) {
 
+		$app	= Factory::getApplication();
 		$form 	= $this->loadForm('com_phocacart.phocacarttax', 'phocacarttax', array('control' => 'jform', 'load_data' => $loadData));
-		return $this->prepareI18nForm($form);
+		if (empty($form)) {
+			return false;
+		}
+		return $form;
 	}
 
 	protected function loadFormData()
@@ -69,7 +58,6 @@ class PhocaCartCpModelPhocacartTax extends AdminModel
 
 		if (empty($data)) {
 			$data = $this->getItem();
-			$this->loadI18nItem($data);
 		}
 
 		return $data;
@@ -128,9 +116,6 @@ class PhocaCartCpModelPhocacartTax extends AdminModel
 
 	public function save($data) {
 
-		$i18nData = $this->prepareI18nData($data);
-		//$table = $this->getTable();
-
 
 		if (!empty($data['tax_hide'])) {
 			$registry 	= new Registry($data['tax_hide']);
@@ -143,15 +128,8 @@ class PhocaCartCpModelPhocacartTax extends AdminModel
 			$data['tax_hide'] = '';
 		}
 
-		if (parent::save($data)) {
-            $savedId = $this->getState($this->getName() . '.id');
-
-            return $this->saveI18nData($savedId, $i18nData);
-        }
-
-        return false;
+		return parent::save($data);
 	}
-
 
 	public function delete(&$cid = array()) {
 
@@ -184,8 +162,6 @@ class PhocaCartCpModelPhocacartTax extends AdminModel
 				. ' WHERE tax_id IN ( '.$cids.' )';
 			$this->_db->setQuery( $query );
 			$this->_db->execute();
-
-			$this->deleteI18nData($cid);
 
 		}
 		return true;

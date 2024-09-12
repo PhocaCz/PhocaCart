@@ -13,7 +13,6 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Router\Route;
-use Phoca\PhocaCart\I18n\I18nHelper;
 
 class PhocacartParameter
 {
@@ -43,45 +42,59 @@ class PhocacartParameter
 	}
 
 
-	public static function getAllParameters($key = 'id', $ordering = 1, $lang = ''): array
-	{
-		$keyP = $key . ':' . $ordering . ':' . $lang;
+	public static function getAllParameters($key = 'id', $ordering = 1, $lang = '') {
 
-		if(!array_key_exists($keyP, self::$parameter)) {
+
+		$keyP = base64_encode(serialize($key) . ':' . serialize((int)$ordering . ':' . $lang ));
+
+		if( !array_key_exists( (string)$keyP, self::$parameter )) {
+
+
 			$db = Factory::getDBO();
 			$orderingText = PhocacartOrdering::getOrderingText($ordering, 12);
 
-			$where = [];
-			$join = [];
+			$wheres = array();
+			$lefts = array();
 
-			//if (I18nHelper::useI18n()) {
-				$columns = 'pp.id, '.I18nHelper::sqlCoalesce(['title', 'alias', 'description', 'title_header'], 'pp').', pp.image,'
-					. ' pp.limit_count, pp.link_type';
-				$join[] = I18nHelper::sqlJoin('#__phocacart_parameters_i18n', 'pp');
-			/*} else {
-				$columns = 'pp.id, pp.title, pp.title_header, pp.image, pp.alias, pp.description, pp.limit_count, pp.link_type';
-			}*/
+			$columns = 'pp.id, pp.title, pp.title_header, pp.image, pp.alias, pp.description, pp.limit_count, pp.link_type';
+			/*$groupsFull		= $columns;
+			$groupsFast		= 'm.id';
+			$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;*/
 
-			$where[] = ' pp.published = 1';
+			$wheres[] = ' pp.published = 1';
+
 			if ($lang != '' && $lang != '*') {
-				$where[] = PhocacartUtilsSettings::getLangQuery('pp.language', $lang);
+
+				$wheres[] = PhocacartUtilsSettings::getLangQuery('pp.language', $lang);
 			}
+
 
 			$q = ' SELECT DISTINCT ' . $columns
 				. ' FROM  #__phocacart_parameters AS pp'
-				. ' ' . implode(' ', $join)
-				. ' WHERE ' . implode(' AND ', $where)
+				. (!empty($lefts) ? ' LEFT JOIN ' . implode(' LEFT JOIN ', $lefts) : '')
+				. (!empty($wheres) ? ' WHERE ' . implode(' AND ', $wheres) : '')
+				//.' GROUP BY '.$groups
 				. ' ORDER BY ' . $orderingText;
 
 			$db->setQuery($q);
 
 
 			try {
-				self::$parameter[$keyP] = $db->loadObjectList($key);
+				$items = $db->loadObjectList($key);
 			} catch (Exception $e) {
 				Factory::getApplication()->enqueueMessage(Text::sprintf('JLIB_DATABASE_ERROR_FUNCTION_FAILED', $e->getCode(), $e->getMessage()), 'error');
-				return [];
+				return;
 			}
+			/*
+			try {
+				$items = $db->loadObjectList();
+			} catch (RuntimeException $e) {
+				throw new Exception($e->getMessage(), 500, $e);
+				return false;
+			}*/
+
+
+			self::$parameter[$keyP] = $items;
 		}
 
 		return self::$parameter[$keyP];
@@ -92,35 +105,20 @@ class PhocacartParameter
 	 * PARAMETER VALUES (stored in products) Field PhocacartParameterValues
 	 */
 	public static function getParameterValues($itemId, $parameterId, $select = 0) {
+
 		$db = Factory::getDBO();
 
 		if ($select == 1) {
 			$query = 'SELECT r.parameter_value_id';
 		} else if ($select == 2){
-			/*if (I18nHelper::useI18n()) {
-				$query = 'SELECT a.id, coalesce(i18n.alias, a.alias) as alias ';
-			} else {
-				$query = 'SELECT a.id, a.alias ';
-			}*/
-
-			$columns = 'a.id, ' . I18nHelper::sqlCoalesce(['alias']);
-			$query = 'SELECT ' . $columns;
-
+			$query = 'SELECT a.id, a.alias ';
 		} else {
-			/*if (I18nHelper::useI18n()) {
-				$query = 'SELECT a.id, coalesce(i18n.title, a.title) as title, coalesce(i18n.alias, a.alias) as alias, a.type, a.display_format';
-			} else {
-				$query = 'SELECT a.id, a.title, a.alias, a.type, a.display_format';
-			}*/
-
-			$columns = 'a.id, ' . I18nHelper::sqlCoalesce(['title', 'alias']) . ', a.type, a.display_format';
-			$query = 'SELECT ' . $columns;
-
+			$query = 'SELECT a.id, a.title, a.alias, a.type, a.display_format';
 		}
 		$query .= ' FROM #__phocacart_parameter_values AS a'
+				//.' LEFT JOIN #__phocacart AS f ON f.id = r.item_id'
 				.' LEFT JOIN #__phocacart_parameter_values_related AS r ON a.id = r.parameter_value_id'
 				.' LEFT JOIN #__phocacart_parameters AS p ON a.parameter_id = p.id'
-				. I18nHelper::sqlJoin('#__phocacart_parameter_values_i18n')
 				.' WHERE r.item_id = '.(int) $itemId
 				.' AND p.id = '.(int) $parameterId
                 .' ORDER BY a.id';
@@ -283,14 +281,7 @@ class PhocacartParameter
 		$orderingText 	= PhocacartOrdering::getOrderingText($ordering, 13);
 
 
-		$columns		= 'pv.id, pv.count_products';
-       /* if (I18nHelper::useI18n()) {
-            $columns .= ', coalesce(i18n_pv.title, pv.title) as title, coalesce(i18n_pv.alias, pv.alias) as  alias';
-        } else {
-            $columns   .= ', pv.title, pv.alias';
-        }*/
-		$columns .= I18nHelper::sqlCoalesce(['title', 'alias'], 'pv', '', '', ',');
-
+		$columns		= 'pv.id, pv.title, pv.alias, pv.count_products';
 		/*$groupsFull		= $columns;
 		$groupsFast		= 'm.id';
 		$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;*/
@@ -342,15 +333,14 @@ class PhocacartParameter
 		$q = ' SELECT DISTINCT '.$columns
 			.' FROM  #__phocacart_parameter_values AS pv'
 			. (!empty($lefts) ? ' LEFT JOIN ' . implode( ' LEFT JOIN ', $lefts ) : '')
-			. I18nHelper::sqlJoin('#__phocacart_parameter_values_i18n', 'pv')
 			. (!empty($wheres) ? ' WHERE ' . implode( ' AND ', $wheres ) : '')
 			//.' GROUP BY '.$groups
 			.' ORDER BY '.$orderingText;
 
 		$db->setQuery($q);
 
-		$items = $db->loadObjectList();
 
+		$items = $db->loadObjectList();
 
 		return $items;
 	}
@@ -381,33 +371,16 @@ class PhocacartParameter
         $ordering = PhocacartOrdering::getOrderingText($ordering, 13);//pv
         if (!empty($items)) {
             foreach ($items as $k => $v) {
-               // $wheres[] = '( pp.alias = ' . $db->quote($k) . ' AND pv.id IN (' . $v . ') )';
-
-				$wheres[] = '( '.I18nHelper::sqlCoalesce(['alias'], 'pp', '', '', '', '', true).' = ' . $db->quote($k) . ' AND '.I18nHelper::sqlCoalesce(['id'], 'pv', '', '', '', '', true).' IN (' . $v . ') )';
+                $wheres[] = '( pp.alias = ' . $db->quote($k) . ' AND pv.id IN (' . $v . ') )';
             }
 
             if (!empty($wheres)) {
                 // FULL GROUP BY GROUP_CONCAT(DISTINCT o.title) AS title
-               /* $q = 'SELECT DISTINCT CONCAT(pv.id, \'-\', pv.alias) AS alias, pv.title, pp.alias  AS parameteralias, pp.title AS parametertitle FROM #__phocacart_parameter_values AS pv'
+                $q = 'SELECT DISTINCT CONCAT(pv.id, \'-\', pv.alias) AS alias, pv.title, pp.alias  AS parameteralias, pp.title AS parametertitle FROM #__phocacart_parameter_values AS pv'
                     . ' LEFT JOIN #__phocacart_parameters AS pp ON pp.id = pv.parameter_id'
                     . (!empty($wheres) ? ' WHERE ' . implode(' OR ', $wheres) : '')
                     . ' GROUP BY pp.alias, pv.alias, pv.title'
-                    . ' ORDER BY ' . $ordering;*/
-
-				$q = 'SELECT DISTINCT '
-					.I18nHelper::sqlCoalesce(['alias'], 'pv', '', 'concatid').', '
-					.I18nHelper::sqlCoalesce(['title'], 'pv').', '
-					.I18nHelper::sqlCoalesce(['alias'], 'pp', 'parameter').', '
-					.I18nHelper::sqlCoalesce(['title'], 'pp', 'parameter')
-
-					.' FROM #__phocacart_parameter_values AS pv'
-					.' LEFT JOIN #__phocacart_parameters AS pp ON pp.id = pv.parameter_id'
-
-					. I18nHelper::sqlJoin('#__phocacart_parameters_i18n', 'pp')
-					. I18nHelper::sqlJoin('#__phocacart_parameter_values_i18n', 'pv')
-					. (!empty($wheres) ? ' WHERE ' . implode(' AND ', $wheres) : '')
-                	. ' GROUP BY pp.alias, pv.alias, pv.title'
-                	. ' ORDER BY ' . $ordering;
+                    . ' ORDER BY ' . $ordering;
 
                 $db->setQuery($q);
                 $o = $db->loadAssocList();

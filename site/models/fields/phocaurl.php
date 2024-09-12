@@ -7,14 +7,16 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-
-use Joomla\CMS\Form\Field\UrlField;
+use Joomla\CMS\Form\FormHelper;
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\Form\FormField;
 use Joomla\CMS\Language\Text;
+JFormHelper::loadFieldClass('url');
 
-class JFormFieldPhocaUrl extends UrlField
+class JFormFieldPhocaUrl extends FormFieldUrl
 {
 	protected $type 		= 'PhocaUrl';
-
+	
 	protected function getInput() {
 
 		if (!$this->hidden && ($this->form->getValue('version') == 1)) {
@@ -29,7 +31,7 @@ class JFormFieldPhocaUrl extends UrlField
 			$onchange	= $this->element['onchange'] ? ' onchange="'.(string) $this->element['onchange'].'"' : '';
 			$value 		= htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8');
 			$requInput	= $this->required ? ' required="required" aria-required="true"' : '';
-
+			
 			//prepend:
 			$preIcon	= $this->element['preicon'] 	? '<i class="' . $this->element['preicon'] . ' tip" title="' . $placeholder . '"></i>' : '';
 			$postIcon	= $this->element['posticon'] 	? '<i class="' . $this->element['preicon'] . '"></i>' : '';
@@ -50,17 +52,17 @@ class JFormFieldPhocaUrl extends UrlField
 		} else {
 			return parent::getInput();
 		}
-
+		
 	}
-
+	
 	protected function getLabel() {
-
+		
 		if (!$this->hidden && ($this->form->getValue('version') == 1)) {
 			return '';
 		} else {
 			return parent::getLabel();
 		}
 	}
-
+	
 }
 ?>

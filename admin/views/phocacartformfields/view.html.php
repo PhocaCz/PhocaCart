@@ -56,7 +56,7 @@ class PhocaCartCpViewPhocaCartFormfields extends HtmlView
         $class = ucfirst($this->t['tasks']) . 'Helper';
         $canDo = $class::getActions($this->t, $state->get('filter.formfield_id'));
 
-        ToolbarHelper::title(Text::_($this->t['l'] . '_FORM_FIELDS'), 'fields');
+        ToolbarHelper::title(Text::_($this->t['l'] . '_FORM_FIELDS'), 'list-alt');
 
         if ($canDo->get('core.create')) {
             ToolbarHelper::addNew($this->t['task'] . '.add', 'JTOOLBAR_NEW');

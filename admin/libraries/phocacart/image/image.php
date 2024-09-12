@@ -13,10 +13,7 @@ use Joomla\CMS\Filesystem\Path;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Uri\Uri;
-use Phoca\PhocaCart\Dispatcher\Dispatcher;
-use Phoca\PhocaCart\Event;
 
 class PhocacartImage
 {
@@ -62,10 +59,6 @@ class PhocacartImage
                 $thumbName->abs_webp = PhocacartFile::changeFileExtension($thumbName->abs, 'webp');
             break;
         }
-
-        PluginHelper::importPlugin('pca');
-        //Factory::getApplication()->triggerEvent('onPCAonImageGetThumbnailName', array($path, $filename, $size, &$thumbName));
-        Dispatcher::dispatch(new Event\Admin\Image\GetThumbnailName($path, $filename, $size, $thumbName ));
         return $thumbName;
     }
 
@@ -106,29 +99,15 @@ class PhocacartImage
         return substr($filename, 0, strrpos($filename, '.'));
     }
 
-    public static function getPngQuality($thumbQuality) {
-
-		if ((int)$thumbQuality < 0) {
-			$thumbQuality = 0;
-		}
-		if ((int)$thumbQuality > 100) {
-			$thumbQuality = 100;
-		}
-
-		$pngQuality = ($thumbQuality - 100) / 11.111111;
-		$pngQuality = round(abs($pngQuality));
-		return $pngQuality;
-	}
-
-	public static function getJpegQuality($jpegQuality) {
-		if ((int)$jpegQuality < 0) {
-			$jpegQuality = 0;
-		}
-		if ((int)$jpegQuality > 100) {
-			$jpegQuality = 100;
-		}
-		return $jpegQuality;
-	}
+    public static function getJpegQuality($jpegQuality) {
+        if ((int)$jpegQuality < 0) {
+            $jpegQuality = 0;
+        }
+        if ((int)$jpegQuality > 100) {
+            $jpegQuality = 100;
+        }
+        return $jpegQuality;
+    }
 
     public static function getAdditionalImages($itemId) {
         $db    = Factory::getDBO();

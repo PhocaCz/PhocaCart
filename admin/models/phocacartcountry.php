@@ -128,9 +128,8 @@ class PhocaCartCpModelPhocacartCountry extends AdminModel
 				if ($query != '' && $query[0] != '#'){
 					$db->setQuery($query);
 					if (!$db->execute()){
-						//$app->enqueueMessage(Text::_('JLIB_INSTALLER_ERROR_SQL_ERROR'), 'error');
-						//Log::add(Text::_('JLIB_INSTALLER_ERROR_SQL_ERROR'), Log::WARNING);
-						throw new Exception('Database Error: Importing countries', 500);
+						$app->enqueueMessage(Text::_('JLIB_INSTALLER_ERROR_SQL_ERROR'), 'error');
+						Log::add(Text::_('JLIB_INSTALLER_ERROR_SQL_ERROR'), Log::WARNING);
 						return false;
 					}
 				}

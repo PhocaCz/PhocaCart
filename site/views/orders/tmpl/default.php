@@ -10,6 +10,7 @@ defined('_JEXEC') or die();
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Uri\Uri;
 
 $layoutAl 	= new FileLayout('alert', null, array('component' => 'com_phocacart'));
 
@@ -40,8 +41,11 @@ if ((int)$this->u->id > 0 || $this->t['token'] != '') {
 			echo '<div class="'.$this->s['c']['row'].'  ph-orders-item-box-row" >';
 
 			echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].'">'.PhocacartOrder::getOrderNumber($v->id, $v->date, $v->order_number).'</div>';
+			$statusClass = PhocacartUtilsSettings::getOrderStatusClass($v->status_title);
 
-            $status = PhocacartUtilsSettings::getOrderStatusBadge($v->status_title, $v->status_params);
+
+
+			$status = '<span class="'.$statusClass.'">'.Text::_($v->status_title).'</span>';
 			echo '<div class="'.$this->s['c']['col.xs12.sm2.md2'].'">'.$status.'</div>';
 
 			echo '<div class="'.$this->s['c']['col.xs12.sm3.md3'].'">'.PhocacartUtils::date($v->date).'</div>';
@@ -56,11 +60,7 @@ if ((int)$this->u->id > 0 || $this->t['token'] != '') {
 			if ($this->t['token'] != '') {
 				$token = '&o='.$this->t['token'];
 			}
-			if ($this->p->get('display_user_orders_details_style', 'popup') === 'popup') {
-				$linkOrderView = Route::_('index.php?option=com_phocacart&view=order&tmpl=component&id=' . (int) $v->id . '&type=1' . $token);
-			} else {
-				$linkOrderView = Route::_('index.php?option=com_phocacart&view=order&id=' . (int) $v->id . '&type=1' . $token);
-			}
+			$linkOrderView 		= Route::_( 'index.php?option=com_phocacart&view=order&tmpl=component&id='.(int)$v->id.'&type=1'.$token );
 			$linkInvoiceView 	= Route::_( 'index.php?option=com_phocacart&view=order&tmpl=component&id='.(int)$v->id.'&type=2'.$token );
 			$linkDelNoteView 	= Route::_( 'index.php?option=com_phocacart&view=order&tmpl=component&id='.(int)$v->id.'&type=3'.$token );
 
@@ -74,17 +74,7 @@ if ((int)$this->u->id > 0 || $this->t['token'] != '') {
 			$linkOrderViewHandler= 'onclick="phWindowPopup(this.href, \'orderview\', 2, 1.3);return false;"';
 
 			if (in_array(1, $displayDocument)) {
-				switch ($this->p->get('display_user_orders_details_style', 'popup')) {
-					case 'nopopup':
-						$view .= '<a href="' . $linkOrderView . '" class="' . $this->s['c']['btn.btn-success.btn-sm'] . ' ph-btn ph-orders-btn" role="button">' . PhocacartRenderIcon::icon($this->s['i']['order']. ' ph-icon-order', 'title="' . Text::_('COM_PHOCACART_VIEW_ORDER') . '"') . '</a>';
-						break;
-					case 'blank':
-						$view .= '<a href="' . $linkOrderView . '" class="' . $this->s['c']['btn.btn-success.btn-sm'] . ' ph-btn ph-orders-btn" role="button" target="_blank">' . PhocacartRenderIcon::icon($this->s['i']['order']. ' ph-icon-order', 'title="' . Text::_('COM_PHOCACART_VIEW_ORDER') . '"') . '</a>';
-						break;
-					default:
-						$view .= '<a href="' . $linkOrderView . '" class="' . $this->s['c']['btn.btn-success.btn-sm'] . ' ph-btn ph-orders-btn" role="button" ' . $linkOrderViewHandler . '>' . PhocacartRenderIcon::icon($this->s['i']['order']. ' ph-icon-order', 'title="' . Text::_('COM_PHOCACART_VIEW_ORDER') . '"') . '</a>';
-						break;
-				}
+				$view .= '<a href="' . $linkOrderView . '" class="' . $this->s['c']['btn.btn-success.btn-sm'] . ' ph-btn ph-orders-btn" role="button" ' . $linkOrderViewHandler . '>' . PhocacartRenderIcon::icon($this->s['i']['order']. ' ph-icon-order', 'title="' . Text::_('COM_PHOCACART_VIEW_ORDER') . '"') . '</a>';
 			}
 
 			if (in_array(2, $displayDocument) && $v->invoice_number != '') {
@@ -257,3 +247,4 @@ if (!empty($this->t['categories'])) {
 echo '</div>';
 echo '<div>&nbsp;</div>';
 echo PhocacartUtilsInfo::getInfo();
+?>

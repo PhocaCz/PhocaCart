@@ -48,7 +48,7 @@ class PhocaCartCpViewPhocaCartQuestion extends HtmlView
 		$canDo		= $class::getActions($this->t, $this->state->get('filter.question_id'));
 
 		$text = $isNew ? Text::_( $this->t['l'] . '_NEW' ) : Text::_($this->t['l'] . '_EDIT');
-		ToolbarHelper::title(   Text::_( $this->t['l'] . '_QUESTION' ).': <small><small>[ ' . $text.' ]</small></small>' , 'messaging');
+		ToolbarHelper::title(   Text::_( $this->t['l'] . '_QUESTION' ).': <small><small>[ ' . $text.' ]</small></small>' , 'question-sign');
 
 		// If not checked out, can save the item.
 		if (!$checkedOut && $canDo->get('core.edit')){

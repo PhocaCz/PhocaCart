@@ -7,53 +7,44 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
-
-use Joomla\CMS\Form\FormFactoryInterface;
-use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Utilities\ArrayHelper;
-use Phoca\PhocaCart\Dispatcher\Dispatcher;
-use Phoca\PhocaCart\I18n\I18nAdminModelTrait;
+jimport('joomla.application.component.modeladmin');
 
 class PhocaCartCpModelPhocacartCoupon extends AdminModel
 {
-	use I18nAdminModelTrait;
-
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
 
-    public function __construct($config = [], MVCFactoryInterface $factory = null, FormFactoryInterface $formFactory = null)
-    {
-        parent::__construct($config, $factory, $formFactory);
+	protected function canDelete($record) {
+		return parent::canDelete($record);
+	}
 
-        $this->i18nTable = '#__phocacart_coupons_i18n';
-        $this->i18nFields = [
-            'title',
-            'alias',
-            'description',
-            'gift_description',
-            'gift_sender_message',
-        ];
-    }
+	protected function canEditState($record) {
+		return parent::canEditState($record);
+	}
 
 	public function getTable($type = 'PhocacartCoupon', $prefix = 'Table', $config = array()) {
 		return Table::getInstance($type, $prefix, $config);
 	}
 
 	public function getForm($data = array(), $loadData = true) {
-		$form = $this->loadForm('com_phocacart.phocacartcoupon', 'phocacartcoupon', array('control' => 'jform', 'load_data' => $loadData));
-        return $this->prepareI18nForm($form);
+		$app	= Factory::getApplication();
+		$form 	= $this->loadForm('com_phocacart.phocacartcoupon', 'phocacartcoupon', array('control' => 'jform', 'load_data' => $loadData));
+		if (empty($form)) {
+			return false;
+		}
+		return $form;
 	}
 
 	protected function loadFormData() {
 		$data = Factory::getApplication()->getUserState('com_phocacart.edit.phocacartcoupon.data', array());
 		if (empty($data)) {
 			$data = $this->getItem();
-			$this->loadI18nItem($data);
 		}
 		return $data;
 	}
@@ -68,6 +59,8 @@ class PhocaCartCpModelPhocacartCoupon extends AdminModel
 
 	protected function prepareTable($table) {
 		jimport('joomla.filter.output');
+		$date = Factory::getDate();
+		$user = Factory::getUser();
 
 		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
 		$table->alias		= ApplicationHelper::stringURLSafe($table->alias);
@@ -86,6 +79,9 @@ class PhocaCartCpModelPhocacartCoupon extends AdminModel
 		$table->valid_to 				= PhocacartUtils::getDateFromString($table->valid_to);
 
 		if (empty($table->id)) {
+			// Set the values
+			//$table->created	= $date->toSql();
+
 			// Set ordering to the last item if not set
 			if (empty($table->ordering)) {
 				$db = Factory::getDbo();
@@ -95,11 +91,16 @@ class PhocaCartCpModelPhocacartCoupon extends AdminModel
 				$table->ordering = $max+1;
 			}
 		}
+		else {
+			// Set the values
+			//$table->modified	= $date->toSql();
+			//$table->modified_by	= $user->get('id');
+		}
 	}
 
 	public function save($data)
 	{
-		$i18nData = $this->prepareI18nData($data);
+		//$dispatcher = J EventDispatcher::getInstance();
 		$table = $this->getTable();
 
 		if ((!empty($data['tags']) && $data['tags'][0] != ''))
@@ -143,7 +144,7 @@ class PhocaCartCpModelPhocacartCoupon extends AdminModel
 			}
 
 			// Trigger the onContentBeforeSave event.
-			$result = Dispatcher::dispatchBeforeSave($this->event_before_save, $this->option . '.' . $this->name, $table, $isNew, $data);
+			$result = Factory::getApplication()->triggerEvent($this->event_before_save, array($this->option . '.' . $this->name, $table, $isNew, $data));
 
 			if (in_array(false, $result, true))
 			{
@@ -158,32 +159,34 @@ class PhocaCartCpModelPhocacartCoupon extends AdminModel
 				return false;
 			}
 
-			if ((int)$table->getId() > 0) {
+
+
+
+
+			if ((int)$table->id > 0) {
 
 				if (!isset($data['product_ids'])) {
 					$data['product_ids'] = '';
 				}
-				PhocacartCoupon::storeCouponProductsById($data['product_ids'], (int)$table->getId() );
+				PhocacartCoupon::storeCouponProductsById($data['product_ids'], (int)$table->id );
 
 				if (!isset($data['cat_ids'])) {
 					$data['cat_ids'] = array();
 				}
-				PhocacartCoupon::storeCouponCatsById($data['cat_ids'], (int)$table->getId());
+				PhocacartCoupon::storeCouponCatsById($data['cat_ids'], (int)$table->id);
 
 				if (empty($data['group'])) {
 					$data['group'] = array();
 				}
 
-				PhocacartGroup::storeGroupsById((int)$table->getId(), 6, $data['group']);
-
-				$this->saveI18nData($table->getId(), $i18nData);
+				PhocacartGroup::storeGroupsById((int)$table->id, 6, $data['group']);
 			}
 
 			// Clean the cache.
 			$this->cleanCache();
 
 			// Trigger the onContentAfterSave event.
-			Dispatcher::dispatchAfterSave($this->event_after_save, $this->option . '.' . $this->name, $table, $isNew, $data);
+			Factory::getApplication()->triggerEvent($this->event_after_save, array($this->option . '.' . $this->name, $table, $isNew));
 		}
 		catch (Exception $e)
 		{
@@ -203,21 +206,22 @@ class PhocaCartCpModelPhocacartCoupon extends AdminModel
 		return true;
 	}
 
-	public function delete(&$pks = [])
-	{
-		ArrayHelper::toInteger($pks);
-		if (parent::delete($pks)) {
-			$cids = implode(',', $pks);
+	public function delete(&$cid = array()) {
 
-			$query = 'DELETE FROM #__phocacart_item_groups'
-				. ' WHERE item_id IN ( ' . $cids . ' )'
+		if (count( $cid )) {
+			$delete = parent::delete($cid);
+			if ($delete) {
+
+				ArrayHelper::toInteger($cid);
+				$cids = implode( ',', $cid );
+
+				$query = 'DELETE FROM #__phocacart_item_groups'
+				. ' WHERE item_id IN ( '.$cids.' )'
 				. ' AND type = 6';
-			$this->_db->setQuery($query);
-			$this->_db->execute();
-
-			return $this->deleteI18nData($pks);
+				$this->_db->setQuery( $query );
+				$this->_db->execute();
+			}
 		}
-
-		return false;
 	}
 }
+?>

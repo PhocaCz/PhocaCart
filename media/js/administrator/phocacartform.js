@@ -251,18 +251,15 @@ jQuery(document).ready(function() {
         } else {
             // Get alias from parent attribute and send the value so only options from such type of alias will be selected
             var parentAliasName = parentId + '__alias';
-            var parentAlias = jQuery('input[id^=' + parentAliasName + ']').val()
+            var parentAlias = jQuery('#' + parentAliasName).val();
             src = src + '&parentattributealias=' + encodeURIComponent(parentAlias);
             var parentTitleName = parentId + '__title';
-            var parentTitle = jQuery('input[id^=' + parentTitleName + ']').val()
+            var parentTitle = jQuery('#' + parentTitleName).val();
             src = src + '&parentattributetitle=' + encodeURIComponent(parentTitle);
         }
 
         // Get all categories of current product for possible filtering
-        var cidA = [];
-        jQuery('[name*="jform[catid_multiple]"]').each((_, edit) => {
-            cidA.push(...jQuery(edit).val())
-        });
+        var cidA = jQuery('#jform_catid_multiple').val();
         var cid = cidA.toString();
 
         src = src + '&cid=' + cid;
@@ -270,7 +267,7 @@ jQuery(document).ready(function() {
         src = src.replace("{ph-field-id}", id);
         src = src.replace("{ph-field-parent-id}", parentId);
 
-
+        
 		//var phDownloadFolder = jQuery("#jform_download_folder").val();
 		//src = src + "&folder=&downloadfolder=";
 
@@ -427,6 +424,7 @@ jQuery(document).ready(function() {
         var requestUrl  = element.attr("data-requesturl");
         var requestMsg  = element.attr("data-requestmsg");
 
+
         var phVars = Joomla.getOptions('phVars');
         var phLang = Joomla.getOptions('phLang');
         var url = 'index.php?option=com_phocacart&view=phocacartimagea&format=json&tmpl=component&' + phVars['token'] + '=1';
@@ -470,7 +468,7 @@ jQuery(document).ready(function() {
 
                             jQuery("#ph-ajaxtop").html(phGetMsg(' &nbsp; ', 1));
                             jQuery("#ph-ajaxtop").show();
-                            jQuery("#ph-ajaxtop-message").html(phGetMsg(response.message, 0));z
+                            jQuery("#ph-ajaxtop-message").html(phGetMsg(response.message, 0));
                             phCloseMsgBoxSuccess();
                             if ( response.file != '' ){
                                 element.val(response.file);

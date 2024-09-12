@@ -50,7 +50,7 @@ class PhocaCartCpViewPhocacartCurrency extends HtmlView
 		$canDo		= $class::getActions($this->t, $this->state->get('filter.currency_id'));
 
 		$text = $isNew ? Text::_( $this->t['l'] . '_NEW' ) : Text::_($this->t['l'] . '_EDIT');
-		ToolbarHelper::title(   Text::_( $this->t['l'] . '_CURRENCY' ).': <small><small>[ ' . $text.' ]</small></small>' , 'tags-squared');
+		ToolbarHelper::title(   Text::_( $this->t['l'] . '_CURRENCY' ).': <small><small>[ ' . $text.' ]</small></small>' , 'eur');
 
 		// If not checked out, can save the item.
 		if (!$checkedOut && $canDo->get('core.edit')){

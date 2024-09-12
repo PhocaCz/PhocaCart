@@ -12,9 +12,6 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Plugin\PluginHelper;
-use Phoca\PhocaCart\Dispatcher\Dispatcher;
-use Phoca\PhocaCart\Event;
-
 jimport( 'joomla.application.component.view');
 jimport( 'joomla.filesystem.folder' );
 jimport( 'joomla.filesystem.file' );
@@ -56,7 +53,6 @@ class PhocaCartViewItems extends HtmlView
 		$this->t['image_height_cat']		= $this->p->get( 'image_height_cat', '' );
 		//$this->t['image_link']			= $this->p->get( 'image_link', 0 );
 		$this->t['columns_cat']				= $this->p->get( 'columns_cat', 3 );
-        $this->t['columns_cat_mobile']		= $this->p->get( 'columns_cat_mobile', 3 );
 		$this->t['columns_subcat_cat']		= $this->p->get( 'columns_subcat_cat', 3 );
 		$this->t['enable_social']			= $this->p->get( 'enable_social', 0 );
 		$this->t['cv_display_subcategories']= $this->p->get( 'cv_display_subcategories', 5 );
@@ -144,7 +140,6 @@ class PhocaCartViewItems extends HtmlView
 
 		$this->t['layouttypeactive'] 	= PhocacartRenderFront::setActiveLayoutType($this->t['layouttype']);
 		$this->t['columns_cat'] 		= $this->t['layouttype'] == 'grid' ? $this->t['columns_cat'] : 1;
-        $this->t['columns_cat_mobile'] 		= $this->t['layouttype'] == 'grid' ? $this->t['columns_cat_mobile'] : 1;
 
 
 		$uri->delVar('format');// !!! REMOVE format parameter because return url needs to go to standard html
@@ -169,12 +164,14 @@ class PhocaCartViewItems extends HtmlView
 
 		//$model->hit((int)$this->t['categoryid']);
 
-				// Plugins ------------------------------------------
+		// Plugins ------------------------------------------
+        PluginHelper::importPlugin('pcv');
+        //$this->t['dispatcher']	= J EventDispatcher::getInstance();
         $this->t['event']                      = new stdClass;
-				$results                               = Dispatcher::dispatch(new Event\View\Items\BeforeHeader('com_phocacart.items', $this->items, $this->p));
+        $results                               = Factory::getApplication()->triggerEvent('onPCVonItemsBeforeHeader', array('com_phocacart.items', &$this->items, &$this->p));
         $this->t['event']->onItemsBeforeHeader = trim(implode("\n", $results));
 
-				$results                               = Dispatcher::dispatch(new Event\View\Items\BeforePaginationTop('com_phocacart.items', $this->items, $this->p));
+				$results                               = Factory::getApplication()->triggerEvent('onPCVonItemsBeforePaginationTop', array('com_phocacart.items', &$this->items, &$this->p));
 				$this->t['event']->onItemsBeforePaginationTop = trim(implode("\n", $results));
         // Foreach values are rendered in default foreaches
 
@@ -193,4 +190,4 @@ class PhocaCartViewItems extends HtmlView
 
 	}
 }
-
+?>

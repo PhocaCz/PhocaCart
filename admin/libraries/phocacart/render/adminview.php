@@ -88,8 +88,7 @@ class PhocacartRenderAdminview extends Adminview
 			//$s[] = '   modal.dispose();';
 
 			$s[] = '   var modalEl = document.getElementById("'.$id.'");';
-			//$s[] = '   var modal = bootstrap.Modal.getInstance(modalEl);';
-			$s[] = '   var modal = bootstrap.Modal.getOrCreateInstance(modalEl);';
+			$s[] = '   var modal = bootstrap.Modal.getInstance(modalEl);';
 			$s[] = '   modal.hide();';
 			$s[] = '   jQuery("#'.$id.' .modal-body").css("background", "");';// set back the backround, previously set to white for not first page of wizard
 			$s[] = '}';

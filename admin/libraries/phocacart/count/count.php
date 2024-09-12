@@ -37,7 +37,7 @@ class PhocacartCount
                         $q =  ' SELECT count(a.id)'
                         . ' FROM #__phocacart_products AS a'
                         . ' LEFT JOIN #__phocacart_product_categories AS pc ON a.id = pc.product_id'
-                        . ' WHERE a.published = 1 AND pc.category_id = '.(int)$v;
+                        . ' WHERE a.published AND pc.category_id = '.(int)$v;
 
                         $db->setQuery($q);
 			            $items = $db->loadResult();
@@ -54,7 +54,7 @@ class PhocacartCount
                             $q = ' SELECT count(a.id)'
                                 . ' FROM #__phocacart_products AS a'
                                 . ' LEFT JOIN #__phocacart_tags_related AS tr ON a.id = tr.item_id'
-                                . ' WHERE a.published = 1 AND tr.tag_id = ' . (int)$v;
+                                . ' WHERE a.published AND tr.tag_id = ' . (int)$v;
 
                             $db->setQuery($q);
                             $items = $db->loadResult();
@@ -72,7 +72,7 @@ class PhocacartCount
                             $q = ' SELECT count(a.id)'
                                 . ' FROM #__phocacart_products AS a'
                                 . ' LEFT JOIN #__phocacart_taglabels_related AS tr ON a.id = tr.item_id'
-                                . ' WHERE a.published = 1 AND tr.tag_id = ' . (int)$v;
+                                . ' WHERE a.published AND tr.tag_id = ' . (int)$v;
 
                             $db->setQuery($q);
                             $items = $db->loadResult();
@@ -85,7 +85,7 @@ class PhocacartCount
 
                         $q =  ' SELECT count(a.id)'
                         . ' FROM #__phocacart_products AS a'
-                        . ' WHERE a.published = 1 AND a.manufacturer_id = '.(int)$v;
+                        . ' WHERE a.published AND a.manufacturer_id = '.(int)$v;
 
                         $db->setQuery($q);
 			            $items = $db->loadResult();
@@ -97,7 +97,7 @@ class PhocacartCount
                         $q =  ' SELECT count(a.id)'
                         . ' FROM #__phocacart_products AS a'
                         . ' LEFT JOIN #__phocacart_parameter_values_related AS pvr ON a.id = pvr.item_id'
-                        . ' WHERE a.published = 1 AND pvr.parameter_value_id = '.(int)$v;
+                        . ' WHERE a.published AND pvr.parameter_value_id = '.(int)$v;
 
                         $db->setQuery($q);
 			            $items = $db->loadResult();

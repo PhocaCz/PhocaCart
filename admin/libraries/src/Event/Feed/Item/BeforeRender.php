@@ -10,7 +10,7 @@ class BeforeRender extends AbstractEvent
 {
   use ResultAware, ResultTypeBooleanAware;
 
-  public function __construct(string $context, string $feedName, Form &$subForm) {
+  public function __construct(string $context, string $feedName, Form $subForm) {
     parent::__construct('pcf', 'onPCFonItemBeforeRender', [
       'context' => $context,
       'feedName' => $feedName,

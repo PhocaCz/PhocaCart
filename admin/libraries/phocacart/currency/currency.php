@@ -285,10 +285,10 @@ class PhocacartCurrency
 
 			if (isset($currentCurrency['exchange_rate']) && isset($defaultCurrency['exchange_rate'])) {
 				if ($currentCurrency['exchange_rate'] > 0) {
-					$o .= '<div class="col">1 '.$defaultCurrency['code'] . ' = '. PhocacartPrice::cleanPrice($currentCurrency['exchange_rate']). ' '. $currentCurrency['code'].'</div>';
+					$o .= '<div>1 '.$defaultCurrency['code'] . ' = '. PhocacartPrice::cleanPrice($currentCurrency['exchange_rate']). ' '. $currentCurrency['code'].'</div>';
 				}
 				if ($currentCurrency['exchange_rate'] > 0) {
-					$o .= '<div class="col">1 '.$currentCurrency['code'] . ' = '. PhocacartPrice::cleanPrice(round((1 / $currentCurrency['exchange_rate']), 8))  . ' '. $defaultCurrency['code'].'</div>';
+					$o .= '<div>1 '.$currentCurrency['code'] . ' = '. PhocacartPrice::cleanPrice(round((1 / $currentCurrency['exchange_rate']), 8))  . ' '. $defaultCurrency['code'].'</div>';
 				}
 				return $o;
 			}

@@ -4,7 +4,6 @@ DROP TABLE IF EXISTS `#__phocacart_attribute_values`;
 DROP TABLE IF EXISTS `#__phocacart_bulk_prices`;
 DROP TABLE IF EXISTS `#__phocacart_cart_multiple`;
 DROP TABLE IF EXISTS `#__phocacart_categories`;
-DROP TABLE IF EXISTS `#__phocacart_content_types`;
 DROP TABLE IF EXISTS `#__phocacart_countries`;
 DROP TABLE IF EXISTS `#__phocacart_coupons`;
 DROP TABLE IF EXISTS `#__phocacart_coupon_categories`;
@@ -48,7 +47,6 @@ DROP TABLE IF EXISTS `#__phocacart_payment_method_regions`;
 DROP TABLE IF EXISTS `#__phocacart_payment_method_shipping`;
 DROP TABLE IF EXISTS `#__phocacart_payment_method_zones`;
 DROP TABLE IF EXISTS `#__phocacart_products`;
-DROP TABLE IF EXISTS `#__phocacart_product_bundles`;
 DROP TABLE IF EXISTS `#__phocacart_product_categories`;
 DROP TABLE IF EXISTS `#__phocacart_product_discounts`;
 DROP TABLE IF EXISTS `#__phocacart_product_featured`;
@@ -87,21 +85,6 @@ DROP TABLE IF EXISTS `#__phocacart_zones`;
 DROP TABLE IF EXISTS `#__phocacart_zone_countries`;
 DROP TABLE IF EXISTS `#__phocacart_zone_regions`;
 
--- i18n
-DROP TABLE IF EXISTS `#__phocacart_categories_i18n`;
-DROP TABLE IF EXISTS `#__phocacart_manufacturers_i18n`;
-DROP TABLE IF EXISTS `#__phocacart_products_i18n`;
-DROP TABLE IF EXISTS `#__phocacart_attributes_i18n`;
-DROP TABLE IF EXISTS `#__phocacart_attribute_values_i18n`;
-DROP TABLE IF EXISTS `#__phocacart_specification_groups_i18n`;
-DROP TABLE IF EXISTS `#__phocacart_specifications_i18n`;
-DROP TABLE IF EXISTS `#__phocacart_shipping_methods_i18n`;
-DROP TABLE IF EXISTS `#__phocacart_payment_methods_i18n`;
-DROP TABLE IF EXISTS `#__phocacart_tags_i18n`;
-DROP TABLE IF EXISTS `#__phocacart_parameters_i18n`;
-DROP TABLE IF EXISTS `#__phocacart_parameter_values_i18n`;
-DROP TABLE IF EXISTS `#__phocacart_taxes_i18n`;
-
 -- Obsolete
 DROP TABLE IF EXISTS `#__phocacart_cart`;
 DROP TABLE IF EXISTS `#__phocacart_category_access`;
@@ -111,6 +94,3 @@ DROP TABLE IF EXISTS `#__phocacart_payment_method_access`;
 DROP TABLE IF EXISTS `#__phocacart_product_access`;
 DROP TABLE IF EXISTS `#__phocacart_product_discount_access`;
 DROP TABLE IF EXISTS `#__phocacart_shipping_method_access`;
-
--- Templates
-DELETE FROM `#__mail_templates` WHERE template_id = 'com_phocacart.watchdog';

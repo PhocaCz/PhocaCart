@@ -11,8 +11,6 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Form\FormField;
-use Phoca\PhocaCart\Form\FormHelper;
 
 extract($displayData);
 
@@ -26,29 +24,24 @@ extract($displayData);
  * @var   string  $input        The input field html code
  * @var   string  $description  An optional description to use as in–line help text
  * @var   string  $descClass    The class name to use for the description
- * @var   FormField $field The Field object
  */
 
 if (!empty($options['showonEnabled'])) {
     /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
     $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
     $wa->useScript('showon');
-
-    $options['rel'] = ' data-showon=\'' .
-        json_encode(FormHelper::parseShowOnConditions($field->showon, $field->formControl, $field->group)) .
-        '\''
-    ;
 }
 
-$class = ['ph-par'];
-if ($field->group) {
-  $class = explode('.', $field->group);
+$class = preg_replace('~^jform\[(.*)\]$~', '$1', $name);
+$class = explode('][', $class);
+if (count($class) == 5) {
+  $class = $class[0] . '-' . $class[2] . '-' . $class[4];
+} elseif (count($class) == 3) {
+  $class = $class[0] . '-' . $class[2];
 } else {
-  $class = [];
+  $class = end($class);
 }
-$class[] = $field->fieldname;
-$class = ' ph-par-' . implode('-', $class);
-
+$class = ' ph-par-' . $class;
 $class          .= empty($options['class']) ? '' : ' ' . $options['class'];
 $rel             = empty($options['rel']) ? '' : ' ' . $options['rel'];
 $id              = ($id ?? $name) . '-desc';

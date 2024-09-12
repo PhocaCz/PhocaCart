@@ -56,7 +56,7 @@ class PhocaCartCpViewPhocaCartStatuses extends HtmlView
 		$class	= ucfirst($this->t['tasks']).'Helper';
 		$canDo	= $class::getActions($this->t, $state->get('filter.status_id'));
 
-		ToolbarHelper::title( Text::_( $this->t['l'].'_ORDER_STATUSES' ), 'disable-motion' );
+		ToolbarHelper::title( Text::_( $this->t['l'].'_ORDER_STATUSES' ), 'time' );
 
 		if ($canDo->get('core.create')) {
 			ToolbarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');

@@ -14,9 +14,6 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Layout\FileLayout;
-use Joomla\Database\DatabaseInterface;
-use Phoca\PhocaCart\Constants\WishListType;
-use Phoca\PhocaCart\I18n\I18nHelper;
 
 class PhocacartWishlist
 {
@@ -79,7 +76,6 @@ class PhocacartWishlist
 			$query = 'SELECT a.product_id, a.category_id, a.user_id'
 					.' FROM #__phocacart_wishlists AS a'
 					.' WHERE a.user_id = '.(int)$this->user->id
-					.' AND a.type = ' . WishListType::WishList
 					.' ORDER BY a.id';
 			$db->setQuery($query);
 			$items = $db->loadAssocList();
@@ -117,8 +113,8 @@ class PhocacartWishlist
 				// but it does not work with multiple columns product_id x category_id x user_id in combination
 				foreach($this->items as $k => $v) {
 					if (isset($v['product_id']) && isset($v['category_id']) && (int)$v['product_id'] > 0 && (int)$v['category_id'] > 0) {
-						$q = ' INSERT INTO #__phocacart_wishlists (product_id, category_id, user_id, date, type)';
-						$q .= ' VALUES ('.(int)$v['product_id'].', '.(int)$v['category_id'].', '.(int)$this->user->id.',  '.$db->quote($now). ', ' . WishListType::WishList . ')';
+						$q = ' INSERT INTO #__phocacart_wishlists (product_id, category_id, user_id, date)';
+						$q .= ' VALUES ('.(int)$v['product_id'].', '.(int)$v['category_id'].', '.(int)$this->user->id.',  '.$db->quote($now).')';;
 						$q .= ' ON DUPLICATE KEY UPDATE  product_id = VALUES(product_id), category_id = VALUES(category_id), user_id = VALUES(user_id), date = VALUES(date);';
 					}
 				}
@@ -182,8 +178,7 @@ class PhocacartWishlist
 						.' FROM #__phocacart_wishlists'
 						.' WHERE product_id = '.(int)$this->items[$id]['product_id']
 						.' AND category_id =  '.(int)$this->items[$id]['category_id']
-						.' AND user_id =  '.(int)$this->user->id
-						.' AND type =  '. WishListType::WishList;
+						.' AND user_id =  '.(int)$this->user->id;
 
 						unset($this->items[$id]);// Because of ajax
 
@@ -244,33 +239,27 @@ class PhocacartWishlist
 
 		if ($full == 1) {
 
-            $columns = I18nHelper::sqlCoalesce(['title', 'alias', 'description']);
-            $columns .= ', a.id as id,'
-                       .' GROUP_CONCAT(DISTINCT c.id) as catid,'
-                       .' COUNT(pc.category_id) AS count_categories,'
-                       .' a.catid AS preferred_catid,';
-
-            $columns .= I18nHelper::sqlCoalesce(['title', 'alias'], 'c', 'cat', 'groupconcatdistinct');
-			$columns .= ', a.price, a.image,'
-			            .' a.stock, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.availability,'
-			            .' MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received';
-
-            $groupsFull		= 'a.id, a.title, a.alias, a.description, a.price, a.image,'
-			                .' a.stock, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.availability,'
-			                .' ppg.price, pptg.points_received';
+			$columns		= 'a.id as id, a.title as title, a.alias as alias, a.description, a.price, a.image,'
+			.'  GROUP_CONCAT(DISTINCT c.id) as catid, GROUP_CONCAT(DISTINCT c.alias) as catalias, GROUP_CONCAT(DISTINCT c.title) as cattitle, COUNT(pc.category_id) AS count_categories, a.catid AS preferred_catid,'
+			//.' a.length, a.width, a.height, a.weight, a.volume,'
+			.' a.stock, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.availability,'
+			//.' m.title as manufacturer_title'
+			.' MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received';
+			$groupsFull		= 'a.id, a.title, a.alias, a.description, a.price, a.image,'
+			.' a.stock, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.availability,'
+			.' ppg.price, pptg.points_received';
 			$groupsFast		= 'a.id';
 			$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
 
 			$query =
 			 ' SELECT '.$columns
 			.' FROM #__phocacart_products AS a'
-			 . I18nHelper::sqlJoin('#__phocacart_products_i18n')
 			.' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id =  a.id'
 			.' LEFT JOIN #__phocacart_categories AS c ON c.id =  pc.category_id'
-             . I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'c')
 			//.' LEFT JOIN #__phocacart_manufacturers AS m ON a.manufacturer_id = m.id'
 			. ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3'// type 3 is product
 			. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
+
 			// user is in more groups, select lowest price by best group
 			. ' LEFT JOIN #__phocacart_product_price_groups AS ppg ON a.id = ppg.product_id AND ppg.group_id IN (SELECT group_id FROM #__phocacart_item_groups WHERE item_id = a.id AND group_id IN ('.$userGroups.') AND type = 3)'
 			// user is in more groups, select highest points by best group
@@ -281,30 +270,22 @@ class PhocacartWishlist
 			. ' ORDER BY a.id';
 		} else {
 
-            $columns = I18nHelper::sqlCoalesce(['title', 'alias', 'description']);
-            $columns .= ', a.id as id,'
-                       .' GROUP_CONCAT(DISTINCT c.id) as catid,'
-                       .' COUNT(pc.category_id) AS count_categories,'
-                       .' a.catid AS preferred_catid,';
-            $columns .= I18nHelper::sqlCoalesce(['title', 'alias'], 'c', 'cat', 'groupconcatdistinct');
-
-            $groupsFull		= 'a.id, a.title, a.alias, a.catid';
+			$columns		= 'a.id as id, a.title as title, a.alias as alias,'
+			.' GROUP_CONCAT(DISTINCT c.id) as catid, GROUP_CONCAT(DISTINCT c.alias) as catalias, GROUP_CONCAT(DISTINCT c.title) as cattitle, COUNT(pc.category_id) AS count_categories, a.catid AS preferred_catid';
+			$groupsFull		= 'a.id, a.title, a.alias';
 			$groupsFast		= 'a.id';
 			$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
 
-
 			$query =
 			 ' SELECT '.$columns
-			 .' FROM #__phocacart_products AS a'
-             . I18nHelper::sqlJoin('#__phocacart_products_i18n')
-			 .' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id =  a.id'
-             .' LEFT JOIN #__phocacart_categories AS c ON c.id =  pc.category_id'
-             . I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'c')
-             . ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3'// type 3 is product
-			 . ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
-			 .  $where
-			 . ' GROUP BY '.$groups
-			 . ' ORDER BY a.id';
+			.' FROM #__phocacart_products AS a'
+			.' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id =  a.id'
+			.' LEFT JOIN #__phocacart_categories AS c ON c.id =  pc.category_id'
+			. ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3'// type 3 is product
+			. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
+			.  $where
+			. ' GROUP BY '.$groups
+			. ' ORDER BY a.id';
 		}
 		return $query;
 	}
@@ -329,12 +310,12 @@ class PhocacartWishlist
 		return $itemsR;
 	}
 
-	public function renderList()
-	{
-		/** @var DatabaseInterface $db */
-		$db 				    = Factory::getContainer()->get(DatabaseInterface::class);
+	public function renderList() {
+
+		$db 				    = Factory::getDBO();
 		$uri 				    = Uri::getInstance();
 		$action			        = $uri->toString();
+		$app			        = Factory::getApplication();
 		$s                      = PhocacartRenderStyle::getStyles();
 		$paramsC 		        = PhocacartUtils::getComponentParameters();
 		$add_wishlist_method	= $paramsC->get( 'add_wishlist_method', 0 );
@@ -404,3 +385,4 @@ class PhocacartWishlist
 		return count($this->items);
 	}
 }
+?>

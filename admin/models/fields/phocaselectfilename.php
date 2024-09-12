@@ -29,7 +29,7 @@ class JFormFieldPhocaSelectFilename extends FormField
 
 		$onchange 		= (string) $this->element['onchange'];
 		$size     		= ($v = $this->element['size']) ? ' size="' . $v . '"' : '';
-		$class    		= ($v = $this->element['class']) ? ' class="' . $v . '"' : 'class="form-control"';
+		$class    		= ($v = $this->element['class']) ? ' class="' . $v . '"' : 'class="form-select"';
 		$required 		= ($v = $this->element['required']) ? ' required="required"' : '';
 
 		if ((string)$this->element['manager'] == 'publicfile') {

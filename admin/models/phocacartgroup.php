@@ -20,19 +20,19 @@ class PhocaCartCpModelPhocacartGroup extends AdminModel
 {
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
-
+	
 	protected function canDelete($record) {
 		return parent::canDelete($record);
 	}
-
+	
 	protected function canEditState($record) {
 		return parent::canEditState($record);
 	}
-
+	
 	public function getTable($type = 'PhocacartGroup', $prefix = 'Table', $config = array()) {
 		return Table::getInstance($type, $prefix, $config);
 	}
-
+	
 	public function getForm($data = array(), $loadData = true) {
 		$app	= Factory::getApplication();
 		$form 	= $this->loadForm('com_phocacart.phocacartgroup', 'phocacartgroup', array('control' => 'jform', 'load_data' => $loadData));
@@ -41,7 +41,7 @@ class PhocaCartCpModelPhocacartGroup extends AdminModel
 		}
 		return $form;
 	}
-
+	
 	protected function loadFormData() {
 		$data = Factory::getApplication()->getUserState('com_phocacart.edit.phocacartgroup.data', array());
 		if (empty($data)) {
@@ -49,14 +49,14 @@ class PhocaCartCpModelPhocacartGroup extends AdminModel
 		}
 		return $data;
 	}
-
+	
 	public function getItem($pk = null) {
 		if ($item = parent::getItem($pk)) {
 			$item->minimum_sum	= PhocacartPrice::cleanPrice($item->minimum_sum);
 		}
 		return $item;
 	}
-
+	
 	protected function prepareTable($table) {
 		jimport('joomla.filter.output');
 		$date = Factory::getDate();
@@ -87,17 +87,17 @@ class PhocaCartCpModelPhocacartGroup extends AdminModel
 			//$table->modified	= $date->toSql();
 			//$table->modified_by	= $user->get('id');
 		}
-
+		
 		if (isset($table->type) && isset($table->published) && $table->type == 1 && $table->published == 0) {
 			$table->published = 1;
 			$app = Factory::getApplication();
 			$app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_DEFAULT_ITEMS_CANNOT_BE_UNPUBLISHED'));
 		}
 	}
-
+	
 	public function delete(&$cid = array()) {
-
-
+		
+		
 		if (count( $cid )) {
 			ArrayHelper::toInteger($cid);
 			//$cids = implode( ',', $cid );
@@ -116,7 +116,7 @@ class PhocaCartCpModelPhocacartGroup extends AdminModel
 						$this->_db->setQuery( $query );
 						$this->_db->execute();
 					}
-
+				
 				}
 			}
 		}
@@ -127,12 +127,12 @@ class PhocaCartCpModelPhocacartGroup extends AdminModel
 		} else {
 			return true;
 		}
-
+		
 	}
-
+	
 	public function publish(&$pks, $value = 1)
 	{
-
+		
 		$user = Factory::getUser();
 		$table = $this->getTable();
 		$pks = (array) $pks;
@@ -143,8 +143,8 @@ class PhocaCartCpModelPhocacartGroup extends AdminModel
 			$table->reset();
 
 			if ($table->load($pk)) {
-
-
+				
+				
 				if (!$this->canEditState($table)){
 					// Prune items that you can't change.
 					unset($pks[$i]);
@@ -159,16 +159,16 @@ class PhocaCartCpModelPhocacartGroup extends AdminModel
 					unset($pks[$i]);
 					return false;
 				}
-
+				
 				if (property_exists($table, 'type') && $table->type && ((int)$table->type == 1) && $value == 0){
 					$error = 1;
 					unset($pks[$i]);
 					//return false;
-				}
+				}			
 			}
 		}
 
-
+		
 		// Attempt to change the state of the records.
 		if (!empty($pks)) {
 			if (!$table->publish($pks, $value, $user->get('id'))) {
@@ -176,11 +176,11 @@ class PhocaCartCpModelPhocacartGroup extends AdminModel
 				return false;
 			}
 		}
-
-
-
+		
+		
+	
 		if ($error) {
-
+			
 			//$this->setError(Text::_('COM_PHOCACART_ERROR_DEFAULT_ITEMS_CANNOT_BE_UNPUBLISHED'));
 			$app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_DEFAULT_ITEMS_CANNOT_BE_UNPUBLISHED'));
 			return true;
