@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <config>
+        <inlinehelp button="show"/>
+    </config>
+
+    <fields addfieldpath="/administrator/components/com_phocacart/models/fields">
+        <fieldset name="title">
+            <field name="title" type="phocatext" required="true" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" />
+        </fieldset>
+
+        <fieldset name="general" label="COM_PHOCACART_GENERAL_OPTIONS">
+        </fieldset>
+
+        <fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
+            <field name="published" type="list" default="1" class="form-select-color-state" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC">
+                <option value="1">JPUBLISHED</option>
+                <option	value="0">JUNPUBLISHED</option>
+            </field>
+
+            <field name="context" type="list" default="category" label="COM_PHOCACART_FIELD_CONTEXT_LABEL" description="COM_PHOCACART_FIELD_CONTEXT_DESC">
+                <option value="category">COM_PHOCACART_CONTEXT_CATEGORY</option>
+                <option value="product_related">COM_PHOCACART_CONTEXT_PRODUCT_RELATED</option>
+                <option value="attribute">COM_PHOCACART_CONTEXT_ATTRIBUTE</option>
+            </field>
+
+            <field name="ordering" type="PhocacartOrdering" table="content_types" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC"/>
+
+            <field name="id" type="hidden"/>
+        </fieldset>
+    </fields>
+
+    <fields name="params" addfieldpath="/administrator/components/com_phocacart/models/fields">
+        <fieldset name="general" label="COM_PHOCACART_GENERAL_OPTIONS">
+            <fields name="product_related">
+                <field name="display_in_product" type="radio" default="1" showon=".context:product_related" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_DISAPLY_IN_PRODUCT_LABEL">
+                    <option value="0">COM_PHOCACART_NO</option>
+                    <option value="1">COM_PHOCACART_YES</option>
+                </field>
+            </fields>
+
+            <fields name="attribute">
+                <field name="title" type="phocatext" i18n="true" showon=".context:attribute" label="COM_PHOCACART_FIELD_TITLE_LABEL" />
+
+                <field name="alias" type="phocatext" i18n="true" showon=".context:attribute" label="COM_PHOCACART_FIELD_ALIAS_LABEL" />
+
+                <field name="is_default" type="radio" default="0" showon=".context:attribute" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_IS_DEFAULT_LABEL">
+                    <option value="0">COM_PHOCACART_NO</option>
+                    <option value="1">COM_PHOCACART_YES</option>
+                </field>
+
+                <field name="required" type="radio" default="0" showon=".context:attribute" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_REQUIRED_LABEL">
+                    <option value="0">COM_PHOCACART_NO</option>
+                    <option value="1">COM_PHOCACART_YES</option>
+                </field>
+
+                <field name="is_filter" type="radio" default="1" showon=".context:attribute" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_IS_FILTER_LABEL">
+                    <option value="0">COM_PHOCACART_NO</option>
+                    <option value="1">COM_PHOCACART_YES</option>
+                </field>
+
+                <field name="type" type="list" default="1" showon=".context:attribute" label="COM_PHOCACART_FIELD_TYPE_LABEL">
+                    <option value="1">COM_PHOCACART_ATTR_TYPE_LIST</option>
+                    <option value="2">COM_PHOCACART_ATTR_TYPE_COLOR_SELECT</option>
+                    <option value="3">COM_PHOCACART_ATTR_TYPE_IMAGE_SELECT</option>
+                    <option value="4">COM_PHOCACART_ATTR_TYPE_CHECKBOX</option>
+                    <option value="5">COM_PHOCACART_ATTR_TYPE_COLOR_CHECKBOX</option>
+                    <option value="6">COM_PHOCACART_ATTR_TYPE_IMAGE_CHECKBOX</option>
+                    <option value="7">COM_PHOCACART_ATTR_TYPE_TEXT_64</option>
+                    <option value="8">COM_PHOCACART_ATTR_TYPE_TEXT_128</option>
+                    <option value="9">COM_PHOCACART_ATTR_TYPE_TEXT_256</option>
+                    <option value="10">COM_PHOCACART_ATTR_TYPE_TEXTAREA_1024</option>
+                    <option value="11">COM_PHOCACART_ATTR_TYPE_TEXTAREA_2048</option>
+                    <option value="12">COM_PHOCACART_ATTR_TYPE_TEXT_COLOR_PICKER</option>
+                    <option value="20">COM_PHOCACART_ATTR_TYPE_GIFT</option>
+                </field>
+            </fields>
+        </fieldset>
+    </fields>
+</form>

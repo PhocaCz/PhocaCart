@@ -63,52 +63,29 @@ class JFormFieldPhocaSelectItem extends FormField
 		$maxSize = isset($this->element['maxsize']) &&  (int)$this->element['maxsize'] > 0 ? (int)$this->element['maxsize'] : 0;
 
 
-		$onchange 	= (string) $this->element['onchange'];
 		$value = '';
 		if ($related) {
 			// Related product - select related products by "parent" product ID
 			$id 	= $this->form->getValue('id');
-
-/*
-			if ((int)$id > 0) {
-				$relatedOption	= PhocacartRelated::getRelatedItemsById((int)$id, 3);
-
-				if(!empty($relatedOption)) {
-					$i = 0;
-					//$value .= '[';
-					foreach($relatedOption as $k => $v) {
-						if ($i > 0) {
-							$value .= '[|]';
-						}
-
-						$title = PhocacartText::filterValue($v->title, 'text');
-						$titleCat = PhocacartText::filterValue($v->categories_title, 'text');
-						//$title = str_replace(',', '-', $title);
-						//$titleCat = str_replace(',', '-', $titleCat);
-
-						$value .= (int)$v->id . ':'.$title.' ('.$titleCat.')';
-						$i++;
-					}
-					//$value .= ']';
-				}
-			}*/
 			$value = $this->value;
 		} else {
 			// Standard product - only select one product by ID
 			$product = PhocacartProduct::getProductByProductId((int)$this->value);
-
 			if(isset($product->id)) {
 				$value .= (int)$product->id . ':'.PhocacartText::filterValue($product->title, 'text') .' ('.PhocacartText::filterValue($product->categories_title, 'text').')';
 			}
 			$id = (int)$this->value;
-
 		}
 
 		$document = Factory::getDocument();
 		HTMLHelper::_('jquery.framework', false);
-		HTMLHelper::_('script', 'media/com_phocacart/js/administrator/select2/select2.js', array('version' => 'auto'));
-		HTMLHelper::_('script', 'media/com_phocacart/js/phoca/jquery.phocaselect2.js', array('version' => 'auto'));
-		HTMLHelper::_('stylesheet', 'media/com_phocacart/js/administrator/select2/select2.css', array('version' => 'auto'));
+        $app = Factory::getApplication();
+		$wa = $app->getDocument()->getWebAssetManager();
+		$wa->registerAndUseScript('com_phocacart.select2', 'media/com_phocacart/js/administrator/select2/select2.js', ['version' => 'auto']);
+		$wa->registerAndUseScript('com_phocacart.phocaselect2', 'media/com_phocacart/js/phoca/jquery.phocaselect2.js', ['version' => 'auto']);
+		$wa->registerAndUseStyle('com_phocacart.select2', 'media/com_phocacart/js/administrator/select2/select2.css', ['version' => 'auto']);
+        Text::script('COM_PHOCACART_SKU');
+        Text::script('COM_PHOCACART_EAN');
 
 		$document->addScriptOptions('phLang', array(
 			'COM_PHOCACART_NO_MATCHES_FOUND' => Text::_('COM_PHOCACART_NO_MATCHES_FOUND'),
@@ -152,4 +129,4 @@ class JFormFieldPhocaSelectItem extends FormField
 		return $this->getInput();
 	}
 }
-?>
+

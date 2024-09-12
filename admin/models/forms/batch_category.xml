@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fields name="batch">
+        <fieldset name="basic" addfieldpath="/administrator/components/com_phocacart/models/fields">
+            <field name="copy_move" type="list" label="COM_PHOCACART_BATCH_COPY_MOVE">
+                <option value="">COM_PHOCACART_BATCH_COPY_MOVE_NO</option>
+                <option value="c">JLIB_HTML_BATCH_COPY</option>
+                <option value="m">JLIB_HTML_BATCH_MOVE</option>
+            </field>
+
+            <field name="_copy_move_tip" type="note" showon="copy_move:c" class="alert alert-info w-100 m-0" description="COM_PHOCACART_BATCH_COPY_TIP" />
+
+            <field name="category_type" type="PhocaCartContentType" context="category" label="COM_PHOCACART_FIELD_CATEGORY_TYPE_LABEL">
+                <option value="">COM_PHOCACART_BATCH_NOCHANGE</option>
+            </field>
+
+            <field name="assetgroup_id" type="accesslevel" label="JLIB_HTML_BATCH_ACCESS_LABEL">
+                <option value="">JLIB_HTML_BATCH_NOCHANGE</option>
+            </field>
+
+            <field name="language_id" type="contentlanguage" label="JLIB_HTML_BATCH_LANGUAGE_LABEL">
+                <option value="">JLIB_HTML_BATCH_LANGUAGE_NOCHANGE</option>
+                <option value="*">JALL</option>
+            </field>
+        </fieldset>
+
+        <fieldset name="params" addfieldpath="/administrator/components/com_phocacart/models/fields">
+            <field name="_move_copy_params_heading" type="note" showon="copy_move:c[OR]copy_move:m" class="bg-primary text-white p-2 fw-bold w-100" description="COM_PHOCACART_BATCH_MOVE_COPY_PARAMS_HEADING" />
+
+            <field name="category_id" type="phocacartcategory" showon="copy_move:c[OR]copy_move:m" layout="joomla.form.field.list-fancy-select" label="JLIB_HTML_BATCH_MENU_LABEL">
+                <option value="0">JLIB_HTML_ADD_TO_ROOT</option>
+            </field>
+        </fieldset>
+    </fields>
+</form>

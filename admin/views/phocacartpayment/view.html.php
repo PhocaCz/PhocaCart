@@ -7,12 +7,12 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+
 use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Toolbar\ToolbarHelper;
-jimport( 'joomla.application.component.view' );
 
 class PhocaCartCpViewPhocacartPayment extends HtmlView
 {
@@ -38,10 +38,9 @@ class PhocaCartCpViewPhocacartPayment extends HtmlView
 	}
 
 	protected function addToolbar() {
-
 		require_once JPATH_COMPONENT.'/helpers/'.$this->t['tasks'].'.php';
 		Factory::getApplication()->input->set('hidemainmenu', true);
-		$bar 		= Toolbar::getInstance('toolbar');
+
 		$user		= Factory::getUser();
 		$isNew		= ($this->item->id == 0);
 		$checkedOut	= !($this->item->checked_out == 0 || $this->item->checked_out == $user->get('id'));
@@ -49,7 +48,7 @@ class PhocaCartCpViewPhocacartPayment extends HtmlView
 		$canDo		= $class::getActions($this->t, $this->state->get('filter.payment_id'));
 
 		$text = $isNew ? Text::_( $this->t['l'] . '_NEW' ) : Text::_($this->t['l'] . '_EDIT');
-		ToolbarHelper::title(   Text::_( $this->t['l'] . '_PAYMENT' ).': <small><small>[ ' . $text.' ]</small></small>' , 'credit-card');
+		ToolbarHelper::title(   Text::_( $this->t['l'] . '_PAYMENT' ).': <small><small>[ ' . $text.' ]</small></small>' , 'credit');
 
 		// If not checked out, can save the item.
 		if (!$checkedOut && $canDo->get('core.edit')){
@@ -65,9 +64,9 @@ class PhocaCartCpViewPhocacartPayment extends HtmlView
 			ToolbarHelper::cancel($this->t['task'].'.cancel', 'JTOOLBAR_CLOSE');
 		}
 		ToolbarHelper::divider();
+		ToolbarHelper::inlinehelp();
 		ToolbarHelper::help( 'screen.'.$this->t['c'], true );
 
 		PhocacartRenderAdminview::renderWizardButton('back');
 	}
 }
-?>

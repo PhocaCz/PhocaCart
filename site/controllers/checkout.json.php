@@ -42,7 +42,7 @@ class PhocaCartControllerCheckout extends FormController
 
             $o .= '<option value="">-&nbsp;' . Text::_('COM_PHOCACART_SELECT_REGION') . '&nbsp;-</option>';
             foreach ($options as $k => $v) {
-                $o .= '<option value="' . $v->id . '">' . htmlspecialchars($v->title) . '</option>';
+                $o .= '<option value="' . $v->id . '">' . $v->title . '</option>';
             }
         }
         $response = array(
@@ -168,6 +168,7 @@ class PhocaCartControllerCheckout extends FormController
                         $d['typeview']            = $typeView;
                         $d['stock_status_class']	= isset($stockStatus['stock_status_class']) ? $stockStatus['stock_status_class'] : '';
                         $d['stock_status_output'] = PhocacartStock::getStockStatusOutput($stockStatus);
+                        $d['ajax']                 = 1;
 
                         $oA['stock'] = $layoutS->render($d);
 
@@ -534,6 +535,7 @@ class PhocaCartControllerCheckout extends FormController
                 $paramsM                               = new Registry($module->params);
                 $cart->params['display_image']         = $paramsM->get('display_image', 0);
                 $cart->params['display_checkout_link'] = $paramsM->get('display_checkout_link', 1);
+                $cart->params['display_product_tax_info'] = $paramsM->get('display_product_tax_info', 0);
 
                 $added = $cart->addItems((int)$item['id'], (int)$item['catid'], (int)$item['quantity'], $item['attribute']);
 
@@ -730,6 +732,7 @@ class PhocaCartControllerCheckout extends FormController
             $paramsM                               = new Registry($module->params);
             $cart->params['display_image']         = $paramsM->get('display_image', 0);
             $cart->params['display_checkout_link'] = $paramsM->get('display_checkout_link', 1);
+            $cart->params['display_product_tax_info'] = $paramsM->get('display_product_tax_info', 1);
 
             if ($item['action'] == 'delete') {
                 $updated = $cart->updateItemsFromCheckout($item['idkey'], 0);

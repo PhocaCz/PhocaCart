@@ -31,36 +31,20 @@ class Adminviews
     public $option      = '';
     public $optionLang  = '';
     public $tmpl        = '';
-    public $compatible  = false;
     public $sidebar     = true;
     protected $document	= false;
 
     public function __construct() {
 
-        $app              = Factory::getApplication();
-        $version          = new Version();
-        $this->compatible = $version->isCompatible('4.0.0-alpha');
-        $this->view       = $app->input->get('view');
-        $this->option     = $app->input->get('option');
-        $this->optionLang = strtoupper($this->option);
+        $app				= Factory::getApplication();
+		$version 			= new Version();
+		$this->view			= $app->input->get('view');
+		$this->option		= $app->input->get('option');
+		$this->optionLang   = strtoupper($this->option);
         $this->tmpl       = $app->input->get('tmpl');
-        $this->document   = Factory::getDocument();
-
-
-        $this->sidebar = Factory::getApplication()->getTemplate(true)->params->get('menu', 1) ? true : false;
-
-
-        /* switch($this->view) {
-
-             case 2:
-                 HTMLHelper::_('behavior.keepalive');
-                 if (!$this->compatible) {
-                     HTMLHelper::_('formbehavior.chosen', 'select');
-                 }
-             break;
-
-             case 1:
-             default:*/
+		$this->sidebar 		= Factory::getApplication()->getTemplate(true)->params->get('menu', 1) ? true : false;
+		$this->document	  	= Factory::getDocument();
+		$wa 				= $app->getDocument()->getWebAssetManager();
 
 				HTMLHelper::_('bootstrap.tooltip');
                 if ($this->view == 'phocacartorders') {
@@ -73,42 +57,25 @@ class Adminviews
 
                 //HTMLHelper::_('script', 'media/' . $this->option . '/js/administrator/multiselect.min.js', array('version' => 'auto'));
 				HTMLHelper::_('dropdown.init');
-				if (!$this->compatible) {
-					HTMLHelper::_('formbehavior.chosen', 'select');
-				}
-
-
 				HTMLHelper::_('jquery.framework', false);
 
-        //	break;
-        //}
+		$wa->registerAndUseStyle($this->option . '.font', 'media/' . $this->option . '/duotone/joomla-fonts.css', array('version' => 'auto'));
+		$wa->registerAndUseStyle($this->option . '.main', 'media/' .$this->option . '/css/administrator/'.str_replace('com_', '', $this->option).'.css', array('version' => 'auto'));
+		$wa->registerAndUseStyle($this->option . '.version', 'media/' .$this->option . '/css/administrator/4.css', array('version' => 'auto'));
+		$wa->registerAndUseStyle($this->option . '.theme', 'media/' .$this->option . '/css/administrator/theme-dark.css', array('version' => 'auto'), [], ['template.active']);
 
         // Modal
         if ($this->tmpl == 'component') {
-
             HTMLHelper::_('behavior.core');
             HTMLHelper::_('behavior.polyfill', array('event'), 'lt IE 9');
             HTMLHelper::_('script', 'media/' . $this->option . '/js/administrator/admin-phocaitems-modal.min.js', array('version' => 'auto', 'relative' => true));
             HTMLHelper::_('bootstrap.tooltip', '.hasTooltip', array('placement' => 'bottom'));
             HTMLHelper::_('bootstrap.popover', '.hasPopover', array('placement' => 'bottom'));
-
-        }
-
-        HTMLHelper::_('stylesheet', 'media/' . $this->option . '/duotone/joomla-fonts.css', array('version' => 'auto'));
-        HTMLHelper::_('stylesheet', 'media/' . $this->option . '/css/administrator/' . str_replace('com_', '', $this->option) . '.css', array('version' => 'auto'));
-
-        if ($this->compatible) {
-            HTMLHelper::_('stylesheet', 'media/' . $this->option . '/css/administrator/4.css', array('version' => 'auto'));
-        } else {
-            HTMLHelper::_('stylesheet', 'media/' . $this->option . '/css/administrator/3.css', array('version' => 'auto'));
         }
     }
 
-    public function startHeader() {
-
-		$layoutSVG 	= new FileLayout('svg_definitions', null, array('component' => $this->option));
-		//return $layoutSVG->render(array());
-
+    public function startHeader()
+    {
 	}
 
 
@@ -116,24 +83,12 @@ class Adminviews
 
         $o = array();
 
-        if ($this->compatible) {
-
-            // Joomla! 4
-
-            $o[] = '<div class="row">';
-            if ($this->sidebar) {
-
-                $o[] = '<div id="j-main-container" class="col-md-12">';
-            } else {
-
-                $o[] = '<div id="j-sidebar-container" class="col-md-2">' . Sidebar::render() . '</div>';
-                $o[] = '<div id="j-main-container" class="col-md-10">';
-            }
-
-
+        $o[] = '<div class="row">';
+        if ($this->sidebar) {
+            $o[] = '<div id="j-main-container" class="col-md-12">';
         } else {
-            $o[] = '<div id="j-sidebar-container" class="span2">' . Sidebar::render() . '</div>';
-            $o[] = '<div id="j-main-container" class="span10">';
+            $o[] = '<div id="j-sidebar-container" class="col-md-2">' . Sidebar::render() . '</div>';
+            $o[] = '<div id="j-main-container" class="col-md-10">';
         }
 
         return implode("\n", $o);
@@ -143,9 +98,8 @@ class Adminviews
         $o = array();
 
         $o[] = '</div>';
-        if ($this->compatible) {
-            $o[] = '</div>';
-        }
+        $o[] = '</div>';
+
         return implode("\n", $o);
     }
 
@@ -409,9 +363,6 @@ class Adminviews
 
 
     public function saveOrder($t, $listDirn, $catid = 0) {
-
-
-
         $saveOrderingUrl = 'index.php?option=' . $t['o'] . '&task=' . $t['tasks'] . '.saveOrderAjax&tmpl=component&' . Session::getFormToken() . '=1';
 
         // Joomla BUG: https://github.com/joomla/joomla-cms/issues/36346 $this->t['catid']
@@ -420,48 +371,30 @@ class Adminviews
         if ((int)$catid > 0) {
             $saveOrderingUrl .= '&catid='.(int)$catid;
         }
-        // ---
 
-        if ($this->compatible) {
-            HTMLHelper::_('draggablelist.draggable');
-        } else {
-            HTMLHelper::_('sortablelist.sortable', 'categoryList', 'adminForm', strtolower($listDirn), $saveOrderingUrl, false, true);
-        }
+        HTMLHelper::_('draggablelist.draggable');
 
         return $saveOrderingUrl;
     }
 
     public function firstColumnHeader($listDirn, $listOrder, $prefix = 'a', $empty = false) {
-        if ($this->compatible) {
-            return '<th class="w-1 text-center ph-check">' . HTMLHelper::_('grid.checkall') . '</td>';
-        } else {
-            return $this->thOrderingXML('JGRID_HEADING_ORDERING', $listDirn, $listOrder, $prefix, $empty);
-        }
+        return '<th class="w-1 text-center ph-check">' . HTMLHelper::_('grid.checkall') . '</td>';
     }
 
     public function secondColumnHeader($listDirn, $listOrder, $prefix = 'a', $empty = false) {
-        if ($this->compatible) {
-            return $this->thOrderingXML('JGRID_HEADING_ORDERING', $listDirn, $listOrder, $prefix, $empty);
-        } else {
-            return $this->thCheck('JGLOBAL_CHECK_ALL');
-        }
+        return $this->thOrderingXML('JGRID_HEADING_ORDERING', $listDirn, $listOrder, $prefix, $empty);
     }
 
 
     public function startTblBody($saveOrder, $saveOrderingUrl, $listDirn) {
-
         $o = array();
 
-        if ($this->compatible) {
-            $o[] = '<tbody';
-            if ($saveOrder) {
-                $o[] = ' class="js-draggable" data-url="' . $saveOrderingUrl . '" data-direction="' . strtolower($listDirn) . '" data-nested="true"';
-            }
-            $o[] = '>';
-
-        } else {
-            $o[] = '<tbody>' . "\n";
+        $o[] = '<tbody';
+        if ($saveOrder) {
+            $o[] = ' class="js-draggable" data-url="' . $saveOrderingUrl . '" data-direction="' . strtolower($listDirn) . '" data-nested="true"';
         }
+        $o[] = '>';
+
 
         return implode("", $o);
     }
@@ -477,13 +410,8 @@ class Adminviews
         if ($id > 0) {
             $dataItemId = ' data-item-id="'.(int)$id.'"';
         }
-        $dataItemCatid  = '';
 
-        if ($this->compatible) {
-            $dataItemCatid = ' data-draggable-group="' . (int)$catid . '"';
-        } else {
-            $dataItemCatid = ' sortable-group-id="' . (int)$catid . '"';
-        }
+        $dataItemCatid = ' data-draggable-group="' . (int)$catid . '"';
 
         $dataParents = '';
         if ($parentsString != '') {
@@ -515,44 +443,32 @@ class Adminviews
         return "";
     }
 
-    public function firstColumn($i, $itemId, $canChange, $saveOrder, $orderkey, $ordering, $saveOrderCatSelected = true) {
-        if ($this->compatible) {
-            return $this->td(HTMLHelper::_('grid.id', $i, $itemId), 'text-center ph-select-row');
-        } else {
-            return $this->tdOrder($canChange, $saveOrder, $orderkey, $ordering, $saveOrderCatSelected);
-        }
+    public function firstColumn($i, $itemId, $canChange = null, $saveOrder = null, $orderkey = null, $ordering = null, $saveOrderCatSelected = true) {
+        return $this->td(HTMLHelper::_('grid.id', $i, $itemId), 'text-center ph-select-row');
     }
 
     public function secondColumn($i, $itemId, $canChange, $saveOrder, $orderkey, $ordering, $saveOrderCatSelected = true, $catid = 0) {
+        $o   = array();
+        $o[] = '<td class="text-center d-none d-md-table-cell">';
 
-        if ($this->compatible) {
-
-            $o   = array();
-            $o[] = '<td class="text-center d-none d-md-table-cell">';
-
-            $iconClass = '';
-            if (!$canChange) {
-                $iconClass = ' inactive';
-            } else if (!$saveOrderCatSelected) {
-                $iconClass = ' inactive" title="' . Text::_($this->optionLang . '_SELECT_CATEGORY_TO_ORDER_ITEMS');
-            } else if (!$saveOrder) {
-                $iconClass = ' inactive" title="' . Text::_('JORDERINGDISABLED');
-            }
-
-            $o[] = '<span class="sortable-handler' . $iconClass . '"><span class="fas fa-ellipsis-v" aria-hidden="true"></span></span>';
-
-            if ($canChange && $saveOrder) {
-                $o[] = '<input type="text" name="order[]" size="5" value="' . $ordering . '" class="width-20 text-area-order hidden">';
-
-            }
-
-            $o[] = '</td>';
-
-            return implode("", $o);
-
-        } else {
-            return $this->td(HTMLHelper::_('grid.id', $i, $itemId), "small ");
+        $iconClass = '';
+        if (!$canChange) {
+            $iconClass = ' inactive';
+        } else if (!$saveOrderCatSelected) {
+            $iconClass = ' inactive" title="' . Text::_($this->optionLang . '_SELECT_CATEGORY_TO_ORDER_ITEMS');
+        } else if (!$saveOrder) {
+            $iconClass = ' inactive" title="' . Text::_('JORDERINGDISABLED');
         }
+
+        $o[] = '<span class="sortable-handler' . $iconClass . '"><span class="fas fa-ellipsis-v" aria-hidden="true"></span></span>';
+
+        if ($canChange && $saveOrder) {
+            $o[] = '<input type="text" name="order[]" size="5" value="' . $ordering . '" class="width-20 text-area-order hidden">';
+
+        }
+
+        $o[] = '</td>';
+
+        return implode("", $o);
     }
 }
-?>

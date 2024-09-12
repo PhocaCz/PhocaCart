@@ -28,8 +28,9 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Factory;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
 
-$layoutAl 	= new FileLayout('alert', null, array('component' => 'com_phocacart'));
+$layoutAl 	= new FileLayout('alert', null, array('component' => 'com_phocacart', 'client' => 0));
 
 $d = $displayData;
 
@@ -81,6 +82,8 @@ $display_reward_points_pos				= $d['params']->get( 'display_reward_points_pos', 
 $display_time_of_supply_invoice			= $d['params']->get( 'display_time_of_supply_invoice', 0 );
 
 
+$store_logo = PhocacartUtils::realCleanImageUrl($store_logo);
+$store_logo_pos = PhocacartUtils::realCleanImageUrl($store_logo_pos);
 
 if($d['type'] == 1 && $d['common']->order_number == '') {
 	echo $layoutAl->render(array('type' => 'error', 'text' => Text::_('COM_PHOCACART_ORDER_DOES_NOT_EXIST')));
@@ -95,7 +98,7 @@ if($d['type'] == 1 && $d['common']->receipt_number == '') {
 	return;
 }
 if($d['type'] == 2 && $d['common']->invoice_number == '') {
-	echo $layoutAl->render(array('type' => 'error', 'text' => Text::_('COM_PHOCACART_INVOICE_NOT_YET_ISSUED')));
+    echo $layoutAl->render(array('type' => 'error', 'text' => Text::_('COM_PHOCACART_INVOICE_NOT_YET_ISSUED')));
 	return;
 }
 
@@ -552,6 +555,11 @@ if ($d['type'] == 2) {
 	if ($invoiceTopDescArticle != '') {
 		$o[] = '<div '.$hrSmall.'>&nbsp;</div>';
 		$invoiceTopDescArticle 	= PhocacartPdf::skipStartAndLastTag($invoiceTopDescArticle, 'p');
+
+        if ($d['qrcode'] != '' && $d['format'] == 'pdf') {
+            $invoiceTopDescArticle = str_replace('{invoiceqr}', '{phocapdfqrcode|' . urlencode($d['qrcode']) . '}', $invoiceTopDescArticle);
+        }
+
 		$invoiceTopDescArticle 	= PhocacartText::completeText($invoiceTopDescArticle, $d['preparereplace'], 1);
 		//$invoiceTopDescArticle 	= PhocacartText::completeTextFormFields($invoiceTopDescArticle, $d['bas']['b'], 1);
 		//$invoiceTopDescArticle 	= PhocacartText::completeTextFormFields($invoiceTopDescArticle, $d['bas']['s'], 2);
@@ -564,6 +572,11 @@ if ($d['type'] == 2) {
 	if ($orderTopDescArticle != '') {
 		$o[] = '<div '.$hrSmall.'>&nbsp;</div>';
 		$orderTopDescArticle 	= PhocacartPdf::skipStartAndLastTag($orderTopDescArticle, 'p');
+
+        if ($d['qrcode'] != '' && $d['format'] == 'pdf') {
+            $orderTopDescArticle = str_replace('{invoiceqr}', '{phocapdfqrcode|' . urlencode($d['qrcode']) . '}', $orderTopDescArticle);
+        }
+
 		$orderTopDescArticle 	= PhocacartText::completeText($orderTopDescArticle, $d['preparereplace'], 1);
 		//$orderTopDescArticle 	= PhocacartText::completeTextFormFields($orderTopDescArticle, $d['bas']['b'], 1);
 		//$orderTopDescArticle 	= PhocacartText::completeTextFormFields($orderTopDescArticle, $d['bas']['s'], 2);
@@ -576,6 +589,11 @@ if ($d['type'] == 2) {
 	if ($dnTopDescArticle != '') {
 		$o[] = '<div '.$hrSmall.'>&nbsp;</div>';
 		$dnTopDescArticle 	= PhocacartPdf::skipStartAndLastTag($dnTopDescArticle, 'p');
+
+        if ($d['qrcode'] != '' && $d['format'] == 'pdf') {
+            $dnTopDescArticle = str_replace('{invoiceqr}', '{phocapdfqrcode|' . urlencode($d['qrcode']) . '}', $dnTopDescArticle);
+        }
+
 		$dnTopDescArticle 	= PhocacartText::completeText($dnTopDescArticle, $d['preparereplace'], 1);
 		$dnTopDescArticle 	= PhocacartText::completeTextFormFields($dnTopDescArticle, $d['bas']['b'], $d['bas']['s']);
 		$o[] = '<table '.$bDesc.'><tr><td>'.$dnTopDescArticle.'</td></tr></table>';
@@ -934,6 +952,11 @@ if ($d['type'] == 2) {
 	if ($invoiceMiddleDescArticle != '') {
 		$o[] = '<div '.$hrSmall.'>&nbsp;</div>';
 		$invoiceMiddleDescArticle 	= PhocacartPdf::skipStartAndLastTag($invoiceMiddleDescArticle, 'p');
+
+        if ($d['qrcode'] != '' && $d['format'] == 'pdf') {
+            $invoiceMiddleDescArticle = str_replace('{invoiceqr}', '{phocapdfqrcode|' . urlencode($d['qrcode']) . '}', $invoiceMiddleDescArticle);
+        }
+
 		$invoiceMiddleDescArticle 	= PhocacartText::completeText($invoiceMiddleDescArticle, $d['preparereplace'], 1);
 		//$invoiceMiddleDescArticle 	= PhocacartText::completeTextFormFields($invoiceMiddleDescArticle, $d['bas']['b'], 1);
 		//$invoiceMiddleDescArticle 	= PhocacartText::completeTextFormFields($invoiceMiddleDescArticle, $d['bas']['s'], 2);
@@ -946,7 +969,12 @@ if ($d['type'] == 2) {
 	if ($orderMiddleDescArticle != '') {
 		$o[] = '<div '.$hrSmall.'>&nbsp;</div>';
 		$orderMiddleDescArticle 	= PhocacartPdf::skipStartAndLastTag($orderMiddleDescArticle, 'p');
-		$orderMiddleDescArticle 	= PhocacartText::completeText($orderMiddleDescArticle, $d['preparereplace'], 1);
+
+        if ($d['qrcode'] != '' && $d['format'] == 'pdf') {
+            $orderMiddleDescArticle = str_replace('{invoiceqr}', '{phocapdfqrcode|' . urlencode($d['qrcode']) . '}', $orderMiddleDescArticle);
+        }
+
+        $orderMiddleDescArticle 	= PhocacartText::completeText($orderMiddleDescArticle, $d['preparereplace'], 1);
 		//$orderMiddleDescArticle 	= PhocacartText::completeTextFormFields($orderMiddleDescArticle, $d['bas']['b'], 1);
 		//$orderMiddleDescArticle 	= PhocacartText::completeTextFormFields($orderMiddleDescArticle, $d['bas']['s'], 2);
 		$orderMiddleDescArticle 	= PhocacartText::completeTextFormFields($orderMiddleDescArticle, $d['bas']['b'], $d['bas']['s']);
@@ -958,6 +986,11 @@ if ($d['type'] == 2) {
 	if ($dnMiddleDescArticle != '') {
 		$o[] = '<div '.$hrSmall.'>&nbsp;</div>';
 		$dnMiddleDescArticle 	= PhocacartPdf::skipStartAndLastTag($dnMiddleDescArticle, 'p');
+
+        if ($d['qrcode'] != '' && $d['format'] == 'pdf') {
+            $dnMiddleDescArticle = str_replace('{invoiceqr}', '{phocapdfqrcode|' . urlencode($d['qrcode']) . '}', $dnMiddleDescArticle);
+        }
+
 		$dnMiddleDescArticle 	= PhocacartText::completeText($dnMiddleDescArticle, $d['preparereplace'], 1);
 		$dnMiddleDescArticle 	= PhocacartText::completeTextFormFields($dnMiddleDescArticle, $d['bas']['b'], $d['bas']['s']);
 		$o[] = '<table '.$bDesc.'><tr><td>'.$dnMiddleDescArticle.'</td></tr></table>';
@@ -968,6 +1001,15 @@ if ($d['type'] == 2) {
 // -----------------------
 // INVOICE QR CODE, STAMP IMAGE
 // -----------------------
+
+// No PDF invoice - we can add QR code to no PDF document using TCPDF method but Phoca PDF must be enabled
+
+if (($d['format'] == 'html' || $d['format'] == '') && $d['type'] == 2 && ($d['qrcode'] != '')) {
+
+    $o[] = PhocacartUtils::getQrImage($d['qrcode']);
+}
+
+
 if ($d['format'] == 'pdf' && $d['type'] == 2 && ($d['qrcode'] != '' || $pdf_invoice_signature_image != '')) {
 	$o[] = '<div>&nbsp;</div><div>&nbsp;</div>';
 	$o[] = '<table>';// End box in
@@ -1152,7 +1194,12 @@ if ($d['type'] == 2) {
 	if ($invoiceBottomDescArticle != '') {
 		$o[] = '<div '.$hrSmall.'>&nbsp;</div>';
 		$invoiceBottomDescArticle 	= PhocacartPdf::skipStartAndLastTag($invoiceBottomDescArticle, 'p');
-		$invoiceBottomDescArticle 	= PhocacartText::completeText($invoiceBottomDescArticle, $d['preparereplace'], 1);
+
+        if ($d['qrcode'] != '' && $d['format'] == 'pdf') {
+            $invoiceBottomDescArticle = str_replace('{invoiceqr}', '{phocapdfqrcode|' . urlencode($d['qrcode']) . '}', $invoiceBottomDescArticle);
+        }
+
+        $invoiceBottomDescArticle 	= PhocacartText::completeText($invoiceBottomDescArticle, $d['preparereplace'], 1);
 		//$invoiceBottomDescArticle 	= PhocacartText::completeTextFormFields($invoiceBottomDescArticle, $d['bas']['b'], 1);
 		//$invoiceBottomDescArticle 	= PhocacartText::completeTextFormFields($invoiceBottomDescArticle, $d['bas']['s'], 2);
 		$invoiceBottomDescArticle 	= PhocacartText::completeTextFormFields($invoiceBottomDescArticle, $d['bas']['b'], $d['bas']['s']);
@@ -1164,11 +1211,17 @@ if ($d['type'] == 2) {
 	if ($orderBottomDescArticle != '') {
 		$o[] = '<div '.$hrSmall.'>&nbsp;</div>';
 		$orderBottomDescArticle 	= PhocacartPdf::skipStartAndLastTag($orderBottomDescArticle, 'p');
+
+        if ($d['qrcode'] != '' && $d['format'] == 'pdf') {
+            $orderBottomDescArticle = str_replace('{invoiceqr}', '{phocapdfqrcode|' . urlencode($d['qrcode']) . '}', $orderBottomDescArticle);
+        }
 		$orderBottomDescArticle 	= PhocacartText::completeText($orderBottomDescArticle, $d['preparereplace'], 1);
 		//$orderBottomDescArticle 	= PhocacartText::completeTextFormFields($orderBottomDescArticle, $d['bas']['b'], 1);
 		//$orderBottomDescArticle 	= PhocacartText::completeTextFormFields($orderBottomDescArticle, $d['bas']['s'], 2);
 		$orderBottomDescArticle 	= PhocacartText::completeTextFormFields($orderBottomDescArticle, $d['bas']['b'], $d['bas']['s']);
 		$o[] = '<table '.$bDesc.'><tr><td>'.$orderBottomDescArticle.'</td></tr></table>';
+
+
 	}
 } else if ($d['type'] == 3) {
 	$dnBottomDescArticle = PhocacartRenderFront::renderArticle((int)$dn_global_bottom_desc, $d['format']);
@@ -1176,6 +1229,11 @@ if ($d['type'] == 2) {
 	if ($dnBottomDescArticle != '') {
 		$o[] = '<div '.$hrSmall.'>&nbsp;</div>';
 		$dnBottomDescArticle 	= PhocacartPdf::skipStartAndLastTag($dnBottomDescArticle, 'p');
+
+        if ($d['qrcode'] != '' && $d['format'] == 'pdf') {
+            $dnBottomDescArticle = str_replace('{invoiceqr}', '{phocapdfqrcode|' . urlencode($d['qrcode']) . '}', $dnBottomDescArticle);
+        }
+
 		$dnBottomDescArticle 	= PhocacartText::completeText($dnBottomDescArticle, $d['preparereplace'], 1);
 		$dnBottomDescArticle 	= PhocacartText::completeTextFormFields($dnBottomDescArticle, $d['bas']['b'], $d['bas']['s']);
 		$o[] = '<table '.$bDesc.'><tr><td>'.$dnBottomDescArticle.'</td></tr></table>';
@@ -1230,7 +1288,7 @@ if ($pR) {
 
 	$oPr2 = HTMLHelper::_('content.prepare', $oPr2);
 
-	Factory::getApplication()->triggerEvent('onChangeText', array(&$oPr2));
+	Dispatcher::dispatchChangeText($oPr2);
 
 	echo $oPr2;
 } else {
@@ -1244,8 +1302,6 @@ if ($pR) {
 	}
 	$o2 = HTMLHelper::_('content.prepare', $o2);
 
-	Factory::getApplication()->triggerEvent('onChangeText', array(&$o2));
+	Dispatcher::dispatchChangeText($o2);
 	echo $o2;
 }
-
-?>

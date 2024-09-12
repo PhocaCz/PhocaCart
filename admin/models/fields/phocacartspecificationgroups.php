@@ -10,6 +10,7 @@ defined('_JEXEC') or die();
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Factory;
 
 class JFormFieldPhocacartSpecificationGroups extends FormField
 {
@@ -34,14 +35,26 @@ class JFormFieldPhocacartSpecificationGroups extends FormField
 		$attr 		.= $this->element['onchange'] ? ' onchange="'.(string) $this->element['onchange'].'" ' : ' ';
 
 		$activeAttributes = array();
-		$attributes = array();
+		//$attributes = array();
 		//if ((int)$id > 0) {
-			$attributes	= PhocacartSpecification::getGroupArray();
+		//	$attributes	= PhocacartSpecification::getGroupArray();
 		//}
+		$db = Factory::getDBO();
+		$query = 'SELECT a.title AS text, a.id AS value'
+		. ' FROM #__phocacart_specification_groups AS a'
+		. ' WHERE a.published = 1'
+		. ' ORDER BY a.ordering';
+		$db->setQuery( $query );
+		$attributes = $db->loadObjectList();
 
 
 		if (!$multiple) {
+
+			// array unshift changes the numerical indexes
 			array_unshift($attributes, HTMLHelper::_('select.option', '', '- ' . Text::_('COM_PHOCACART_SELECT_GROUP') . ' -', 'value', 'text'));
+			//$attributes = array_merge(['' => HTMLHelper::_('select.option', '', '- ' . Text::_('COM_PHOCACART_SELECT_GROUP') . ' -', 'value', 'text')], $attributes);
+			//$attributes = ['' => HTMLHelper::_('select.option', '', '- ' . Text::_('COM_PHOCACART_SELECT_GROUP') . ' -', 'value', 'text')] + $attributes;
+
 			return HTMLHelper::_('select.genericlist',  $attributes,  $this->name, $attr, 'value', 'text', $this->value, $this->id );
 		} else {
 

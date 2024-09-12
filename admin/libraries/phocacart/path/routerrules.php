@@ -15,7 +15,7 @@ use Joomla\CMS\Component\Router\Rules\NomenuRules;
 use Joomla\CMS\Component\Router\Rules\StandardRules;
 use Joomla\Registry\Registry;
 
-class PhocaCartRouterrules extends MenuRules
+class PhocacartRouterrules extends MenuRules
 {
     public function preprocess(&$query) {
         parent::preprocess($query);
@@ -39,7 +39,7 @@ class PhocaCartRouterrules extends MenuRules
 
 
         // PHOCAEDIT
-        if (!isset($item->query['id'])) {
+        if (isset($item->query) && !isset($item->query['id'])) {
             $item->query['id'] = 0;
         }
 

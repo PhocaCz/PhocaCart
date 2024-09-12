@@ -158,6 +158,7 @@ class PhocacartFileThumbnail
 			case 'gif':
 			case 'jpeg':
             case 'webp':
+			case 'avif':
 
 			//Get File thumbnails name
 

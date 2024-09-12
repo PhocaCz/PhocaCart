@@ -15,6 +15,8 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\CMS\HTML\HTMLHelper;
+use Phoca\PhocaCart\I18n\I18nHelper;
+
 jimport( 'joomla.application.component.view' );
 
 class PhocaCartCpViewPhocaCartItems extends HtmlView
@@ -26,34 +28,34 @@ class PhocaCartCpViewPhocaCartItems extends HtmlView
 	protected $t;
 	protected $r;
     public $filterForm;
+    public $batchForm;
 	public $activeFilters;
 
 	function display($tpl = null) {
-
-
-		//if ($this->getLayout() !== 'modal') {
-		//	ContactHelper::addSubmenu('phocacartitems');
-		//}
-
-		$this->t			= PhocacartUtils::setVars('item');
-		$this->r 			= new PhocacartRenderAdminviews();
+		$this->t			    = PhocacartUtils::setVars('item');
+		$this->r 			    = new PhocacartRenderAdminviews();
 		$this->items			= $this->get('Items');
 		$this->pagination		= $this->get('Pagination');
 		$this->state			= $this->get('State');
 		$this->filterForm   	= $this->get('FilterForm');
+        $this->batchForm   	    = $this->get('BatchForm');
         $this->activeFilters 	= $this->get('ActiveFilters');
 
 
         // Check for errors.
 		if (count($errors = $this->get('Errors'))) {
 			throw new Exception(implode("\n", $errors), 500);
-			return false;
 		}
 
 
         $paramsC = PhocacartUtils::getComponentParameters();
         $this->t['admin_columns_products'] = $paramsC->get('admin_columns_products', 'sku=E, image, title, published, categories, price=E, price_original=E, stock=E, access_level, language, association, hits, id');
         $this->t['admin_columns_products'] = explode(',', $this->t['admin_columns_products']);
+        if (I18nHelper::isI18n()) {
+            $this->t['admin_columns_products'] = array_filter($this->t['admin_columns_products'], function($column) {
+              return !preg_match('~^\s*language~', $column);
+            });
+        }
 
 
 		// Multiple categories, ordering
@@ -121,7 +123,7 @@ class PhocaCartCpViewPhocaCartItems extends HtmlView
 		$user  	= Factory::getUser();
 		$bar 	= Toolbar::getInstance('toolbar');
 
-		ToolbarHelper::title( Text::_($this->t['l'].'_PRODUCTS'), 'folder-close' );
+		ToolbarHelper::title( Text::_($this->t['l'].'_PRODUCTS'), 'archive' );
 		if ($canDo->get('core.create')) {
 			ToolbarHelper::addNew( $this->t['task'].'.add','JTOOLBAR_NEW');
 
@@ -131,58 +133,39 @@ class PhocaCartCpViewPhocaCartItems extends HtmlView
 			ToolbarHelper::editList($this->t['task'].'.edit','JTOOLBAR_EDIT');
 		}
 
-		$dropdown = $bar->dropdownButton('status-group')->text('JTOOLBAR_CHANGE_STATUS')->toggleSplit(false)->icon('icon-ellipsis-h')->buttonClass('btn btn-action')->listCheck(true);
+		$dropdown = $bar->dropdownButton('status-group')->text('JTOOLBAR_CHANGE_STATUS')->toggleSplit(false)->icon('icon-ellipsis-h')->buttonClass('btn btn-action');
 		$childBar = $dropdown->getChildToolbar();
 
-
-
-
 		if ($canDo->get('core.edit.state')) {
-			///ToolbarHelper::divider();
 			$childBar->publish($this->t['tasks'].'.publish')->listCheck(true);
 			$childBar->unpublish($this->t['tasks'].'.unpublish')->listCheck(true);
+			$childBar->archive($this->t['tasks'].'.archive')->listCheck(true);
 			$childBar->standardButton('featured')->text('JFEATURE')->task($this->t['tasks'].'.featured')->listCheck(true);
 			$childBar->standardButton('unfeatured')->text('JUNFEATURE')->task($this->t['tasks'].'.unfeatured')->listCheck(true);
-			//ToolbarHelper::custom($this->t['tasks'].'.publish', 'publish.png', 'publish_f2.png','JTOOLBAR_PUBLISH', true);
-			//ToolbarHelper::custom($this->t['tasks'].'.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
-			//ToolbarHelper::custom($this->t['tasks'].'.featured', 'featured.png', 'featured_f2.png', 'JFEATURED', true);
+            if ($this->state->get('filter.published') != -2) {
+                $childBar->trash($this->t['tasks'] . '.trash')->text($this->t['l'] . '_TRASH')->icon('icon-trash')->listCheck(true);
+            }
 		}
 
 		if ($canDo->get('core.delete')) {
-			$childBar->delete($this->t['tasks'].'.delete')->text($this->t['l'].'_DELETE')->message( $this->t['l'].'_WARNING_DELETE_ITEMS')->icon('icon-trash')->listCheck(true);
-			//ToolbarHelper::deleteList( Text::_( $this->t['l'].'_WARNING_DELETE_ITEMS' ), $this->t['tasks'].'.delete', $this->t['l'].'_DELETE');
-
+            if ($this->state->get('filter.published') == -2) {
+                $childBar->delete($this->t['tasks'] . '.delete')->text($this->t['l'] . '_DELETE')->message($this->t['l'] . '_WARNING_DELETE_ITEMS')->icon('icon-trash')->listCheck(true);
+            }
 		}
 
 		// Add a batch button
 		if ($user->authorise('core.edit'))
 		{
 			HTMLHelper::_('bootstrap.renderModal', 'collapseModal');
-
-			/*$title = Text::_('JTOOLBAR_BATCH');
-			$dhtml = "<joomla-toolbar-button><button data-bs-toggle=\"modal\" data-bs-target=\"#collapseModal\" class=\"btn btn-small\">
-						<span class=\"icon-checkbox-partial\" title=\"$title\"></span>
-						$title</button></joomla-toolbar-button>";
-			$bar->appendButton('Custom', $dhtml, 'batch');*/
-
-			$childBar->popupButton('batch')->text('JTOOLBAR_BATCH')->selector('collapseModal')->listCheck(true);
+			$childBar->popupButton('batch')->text('JTOOLBAR_BATCH')->selector('collapseModal');
 
 			HTMLHelper::_('bootstrap.renderModal', 'collapseModalCA');
-			/*$title = Text::_('COM_PHOCACART_COPY_ATTRIBUTES');
-			$dhtml = "<joomla-toolbar-button><button data-bs-toggle=\"modal\" data-bs-target=\"#collapseModalCA\" class=\"btn btn-small\">
-						<span class=\"icon-checkbox-partial\" title=\"$title\"></span>
-						$title</button></joomla-toolbar-button>";
-			$bar->appendButton('Custom', $dhtml, 'copy_attributes');*/
-
 			$childBar->popupButton('copy_attributes')->text('COM_PHOCACART_COPY_ATTRIBUTES')->selector('collapseModalCA')->icon('icon-list')->listCheck(true);
 		}
 
 		$onClick = 'javascript:if(document.adminForm.boxchecked.value==0){alert(\''.Text::_('COM_PHOCACART_WARNING_RECREATE_MAKE_SELECTION').'\');}else{if(confirm(\''.Text::_('COM_PHOCACART_WARNING_RECREATE_THUMBNAILS').'\')){Joomla.submitbutton(\'phocacartitem.recreate\');}}';
-		//$dhtml = '<joomla-toolbar-button><button class="btn btn-small" onclick="'.$onClick.'" ><i class="icon-image" title="'.Text::_('COM_PHOCACART_RECREATE_THUMBS').'"></i> '.Text::_('COM_PHOCACART_RECREATE_THUMBS').'</button></joomla-toolbar-button>';
-		//$bar->appendButton('Custom', $dhtml);
 
-
-		$childBar->standardButton('recreate')->text('COM_PHOCACART_RECREATE_THUMBS')->onclick($onClick)->icon('icon-image');
+		$childBar->standardButton('recreate')->text('COM_PHOCACART_RECREATE_THUMBS')->onclick($onClick)->icon('icon-image')->listCheck(true);
 
 		ToolbarHelper::divider();
 		ToolbarHelper::help( 'screen.'.$this->t['c'], true );
@@ -191,4 +174,3 @@ class PhocaCartCpViewPhocaCartItems extends HtmlView
 	}
 
 }
-?>

@@ -74,6 +74,9 @@ class JFormFieldPhocaPluginMethod extends FormField
 		$s[]	= '					}';
 		$s[]	= '				});';
 
+		// Initialize showon when parameters are loaded by AJAX
+		$s[] = '				Joomla.Showon.initialise(document);';
+
 		$s[] 	= '         } else {';
 		$s[] 	= '	            jQuery("#ph-extended-params-msg").html(data.error);';
 		$s[] 	= '         }';

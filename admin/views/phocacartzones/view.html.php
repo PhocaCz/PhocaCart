@@ -58,7 +58,7 @@ class PhocaCartCpViewPhocacartZones extends HtmlView
 		$class	= ucfirst($this->t['tasks']).'Helper';
 		$canDo	= $class::getActions($this->t, $state->get('filter.zone_id'));
 
-		ToolbarHelper::title( Text::_( $this->t['l'].'_ZONES' ), 'globe' );
+		ToolbarHelper::title( Text::_( $this->t['l'].'_ZONES' ), 'location' );
 
 		if ($canDo->get('core.create')) {
 			ToolbarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');

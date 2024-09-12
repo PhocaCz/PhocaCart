@@ -1,87 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
+	<config>
+		<inlinehelp button="show"/>
+	</config>
 
-	<fieldset addfieldpath="/administrator/components/com_phocacart/models/fields">
+	<fields addfieldpath="/administrator/components/com_phocacart/models/fields">
+		<fieldset name="title">
+			<field name="title" type="phocatext" i18n="true" required="true" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" />
 
-<field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" required="true" readonly="true" class="readonly" />
+			<field name="alias" type="phocahidden" i18n="true" />
+		</fieldset>
 
-<field name="title" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" required="true" />
+		<fieldset name="general" label="COM_PHOCACART_GENERAL_OPTIONS">
+			<field name="discount" type="text" label="COM_PHOCACART_FIELD_DISCOUNT_LABEL" description="COM_PHOCACART_FIELD_DISCOUNT_DESC" />
 
-<field name="alias" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC" />
+			<field name="calculation_type" type="list" label="COM_PHOCACART_FIELD_CALCULATION_TYPE_LABEL" description="COM_PHOCACART_FIELD_CALCULATION_TYPE_DESC" size="1" default="1">
+				<option value="1">COM_PHOCACART_PERCENTAGE</option>
+				<option	value="0">COM_PHOCACART_FIXED_AMOUNT</option>
+			</field>
 
+			<field name="free_shipping" type="radio" default="0" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_FREE_SHIPPING_LABEL" description="COM_PHOCACART_FIELD_FREE_SHIPPING_DESC">
+				<option	value="0">COM_PHOCACART_NO</option>
+				<option value="1">COM_PHOCACART_YES</option>
+			</field>
 
+			<field name="free_payment" type="radio" default="0" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_FREE_PAYMENT_LABEL" description="COM_PHOCACART_FIELD_FREE_PAYMENT_DESC">
+				<option	value="0">COM_PHOCACART_NO</option>
+				<option value="1">COM_PHOCACART_YES</option>
+			</field>
 
-<field name="discount" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_DISCOUNT_LABEL" description="COM_PHOCACART_FIELD_DISCOUNT_DESC" />
+			<field name="description" type="phocaeditor" i18n="true" buttons="true" hide="pagebreak,readmore" filter="\Phoca\PhocaCart\Input\InputHelper::filterText" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
+		</fieldset>
 
-<field name="total_amount" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_TOTAL_AMOUNT_LABEL" description="COM_PHOCACART_FIELD_DISCOUNT_TOTAL_AMOUNT_DESC" />
+		<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
+			<field name="published" type="list" default="1" class="form-select-color-state" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC">
+				<option value="1">JPUBLISHED</option>
+				<option	value="0">JUNPUBLISHED</option>
+			</field>
 
-<field name="calculation_type" type="list" class="form-select" label="COM_PHOCACART_FIELD_CALCULATION_TYPE_LABEL" description="COM_PHOCACART_FIELD_CALCULATION_TYPE_DESC" size="1" default="1">
-	<option value="1">COM_PHOCACART_PERCENTAGE</option>
-	<option	value="0">COM_PHOCACART_FIXED_AMOUNT</option>
-</field>
+			<field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" >
+				<option value="*">JALL</option>
+			</field>
 
-<!--
-<field name="quantity_from" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_QUANTITY_FROM_LABEL" description="COM_PHOCACART_FIELD_QUANTITY_FROM_DESC" />
--->
-<field name="quantity_from" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_MINIMUM_QUANTITY_LABEL" description="COM_PHOCACART_FIELD_MINIMUM_QUANTITY_DESC" />
+			<field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" description="JFIELD_ACCESS_DESC" />
 
-<field name="quantity_to" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_QUANTITY_TO_LABEL" description="COM_PHOCACART_FIELD_QUANTITY_FROM_DESC" />
+			<field name="group" type="PhocacartGroups" multiple="true" table="6" layout="joomla.form.field.list-fancy-select" label="COM_PHOCACART_FIELD_CUSTOMER_GROUP_LABEL" description="COM_PHOCACART_FIELD_CUSTOMER_GROUP_DESC"  />
 
-<field name="free_shipping" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_FREE_SHIPPING_LABEL" description="COM_PHOCACART_FIELD_DISCOUNT_FREE_SHIPPING_DESC" size="1" default="0">
-	<option	value="0">COM_PHOCACART_NO</option>
-    <option value="1">COM_PHOCACART_YES</option>
-</field>
+			<field name="ordering" type="phocacartOrdering" table="discounts" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
 
-<field name="free_payment" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_FREE_PAYMENT_LABEL" description="COM_PHOCACART_FIELD_DISCOUNT_FREE_PAYMENT_DESC" size="1" default="0">
-	<option	value="0">COM_PHOCACART_NO</option>
-    <option value="1">COM_PHOCACART_YES</option>
-</field>
+			<field name="id" type="hidden" />
+		</fieldset>
 
+		<fieldset name="rules" label="COM_PHOCACART_RULES">
+			<field name="valid_from" type="Calendar" label="COM_PHOCACART_FIELD_VALID_FROM_LABEL" description="COM_PHOCACART_FIELD_VALID_FROM_DESC" filter="user_utc" showtime="true" translateformat="true" />
 
+			<field name="valid_to" type="Calendar" label="COM_PHOCACART_FIELD_VALID_TO_LABEL" description="COM_PHOCACART_FIELD_VALID_TO_DESC" filter="user_utc" showtime="true" translateformat="true" />
 
+			<field name="total_amount" type="text" label="COM_PHOCACART_FIELD_TOTAL_AMOUNT_LABEL" description="COM_PHOCACART_FIELD_TOTAL_AMOUNT_DESC" />
 
-<field name="cat_ids" type="phocadiscountcategory" label="COM_PHOCACART_FIELD_DISCOUNT_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_DISCOUNT_CATEGORY_DESC" multiple="true" layout="joomla.form.field.list-fancy-select" />
+			<field name="quantity_from" type="text" label="COM_PHOCACART_FIELD_MINIMUM_QUANTITY_COUPON_LABEL" description="COM_PHOCACART_FIELD_MINIMUM_QUANTITY_COUPON_DESC" />
 
-<field name="category_filter" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_CATEGORY_FILTER_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_FILTER_DESC" size="1" default="1">
-	<option value="1">COM_PHOCACART_INCLUDE</option>
-	<option	value="0">COM_PHOCACART_EXCLUDE</option>
-</field>
+			<field name="cat_ids" type="phocadiscountcategory" multiple="true" layout="joomla.form.field.list-fancy-select" label="COM_PHOCACART_FIELD_COUPON_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_COUPON_CATEGORY_DESC" />
 
-<field name="product_ids" type="phocadiscountproduct" label="COM_PHOCACART_FIELD_DISCOUNT_PRODUCT_LABEL" description="COM_PHOCACART_FIELD_DISCOUNT_PRODUCT_DESC" layout="joomla.form.field.list-fancy-select" />
+			<field name="category_filter" type="radio" default="1" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_CATEGORY_FILTER_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_FILTER_DESC">
+				<option	value="0">COM_PHOCACART_EXCLUDE</option>
+				<option value="1">COM_PHOCACART_INCLUDE</option>
+			</field>
 
-<field name="product_filter" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_PRODUCT_FILTER_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_FILTER_DESC" size="1" default="1">
-		<option	value="0">COM_PHOCACART_EXCLUDE</option>
-    <option value="1">COM_PHOCACART_INCLUDE</option>
-</field>
+			<field name="product_ids" type="phocadiscountproduct" layout="joomla.form.field.list-fancy-select" label="COM_PHOCACART_FIELD_COUPON_PRODUCT_LABEL" description="COM_PHOCACART_FIELD_COUPON_PRODUCT_DESC" />
 
-<field name="ordering" type="PhocacartOrdering" table="product" class="form-select" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
-
-<field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" description="JFIELD_ACCESS_DESC" class="form-control" size="1" />
-
-<field name="group" type="PhocacartGroups" layout="joomla.form.field.list-fancy-select" multiple="true" table="5"  size="40" label="COM_PHOCACART_FIELD_CUSTOMER_GROUP_LABEL" description="COM_PHOCACART_FIELD_CUSTOMER_GROUP_DESC"  />
-
-<field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="\Joomla\CMS\Component\ComponentHelper::filterText" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
-
-
-
-	</fieldset>
-
-	<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
-
-	<field name="valid_from" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_VALID_FROM_LABEL" description="COM_PHOCACART_FIELD_DISCOUNT_VALID_FROM_DESC" filter="user_utc" showtime="true" translateformat="true" />
-
-<field name="valid_to" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_VALID_TO_LABEL" description="COM_PHOCACART_FIELD_DISCOUNT_VALID_TO_DESC" filter="user_utc" showtime="true" translateformat="true" />
-
-<field name="published" type="list" class="form-select" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" size="1" default="1">
-	<option value="1">JPUBLISHED</option>
-	<option	value="0">JUNPUBLISHED</option>
-</field>
-
-<field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" class="form-control">
-	<option value="*">JALL</option>
-</field>
-
-
-
-	</fieldset>
+			<field name="product_filter" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_PRODUCT_FILTER_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_FILTER_DESC" size="1" default="1">
+				<option	value="0">COM_PHOCACART_EXCLUDE</option>
+				<option value="1">COM_PHOCACART_INCLUDE</option>
+			</field>
+		</fieldset>
+	</fields>
 </form>

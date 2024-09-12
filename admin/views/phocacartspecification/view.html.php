@@ -30,7 +30,7 @@ class PhocaCartCpViewPhocacartSpecification extends HtmlView
 		$this->form		= $this->get('Form');
 		$this->item		= $this->get('Item');
 
-		$media = new PhocacartRenderAdminmedia();
+		new PhocacartRenderAdminmedia();
 
 		$this->addToolbar();
 		parent::display($tpl);
@@ -41,15 +41,14 @@ class PhocaCartCpViewPhocacartSpecification extends HtmlView
 
 		require_once JPATH_COMPONENT.'/helpers/'.$this->t['tasks'].'.php';
 		Factory::getApplication()->input->set('hidemainmenu', true);
-		$bar 		= Toolbar::getInstance('toolbar');
 		$user		= Factory::getUser();
 		$isNew		= ($this->item->id == 0);
 		$checkedOut	= !($this->item->checked_out == 0 || $this->item->checked_out == $user->get('id'));
-		$class		= ucfirst($this->t['tasks']).'Helper';
+		$class		= ucfirst($this->t['tasks']) . 'Helper';
 		$canDo		= $class::getActions($this->t, $this->state->get('filter.specification_id'));
 
 		$text = $isNew ? Text::_( $this->t['l'] . '_NEW' ) : Text::_($this->t['l'] . '_EDIT');
-		ToolbarHelper::title(   Text::_( $this->t['l'] . '_SPECIFICATION_GROUP' ).': <small><small>[ ' . $text.' ]</small></small>' , 'list');
+		ToolbarHelper::title(   Text::_( $this->t['l'] . '_SPECIFICATION_GROUP' ).': <small><small>[ ' . $text.' ]</small></small>' , 'equalizer');
 
 		// If not checked out, can save the item.
 		if (!$checkedOut && $canDo->get('core.edit')){
@@ -60,12 +59,13 @@ class PhocaCartCpViewPhocacartSpecification extends HtmlView
 
 		if (empty($this->item->id))  {
 			ToolbarHelper::cancel($this->t['task'].'.cancel', 'JTOOLBAR_CANCEL');
-		}
-		else {
+		} else {
 			ToolbarHelper::cancel($this->t['task'].'.cancel', 'JTOOLBAR_CLOSE');
 		}
+
 		ToolbarHelper::divider();
+		ToolbarHelper::inlinehelp();
 		ToolbarHelper::help( 'screen.'.$this->t['c'], true );
 	}
 }
-?>
+

@@ -56,7 +56,7 @@ class PhocaCartCpViewPhocacartFeeds extends HtmlView
 		$class	= ucfirst($this->t['tasks']).'Helper';
 		$canDo	= $class::getActions($this->t, $state->get('filter.feed_id'));
 
-		ToolbarHelper::title( Text::_( $this->t['l'].'_XML_FEEDS' ), 'bullhorn' );
+		ToolbarHelper::title( Text::_( $this->t['l'].'_XML_FEEDS' ), 'feed' );
 
 		if ($canDo->get('core.create')) {
 			ToolbarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');

@@ -8,8 +8,9 @@
  */
 defined('_JEXEC') or die();
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Plugin\PluginHelper;
-use Joomla\CMS\Factory;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
+
 $d = $displayData;
 $d['checkout_view_href']    = $d['s']['a']['data-bs-dismiss-modal'];
 $d['close']                 = '<button type="button" class="'.$d['s']['c']['modal-btn-close'].'"'.$d['s']['a']['modal-btn-close'].' aria-label="'.Text::_('COM_PHOCACART_CLOSE').'" '. $d['checkout_view_href'].'></button>';
@@ -29,11 +30,8 @@ if (isset($d['checkout_view']) && $d['checkout_view'] == 1) {
             <div class="<?php echo $d['s']['c']['row'] ?>">
                 <div class="<?php echo $d['s']['c']['col.xs12.sm12.md12'] ?> ph-center">
                     <?php
-
-                    PluginHelper::importPlugin('pcv');
-                    $results = Factory::getApplication()->triggerEvent('onPCVonPopupAddToCartAfterHeader', array('com_phocacart.popupaddtocart', $d['product'], $d['products'], $d['total']));
+                    $results = Dispatcher::dispatch(new Event\View\Layouts\PopupAddToCartAfterHeader('com_phocacart.popupaddtocart', $d['product'], $d['products'], $d['total']));
                     echo trim(implode("\n", $results));
-
                     ?>
                 </div>
             </div>

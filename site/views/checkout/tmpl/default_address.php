@@ -8,11 +8,11 @@
  */
 defined('_JEXEC') or die();
 
-use Joomla\CMS\Factory;
 use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Plugin\PluginHelper;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
 
 $layoutI 		= new FileLayout('icon_checkout_status', null, array('component' => 'com_phocacart'));
 $d				= array();
@@ -25,6 +25,7 @@ if ($this->a->addressedit == 1) {
 
 	$d['status']	= 'pending';
 
+	echo '<div class="ph-checkout-box-address ph-checkout-box-status-'.$d['status'].'">';
 
 	echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-row">';
 
@@ -38,9 +39,7 @@ if ($this->a->addressedit == 1) {
 	// Body
 	echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-action">';
 
-	$pluginLayout 	= PluginHelper::importPlugin('pct');
-	$eventData = [];
-	$results = Factory::getApplication()->triggerEvent('onPCVonCheckoutInsideAddressAfterHeader', array('com_phocacart.checkout', $this->data, $eventData));
+	$results = Dispatcher::dispatch(new Event\View\Checkout\InsideAddressAfterHeader('com_phocacart.checkout', $this->data));
 	if (!empty($results)) {
 		echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].'">';
 		echo trim(implode("\n", $results));
@@ -75,7 +74,7 @@ if ($this->a->addressedit == 1) {
 
 	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].'">';
 	echo '<div class="'.$this->s['c']['pull-right'].' ph-checkout-address-save">';
-	echo '<button class="'.$this->s['c']['btn.btn-primary.btn-sm'].'">'.PhocacartRenderIcon::icon($this->s['i']['save'], '', ' ') .Text::_('COM_PHOCACART_SAVE').'</button>';
+	echo '<button class="'.$this->s['c']['btn.btn-primary.btn-sm'].'">'.PhocacartRenderIcon::icon($this->s['i']['save'], '', ' ') .Text::_('COM_PHOCACART_CHECKOUT_ADDRESS_SAVE').'</button>';
 	//echo '<input type="submit" value="submit" />';
 	echo '</div>';
 	echo '</div>';
@@ -92,10 +91,14 @@ if ($this->a->addressedit == 1) {
 	echo HTMLHelper::_('form.token');
 	echo '</form>'. "\n";
 
+	echo '</div>';// end box address
+
 } else if ($this->a->addressview == 1){
 
 	$d['status']	= 'finished';
 	// User completed all items in the form
+
+	echo '<div class="ph-checkout-box-address ph-checkout-box-status-'.$d['status'].'">';
 
 	// Header
 	echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-row">';
@@ -138,15 +141,12 @@ if ($this->a->addressedit == 1) {
 		echo '</div>';
 	}
 
-	$pluginLayout 	= PluginHelper::importPlugin('pct');
-	if ($pluginLayout) {
-		$eventData	= [];
-		$results = Factory::getApplication()->triggerEvent('onPCTonAfterUserAddressCheckoutView', array('com_phocacart.checkout', &$this->data, $eventData));
-		if (!empty($results)) {
-			foreach ($results as $k => $v) {
-				if ($v != false && isset($v['content']) && $v['content'] != '') {
-					echo '<div class="ph-info-view-content">'.$v['content'].'</div>';
-				}
+	$results = Dispatcher::dispatch(new Event\Tax\UserAddressAfterCheckoutView('com_phocacart.checkout', $this->data));
+
+	if (!empty($results)) {
+		foreach ($results as $k => $v) {
+			if ($v != false && isset($v['content']) && $v['content'] != '') {
+				echo '<div class="ph-info-view-content">'.$v['content'].'</div>';
 			}
 		}
 	}
@@ -173,12 +173,18 @@ if ($this->a->addressedit == 1) {
 	echo HTMLHelper::_('form.token');
 	echo '</form>'. "\n";
 
+	echo '</div>';// end box address
+
 } else {
 
 	$d['status']	= 'pending';
 
+	echo '<div class="ph-checkout-box-address ph-checkout-box-status-'.$d['status'].'">';
+
 	echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-row">';
 	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-checkout-box-header-pas">'.$layoutI->render($d).'<h3>'.$this->t['na'].'. '.Text::_('COM_PHOCACART_BILLING_AND_SHIPPING_ADDRESS').'</h3></div>';
 	echo '</div>';
+
+	echo '</div>';// end box address
 }
 ?>

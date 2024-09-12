@@ -53,7 +53,7 @@ class PhocaCartCpViewPhocacartFeed extends HtmlView
 		$canDo		= $class::getActions($this->t, $this->state->get('filter.feed_id'));
 
 		$text = $isNew ? Text::_( $this->t['l'] . '_NEW' ) : Text::_($this->t['l'] . '_EDIT');
-		ToolbarHelper::title(   Text::_( $this->t['l'] . '_XML_FEED' ).': <small><small>[ ' . $text.' ]</small></small>' , 'bullhorn');
+		ToolbarHelper::title(   Text::_( $this->t['l'] . '_XML_FEED' ).': <small><small>[ ' . $text.' ]</small></small>' , 'feed');
 
 		// If not checked out, can save the item.
 		if (!$checkedOut && $canDo->get('core.edit')){

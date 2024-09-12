@@ -13,6 +13,8 @@ use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Language\Text;
+use Phoca\PhocaCart\Constants\WishListType;
+
 $r 			= $this->r;
 $user		= Factory::getUser();
 $userId		= $user->get('id');
@@ -24,34 +26,13 @@ $saveOrderingUrl = '';
 if ($saveOrder && !empty($this->items)) {
     $saveOrderingUrl = $r->saveOrder($this->t, $listDirn);
 }
-$sortFields = $this->getSortFields();
 
 echo $r->jsJorderTable($listOrder);
 
 
 echo $r->startForm($this->t['o'], $this->t['tasks'], 'adminForm');
-//echo $r->startFilter();
-//echo $r->selectFilterPublished('JOPTION_SELECT_PUBLISHED', $this->state->get('filter.published'));
-//echo $r->selectFilterLanguage('JOPTION_SELECT_LANGUAGE', $this->state->get('filter.language'));
-//echo $r->selectFilterCategory(PhocaDownloadCategory::options($this->t['o']), 'JOPTION_SELECT_CATEGORY', $this->state->get('filter.category_id'));
-//echo $r->endFilter();
 
 echo $r->startMainContainer();
-/*
-echo $r->startFilterBar();
-echo $r->inputFilterSearch($this->t['l'].'_FILTER_SEARCH_LABEL', $this->t['l'].'_FILTER_SEARCH_DESC',
-							$this->escape($this->state->get('filter.search')));
-echo $r->inputFilterSearchClear('JSEARCH_FILTER_SUBMIT', 'JSEARCH_FILTER_CLEAR');
-echo $r->inputFilterSearchLimit('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC', $this->pagination->getLimitBox());
-echo $r->selectFilterDirection('JFIELD_ORDERING_DESC', 'JGLOBAL_ORDER_ASCENDING', 'JGLOBAL_ORDER_DESCENDING', $listDirn);
-echo $r->selectFilterSortBy('JGLOBAL_SORT_BY', $sortFields, $listOrder);
-
-echo $r->startFilterBar(2);
-echo $r->selectFilterPublished('JOPTION_SELECT_PUBLISHED', $this->state->get('filter.published'));
-echo $r->endFilterBar();
-
-echo $r->endFilterBar();*/
-
 echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 echo $r->startTable('categoryList');
 
@@ -60,6 +41,7 @@ echo $r->startTblHeader();
 echo $r->firstColumnHeader($listDirn, $listOrder);
 echo $r->secondColumnHeader($listDirn, $listOrder);
 echo '<th class="ph-name">'.HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_USER', 'username', $listDirn, $listOrder ).'</th>'."\n";
+echo '<th class="ph-type">'.HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_WISHLIST_TYPE', 'a.type', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-product">'.HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_PRODUCT', 'productname', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-category">'.HTMLHelper::_('searchtools.sort',  	$this->t['l'].'_CATEGORY', 'cattitle', $listDirn, $listOrder ).'</th>'."\n";
 echo '<th class="ph-date">'.HTMLHelper::_('searchtools.sort',  $this->t['l'].'_DATE', 'a.date', $listDirn, $listOrder ).'</th>'."\n";
@@ -75,75 +57,63 @@ $j 				= 0;
 
 if (is_array($this->items)) {
 	foreach ($this->items as $i => $item) {
-		//if ($i >= (int)$this->pagination->limitstart && $j < (int)$this->pagination->limit) {
-			$j++;
+		$j++;
 
-$urlEdit		= 'index.php?option='.$this->t['o'].'&task='.$this->t['task'].'.edit&id=';
-$urlTask		= 'index.php?option='.$this->t['o'].'&task='.$this->t['task'];
-$orderkey   	= array_search($item->id, $this->ordering[$item->user_id]);
-$ordering		= ($listOrder == 'a.ordering');
-$canCreate		= $user->authorise('core.create', $this->t['o']);
-$canEdit		= $user->authorise('core.edit', $this->t['o']);
-$canCheckin		= $user->authorise('core.manage', 'com_checkin') || $item->checked_out==$user->get('id') || $item->checked_out==0;
-$canChange		= $user->authorise('core.edit.state', $this->t['o']) && $canCheckin;
-$linkEdit 		= Route::_( $urlEdit. $item->id );
+		$urlEdit    = 'index.php?option=' . $this->t['o'] . '&task=' . $this->t['task'] . '.edit&id=';
+		$urlTask    = 'index.php?option=' . $this->t['o'] . '&task=' . $this->t['task'];
+		$orderkey   = array_search($item->id, $this->ordering[$item->user_id]);
+		$ordering   = ($listOrder == 'a.ordering');
+		$canCreate  = $user->authorise('core.create', $this->t['o']);
+		$canEdit    = $user->authorise('core.edit', $this->t['o']);
+		$canCheckin = $user->authorise('core.manage', 'com_checkin') || $item->checked_out == $user->get('id') || $item->checked_out == 0;
+		$canChange  = $user->authorise('core.edit.state', $this->t['o']) && $canCheckin;
+		$linkEdit   = Route::_($urlEdit . $item->id);
 
+		echo $r->startTr($i, isset($item->catid) ? (int) $item->catid : 0);
 
+		echo $r->firstColumn($i, $item->id, $canChange, $saveOrder, $orderkey, $item->ordering);
+		echo $r->secondColumn($i, $item->id, $canChange, $saveOrder, $orderkey, $item->ordering);
 
-echo $r->startTr($i, isset($item->catid) ? (int)$item->catid : 0);
+		$checkO = '';
+		if ($item->checked_out) {
+			$checkO .= HTMLHelper::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'] . '.', $canCheckin);
+		}
 
-        echo $r->firstColumn($i, $item->id, $canChange, $saveOrder, $orderkey, $item->ordering);
-        echo $r->secondColumn($i, $item->id, $canChange, $saveOrder, $orderkey, $item->ordering);
+		// Name
+		if ($canCreate || $canEdit) {
+			$checkO .= '<a href="' . Route::_($linkEdit) . '">' . $this->escape($item->name) . ' <small>(' . $this->escape($item->username) . ')</small>' . '</a>';
+		} else {
+			$checkO .= $this->escape($item->name) . ' <small>(' . $this->escape($item->username) . ')</small>';
+		}
+		echo $r->td($checkO, "small", 'th');
 
-$checkO = '';
-if ($item->checked_out) {
-	$checkO .= HTMLHelper::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, $this->t['tasks'].'.', $canCheckin);
-}
+		switch($item->type) {
+			case WishListType::WishList:
+				echo $r->td($this->escape(Text::_('COM_PHOCACART_WISHLIST_TYPE_WISHLIST')));
+				break;
+			case WishListType::WatchDog:
+				echo $r->td($this->escape(Text::_('COM_PHOCACART_WISHLIST_TYPE_WATCHDOG')));
+				break;
+		}
 
-// Name
-//echo $r->td($checkO . $this->escape($item->name.' <small>('.$item->username.')</small>'), "small");
+		echo $r->td($this->escape($item->productname), "small");
 
-// Name
-if ($canCreate || $canEdit) {
-	$checkO .= '<a href="'. Route::_($linkEdit).'">'. $this->escape($item->name) .' <small>('.$this->escape($item->username).')</small>'.'</a>';
-} else {
-	$checkO .= $this->escape( $item->name ) .' <small>('.$this->escape($item->username).')</small>';
-}
-echo $r->td($checkO, "small", 'th');
+		// Category
+		echo $r->td($this->escape($item->cattitle), "small");
 
+		echo $r->td(HTMLHelper::date($item->date, Text::_('DATE_FORMAT_LC5')), "small");
 
-echo $r->td($this->escape($item->productname), "small");
+		echo $r->td($item->id, "small");
 
-// Category
-echo $r->td($this->escape($item->cattitle), "small");
+		echo $r->endTr();
 
-
-
-
-
-
-
-//echo $r->td($this->escape($item->ip), "small");
-
-//echo $r->td(JHtml::_('jgrid.published', $item->published, $i, $this->t['tasks'].'.', $canChange), "small");
-
-//echo $r->td(PhocacartUtils::wordDeleteWhole($item->message, 50), "small");
-
-echo $r->td(HTMLHelper::date($item->date, Text::_('DATE_FORMAT_LC5')), "small");
-
-echo $r->td($item->id, "small");
-
-echo $r->endTr();
-
-		//}
 	}
 }
 echo $r->endTblBody();
 
-echo $r->tblFoot($this->pagination->getListFooter(), 7);
+echo $r->tblFoot($this->pagination->getListFooter(), 8);
 echo $r->endTable();
 
 echo $r->formInputsXML($listOrder, $listDirn, $originalOrders);
 echo $r->endMainContainer();
 echo $r->endForm();
-?>

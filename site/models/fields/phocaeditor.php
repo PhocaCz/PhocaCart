@@ -7,6 +7,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Factory;
@@ -17,19 +18,19 @@ class JFormFieldPhocaEditor extends FormField
 
 	public $type = 'PhocaEditor';
 	protected $editor;
-	
+
 	protected function getInput(){
-	
-		
+
+
 		$class = $this->element['class'] ? ' class="' . (string) $this->element['class'] . ' mceEditor"' : '';
-		
+
 		$disabled = ((string) $this->element['disabled'] == 'true') ? ' disabled="disabled"' : '';
 		$columns = $this->element['cols'] ? ' cols="' . (int) $this->element['cols'] . '"' : '';
 		$rows = $this->element['rows'] ? ' rows="' . (int) $this->element['rows'] . '"' : '';
 
 		// Initialize JavaScript field attributes.
 		$onchange = $this->element['onchange'] ? ' onchange="' . (string) $this->element['onchange'] . '"' : '';
-		
+
 		$height      = ((string) $this->element['height']) ? (string) $this->element['height'] : '250';
 		$width       = ((string) $this->element['width']) ? (string) $this->element['width'] : '100%';
 		$assetField  = $this->element['asset_field'] ? (string) $this->element['asset_field'] : 'asset_id';
@@ -53,7 +54,7 @@ class JFormFieldPhocaEditor extends FormField
 		}
 
 		$hide = ((string) $this->element['hide']) ? explode(',', (string) $this->element['hide']) : array();
-		
+
 		// We search for defined editor (tinymce)
 		$editor = $this->getEditor();
 		if ($editor) {
@@ -63,7 +64,7 @@ class JFormFieldPhocaEditor extends FormField
 						.'theme : "advanced",'. "\n"
 						.'language : "en",'. "\n"
 						.'plugins : "emotions",'. "\n"
-						.'editor_selector : "mceEditor",'. "\n"					
+						.'editor_selector : "mceEditor",'. "\n"
 						.'theme_advanced_buttons1 : "bold, italic, underline, separator, strikethrough, justifyleft, justifycenter, justifyright, justifyfull, bullist, numlist, undo, redo, link, unlink, separator, emotions",'. "\n"
 						.'theme_advanced_buttons2 : "",'. "\n"
 						.'theme_advanced_buttons3 : "",'. "\n"
@@ -75,10 +76,10 @@ class JFormFieldPhocaEditor extends FormField
 			$js .=		 'extended_valid_elements : "a[name|href|target|title|onclick],img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name],hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]"
 	});' . "\n";
 			$js .=	'</script>';
-			
+
 			$js2 = "\t<script type=\"text/javascript\" src=\"".Uri::root()."media/editors/tinymce/jscripts/tiny_mce/tiny_mce.js\"></script>\n";
-			
-			
+
+
 			$js = '<script type="text/javascript">
 				tinyMCE.init({
 					// General
@@ -118,24 +119,24 @@ class JFormFieldPhocaEditor extends FormField
 
 				});
 				</script>';
-			
+
 			$js2 = "\t<script type=\"text/javascript\" src=\"".Uri::root()."media/editors/tinymce/tinymce.min.js\"></script>\n";
-			
-			
+
+
 			$document	= Factory::getDocument();
 			$document->addCustomTag($js2);
 			$document->addCustomTag($js);
-			
+
 			if (is_numeric( $width )) {
 				$width .= 'px';
 			}
 			if (is_numeric( $height )) {
 				$height .= 'px';
 			}
-			
+
 			// Problem with required
 			$class = str_replace('required', '', $class);
-			
+
 			$editor = '<textarea class="mce_editable" name="' . $this->name . '" id="' . $this->id . '"' . $columns . $rows . $class . $disabled . $onchange . ' style="width:' . $width .'; height:'. $height.'">'
 				. htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '</textarea>';
 		} else {
@@ -204,7 +205,7 @@ class JFormFieldPhocaEditor extends FormField
 				return false;
 			}
 			// END PHOCAEDIT
-			
+
 			$this->editor = Editor::getInstance($editor);
 		}
 

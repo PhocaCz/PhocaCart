@@ -67,7 +67,7 @@ foreach ($v->options as $k2 => $v2) {
     $maxLength = ' maxlength="' . PhocacartAttribute::getAttributeLength($v->type) . '"';
 
 	echo '<div class="'. $d['s']['c']['row'].' ph-gift-box-form">';
-    echo '<div class="'.$d['s']['c']['col.xs12.sm6.md6'].'"><label class="' . ' phTextAttributeInput ' . $active . '" style="background-color: ' . strip_tags($v2->color) . '">' . htmlspecialchars($v2->title) . $suffix . $d['required']['span'] . '</label></div>';
+    echo '<div class="'.$d['s']['c']['col.xs12.sm6.md6'].'"><label class="'  . ' phTextAttributeInput ' . $active . '" style="background-color: ' . strip_tags($v2->color) . '">' . htmlspecialchars($v2->title) . $suffix . $d['required']['span'] . '</label></div>';
 	echo '<div class="'.$d['s']['c']['col.xs12.sm6.md6'].'">';
     switch ($v->type) {
         case 10:

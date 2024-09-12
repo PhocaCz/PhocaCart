@@ -11,13 +11,8 @@
 defined('_JEXEC') or die();
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-
-/*
-phocacart import('phocacart.user.user');
-phocacart import('phocacart.user.guestuser');
-phocacart import('phocacart.shipping.shipping');
-phocacart import('phocacart.payment.payment');
-*/
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
 
 class PhocacartCart
 {
@@ -359,12 +354,15 @@ class PhocacartCart
 
         if ($k != '' && (int)$quantity > 0) {
             if (isset($this->items[$k]['quantity']) && (int)$this->items[$k]['quantity'] > 0) {
-
+                $oldQuantity = $this->items[$k]['quantity'];
                 $this->items[$k]['quantity'] = $this->items[$k]['quantity'] + (int)$quantity;
             } else {
+                $oldQuantity = 0;
                 $this->items[$k]['quantity'] = (int)$quantity;
             }
-            $this->updateItems();
+
+            $this->updateItems($k, $this->items[$k], $oldQuantity, $this->items[$k]['quantity']);
+
             //$this->updateSubTotal();
             return true;
         } else {
@@ -380,22 +378,39 @@ class PhocacartCart
     public function updateItemsFromCheckout($idKey = '', $quantity = 0) {
 
         // Don't check for quantity as it can be NULL
-        if ($idKey != '' && (int)$quantity > 0) {
-            $this->items[$idKey]['quantity'] = (int)$quantity;
-            $this->updateItems();
-            return true;
-        } else if ($idKey != '' && (int)$quantity == 0) {
-            unset($this->items[$idKey]);
-            $this->updateItems();
-            return true;
+        if ($idKey != '') {
+            if (isset($this->items[$idKey])) {
+
+                $oldQuantity = $this->items[$idKey]['quantity'];
+
+                if ((int)$quantity > 0) {
+                    $this->items[$idKey]['quantity'] = (int)$quantity;
+                    $newQuantity                     = $quantity;
+                } else {
+                    unset($this->items[$idKey]);
+                    $newQuantity = 0;
+                }
+
+                if (!isset($this->items[$idKey])) {
+                    // it was unset
+                    //$this->updateItems($idKey, [], $oldQuantity, $newQuantity);
+                    $this->updateItems($idKey, null, $oldQuantity, $newQuantity);
+                } else {
+                    $this->updateItems($idKey, $this->items[$idKey], $oldQuantity, $newQuantity);
+                }
+
+                return true;
+            }
         }
+
+        return false;
     }
 
 
     /*
      * UPDATE - protected internal function to update session or database
      */
-    protected function updateItems() {
+    protected function updateItems(string $idKey, ?array $item, ?int $quantityOld, int $quantityNew) {
 
         $session = Factory::getSession();
 
@@ -415,6 +430,8 @@ class PhocacartCart
 
         $this->updateShipping();
         $this->updatePayment();
+
+        Dispatcher::dispatch(new Event\View\Cart\UpdateItems($idKey, $item, $quantityOld, $quantityNew));
     }
 
     /*
@@ -636,8 +653,11 @@ class PhocacartCart
                             . Text::_('COM_PHOCACART_PLEASE_RECHECK_PRODUCTS_IN_YOUR_CART'), 'error');
                         }
 
-                        unset($this->items[$k]);
+
+
                         $this->updateItemsFromCheckout($k, 0);
+                        unset($this->items[$k]);
+
                         // In case this all happens when order is made - stop the order and inform user
                         $this->updateProductsRemoved($k);
 
@@ -660,8 +680,9 @@ class PhocacartCart
                                     Text::_('COM_PHOCACART_ERROR_ATTRIBUTE_OF_PRODUCT_STORED_IN_CART_NOT_EXISTS') . ' '
                                     . Text::_('COM_PHOCACART_ERROR_PRODUCT_REMOVED_FROM_CART') . ' '
                                     . Text::_('COM_PHOCACART_PLEASE_RECHECK_PRODUCTS_IN_YOUR_CART'), 'error');
-                                unset($this->items[$k]);
+
                                 $this->updateItemsFromCheckout($k, 0);
+                                unset($this->items[$k]);
                                 // In case this all happens when order is made - stop the order and inform user
                                 $this->updateProductsRemoved($k);
 
@@ -680,6 +701,19 @@ class PhocacartCart
                 // 1) Basic Calculation
                 // --------------------
                 $calc->calculateBasicProducts($this->fullitems[1], $this->fullitemsgroup[1], $this->total[1], $this->stock, $this->minqty, $this->minmultipleqty, $this->items);
+
+                $options = PhocaCartUtils::getComponentParameters();
+                if ($options->get('checkout_separate_by_owner')) {
+                    usort($this->fullitems[1], function($a, $b) {
+                        switch (true) {
+                            case $a['owner_id'] === $b['owner_id']: return 0;
+                            case !$a['owner_id']: return 1;
+                            case !$b['owner_id']: return -1;
+                            case $a['owner_ordering'] === $b['owner_ordering']: return strcmp($a['owner_name'], $b['owner_name']);
+                            default: return $a['owner_ordering'] < $b['owner_ordering'] ? -1 : 1;
+                        }
+                    });
+                }
 
                 //$calc->round($this->total[1]);
 
@@ -874,7 +908,7 @@ class PhocacartCart
 
     public function getTotal() {
 
-        $items = array('netto', 'brutto', 'quantity', 'weight', 'length', 'width', 'height');
+        $items = array('netto', 'brutto', 'subtotalnetto', 'subtotalbrutto', 'wdnetto','quantity', 'weight', 'length', 'width', 'height');
         foreach ($items as $k => $v) {
             if (!isset($this->total[0][$v])) {
                 $this->total[0][$v] = 0;

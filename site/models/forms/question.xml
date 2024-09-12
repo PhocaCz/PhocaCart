@@ -46,7 +46,7 @@
 	<option	value="0">JUNPUBLISHED</option>
 </field>
 
-<field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" class="form-control" filter="string">
+<field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC"  filter="string">
 	<option value="*">JALL</option>
 </field>
 

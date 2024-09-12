@@ -52,7 +52,7 @@ class PhocaCartControllerWishList extends FormController
 		$d['s']	    = $s;
 		$layoutW	= new FileLayout('popup_add_to_wishlist', null, array('component' => 'com_phocacart'));
 
-		$d['link_wishlist'] = Route::_(PhocacartRoute::getWishListRoute((int)$item['id']), (int)$item['catid']);
+		$d['link_wishlist'] = Route::_(PhocacartRoute::getWishListRoute((int)$item['id'], (int)$item['catid']));
 		$d['link_continue'] = '';
 		// We need to know if module is displayed on wishlist site
 		// If yes and one item will be deleted per AJAX, we need to refresh wishlist site
@@ -120,7 +120,7 @@ class PhocaCartControllerWishList extends FormController
 		$d['s']	    = $s;
 		$layoutW	= new FileLayout('popup_remove_from_wishlist', null, array('component' => 'com_phocacart'));
 
-		$d['link_wishlist'] = Route::_(PhocacartRoute::getWishListRoute((int)$item['id']), (int)$item['catid']);
+		$d['link_wishlist'] = Route::_(PhocacartRoute::getWishListRoute((int)$item['id'], (int)$item['catid']));
 		$d['link_continue'] = '';
 		// We need to know if module is displayed on wishlist site
 		// If yes and one item will be deleted per AJAX, we need to refresh wishlist site

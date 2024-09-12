@@ -56,10 +56,10 @@ if (isset($d['filterprice']) && $d['filterprice'] == 2) {
 $title = isset($d['titleheader']) && $d['titleheader'] != '' ? $d['titleheader'] : $d['title'];
 $displayData 	= null;
 ?>
-<div class="<?php echo $d['s']['c']['panel.panel-default'] ?> panel-<?php echo $d['param']; ?>" <?php echo $d['s']['a']['accordion'] ?>>
+<div class="<?php echo $d['s']['c']['panel.panel-default'] ?> panel-<?php echo $d['param']; ?>" <?php echo $d['s']['a']['accordion'] ?> role="tab">
 
     <?php if ($d['s']['c']['class-type'] != 'uikit') { ?>
-        <div class="<?php echo $d['s']['c']['panel-heading'] ?>" role="tab" id="heading<?php echo $d['param']; ?>">
+        <div class="<?php echo $d['s']['c']['panel-heading'] ?>"  id="heading<?php echo $d['param']; ?>">
             <h4 class="<?php echo $d['s']['c']['panel-title'] ?>">
                 <a data-bs-toggle="collapse" href="#collapse<?php echo $d['param']; ?>" aria-expanded="true" aria-controls="collapse<?php echo $d['param']; ?>" class="panel-collapse" aria-label="<?php echo Text::_('COM_PHOCACART_COLLAPSE') . ' ' . $title ?>"><?php echo PhocacartRenderIcon::icon($d['triangle_class']) ?></a>
                 <a data-bs-toggle="collapse" href="#collapse<?php echo $d['param']; ?>" aria-expanded="true" aria-controls="collapse<?php echo $d['param']; ?>" class="panel-collapse" aria-label="<?php echo $title ?>"><?php echo $title ?></a>

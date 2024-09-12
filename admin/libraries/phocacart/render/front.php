@@ -9,14 +9,14 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Associations;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Plugin\PluginHelper;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
 
 class PhocacartRenderFront
 {
@@ -109,7 +109,7 @@ class PhocacartRenderFront
         $menus = $app->getMenu();
         $menu = $menus->getActive();
         $pathway = $app->getPathway();
-        $title = null;
+
         $metakey = $params->get('cart_metakey', '');
         $metadesc = $params->get('cart_metadesc', '');
         $render_canonical_url = $params->get('render_canonical_url', 0);
@@ -141,12 +141,6 @@ class PhocacartRenderFront
 
 
         if (isset($name->title) && $name->title != '') {
-            /*if ($title != '') {
-                $title = $title .' - ' .  $name->title;
-            } else {
-                $title = $name->title;
-            }*/
-
             $title = $name->title;
         }
 
@@ -709,25 +703,6 @@ class PhocacartRenderFront
                         ]
                     );
 
-
-
-
-            /*if (Associations::isEnabled())
-            {
-                $subQuery = $db->getQuery(true)
-                    ->select('COUNT(' . $db->quoteName('asso1.id') . ') > 1')
-                    ->from($db->quoteName('#__associations', 'asso1'))
-                    ->join('INNER', $db->quoteName('#__associations', 'asso2'), $db->quoteName('asso1.key') . ' = ' . $db->quoteName('asso2.key'))
-                    ->where(
-                        [
-                            $db->quoteName('asso1.id') . ' = ' . $db->quoteName('a.id'),
-                            $db->quoteName('asso1.context') . ' = ' . $db->quote('com_content.item'),
-                        ]
-                    );
-
-                $query->select('(' . $subQuery . ') AS ' . $db->quoteName('association'));
-            }*/
-
             $db->setQuery((string)$query);
 
             $a = $db->loadObject();
@@ -736,11 +711,9 @@ class PhocacartRenderFront
             // Associated article by language - lang, assoc
             if (Associations::isEnabled())
             {
-                $itemAssociations = array();
-
                 if ($id != null)
                 {
-                    $associations = JLanguageAssociations::getAssociations('com_content', '#__content', 'com_content.item', $id);
+                    $associations = Associations::getAssociations('com_content', '#__content', 'com_content.item', $id);
 
 
                     $lang = Factory::getLanguage();
@@ -778,9 +751,7 @@ class PhocacartRenderFront
 
 
             if ($changeLang == 1) {
-                PluginHelper::importPlugin('system');
-                PluginHelper::importPlugin('plgSystemMultilanguagesck');
-                Factory::getApplication()->triggerEvent('onChangeText', array(&$o));
+                Dispatcher::dispatchChangeText($o);
             }
 
             if ($format == 'pdf' || $format == 'text') {

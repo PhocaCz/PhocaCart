@@ -1,30 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-	<fieldset name="header">
-		<field name="title" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" required="true" />
+	<config>
+		<inlinehelp button="show"/>
+	</config>
 
-		<field name="alias" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC" />
+	<fieldset name="title">
+		<field name="title" type="phocatext" i18n="true" required="true" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" />
+
+		<field name="alias" type="phocatext" i18n="true" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC" />
 	</fieldset>
 
 
 	<fieldset name="general" label="COM_PHOCACART_GENERAL_OPTIONS" addfieldpath="/administrator/components/com_phocacart/models/fields">
-		<field name="title_long" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_TITLE_LONG_LABEL" description="COM_PHOCACART_FIELD_TITLE_LONG_DESC" />
+		<field name="title_long" type="phocatext" i18n="true" label="COM_PHOCACART_FIELD_TITLE_LONG_LABEL" description="COM_PHOCACART_FIELD_TITLE_LONG_DESC" />
 
-		<field name="image" type="media" manager="categoryimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL"  description="COM_PHOCACART_FIELD_IMAGE_DESC" class="form-control" size="40" />
+		<field name="image" type="media" manager="categoryimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL" description="COM_PHOCACART_FIELD_IMAGE_DESC" />
 
-		<field name="link" type="text"  label="COM_PHOCACART_FIELD_MANUFACTURER_LINK_LABEL"  description="COM_PHOCACART_FIELD_MANUFACTURER_LINK_DESC" class="form-control" size="40" />
+		<field name="link" type="phocatext" i18n="true" label="COM_PHOCACART_FIELD_MANUFACTURER_LINK_LABEL" description="COM_PHOCACART_FIELD_MANUFACTURER_LINK_DESC" />
 
-		<field name="ordering" type="PhocacartOrdering" table="manufacturer" class="form-select" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
-
-		<field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="\Joomla\CMS\Component\ComponentHelper::filterText" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
-		<field name="featured" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_FEATURED_LABEL" description="COM_PHOCACART_FIELD_FEATURED_MANUFACTURER_DESC" default="0">
-            <option value="0">COM_PHOCACART_NO</option>
-            <option value="1">COM_PHOCACART_YES</option>
-        </field>
-
+		<field name="description" type="phocaeditor" i18n="true" buttons="true" hide="pagebreak,readmore" filter="\Phoca\PhocaCart\Input\InputHelper::filterText" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
 	</fieldset>
-
-
 
 	<fieldset name="publish" label="COM_PHOCACART_PUBLISHING_OPTIONS" >
 		<field name="published" type="list" class="form-select" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" size="1" default="1">
@@ -32,46 +27,37 @@
 			<option	value="0">JUNPUBLISHED</option>
 		</field>
 
-		<field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" class="form-control">
+		<field name="featured" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_FEATURED_LABEL" description="COM_PHOCACART_FIELD_FEATURED_MANUFACTURER_DESC" default="0">
+			<option value="0">COM_PHOCACART_NO</option>
+			<option value="1">COM_PHOCACART_YES</option>
+		</field>
+
+		<field name="ordering" type="PhocacartOrdering" table="manufacturer" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
+
+		<field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" >
 			<option value="*">JALL</option>
 		</field>
 
-		<field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" readonly="true" class="readonly" />
+		<field name="id" type="text" default="0" readonly="true" label="JGLOBAL_FIELD_ID_LABEL" />
 	</fieldset>
 
 	<fieldset name="metadata" label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
-		<field name="metatitle" type="text"
-					 label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC"
-					 class="form-control"/>
+		<field name="metatitle" type="phocatext" i18n="true" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" />
 
-		<field name="metakey" type="textarea"
-					 label="JField_Meta_Keywords_Label" description="JField_Meta_Keywords_Desc"
-					 class="form-control" rows="3" cols="30"/>
+		<field name="metakey" type="phocatextarea" i18n="true" rows="3" cols="30" label="JFIELD_META_KEYWORDS_LABEL" description="JFIELD_META_KEYWORDS_DESC" />
 
-		<field name="metadesc" type="textarea"
-					 label="JField_Meta_Description_Label" description="JField_Meta_Description_Desc"
-					 class="form-control" rows="3" cols="30"/>
+		<field name="metadesc" type="phocatextarea" i18n="true" rows="3" cols="30" label="JFIELD_META_DESCRIPTION_LABEL" description="JFIELD_META_DESCRIPTION_DESC" />
 	</fieldset>
 
 	<fields name="metadata">
 		<fieldset name="metadata" label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
 			<field name="robots" type="list" label="JFIELD_METADATA_ROBOTS_LABEL" validate="options">
-				<option value="">
-					JGLOBAL_USE_GLOBAL
-				</option>
+				<option value="">JGLOBAL_USE_GLOBAL</option>
 				<option value="index, follow"/>
 				<option value="noindex, follow"/>
 				<option value="index, nofollow"/>
 				<option value="noindex, nofollow"/>
 			</field>
-
-			<!--
-			<field name="author" type="text" label="JAUTHOR"
- 				description="JField_Metadata_Author_Desc" size="20" />
-
-			<field name="rights" type="text"
- 				label="JFIELD_META_RIGHTS_LABEL" description="JFIELD_META_RIGHTS_DESC"
- 				required="" filter="string" cols="30" rows="2" />-->
 		</fieldset>
 	</fields>
 </form>

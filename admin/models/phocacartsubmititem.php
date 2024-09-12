@@ -19,10 +19,9 @@ use Joomla\CMS\Log\Log;
 use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Form\Form;
-use Joomla\CMS\Language\Associations;
 use Joomla\CMS\Language\LanguageHelper;
-jimport('joomla.application.component.modeladmin');
 use Joomla\String\StringHelper;
+use Phoca\PhocaCart\I18n\I18nHelper;
 
 class PhocaCartCpModelPhocaCartSubmititem extends AdminModel
 {
@@ -218,7 +217,8 @@ class PhocaCartCpModelPhocaCartSubmititem extends AdminModel
 		$data['published']	= 1;
 
 		$data['upload_token'] 			= PhocacartUtils::getToken();
-		$data['upload_folder']			= PhocacartUtils::getToken('folder');
+		$data['upload_folder']			= PhocacartUtils::getAndCheckToken('folder', PhocacartPath::getPath('submititem'));
+		//$data['upload_folder']			= PhocacartUtils::getToken('folder');
 
 		// ALIAS
 		if (in_array($input->get('task'), array('apply', 'save', 'save2new')) && (!isset($data['id']) || (int) $data['id'] == 0)) {
@@ -282,9 +282,6 @@ class PhocaCartCpModelPhocaCartSubmititem extends AdminModel
 		// Clean the cache.
 		$cache = Factory::getCache($this->option);
 		$cache->clean();
-
-		// Trigger the onContentAfterSave event.
-		//Factory::getApplication()->triggerEvent('$this->event_after_save, array($this->option.'.'.$this->name, $table, $isNew));
 
 		$pkName = $table->getKeyName();
 		if (isset($table->$pkName)) {
@@ -742,7 +739,7 @@ class PhocaCartCpModelPhocaCartSubmititem extends AdminModel
 		}*/
 
 		// Association Phoca Cart items
-		if (Associations::isEnabled()){
+		if (I18nHelper::associationsEnabled()) {
 			$languages = LanguageHelper::getContentLanguages(false, true, null, 'ordering', 'asc');
 
 			if (count($languages) > 1){

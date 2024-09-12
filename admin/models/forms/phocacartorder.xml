@@ -1,88 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
+    <config>
+        <inlinehelp button="show"/>
+    </config>
 
-    <fieldset addfieldpath="/administrator/components/com_phocacart/models/fields">
+    <fieldset name="order" label="COM_PHOCACART_ORDER_OPTIONS" addfieldpath="/administrator/components/com_phocacart/models/fields">
+        <field name="order_number" type="text" label="COM_PHOCACART_FIELD_ORDER_NUMBER_LABEL" description="COM_PHOCACART_FIELD_ORDER_NUMBER_DESC"/>
 
-        <field name="id" type="text" default="0" label="COM_PHOCACART_ORDER_ID_LABEL" description="COM_PHOCACART_ORDER_ID_DESC" required="true" readonly="true" class="readonly"/>
+        <field name="status_id" type="PhocacartOrderStatus" default="0" required="true" readonly="true" label="COM_PHOCACART_ORDER_STATUS_LABEL" description="COM_PHOCACART_ORDER_STATUS_DESC"/>
 
-        <!--
-        <field name="user_id" type="text" default="0" label="COM_PHOCACART_USER_ID_LABEL" description="COM_PHOCACART_USER_ID_DESC" required="true" readonly="true" class="readonly" />-->
+        <field name="tracking_number" type="text" label="COM_PHOCACART_FIELD_TRACKING_NUMBER_LABEL" description="COM_PHOCACART_FIELD_TRACKING_NUMBER_DESC"/>
 
-        <field name="status_id" type="PhocacartOrderStatus" default="0" label="COM_PHOCACART_ORDER_STATUS_LABEL" description="COM_PHOCACART_ORDER_STATUS_DESC" required="true" readonly="true" class="readonly"/>
+        <field name="tracking_link" type="phocatext" readonly="true" class="tracking-link" showCopyButton="true" showLinkButton="true" filter="unset" label="COM_PHOCACART_FIELD_TRACKING_LINK_LABEL" />
 
-        <field name="order_token" type="phocacarttoken" readonly="true" manager="folder" class="form-control" size="40" label="COM_PHOCACART_FIELD_ORDER_TOKEN_LABEL" description="COM_PHOCACART_FIELD_ORDER_TOKEN_DESC"/>
+        <field name="tracking_link_custom" type="text" label="COM_PHOCACART_FIELD_CUSTOM_TRACKING_LINK_LABEL" description="COM_PHOCACART_FIELD_CUSTOM_TRACKING_LINK_DESC"/>
 
-        <field name="comment" type="textarea" class="form-control" size="40" label="COM_PHOCACART_FIELD_COMMENT_LABEL" description="COM_PHOCACART_FIELD_COMMENT_DESC"/>
+        <field name="tracking_date_shipped" type="Calendar" label="COM_PHOCACART_FIELD_DATE_SHIPPED_LABEL" description="COM_PHOCACART_FIELD_DATE_SHIPPED_DESC" translateformat="true" filter="user_utc" />
 
-        <field name="tracking_number" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_TRACKING_NUMBER_LABEL" description="COM_PHOCACART_FIELD_TRACKING_NUMBER_DESC"/>
-        <field name="tracking_link_custom" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_CUSTOM_TRACKING_LINK_LABEL" description="COM_PHOCACART_FIELD_CUSTOM_TRACKING_LINK_DESC"/>
-        <field name="tracking_description_custom" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_CUSTOM_TRACKING_DESCRIPTION_LABEL"
-               filter="\Joomla\CMS\Component\ComponentHelper::filterText" description="COM_PHOCACART_FIELD_CUSTOM_TRACKING_DESCRIPTION_DESC"/>
+        <field name="order_token" type="phocacarttoken" readonly="true" manager="token" label="COM_PHOCACART_FIELD_ORDER_TOKEN_LABEL" description="COM_PHOCACART_FIELD_ORDER_TOKEN_DESC"/>
 
-        <field name="tracking_date_shipped" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_DATE_SHIPPED_LABEL" description="COM_PHOCACART_FIELD_DATE_SHIPPED_DESC" translateformat="true" filter="user_utc" />
+        <field name="id" type="text" default="0" required="true" readonly="true" label="COM_PHOCACART_ORDER_ID_LABEL" description="COM_PHOCACART_ORDER_ID_DESC" />
 
-
-        <field name="order_number" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_ORDER_NUMBER_LABEL" description="COM_PHOCACART_FIELD_ORDER_NUMBER_DESC"/>
-        <field name="receipt_number" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_RECEIPT_NUMBER_LABEL" description="COM_PHOCACART_FIELD_RECEIPT_NUMBER_DESC"/>
-        <field name="invoice_number" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_INVOICE_NUMBER_LABEL" description="COM_PHOCACART_FIELD_INVOICE_NUMBER_DESC"/>
-
-		<field name="queue_number" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_QUEUE_NUMBER_LABEL" description="COM_PHOCACART_FIELD_QUEUE_NUMBER_DESC"/>
-
-		<field name="order_number_id" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_ORDER_NUMBER_ID_LABEL" description="COM_PHOCACART_FIELD_ORDER_NUMBER_ID_DESC" readonly="readonly" />
-        <field name="receipt_number_id" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_RECEIPT_NUMBER_ID_LABEL" description="COM_PHOCACART_FIELD_RECEIPT_NUMBER_ID_DESC" readonly="readonly" />
-        <field name="invoice_number_id" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_INVOICE_NUMBER_ID_LABEL" description="COM_PHOCACART_FIELD_INVOICE_NUMBER_ID_DESC" readonly="readonly" />
-		<field name="queue_number_id" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_QUEUE_NUMBER_ID_LABEL" description="COM_PHOCACART_FIELD_QUEUE_NUMBER_ID_DESC" readonly="readonly" />
-
-
-        <field name="invoice_prn" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_PAYMENT_REFERENCE_NUMBER_LABEL" description="COM_PHOCACART_FIELD_PAYMENT_REFERENCE_NUMBER_DESC"/>
-        <field name="invoice_date" type="calendar" class="date" size="40" label="COM_PHOCACART_FIELD_INVOICE_DATE_LABEL" description="COM_PHOCACART_FIELD_INVOICE_DATE_DESC" translateformat="true" filter="user_utc" />
-        <field name="invoice_due_date" type="calendar" class="date" size="40" label="COM_PHOCACART_FIELD_INVOICE_DUE_DATE_LABEL" description="COM_PHOCACART_FIELD_INVOICE_DUE_DATE_DESC" translateformat="true" filter="user_utc" />
-        <field name="invoice_time_of_supply" type="calendar" class="date" size="40" label="COM_PHOCACART_FIELD_DATE_OF_TAXABLE_SUPPLY_LABEL" description="COM_PHOCACART_FIELD_DATE_OF_TAXABLE_SUPPLY_DESC" translateformat="true" filter="user_utc" />
-        <!--
-        <field name="required_delivery_time" type="calendar" class="date" size="40" label="" description="" translateformat="true" filter="user_utc" />-->
-
-        <field name="invoice_spec_top_desc" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_TOP_DESCRIPTION_LABEL" filter="\Joomla\CMS\Component\ComponentHelper::filterText"
-               description="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_TOP_DESCRIPTION_DESC"/>
-        <field name="invoice_spec_middle_desc" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_MIDDLE_DESCRIPTION_LABEL"
-               filter="\Joomla\CMS\Component\ComponentHelper::filterText" description="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_MIDDLE_DESCRIPTION_DESC"/>
-        <field name="invoice_spec_bottom_desc" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_BOTTOM_DESCRIPTION_LABEL"
-               filter="\Joomla\CMS\Component\ComponentHelper::filterText" description="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_BOTTOM_DESCRIPTION_DESC"/>
-
-        <field name="oidn_spec_billing_desc" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_ORDER_INVOICE_DELIVERY_NOTE_BILLING_DESCRIPTION_LABEL"
-               filter="\Joomla\CMS\Component\ComponentHelper::filterText" description="COM_PHOCACART_FIELD_ORDER_INVOICE_DELIVERY_NOTE_BILLING_DESCRIPTION_DESC"/>
-
-        <field name="oidn_spec_shipping_desc" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_ORDER_INVOICE_DELIVERY_NOTE_SHIPPING_DESCRIPTION_LABEL"
-               filter="\Joomla\CMS\Component\ComponentHelper::filterText" description="COM_PHOCACART_FIELD_ORDER_INVOICE_DELIVERY_NOTE_SHIPPING_DESCRIPTION_LABEL"/>
-
-
-        <field name="terms" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_TERMS_AND_CONDITIONS_AGREED_LABEL" description="COM_PHOCACART_FIELD_TERMS_AND_CONDITIONS_AGREED_DESC" size="1" default="0">
-            <option value="1">COM_PHOCACART_YES</option>
-            <option value="0">COM_PHOCACART_NO</option>
-        </field>
-        <field name="privacy" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_PRIVACY_AGREED_LABEL" description="COM_PHOCACART_FIELD_PRIVACY_AGREED_DESC" size="1" default="0">
-            <option value="1">COM_PHOCACART_YES</option>
-            <option value="0">COM_PHOCACART_NO</option>
-        </field>
-        <field name="newsletter" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_NEWSLETTER_SUBSCRIBED_LABEL" description="COM_PHOCACART_FIELD_NEWSLETTER_SUBSCRIBED_DESC" size="1" default="0">
+        <field name="terms" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_TERMS_AND_CONDITIONS_AGREED_LABEL" description="COM_PHOCACART_FIELD_TERMS_AND_CONDITIONS_AGREED_DESC">
             <option value="1">COM_PHOCACART_YES</option>
             <option value="0">COM_PHOCACART_NO</option>
         </field>
 
+        <field name="privacy" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_PRIVACY_AGREED_LABEL" description="COM_PHOCACART_FIELD_PRIVACY_AGREED_DESC">
+            <option value="1">COM_PHOCACART_YES</option>
+            <option value="0">COM_PHOCACART_NO</option>
+        </field>
 
-        <field name="date" type="text" class="form-control" label="COM_PHOCACART_FIELD_CREATED_DATE_LABEL" description="COM_PHOCACART_FIELD_CREATED_DATE_DESC" readonly="readonly" translateformat="true"
-               showtime="true"/>
+        <field name="newsletter" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_NEWSLETTER_SUBSCRIBED_LABEL" description="COM_PHOCACART_FIELD_NEWSLETTER_SUBSCRIBED_DESC">
+            <option value="1">COM_PHOCACART_YES</option>
+            <option value="0">COM_PHOCACART_NO</option>
+        </field>
 
-        <field name="modified" type="text" class="form-control" label="COM_PHOCACART_FIELD_MODIFIED_DATE_LABEL" description="COM_PHOCACART_FIELD_MODIFIED_DATE_DESC" readonly="readonly" translateformat="true"
-               showtime="true"/>
-
-
-    </fieldset>
-
-    <fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS">
-
-        <field name="published" type="list" class="form-select" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" size="1" default="1">
+        <field name="published" type="list" default="1" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC">
             <option value="1">JPUBLISHED</option>
             <option value="0">JUNPUBLISHED</option>
         </field>
     </fieldset>
+
+    <fieldset name="info" label="COM_PHOCACART_GROUP_INFO">
+        <field name="user_id" type="user" label="COM_PHOCACART_USER" filter="unset" readonly="true" />
+
+        <field name="comment" type="textarea" label="COM_PHOCACART_FIELD_COMMENT_LABEL" description="COM_PHOCACART_FIELD_COMMENT_DESC" />
+
+        <field name="internal_comment" type="textarea"  label="COM_PHOCACART_FIELD_INTERNAL_COMMENT_LABEL" description="COM_PHOCACART_FIELD_INTERNAL_COMMENT_DESC"/>
+    </fieldset>
+
+    <fieldset name="pos" label="COM_PHOCACART_GROUP_POS">
+        <field name="vendor_id" type="user" label="COM_PHOCACART_VENDOR" />
+
+        <field name="section_id" type="phocacartsection" filter="integer" label="COM_PHOCACART_SECTION" />
+
+        <field name="unit_id" type="phocaunit" filter="integer" label="COM_PHOCACART_UNIT" />
+
+        <field name="ticket_id" type="text" filter="integer" readonly="true" label="COM_PHOCACART_TICKET" />
+    </fieldset>
+
+    <fieldset name="tracking" label="COM_PHOCACART_SHIPMENT_TRACKING_OPTIONS" addfieldpath="/administrator/components/com_phocacart/models/fields">
+        <field name="tracking_description_custom" type="editor" buttons="true" hide="pagebreak,readmore" filter="\Joomla\CMS\Component\ComponentHelper::filterText" label="COM_PHOCACART_FIELD_CUSTOM_TRACKING_DESCRIPTION_LABEL" description="COM_PHOCACART_FIELD_CUSTOM_TRACKING_DESCRIPTION_DESC"/>
+    </fieldset>
+
+    <fieldset name="products" label="COM_PHOCACART_ORDERED_PRODUCTS" addfieldpath="/administrator/components/com_phocacart/models/fields">
+    </fieldset>
+
+    <fieldset name="download" label="COM_PHOCACART_DOWNLOAD_LINKS" addfieldpath="/administrator/components/com_phocacart/models/fields">
+    </fieldset>
+
+    <fieldset name="billing" label="COM_PHOCACART_BILLING" addfieldpath="/administrator/components/com_phocacart/models/fields">
+        <field name="order_number_id" type="text" label="COM_PHOCACART_FIELD_ORDER_NUMBER_ID_LABEL" description="COM_PHOCACART_FIELD_ORDER_NUMBER_ID_DESC" readonly="readonly" />
+        <field name="receipt_number" type="text" label="COM_PHOCACART_FIELD_RECEIPT_NUMBER_LABEL" description="COM_PHOCACART_FIELD_RECEIPT_NUMBER_DESC"/>
+        <field name="receipt_number_id" type="text" label="COM_PHOCACART_FIELD_RECEIPT_NUMBER_ID_LABEL" description="COM_PHOCACART_FIELD_RECEIPT_NUMBER_ID_DESC" readonly="readonly" />
+        <field name="invoice_number" type="text" label="COM_PHOCACART_FIELD_INVOICE_NUMBER_LABEL" description="COM_PHOCACART_FIELD_INVOICE_NUMBER_DESC"/>
+        <field name="invoice_number_id" type="text" label="COM_PHOCACART_FIELD_INVOICE_NUMBER_ID_LABEL" description="COM_PHOCACART_FIELD_INVOICE_NUMBER_ID_DESC" readonly="readonly" />
+        <field name="invoice_prn" type="text" label="COM_PHOCACART_FIELD_PAYMENT_REFERENCE_NUMBER_LABEL" description="COM_PHOCACART_FIELD_PAYMENT_REFERENCE_NUMBER_DESC"/>
+        <field name="queue_number" type="text" label="COM_PHOCACART_FIELD_QUEUE_NUMBER_LABEL" description="COM_PHOCACART_FIELD_QUEUE_NUMBER_DESC"/>
+        <field name="queue_number_id" type="text" label="COM_PHOCACART_FIELD_QUEUE_NUMBER_ID_LABEL" description="COM_PHOCACART_FIELD_QUEUE_NUMBER_ID_DESC" readonly="readonly" />
+        <field name="invoice_date" type="calendar" label="COM_PHOCACART_FIELD_INVOICE_DATE_LABEL" description="COM_PHOCACART_FIELD_INVOICE_DATE_DESC" translateformat="true" filter="user_utc" />
+        <field name="invoice_due_date" type="calendar" label="COM_PHOCACART_FIELD_INVOICE_DUE_DATE_LABEL" description="COM_PHOCACART_FIELD_INVOICE_DUE_DATE_DESC" translateformat="true" filter="user_utc" />
+        <field name="invoice_time_of_supply" type="calendar" label="COM_PHOCACART_FIELD_DATE_OF_TAXABLE_SUPPLY_LABEL" description="COM_PHOCACART_FIELD_DATE_OF_TAXABLE_SUPPLY_DESC" translateformat="true" filter="user_utc" />
+        <field name="date" type="text" label="COM_PHOCACART_FIELD_CREATED_DATE_LABEL" description="COM_PHOCACART_FIELD_CREATED_DATE_DESC" readonly="readonly" translateformat="true" showtime="true"/>
+        <field name="modified" type="text" label="COM_PHOCACART_FIELD_MODIFIED_DATE_LABEL" description="COM_PHOCACART_FIELD_MODIFIED_DATE_DESC" readonly="readonly" translateformat="true" showtime="true"/>
+        <field name="invoice_spec_top_desc" type="editor" buttons="true" hide="pagebreak,readmore" label="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_TOP_DESCRIPTION_LABEL" filter="\Joomla\CMS\Component\ComponentHelper::filterText" description="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_TOP_DESCRIPTION_DESC"/>
+        <field name="invoice_spec_middle_desc" type="editor" buttons="true" hide="pagebreak,readmore" label="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_MIDDLE_DESCRIPTION_LABEL" filter="\Joomla\CMS\Component\ComponentHelper::filterText" description="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_MIDDLE_DESCRIPTION_DESC"/>
+        <field name="invoice_spec_bottom_desc" type="editor" buttons="true" hide="pagebreak,readmore" label="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_BOTTOM_DESCRIPTION_LABEL" filter="\Joomla\CMS\Component\ComponentHelper::filterText" description="COM_PHOCACART_FIELD_INVOICE_SPECIFIC_BOTTOM_DESCRIPTION_DESC"/>
+        <field name="oidn_spec_billing_desc" type="editor" buttons="true" hide="pagebreak,readmore" label="COM_PHOCACART_FIELD_ORDER_INVOICE_DELIVERY_NOTE_BILLING_DESCRIPTION_LABEL" filter="\Joomla\CMS\Component\ComponentHelper::filterText" description="COM_PHOCACART_FIELD_ORDER_INVOICE_DELIVERY_NOTE_BILLING_DESCRIPTION_DESC"/>
+        <field name="oidn_spec_shipping_desc" type="editor" buttons="true" hide="pagebreak,readmore" label="COM_PHOCACART_FIELD_ORDER_INVOICE_DELIVERY_NOTE_SHIPPING_DESCRIPTION_LABEL" filter="\Joomla\CMS\Component\ComponentHelper::filterText" description="COM_PHOCACART_FIELD_ORDER_INVOICE_DELIVERY_NOTE_SHIPPING_DESCRIPTION_LABEL"/>
+    </fieldset>
+
+    <fields name="billing_address">
+        <fieldset name="billing_address" label="COM_PHOCACART_BILLING_ADDRESS" addfieldpath="/administrator/components/com_phocacart/models/fields">
+            <field name="id" type="hidden" />
+        </fieldset>
+    </fields>
+
+    <fields name="shipping_address">
+        <fieldset name="shipping_address" label="COM_PHOCACART_SHIPPING_ADDRESS" addfieldpath="/administrator/components/com_phocacart/models/fields">
+            <field name="id" type="hidden" />
+
+            <field name="ba_sa" type="radio" default="0" layout="joomla.form.field.radio.switcher" filter="options" label="COM_PHOCACART_BILLING_AND_SHIPPING_ADDRESS_IS_THE_SAME">
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+
+            <field name="_ba_sa_note" type="note" class="alert alert-danger m-0" showon="ba_sa:1" description="COM_PHOCACART_WARNING_USER_SET_SHIPPING_ADDRESS_SAME_AS_BILLING_ADDRESS" />
+        </fieldset>
+    </fields>
+
 </form>

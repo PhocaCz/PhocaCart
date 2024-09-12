@@ -6,13 +6,17 @@
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
-defined( '_JEXEC' ) or die();
-use Joomla\CMS\MVC\Model\AdminModel;
-jimport('joomla.application.component.modeladmin');
+defined('_JEXEC') or die;
 
-class PhocaCartCpModelPhocaCartTool extends AdminModel
+use Joomla\CMS\Table\Table;
+
+class TablePhocacartContentType extends Table
 {
-	protected	$option 		= 'com_phocacart';
-	protected 	$text_prefix	= 'com_phocacart';
+    protected $_jsonEncode = ['params'];
+
+	function __construct($db)
+    {
+		parent::__construct('#__phocacart_content_types', 'id', $db);
+	}
+
 }
-?>

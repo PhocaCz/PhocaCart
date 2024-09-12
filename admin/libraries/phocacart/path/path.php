@@ -125,6 +125,7 @@ class PhocacartPath
 			$path['orig_rel'] 				= '';
 			$path['orig_rel_ds'] 			= '';
 		}
+
 		return $path;
 	}
 

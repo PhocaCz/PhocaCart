@@ -31,11 +31,33 @@ class PhocaCartViewInfo extends HtmlView
 
 		$this->t['info_view_description']			= $this->p->get( 'info_view_description', '' );
 		$this->t['info_view_description']			= PhocacartRenderFront::renderArticle($this->t['info_view_description']);
+		$this->t['guest_checkout']					= $this->p->get( 'guest_checkout', 0);
 
 		$session 				= Factory::getSession();
 		$this->t['infoaction'] 	= $session->get('infoaction', 0, 'phocaCart');
 		$this->t['infomessage'] = $session->get('infomessage', array(), 'phocaCart');
 		$this->t['infodata'] 	= $session->get('infodata', array(), 'phocaCart');
+
+		$this->t['display_order_data'] = false;
+		if (isset($this->t['infodata']['order_id']) && (int)$this->t['infodata']['order_id'] > 0) {
+
+			if (isset($this->t['infodata']['user_id']) && isset($this->u->id ) && (int)$this->t['infodata']['user_id'] == (int)$this->u->id) {
+				$this->t['display_order_data'] = true;
+			} else if((int)$this->t['guest_checkout'] == 1 && isset($this->u->guest) &&  $this->u->guest == 1){
+				$this->t['display_order_data'] = true;
+			}
+		}
+
+		$this->t['preparereplace'] = false;
+		if ($this->t['display_order_data']) {
+			$this->t['order']			= new PhocacartOrderView();
+			$this->t['order_id']		= (int)$this->t['infodata']['order_id'];
+			$this->t['order_common']	= $this->t['order']->getItemCommon($this->t['order_id']);
+			$this->t['order_bas']		= $this->t['order']->getItemBaS($this->t['order_id'], 1);
+
+			$this->t['preparereplace']    = PhocacartText::prepareReplaceText($this->t['order'], $this->t['order_id'], $this->t['order_common'], $this->t['order_bas']);
+		}
+
 
 		$session->set('infoaction', 0, 'phocaCart');
 		$session->set('infomessage', array(), 'phocaCart');

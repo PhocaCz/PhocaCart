@@ -17,10 +17,9 @@ use Joomla\CMS\Component\Router\Rules\NomenuRules;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\Database\ParameterType;
+use Phoca\PhocaCart\I18n\I18nHelper;
 
-if (! class_exists('PhocaCartLoader')) {
-    require_once( JPATH_ADMINISTRATOR.'/components/com_phocacart/libraries/loader.php');
-}
+require_once( JPATH_ADMINISTRATOR.'/components/com_phocacart/libraries/bootstrap.php');
 
 class PhocacartRouter extends RouterView
 {
@@ -30,11 +29,9 @@ class PhocacartRouter extends RouterView
   {
     $viewsNoId 		= array('checkout', 'comparison', 'download', 'terms', 'account', 'orders', 'payment', 'info', 'wishlist', 'pos', 'submit');
     $viewsId		= array('feed');
-    $viewsNotOwnId	= array('question');
 
     $params = ComponentHelper::getParams('com_phocacart');;
     $this->noIDs = (bool)$params->get('remove_sef_ids');
-
 
     // Is the main menu type categories view or items view - does categories view exist?
     $component 		    = ComponentHelper::getComponent('com_phocacart');
@@ -78,36 +75,6 @@ class PhocacartRouter extends RouterView
     $category->setKey('id')->setParent($categories, 'parent_id')->setNestable();
     $this->registerView($category);
 
-
-    /*	$categoriesQ = new RouterViewConfiguration('categoriesq');
-      $categoriesQ->setKey('id');
-      $this->registerView($categoriesQ);
-
-      $categoryQ = new RouterViewConfiguration('categoryq');
-      $categoryQ->setKey('id')->setParent($categories, 'parent_id')->setNestable();
-      $this->registerView($categoryQ);*/
-
-
-
-
-    //$itemq = new RouterViewConfiguration('question');
-    //$itemq->setKey('qid')->setParent($category, 'catid');//->setNestable();
-    //$this->registerView($itemq);
-
-
-    //$q = new RouterViewConfiguration('question2');
-    //$this->registerView($q);
-
-    //$question = new RouterViewConfiguration('question');
-    //$question->setKey('id')->setParent($q)->setParent($category, 'catid');//->setNestable();
-    //$question->setName('question');
-    //$this->registerView($question);
-
-    /*		$items = new RouterViewConfiguration('items');
-        $items->setParent($categories, 'parent_id');
-        $items->setName('items');
-        $this->registerView($items);
-    */
     $item = new RouterViewConfiguration('item');
     $item->setKey('id')->setParent($category, 'catid');//->setNestable();
     $this->registerView($item);
@@ -138,37 +105,13 @@ class PhocacartRouter extends RouterView
       $this->registerView($it);
     }
 
-    /* foreach ($viewsNotOwnId as $k => $v) {
-        $it = new RouterViewConfiguration($v);
-
-     //$it->setParent($categories);
-     //$it->setParent($category, 'catid');
-         //$it->setParent($item, 'id');
-     $it->setName($v);
-         //$it->setKey('id');
-         //$it->setKey('qid');
-
-         $this->registerView($it);
-     }*/
-
     parent::__construct($app, $menu);
 
-    phocacartimport('phocacart.path.routerrules');
-    phocacartimport('phocacart.category.category');
-
     $this->attachRule(new MenuRules($this));
-    $this->attachRule(new PhocaCartRouterrules($this));
+    $this->attachRule(new PhocacartRouterrules($this));
     $this->attachRule(new StandardRules($this));
     $this->attachRule(new NomenuRules($this));
   }
-
-
-	/*public function getCategoriesqSegment($id, $query) {
-		return $this->getCategorySegment($id, $query);
-	}
-	public function getCategoryqSegment($id, $query) {
-		return $this->getCategorySegment($id, $query);
-	}*/
 
   public function getCategoriesSegment($id, $query)
   {
@@ -181,35 +124,79 @@ class PhocacartRouter extends RouterView
 
   public function getCategorySegment($id, $query)
   {
-    $category = PhocaCartCategory::getCategoryById($id);
+      $category = PhocacartCategory::getCategoryById($id);
 
-    if ($category) {
-      $path = PhocaCartCategory::getPathRouter(array(), (int)$category->id, $category->parent_id, $category->title, $category->alias);
+      if ($category) {
+          $lang = null;
+          $alias = $category->alias;
+          $title = $category->title;
+          if (I18nHelper::isI18n()) {
+              if (isset($query['lang'])) {
+                  $lang = $query['lang'];
+              } else {
+                  $lang = Factory::getApplication()->getLanguage()->getTag();
+              }
 
-      //$path = array_reverse($path, true);
-      //$path = array_reverse($category->getPath(), true);
-      $path[0] = '1:root';// we don't use root but it is needed when building urls with joomla methods
+              $alias = $category->i18n[$lang]->alias ?? $alias;
+              $title = $category->i18n[$lang]->title ?? $title;
+          }
 
-      if ($this->noIDs) {
-        foreach ($path as &$segment){
-          list($id, $segment) = explode(':', $segment, 2);
-        }
+          $path = PhocacartCategory::getPathRouter(array(), (int)$category->id, $category->parent_id, $title, $alias, $lang);
+
+          $path[0] = '1:root';// we don't use root but it is needed when building urls with joomla methods
+
+          if ($this->noIDs) {
+              foreach ($path as &$segment) {
+                  list($id, $segment) = explode(':', $segment, 2);
+              }
+          }
+
+          return $path;
       }
-      return $path;
-    }
 
-    return [];
+      return [];
   }
 
-	public function getItemSegment($id, $query) {
-    if (!strpos($id, ':')) {
-			$db = Factory::getDbo();
-			$dbquery = $db->getQuery(true);
-			$dbquery->select($dbquery->qn('alias'))
-				->from($dbquery->qn('#__phocacart_products'))
-				->where('id = ' . $dbquery->q($id));
-			$db->setQuery($dbquery);
-			$id .= ':' . $db->loadResult();
+	public function getItemSegment($id, $query)
+    {
+        static $cache = [];
+        if (!strpos($id, ':')) {
+            $lang = null;
+            if (I18nHelper::isI18n()) {
+                if (isset($query['lang'])) {
+                    $lang = $query['lang'];
+                } else {
+                    $lang = Factory::getApplication()->getLanguage()->getTag();
+                }
+            }
+
+            $cacheKey = $id . '-' . $lang;
+
+            if (!array_key_exists($cacheKey, $cache)) {
+                $db      = Factory::getDbo();
+                $dbquery = $db->getQuery(true);
+                $dbquery
+                    ->from($dbquery->quoteName('#__phocacart_products', 'p'))
+                    ->where('p.id = :id')
+                    ->bind(':id', $id, ParameterType::INTEGER);
+                if (I18nHelper::isI18n()) {
+                    if (isset($query['lang'])) {
+                        $lang = $query['lang'];
+                    } else {
+                        $lang = Factory::getApplication()->getLanguage()->getTag();
+                    }
+
+                    $dbquery
+                        ->select('coalesce(' . $dbquery->quoteName('i18n_p.alias') . ', ' . $dbquery->quoteName('p.alias') . ')')
+                        ->join('LEFT', $db->quoteName('#__phocacart_products_i18n', 'i18n_p'), 'i18n_p.id = p.id AND i18n_p.language = ' . $db->quote($lang));
+                } else {
+                    $dbquery->select($dbquery->quoteName('p.alias'));
+                }
+                $db->setQuery($dbquery);
+                $cache[$cacheKey] = $db->loadResult();
+            }
+
+            $id .= ':' . $cache[$cacheKey];
 		}
 
 		if ($this->noIDs) {
@@ -241,93 +228,88 @@ class PhocacartRouter extends RouterView
         return false;
     }
 
-	public function getCategoryId($segment, $query) {
-
+	public function getCategoryId($segment, $query)
+    {
         if (!isset($query['id']) && isset($query['view']) && $query['view'] == 'categories') {
             $query['id'] = 0;
         } else if (!isset($query['id']) && isset($query['view']) && $query['view'] == 'items') {
-            // TEST items view
             $query['id'] = 0;
         }
 
-	    if ($this->noIDs)  {
-	        $db = Factory::getDbo();
-			$dbquery = $db->getQuery(true);
-			$dbquery->select($db->quoteName('id'))
-				->from($db->quoteName('#__phocacart_categories'))
-				->where([
-						$db->quoteName('alias') . ' = :alias',
-						$db->quoteName('parent_id') . ' = :parent_id',
-        ])
-				->bind(':alias', $segment)
-				->bind(':parent_id', $query['id'], ParameterType::INTEGER);
-      if (Multilanguage::isEnabled()) {
-        if (isset($query['lang'])) {
-          $lang = $query['lang'];
-        } else {
-          $lang = Factory::getApplication()->getLanguage()->getTag();
+        if ($this->noIDs) {
+            $db      = Factory::getDbo();
+            $dbquery = $db->getQuery(true);
+            $dbquery->select($db->quoteName('c.id'))
+                ->from($db->quoteName('#__phocacart_categories', 'c'))
+                ->where($db->quoteName('c.parent_id') . ' = :parent_id')
+                ->bind(':parent_id', $query['id'], ParameterType::INTEGER);
+
+            if (isset($query['lang'])) {
+                $lang = $query['lang'];
+            } else {
+                $lang = Factory::getApplication()->getLanguage()->getTag();
+            }
+
+            if (I18nHelper::isI18n()) {
+                $dbquery
+                    ->join('LEFT', $db->quoteName('#__phocacart_categories_i18n', 'i18n_c'), 'i18n_c.id = c.id AND i18n_c.language = ' . $db->quote($lang))
+                    ->where('coalesce(' . $db->quoteName('i18n_c.alias') . ', ' . $db->quoteName('c.alias') . ')' . ' = :alias');
+            } else {
+                $dbquery->where($db->quoteName('c.alias') . ' = :alias');
+            }
+
+            $dbquery
+                ->bind(':alias', $segment)
+                ->bind(':parent_id', $query['id'], ParameterType::INTEGER);
+
+            if (Multilanguage::isEnabled()) {
+                $dbquery
+                    ->where([
+                        $db->quoteName('c.language') . ' in (:language, ' . $db->quote('*') . ')'
+                    ])
+                    ->bind(':language', $lang);
+            }
+
+            $db->setQuery($dbquery);
+
+            return (int) $db->loadResult();
         }
-
-        $dbquery
-          ->where([
-            $db->quoteName('language') . ' in (:language, ' . $db->quote('*') . ')'
-          ])
-          ->bind(':language', $lang);
-      }
-
-			$db->setQuery($dbquery);
-			return (int) $db->loadResult();
-		}
 
         $category = false;
-	    if (isset($query['id'])) {
-
-
-		    if ((int)$query['id'] > 0) {
-        $category = PhocacartCategory::getCategoryById($query['id']);
-            } else if ((int)$segment > 0) {
-        $category = PhocacartCategory::getCategoryById((int)$segment);
-                if (isset($category->id) && (int)$category->id > 0 && $category->parent_id == 0) {
+        if (isset($query['id'])) {
+            if ((int) $query['id'] > 0) {
+                $category = PhocacartCategory::getCategoryById($query['id']);
+            } else if ((int) $segment > 0) {
+                $category = PhocacartCategory::getCategoryById((int) $segment);
+                if (isset($category->id) && (int) $category->id > 0 && $category->parent_id == 0) {
                     // We don't have root category with 0 so we need to start with segment one
-                    return (int)$category->id;
+                    return (int) $category->id;
                 }
             }
 
-        if ($category) {
-          $subcategories = PhocacartCategory::getChildren($category->id);
-          if ($subcategories) {
-            foreach ($subcategories as $child) {
-              if ($this->noIDs) {
-                if ($child->alias == $segment) {
-                  return $child->id;
+            if ($category) {
+                $subcategories = PhocacartCategory::getChildren($category->id);
+                if ($subcategories) {
+                    foreach ($subcategories as $child) {
+                        if ($this->noIDs) {
+                            if ($child->alias == $segment) {
+                                return $child->id;
+                            }
+                        }
+                        else {
+                            // We need to check full alias because ID can be same for Category and Item
+                            $fullAlias = (int) $child->id . '-' . $child->alias;
+                            if ($fullAlias == $segment) {
+                                return $child->id;
+                            }
+                        }
+                    }
                 }
-              } else {
-                // We need to check full alias because ID can be same for Category and Item
-                $fullAlias = (int)$child->id . '-'.$child->alias;
-                if ($fullAlias == $segment) {
-                  return $child->id;
-                }
-              }
             }
-          }
-			}
-		} else {
-
-            // --- under test
-            // We don't have query ID because of e.g. language
-            // Should not happen because of modifications in build function here: administrator/components/com_phocacart/libraries/phocacart/path/routerrules.php
-            /*if ((int)$segment > 0) {
-		        $category = PhocaCartCategory::getCategoryById((int)$segment);
-                if (isset($category->id) && (int)$category->id > 0 && $category->parent_id == 0) {
-                    // We don't have root category with 0 so we need to start with segment one
-                    return (int)$category->id;
-                }
-            }*/
-            // under test
         }
 
-		return false;
-	}
+        return false;
+    }
 
 	public function getCategoriesId($segment, $query) {
 		return $this->getCategoryId($segment, $query);
@@ -338,61 +320,55 @@ class PhocacartRouter extends RouterView
 	}
 
 	public function getItemId($segment, $query)
-	{
+    {
+        if ($this->noIDs) {
+            if (isset($query['lang'])) {
+                $lang = $query['lang'];
+            } else {
+                $lang = Factory::getApplication()->getLanguage()->getTag();
+            }
 
-		if ($this->noIDs) {
-			$db = Factory::getDbo();
-      $dbquery = $db->getQuery(true);
-      $dbquery->select($db->quoteName('id'))
-        ->from($db->quoteName('#__phocacart_products'))
-        ->where([
-          $db->quoteName('alias') . ' = :alias',
-        ])
-        ->bind(':alias', $segment);
-      if (Multilanguage::isEnabled()) {
-        if (isset($query['lang'])) {
-          $lang = $query['lang'];
-        } else {
-          $lang = Factory::getApplication()->getLanguage()->getTag();
+            $db      = Factory::getDbo();
+            $dbquery = $db->getQuery(true);
+            $dbquery->select($db->quoteName('p.id'))
+                ->from($db->quoteName('#__phocacart_products', 'p'));
+
+            if (I18nHelper::isI18n()) {
+                $dbquery
+                    ->join('LEFT', $db->quoteName('#__phocacart_products_i18n', 'i18n_p'), 'i18n_p.id = p.id AND i18n_p.language = ' . $db->quote($lang))
+                    ->where('coalesce(' . $db->quoteName('i18n_p.alias') . ', ' . $db->quoteName('p.alias') . ')' . ' = :alias');
+            } else {
+                $dbquery->where($db->quoteName('p.alias') . ' = :alias');
+            }
+
+            $dbquery->bind(':alias', $segment);
+
+            if (Multilanguage::isEnabled()) {
+                $dbquery
+                    ->where([
+                        $db->quoteName('p.language') . ' in (:language, ' . $db->quote('*') . ')'
+                    ])
+                    ->bind(':language', $lang);
+            }
+
+            $db->setQuery($dbquery);
+
+            return (int) $db->loadResult();
         }
 
-        $dbquery
-          ->where([
-            $db->quoteName('language') . ' in (:language, ' . $db->quote('*') . ')'
-          ])
-          ->bind(':language', $lang);
-      }
-
-      $db->setQuery($dbquery);
-			return (int) $db->loadResult();
-		}
-
-		return (int) $segment;
-	}
-
-
-	public function parse(&$segments){
-		return parent::parse($segments);
-	}
-
-    public function build(&$query) {
-
-		return parent::build($query);
-	}
+        return (int) $segment;
+    }
 }
 
 function PhocaCartBuildRoute(&$query) {
-
 	$app = Factory::getApplication();
 	$router = new PhocaCartRouter($app, $app->getMenu());
 	return $router->build($query);
 }
 
 function PhocaCartParseRoute($segments) {
-
 	$app = Factory::getApplication();
 	$router = new PhocaCartRouter($app, $app->getMenu());
-
 
 	return $router->parse($segments);
 }

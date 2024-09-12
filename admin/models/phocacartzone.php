@@ -16,6 +16,8 @@ use Joomla\CMS\Log\Log;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Registry\Registry;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+
 jimport('joomla.application.component.modeladmin');
 
 class PhocaCartCpModelPhocacartZone extends AdminModel
@@ -210,46 +212,39 @@ class PhocaCartCpModelPhocacartZone extends AdminModel
 			}
 
 			// Trigger the onContentBeforeSave event.
-			$result = Factory::getApplication()->triggerEvent($this->event_before_save, array($this->option . '.' . $this->name, $table, $isNew, $data));
+			$result = Dispatcher::dispatchBeforeSave($this->event_before_save, $this->option . '.' . $this->name, $table, $isNew, $data);
 
-			if (in_array(false, $result, true))
-			{
+			if (in_array(false, $result, true)) {
 				$this->setError($table->getError());
 				return false;
 			}
-
-
 
 			// Store the data.
-			if (!$table->store())
-			{
+			if (!$table->store()) {
 				$this->setError($table->getError());
 				return false;
 			}
 
-
-			if ((int)$table->id > 0) {
+			if ((int)$table->getId() > 0) {
 
 				if (!isset($data['country'])) {
 					$data['country'] = array();
 				}
 
-				PhocacartCountry::storeCountries($data['country'], (int)$table->id, 'zone');
+				PhocacartCountry::storeCountries($data['country'], (int)$table->getId(), 'zone');
 
 				if (!isset($data['region'])) {
 					$data['region'] = array();
 				}
 
-				PhocacartRegion::storeRegions($data['region'], (int)$table->id, 'zone');
-
+				PhocacartRegion::storeRegions($data['region'], (int)$table->getId(), 'zone');
 			}
-
 
 			// Clean the cache.
 			$this->cleanCache();
 
 			// Trigger the onContentAfterSave event.
-			Factory::getApplication()->triggerEvent($this->event_after_save, array($this->option . '.' . $this->name, $table, $isNew));
+			Dispatcher::dispatchAfterSave($this->event_after_save, $this->option . '.' . $this->name, $table, $isNew, $data);
 		}
 		catch (Exception $e)
 		{

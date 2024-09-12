@@ -70,11 +70,11 @@ function phEditInPlaceMsg(msg, type) {
     } else {
         phCloseMsgBoxSuccess();
     }
-    
+
 }
 
 function phEditInPlacePasteAndMark(element, json) {
-    
+
     /* combined input means title and alias (both editable) or date and dateformat (only date editable) */
         if (json.idcombined && json.resultcombined) {
         var combinedElement = "#" + phEscapeColon(json.idcombined);
@@ -94,19 +94,20 @@ jQuery(document).ready(function() {
     var phLang = Joomla.getOptions('phLang');
 
     jQuery(".ph-editinplace-text.ph-eip-text").editable(phVars['urleditinplace'], {
-        
+
         tooltip : phLang['PHOCA_CLICK_TO_EDIT'],
         select : true,
         type : "text",
         cancel : phLang['PHOCA_CANCEL'],
         submit : phLang['PHOCA_SUBMIT'],
-        cssclass : 'ph-edit-in-place-class',
-        cancelcssclass : 'btn btn-danger',
-        submitcssclass : 'btn btn-success',
+        cssclass : 'ph-edit-in-place-class input-group',
+        inputcssclass : 'form-control form-control-sm',
+        cancelcssclass : 'btn btn-danger btn-sm',
+        submitcssclass : 'btn btn-success btn-sm',
 
         submitdata : {type: "text"},
 
-        before : function(e) { 
+        before : function(e) {
             /* set height to not jump - e.g. description, if 5 row description changes in popup form to 3 row */
             var height = jQuery(e.currentTarget).height();// e.target // outerHeight()
             jQuery(e.currentTarget).height(height);
@@ -132,7 +133,7 @@ jQuery(document).ready(function() {
                 return json.result;
             }
         },
-        
+
         placeholder: "",
 
         // Possible information for parts on the site which will be not changed by chaning the value (for example currency view - currency rate)
@@ -144,19 +145,20 @@ jQuery(document).ready(function() {
     })
 
     jQuery(".ph-editinplace-text.ph-eip-autogrow").editable(phVars['urleditinplace'], {
-        
+
         tooltip : phLang['PHOCA_CLICK_TO_EDIT'],
         //select : true,
         type : "autogrow",
         cancel : phLang['PHOCA_CANCEL'],
         submit : phLang['PHOCA_SUBMIT'],
-        cssclass : 'ph-edit-in-place-class',
-        cancelcssclass : 'btn btn-danger',
-        submitcssclass : 'btn btn-success',
-        
+        cssclass : 'ph-edit-in-place-class input-group',
+        inputcssclass : 'form-control form-control-sm',
+        cancelcssclass : 'btn btn-danger btn-sm',
+        submitcssclass : 'btn btn-success btn-sm',
+
         submitdata : {type: "autogrow"},
 
-        before : function(e) { 
+        before : function(e) {
             /* set height to not jump */
             var height = jQuery(e.target).height();//outerHeight()
             jQuery(e.target).height(height);
@@ -165,7 +167,7 @@ jQuery(document).ready(function() {
         //onblur : function() {  ... },
 
         intercept : function(jsondata) {
-            
+
             json = JSON.parse(jsondata);
 
             /* return back from fixed height */
@@ -180,7 +182,7 @@ jQuery(document).ready(function() {
                 return json.result;
             }
         },
-        
+
         placeholder: "",
 
         // Possible information for parts on the site which will be not changed by chaning the value (for example currency view - currency rate)
@@ -192,20 +194,21 @@ jQuery(document).ready(function() {
     })
 
     jQuery(".ph-editinplace-text.ph-eip-date").editable(phVars['urleditinplace'], {
-        
+
         tooltip : phLang['PHOCA_CLICK_TO_EDIT'],
         select : true,
         type : "masked",
         mask : "9999-99-99",
         cancel : phLang['PHOCA_CANCEL'],
         submit : phLang['PHOCA_SUBMIT'],
-        cssclass : 'ph-edit-in-place-class',
-        cancelcssclass : 'btn btn-danger',
-        submitcssclass : 'btn btn-success',
+        cssclass : 'ph-edit-in-place-class input-group',
+        inputcssclass : 'form-control form-control-sm',
+        cancelcssclass : 'btn btn-danger btn-sm',
+        submitcssclass : 'btn btn-success btn-sm',
 
         submitdata : {type: "date", dateformat : phVars['dateformat']},
 
-        before : function(e) { 
+        before : function(e) {
             /* set height to not jump */
             var height = jQuery(e.currentTarget).height();// e.target // outerHeight()
             jQuery(e.currentTarget).height(height);
@@ -229,7 +232,7 @@ jQuery(document).ready(function() {
                 return json.result;
             }
         },
-        
+
         placeholder: "",
 
         // Possible information for parts on the site which will be not changed by chaning the value (for example currency view - currency rate)
@@ -239,5 +242,5 @@ jQuery(document).ready(function() {
         },
 
     })
-    
+
 })

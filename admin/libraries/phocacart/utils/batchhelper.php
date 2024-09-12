@@ -14,16 +14,7 @@ class PhocacartUtilsBatchhelper
 	public static function storeProductItems($idSource, $idDest, $batchParams, $params = array()) {
 
 		if ($idSource > 0 && $idDest > 0) {
-
-
-			// Related products
-			$aR = PhocacartRelated::getRelatedItemsById($idSource, 1);
-			$aRS = '';
-			if ($aR != '') {
-				$aRS = implode(',', $aR);
-			}
-
-			PhocacartRelated::storeRelatedItemsById($aRS, (int)$idDest );
+			PhocacartRelated::copyRelatedItems($idSource, $idDest);
 
 			// Additional Images
 			$iA = PhocacartImageAdditional::getImagesByProductId($idSource, 2);
@@ -168,4 +159,4 @@ class PhocacartUtilsBatchhelper
 		return true;
 	}
 }
-?>
+

@@ -7,13 +7,14 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+
 use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\Language\Text;
-JFormHelper::loadFieldClass('text');
+use Joomla\CMS\Form\Field\TextField;
 
-class JFormFieldPhocaText extends FormFieldText
+class JFormFieldPhocaText extends TextField
 {
 	protected $type 		= 'PhocaText';
 

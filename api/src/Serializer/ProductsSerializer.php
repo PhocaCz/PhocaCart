@@ -24,9 +24,9 @@ use Tobscure\JsonApi\Resource;
 /**
  * Products serializer
  *
- * @since  4.1.0
+ * @since  5.0.0
  */
-class ProductsSerializer extends JoomlaSerializer
+class ProductsSerializer extends BaseSerializer
 {
     /**
      * Build products relationships by associations
@@ -35,13 +35,12 @@ class ProductsSerializer extends JoomlaSerializer
      *
      * @return  Relationship
      *
-     * @since 4.0.0
+     * @since 5.0.0
      */
     public function languageAssociations($model)
     {
         $resources = [];
 
-        // @todo: This can't be hardcoded in the future?
         $serializer = new JoomlaSerializer($this->type);
 
         foreach ($model->associations as $association) {
@@ -61,7 +60,7 @@ class ProductsSerializer extends JoomlaSerializer
      *
      * @return  Relationship
      *
-     * @since 4.0.0
+     * @since 5.0.0
      */
     public function category($model)
     {
@@ -69,44 +68,6 @@ class ProductsSerializer extends JoomlaSerializer
 
         $resource = (new Resource($model->catid, $serializer))
             ->addLink('self', Route::link('site', Uri::root() . 'api/index.php/v1/phocacart/categories/' . $model->catid));
-
-        return new Relationship($resource);
-    }
-
-    /**
-     * Build created by user relationship
-     *
-     * @param   \stdClass  $model  products model
-     *
-     * @return  Relationship
-     *
-     * @since 4.0.0
-     */
-    public function createdBy($model)
-    {
-        $serializer = new JoomlaSerializer('users');
-
-        $resource = (new Resource($model->created_by, $serializer))
-            ->addLink('self', Route::link('site', Uri::root() . 'api/index.php/v1/users/' . $model->created_by));
-
-        return new Relationship($resource);
-    }
-
-    /**
-     * Build modified by user relationship
-     *
-     * @param   \stdClass  $model  products model
-     *
-     * @return  Relationship
-     *
-     * @since 4.0.0
-     */
-    public function modifiedBy($model)
-    {
-        $serializer = new JoomlaSerializer('users');
-
-        $resource = (new Resource($model->modified_by, $serializer))
-            ->addLink('self', Route::link('site', Uri::root() . 'api/index.php/v1/users/' . $model->modified_by));
 
         return new Relationship($resource);
     }

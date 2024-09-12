@@ -7,9 +7,9 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Factory;
-jimport('joomla.application.component.modellist');
 
 class PhocaCartCpModelPhocacartWishlists extends ListModel
 {
@@ -25,12 +25,11 @@ class PhocaCartCpModelPhocacartWishlists extends ListModel
 				'productname', 'productname',
 				'cattitle', 'cattitle',
 				'username', 'username',
-				'ip', 'a.ip',
 				'date', 'a.date',
 				'checked_out', 'a.checked_out',
 				'checked_out_time', 'a.checked_out_time',
 				'ordering', 'a.ordering',
-				'published','a.published',
+                'type','a.type',
 			);
 		}
 		parent::__construct($config);
@@ -44,16 +43,8 @@ class PhocaCartCpModelPhocacartWishlists extends ListModel
 		$search = $app->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);
 
-/*		$accessId = $app->getUserStateFromRequest($this->context.'.filter.access', 'filter_access', null, 'int');
-		$this->setState('filter.access', $accessId);*/
-
-
-
-		$state = $app->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '', 'string');
-		$this->setState('filter.published', $state);
-
-		//$language = $app->getUserStateFromRequest($this->context.'.filter.language', 'filter_language', '');
-		//$this->setState('filter.language', $language);
+		$type = $app->getUserStateFromRequest($this->context.'.filter.type', 'filter_type', '', 'string');
+		$this->setState('filter.type', $type);
 
 		// Load the parameters.
 		$params = PhocacartUtils::getComponentParameters();
@@ -67,16 +58,13 @@ class PhocaCartCpModelPhocacartWishlists extends ListModel
 	{
 		// Compile the store id.
 		$id	.= ':'.$this->getState('filter.search');
-		//$id	.= ':'.$this->getState('filter.access');
-		$id	.= ':'.$this->getState('filter.published');
-		$id	.= ':'.$this->getState('filter.wishlist_id');
-
+		$id	.= ':'.$this->getState('filter.type');
 
 		return parent::getStoreId($id);
 	}
 
-	protected function getListQuery() {
-
+	protected function getListQuery()
+	{
 		$db		= $this->getDbo();
 		$query	= $db->getQuery(true);
 
@@ -95,10 +83,6 @@ class PhocaCartCpModelPhocacartWishlists extends ListModel
 		$query->select('c.title AS cattitle, c.id AS catid');
 		$query->join('LEFT', '#__phocacart_categories AS c ON c.id=a.category_id');
 
-		// Join over the language
-		//$query->select('l.title AS language_title');
-		//$query->join('LEFT', '`#__languages` AS l ON l.lang_code = a.language');
-
 		$query->select('ua.id AS userid, ua.username AS username, ua.name AS name');
 		$query->join('LEFT', '#__users AS ua ON ua.id=a.user_id');
 
@@ -106,23 +90,11 @@ class PhocaCartCpModelPhocacartWishlists extends ListModel
 		$query->select('uc.name AS editor');
 		$query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
 
-
-		// Filter by access level.
-/*		if ($access = $this->getState('filter.access')) {
-			$query->where('a.access = '.(int) $access);
-		}*/
-
-
-
-		// Filter by published state.
-		$published = $this->getState('filter.published');
-		if (is_numeric($published)) {
-			$query->where('a.published = '.(int) $published);
+		// Filter by wishlist type.
+		$type = $this->getState('filter.type');
+		if (is_numeric($type)) {
+			$query->where('a.type = '.(int)$type);
 		}
-		else if ($published === '') {
-			$query->where('(a.published IN (0, 1))');
-		}
-
 
 		// Filter by search in title
 		$search = $this->getState('filter.search');
@@ -130,11 +102,9 @@ class PhocaCartCpModelPhocacartWishlists extends ListModel
 		{
 			if (stripos($search, 'id:') === 0) {
 				$query->where('a.id = '.(int) substr($search, 3));
-			}
-			else
-			{
+			} else {
 				$search = $db->Quote('%'.$db->escape($search, true).'%');
-				$query->where('( name LIKE '.$search.' OR username LIKE '.$search.' OR productname LIKE '.$search.')');
+				$query->where('(ua.name LIKE '.$search.' OR ua.username LIKE '.$search.' OR p.title LIKE '.$search.')');
 			}
 		}
 
@@ -142,9 +112,7 @@ class PhocaCartCpModelPhocacartWishlists extends ListModel
 		$orderDirn	= $this->state->get('list.direction', 'asc');
 		$query->order($db->escape($orderCol.' '.$orderDirn));
 
-		//echo nl2br(str_replace('#__', 'jos_', $query->__toString()));
-
 		return $query;
 	}
 }
-?>
+

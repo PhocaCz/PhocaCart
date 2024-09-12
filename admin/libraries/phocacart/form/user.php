@@ -10,35 +10,39 @@
  */
 defined('_JEXEC') or die();
 use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 
-class PhocacartFormUser
+abstract class PhocacartFormUser
 {
+	public const FieldReadWrite = 0;
+	public const FieldReadOnly = 1;
+	public const FieldReadOnlyRegistered = 2;
+	public const FieldReadOnlyButAdmin = 3;
+	public const FieldReadOnlyRegisteredButAdmin = 4;
+
 	private static $form = false;
 
-	private function __construct(){}
-
-	public static function getFormXml($billingSuffix = '', $shippingSuffix = '_phs', $billing = 1, $shipping = 1, $account = 0, $guest = 0) {
-
-		if(self::$form === false){
-
-			$app	= Factory::getApplication();
-			$o = array();
-			$oFb = array();
-			$oFs = array();
+	public static function getFormXml($billingSuffix = '', $shippingSuffix = '_phs', $billing = 1, $shipping = 1, $account = 0, $guest = 0, ?string $fieldsName = null) {
+		if(self::$form === false) {
+			$app = Factory::getApplication();
+			$o = [];
 			$o[] = '<form>';
 
-			$o[] = '<fieldset name="user" addrulepath="/components/com_phocacart/models/rules" addfieldpath="/components/com_phocacart/models/fields" label="COM_PHOCACART_FORM_LABEL">';
+			$o[] = '<fieldset name="user" addrulepath="/components/com_phocacart/models/rules" addfieldpath="/components/com_phocacart/models/fields">';
+			if ($fieldsName) {
+				$o[] = '<fields name="' . $fieldsName. '">';
+			}
 
 			$fields	= new PhocacartFormItems();
 			$f		= $fields->getFormItems($billing, $shipping, $account);
 
 			// Specific fields not managed in administration but added to form,
 			// so we can work with it in checkout view html (default_address)
-			$specFields = array('ba_sa', 'newsletter', 'id');
-			$c 			= count($f);
+			$specFields = ['ba_sa', 'newsletter', 'id'];
+			$c = count($f);
 
-			foreach ($specFields as $k => $v) {
+			foreach ($specFields as $v) {
 				$f[$c] = new StdClass();
 				$f[$c]->title = $v;
 				$f[$c]->display_billing = 0;
@@ -53,17 +57,12 @@ class PhocacartFormUser
 			}
 
 			if (!empty($f)) {
-				foreach($f as $k => $v) {
-
+				foreach($f as $v) {
 					$fB = $fS 	= array();// Billing and Shipping
 					$class 	= '';
 					if($v->title != '' && $v->type != '' && $v->label != '') {
 						$fB[] = '<field name="'.htmlspecialchars($v->title).$billingSuffix.'"';
 						$fS[] = '<field name="'.htmlspecialchars($v->title).$shippingSuffix.'"';
-
-
-
-
 
 						$tA 	= explode(":", $v->type);
 						$type 	= 'text';
@@ -201,9 +200,9 @@ class PhocacartFormUser
 							$class .= ' validate-'.htmlspecialchars($v->validate);
 						}
 
-
-
-
+						if (isset($v->autocomplete) && $v->autocomplete) {
+							$fB[] = $fS[] =  ' autocomplete="'.htmlspecialchars($v->autocomplete).'"';
+						}
 
 						$fB[] = ' class="'.htmlspecialchars($class).'"';
 
@@ -243,8 +242,11 @@ class PhocacartFormUser
 
 						}
 
-
-						$o[] = implode( "", $fB ) . implode( "", $fS );
+						if ($shippingSuffix) {
+							$o[] = implode("", $fB) . implode("", $fS);
+						} else {
+							$o[] = implode("", $fB);
+						}
 
 					} else {
 						continue;
@@ -253,6 +255,9 @@ class PhocacartFormUser
 				}
 			}
 
+			if ($fieldsName) {
+				$o[] = '</fields>';
+			}
 			$o[] = '</fieldset>';
 			$o[] = '</form>';
 
@@ -268,9 +273,176 @@ class PhocacartFormUser
 		return self::$form;
 	}
 
-	public final function __clone() {
-		throw new Exception('Function Error: Cannot clone instance of Singleton pattern', 500);
-		return false;
+	private static function addFieldsNode(\DOMElement $formNode, string $name): \DOMElement
+	{
+		$fieldsNode = $formNode->appendChild(new \DOMElement('fields'));
+		$fieldsNode->setAttribute('name', $name);
+
+		$fieldset = $fieldsNode->appendChild(new \DOMElement('fieldset'));
+		$fieldset->setAttribute('name', $name);
+
+		return $fieldset;
+	}
+
+	private static function addOptionNode(\DOMElement $fieldNode, string $value, string $text): \DOMElement
+	{
+		$node = $fieldNode->appendChild(new \DOMElement('option'));
+		$node->setAttribute('value', $value);
+		$node->appendChild(new \DOMText($text));
+
+		return $node;
+	}
+
+	private static function addFieldNode(\DOMElement $fieldset, object $field, bool $isAdmin = false, bool $isGuest = false): \DOMElement
+	{
+		$node = $fieldset->appendChild(new \DOMElement('field'));
+		$node->setAttribute('name', $field->title);
+		[$type, $subtype] = array_merge(explode(':', $field->type), ['', '']);
+
+		$type = $type ?: 'text';
+
+		switch ($field->validate) {
+			case 'email':
+			case 'tel':
+				$type = $field->validate;
+				break;
+		}
+
+		// --- PREDEFINED VALUES (limited feature, see documentation)
+		$options = [];
+		if ($field->predefined_values) {
+			$options = array_map('trim', explode(',', $field->predefined_values));
+			$options = array_filter($options, 'strlen');
+		}
+
+		if ($options && !in_array($type, ['list', 'radio', 'checkbox'])) {
+			$type = 'checkbox';
+		}
+
+		$node->setAttribute('type', $type);
+        if ($field->label) {
+            $node->setAttribute('label', $field->label);
+        }
+        if ($field->description) {
+            $node->setAttribute('description', $field->description);
+        }
+
+		if ($field->default) {
+			if ($type === 'checkbox') {
+				$node->setAttribute('checked', 'checked');
+			} else {
+				$node->setAttribute('default', $field->default);
+			}
+		}
+
+		if ($type === 'calendar') {
+			$node->setAttribute('filter', 'user_utc');
+			$node->setAttribute('translateformat', 'true');
+			$node->setAttribute('showtime', 'true');
+		}
+
+		switch ($field->read_only) {
+			case self::FieldReadOnly:
+				$node->setAttribute('readonly', 'true');
+				break;
+			case self::FieldReadOnlyRegistered:
+				if (!$isGuest) {
+					$node->setAttribute('readonly', 'true');
+				}
+				break;
+			case self::FieldReadOnlyButAdmin:
+				if (!$isAdmin) {
+					$node->setAttribute('readonly', 'true');
+				}
+				break;
+			case self::FieldReadOnlyRegisteredButAdmin:
+				if (!$isGuest && !$isAdmin) {
+					$node->setAttribute('readonly', 'true');
+				}
+				break;
+		}
+
+		if (!$isAdmin && $field->required) {
+			$node->setAttribute('required', 'true');
+		}
+
+		if ($field->pattern) {
+			$node->setAttribute('pattern', $field->pattern);
+		}
+
+		if ((int)$field->maxlength > 0) {
+			$node->setAttribute('maxlength', $field->maxlength);
+		} elseif (in_array($type, ['text', 'tel', 'email']) && $subtype) {
+			$size = PhocacartUtils::getNumberFromText($subtype);
+			if ($size > 0) {
+				$node->setAttribute('maxlength', $size);
+			}
+		}
+
+		if ($field->unique && !$isAdmin) {
+			$node->setAttribute('unique', 'true');
+		}
+
+		if ($field->class) {
+			$node->setAttribute('class', $field->class);
+		}
+
+		if ($field->validate) {
+			$node->setAttribute('validate', $field->validate);
+		}
+
+		if ($field->autocomplete && !$isAdmin) {
+			$node->setAttribute('autocomplete', $field->autocomplete);
+		}
+
+		if ($options) {
+			if ($field->predefined_values_first_option) {
+				self::addOptionNode($node, '', $field->predefined_values_first_option);
+			}
+
+			foreach ($options as $option) {
+				self::addOptionNode($node, $option, $option);
+			}
+		}
+
+		return $node;
+	}
+
+	public static function loadAddressForm(Form $form, bool $loadBilling = true, bool $loadShipping = true, bool $loadAccount = false, bool $isAdmin = false, bool $isGuest = false): void
+	{
+		Form::addFieldPath(JPATH_ROOT . '/administrator/components/com_phocacart/models/fields');
+
+		$xml = new \DOMDocument('1.0', 'UTF-8');
+		$formNode = $xml->appendChild(new \DOMElement('form'));
+
+		if ($loadBilling) {
+			$billingFieldset = self::addFieldsNode($formNode, 'billing_address');
+		}
+
+		if ($loadShipping) {
+			$shippingFieldset = self::addFieldsNode($formNode, 'shipping_address');
+		}
+
+		if ($loadAccount) {
+			$accountFieldset = self::addFieldsNode($formNode, 'account');
+		}
+
+		$fields	= (new PhocacartFormItems())->getFormItems($loadBilling ? 1 : 0, $loadShipping ? 1 : 0, $loadAccount? 1 : 0);
+
+		foreach ($fields as $field) {
+			if ($loadBilling && $field->display_billing) {
+				self::addFieldNode($billingFieldset, $field, $isAdmin, $isGuest);
+			}
+
+			if ($loadShipping && $field->display_shipping) {
+				self::addFieldNode($shippingFieldset, $field, $isAdmin, $isGuest);
+			}
+
+			if ($loadAccount && $field->display_account) {
+				self::addFieldNode($accountFieldset, $field, $isAdmin, $isGuest);
+			}
+		}
+
+		$form->load($xml->saveXML());
 	}
 }
-?>

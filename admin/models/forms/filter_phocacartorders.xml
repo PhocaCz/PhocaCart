@@ -1,57 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-<fieldset addfieldpath="/administrator/components/com_phocacart/models/fields">
-	<fields name="filter">
-		
-		
-	<field name="search" type="text" inputmode="search" label="COM_PHOCACART_SEARCH" description="COM_PHOCACART_SEARCH" hint="JSEARCH_FILTER" />
+	<fieldset addfieldpath="/administrator/components/com_phocacart/models/fields">
+		<fields name="filter">
+			<field name="search" type="text" inputmode="search" label="COM_PHOCACART_SEARCH" description="COM_PHOCACART_SEARCH" hint="JSEARCH_FILTER" />
 
-		<field name="published" type="list" label="JOPTION_FILTER_PUBLISHED" description="JOPTION_FILTER_PUBLISHED_DESC" onchange="this.form.submit();" >
-		
-		<option value="">JOPTION_SELECT_PUBLISHED</option>
-		<option value="1">COM_PHOCACART_PUBLISHED</option>
-		<option value="0">COM_PHOCACART_UNPUBLISHED</option>
-		</field>
-		
-		
-		<field name="status_id" default="" type="PhocacartOrderstatus" typemethod="2" label="COM_PHOCACART_ORDER_STATUS_LABEL" description="COM_PHOCACART_ORDER_STATUS_DESC"  onchange="this.form.submit();">
-			</field>
-
-            <field name="payment_id" default="" type="PhocacartPaymentMethod" typemethod="2" label="COM_PHOCACART_PAYMENT_METHOD_LABEL" description="COM_PHOCACART_PAYMENT_METHOD_DESC"  onchange="this.form.submit();">
-			</field>
-
-        <field name="shipping_id" default="" type="PhocacartShippingMethod" typemethod="2" label="COM_PHOCACART_SHIPPING_METHOD_LABEL" description="COM_PHOCACART_SHIPPING_METHOD_DESC"  onchange="this.form.submit();">
+			<field name="published" type="list" label="JOPTION_FILTER_PUBLISHED" description="JOPTION_FILTER_PUBLISHED_DESC" onchange="this.form.submit();" >
+				<option value="">JOPTION_SELECT_PUBLISHED</option>
+				<option value="1">COM_PHOCACART_PUBLISHED</option>
+				<option value="0">COM_PHOCACART_UNPUBLISHED</option>
 			</field>
 
 
+			<field name="status_id" default="" type="PhocacartOrderstatus" typemethod="2" label="COM_PHOCACART_ORDER_STATUS_LABEL" description="COM_PHOCACART_ORDER_STATUS_DESC"  onchange="this.form.submit();" />
 
-		
-		
-		<input type="hidden" name="form_submited" value="1"/>
-	</fields>
+			<field name="payment_id" default="" type="PhocacartPaymentMethod" typemethod="2" label="COM_PHOCACART_PAYMENT_METHOD_LABEL" description="COM_PHOCACART_PAYMENT_METHOD_DESC"  onchange="this.form.submit();" />
 
-	<fields name="list">
-		<field name="fullordering" type="list" label="COM_PHOCACART_LIST_FULL_ORDERING" description="COM_PHOCACART_LIST_FULL_ORDERING_DESC" onchange="this.form.submit();" default="a.date DESC" validate="options" >
-			<option value="">JGLOBAL_SORT_BY</option>
-			<option value="order_number ASC">COM_PHOCACART_ORDER_NUMBER_ASC</option>
-			<option value="order_number DESC">COM_PHOCACART_ORDER_NUMBER_DESC</option>
-			<option value="a.published ASC" >COM_PHOCACART_PUBLISHED_ASC</option>
-			<option value="a.published DESC" >COM_PHOCACART_PUBLISHED_DESC</option>
-			<option value="user_username ASC">COM_PHOCACART_USER_ASC</option>
-			<option value="user_username DESC">COM_PHOCACART_USER_DESC</option>
-			<option value="a.status_id ASC">COM_PHOCACART_STATUS_ASC</option>
-			<option value="a.status_id DESC">COM_PHOCACART_STATUS_DESC</option>
-			<option value="total_amount ASC">COM_PHOCACART_TOTAL_ASC</option>
-			<option value="total_amount DESC">COM_PHOCACART_TOTAL_DESC</option>
-			<option value="a.date ASC">COM_PHOCACART_DATE_ADDED_ASC</option>
-			<option value="a.date DESC">COM_PHOCACART_DATE_ADDED_DESC</option>
-			<option value="a.modified ASC">COM_PHOCACART_DATE_MODIFIED_ASC</option>
-			<option value="a.modified DESC">COM_PHOCACART_DATE_MODIFIED_DESC</option>
-			<option value="a.id ASC">JGRID_HEADING_ID_ASC</option>
-			<option value="a.id DESC">JGRID_HEADING_ID_DESC</option>
-		</field>
+			<field name="shipping_id" default="" type="PhocacartShippingMethod" typemethod="2" label="COM_PHOCACART_SHIPPING_METHOD_LABEL" description="COM_PHOCACART_SHIPPING_METHOD_DESC"  onchange="this.form.submit();" />
 
-		<field name="limit" type="limitbox" label="COM_PHOCACART_LIST_LIMIT" description="COM_PHOCACART_LIST_LIMIT_DESC" class="input-mini" default="25" onchange="this.form.submit();" />
-	</fields>
+			<input type="hidden" name="form_submited" value="1"/>
+		</fields>
+
+		<fields name="list">
+			<field name="fullordering" type="list" label="COM_PHOCACART_LIST_FULL_ORDERING" description="COM_PHOCACART_LIST_FULL_ORDERING_DESC" onchange="this.form.submit();" default="a.date DESC" validate="options" >
+				<option value="">JGLOBAL_SORT_BY</option>
+				<option value="order_number ASC">COM_PHOCACART_ORDER_NUMBER_ASC</option>
+				<option value="order_number DESC">COM_PHOCACART_ORDER_NUMBER_DESC</option>
+				<option value="a.published ASC" >COM_PHOCACART_PUBLISHED_ASC</option>
+				<option value="a.published DESC" >COM_PHOCACART_PUBLISHED_DESC</option>
+				<option value="user_username ASC">COM_PHOCACART_USER_ASC</option>
+				<option value="user_username DESC">COM_PHOCACART_USER_DESC</option>
+				<option value="a.status_id ASC">COM_PHOCACART_STATUS_ASC</option>
+				<option value="a.status_id DESC">COM_PHOCACART_STATUS_DESC</option>
+				<option value="total_amount ASC">COM_PHOCACART_TOTAL_ASC</option>
+				<option value="total_amount DESC">COM_PHOCACART_TOTAL_DESC</option>
+				<option value="a.date ASC">COM_PHOCACART_DATE_ADDED_ASC</option>
+				<option value="a.date DESC">COM_PHOCACART_DATE_ADDED_DESC</option>
+				<option value="a.modified ASC">COM_PHOCACART_DATE_MODIFIED_ASC</option>
+				<option value="a.modified DESC">COM_PHOCACART_DATE_MODIFIED_DESC</option>
+				<option value="a.id ASC">JGRID_HEADING_ID_ASC</option>
+				<option value="a.id DESC">JGRID_HEADING_ID_DESC</option>
+			</field>
+
+			<field name="limit" type="limitbox" label="COM_PHOCACART_LIST_LIMIT" description="COM_PHOCACART_LIST_LIMIT_DESC" class="input-mini" default="25" onchange="this.form.submit();" />
+		</fields>
 	</fieldset>
 </form>

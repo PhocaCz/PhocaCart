@@ -68,7 +68,7 @@
 
             <field name="volume" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_VOLUME_LABEL" description="COM_PHOCACART_FIELD_VOLUME_DESC" filter="string"/>
 
-            <field name="condition" type="list" label="COM_PHOCACART_FIELD_PRODUCT_CONDITION_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_CONDITION_DESC" class="form-control" size="1" default="0" filter="integer">
+            <field name="condition" type="list" label="COM_PHOCACART_FIELD_PRODUCT_CONDITION_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_CONDITION_DESC" size="1" default="0" filter="integer">
                 <option value="0">COM_PHOCACART_CONDITION_NEW</option>
                 <option value="1">COM_PHOCACART_CONDITION_REFURBISHED</option>
                 <option value="2">COM_PHOCACART_CONDITION_USED</option>
@@ -81,7 +81,7 @@
                    cols="30" filter="string"/>
 
             <field name="delivery_date" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_PRODUCT_DELIVERY_DATE_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_DELIVERY_DATE_DESC"
-                   filter="user_utc" showtime="true" format="%Y-%m-%d %H:%M:%S" translateformat="true" />
+                   filter="user_utc" showtime="true" translateformat="true" />
 
 
             <field name="metatitle" type="text"

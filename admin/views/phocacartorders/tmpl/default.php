@@ -8,12 +8,13 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-use Joomla\CMS\Factory;
 use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
 
 $d = new PhocacartPrice();
 $d->setCurrency(1, 6);
@@ -171,15 +172,11 @@ if (is_array($this->items)) {
         }
         echo $r->td($userO, "small");
 
-        //$status			= PhocacartOrderStatus::getStatus((int)$item->status_id, $item->id);
-        //$statusSelect	= JHtml::_('select.genericlist',  $status['data'],  'phorderstatus', 'class="form-control"', 'value', 'text', (int)$item->status_id, 'phorderstatus'.(int)$item->id );
-        $statusClass = PhocacartUtilsSettings::getOrderStatusClass($item->status_title);
-        $status      = '<span class="' . $statusClass . '">' . $this->escape(Text::_($item->status_title)) . '</span>';
-        //$status .= ' <a class="modal_edit_status ph-u" href="'.$linkStatus.'" '.$linkStatusHandler.' ><small>'.Text::_('COM_PHOCACART_EDIT_STATUS').'</small></a>';
+        $status = PhocacartUtilsSettings::getOrderStatusBadge($item->status_title, $item->status_params, 'mb-2');
 
-        $status .= ' <span><a href="#' . $idMd . '" role="button" class="ph-u ph-no-wrap ' . $idMd . 'ModalButton" data-bs-toggle="modal" title="' . Text::_($textButton) . '" data-src="' . $linkStatus . '" data-height="' . $h . '" data-width="' . $w . '">' . Text::_($textButton) . '</a></span>';
+        $status .= ' <a href="#' . $idMd . '" role="button" class="ph-no-wrap btn btn-outline-primary btn-sm ' . $idMd . 'ModalButton" data-bs-toggle="modal" title="' . Text::_($textButton) . '" data-src="' . $linkStatus . '" data-height="' . $h . '" data-width="' . $w . '">' . Text::_($textButton) . '</a>';
 
-        echo $r->td($status, "small");
+        echo $r->td($status, "small text-center");
 
 
         // INFO
@@ -207,14 +204,14 @@ if (is_array($this->items)) {
             }
         } else if ($item->type == 1) {
             $info = '<span class="label label-info badge bg-info">' . Text::_('COM_PHOCACART_ONLINE_SHOP') . '</span>';
+            if (isset($item->shipping_name)) {
+                $info .= '<br><span class="badge text-bg-light mt-1">' . $item->shipping_name . '</span>';
+            }
+            if (isset($item->payment_name)) {
+                $info .= '<br><span class="badge text-bg-light mt-1">' . $item->payment_name . '</span>';
+            }
         }
         $info .= '</div>';
-
-
-
-
-
-
 
         echo $r->td($info, "small");
         // ACTION
@@ -244,8 +241,8 @@ if (is_array($this->items)) {
         $amount = (isset($item->total_amount_currency) && $item->total_amount_currency > 0) ? $price->getPriceFormat($item->total_amount_currency, 0, 1) : $price->getPriceFormat($item->total_amount);
         echo $r->td($amount, "small ph-right ph-p-r-med ph-no-wrap");
 
-        echo $r->td($this->escape(PhocacartOrder::getInvoiceNumber($item->id, $item->date, $item->invoice_number, $item->invoice_number_id)), "small");
-
+        //echo $r->td($this->escape(PhocacartOrder::getInvoiceNumber($item->id, $item->date, $item->invoice_number, $item->invoice_number_id)), "small");
+        echo $r->td($this->escape($item->invoice_number), "small");
         echo $r->td(HTMLHelper::date($item->date, Text::_('DATE_FORMAT_LC5')), "small");
         echo $r->td(HTMLHelper::date($item->modified, Text::_('DATE_FORMAT_LC5')), "small");
 
@@ -285,23 +282,15 @@ if (is_array($this->items)) {
                     $titleExistsS = 1;
                 }
                 if (isset($paramsShipping['method']) && $paramsShipping['method'] != '') {
-
-
-
                     $shippingInfo             = $shipping->getShippingMethod($item->shipping_id);
                     if ($titleExistsS == 0 && isset($shippingInfo->title) && $shippingInfo->title != '') {
                         echo '<div><b>' . Text::_('COM_PHOCACART_SHIPPING_METHOD') . '</b>: ' . $shippingInfo->title . '</div>';
                     }
 
+                    $results = Dispatcher::dispatch(new Event\Shipping\GetShippingBranchInfoAdminList('com_phocacart.phocacartorders', $item, $shippingInfo, [
+                      'pluginname' => $paramsShipping['method'],
+                    ]));
 
-                    PluginHelper::importPlugin('pcs', htmlspecialchars(strip_tags($paramsShipping['method'])));
-                    $eventData               			= array();
-                    $eventData['pluginname'] 			= htmlspecialchars(strip_tags($paramsShipping['method']));
-                    $results = Factory::getApplication()->triggerEvent('onPCSgetShippingBranchInfoAdminList', array('com_phocacart.phocacartorders', $item, $shippingInfo, $eventData));
-
-                    /*if (!empty($results)) {
-                        echo trim(implode("\n", $results));
-                    }*/
                     if (!empty($results)) {
                         foreach ($results as $k => $v) {
                             if ($v != false && isset($v['content']) && $v['content'] != '') {
@@ -333,14 +322,10 @@ if (is_array($this->items)) {
                         echo '<div><b>' . Text::_('COM_PHOCACART_PAYMENT_METHOD') . '</b>: ' . $paymentInfo->title . '</div>';
                     }
 
-                    PluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($paramsPayment['method'])));
-                    $eventData               			= array();
-                    $eventData['pluginname'] 			= htmlspecialchars(strip_tags($paramsPayment['method']));
-                    $results = Factory::getApplication()->triggerEvent('onPCPgetPaymentBranchInfoAdminList', array('com_phocacart.phocacartorders', $item, $paymentInfo, $eventData));
+                    $results = Dispatcher::dispatch(new Event\Payment\GetPaymentBranchInfoAdminList('com_phocacart.phocacartorders', $item, $paymentInfo, [
+                      'pluginname' => $paramsPayment['method'],
+                    ]));
 
-                    /*if (!empty($results)) {
-                        echo trim(implode("\n", $results));
-                    }*/
                     if (!empty($results)) {
                         foreach ($results as $k => $v) {
                             if ($v != false && isset($v['content']) && $v['content'] != '') {
@@ -357,12 +342,6 @@ if (is_array($this->items)) {
             echo  '</div></td>';
             echo $r->endTr();
         }
-
-
-
-
-
-        //}
     }
 }
 echo $r->endTblBody();

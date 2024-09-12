@@ -56,7 +56,7 @@ class PhocaCartCpViewPhocaCartQuestions extends HtmlView
 		$class	= ucfirst($this->t['tasks']).'Helper';
 		$canDo	= $class::getActions($this->t, $state->get('filter.question_id'));
 
-		ToolbarHelper::title( Text::_( $this->t['l'].'_QUESTIONS' ), 'question-sign' );
+		ToolbarHelper::title( Text::_( $this->t['l'].'_QUESTIONS' ), 'messaging' );
 
 		if ($canDo->get('core.create')) {
 			ToolbarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');

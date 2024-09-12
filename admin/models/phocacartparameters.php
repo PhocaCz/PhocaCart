@@ -7,12 +7,15 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Factory;
-jimport('joomla.application.component.modellist');
+use Phoca\PhocaCart\I18n\I18nListModelTrait;
 
 class PhocaCartCpModelPhocacartParameters extends ListModel
 {
+	use I18nListModelTrait;
+
 	protected $option 	= 'com_phocacart';
 
 	public function __construct($config = array()) {
@@ -125,8 +128,8 @@ class PhocaCartCpModelPhocacartParameters extends ListModel
 		$orderDirn	= $this->state->get('list.direction', 'asc');
 		$query->order($db->escape($orderCol.' '.$orderDirn));
 
-		//echo nl2br(str_replace('#__', 'jos_', $query->__toString()));
 		return $query;
 	}
+
 }
-?>
+

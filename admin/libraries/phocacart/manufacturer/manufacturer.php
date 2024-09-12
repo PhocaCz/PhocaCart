@@ -11,6 +11,7 @@
 defined('_JEXEC') or die();
 use Joomla\CMS\Factory;
 use Joomla\CMS\Router\Route;
+use Phoca\PhocaCart\I18n\I18nHelper;
 
 class PhocacartManufacturer
 {
@@ -24,10 +25,13 @@ class PhocacartManufacturer
 		$wheres		= array();
 		$lefts		= array();
 
-		$columns		= 'm.id, m.title, m.image, m.alias, m.description, m.count_products';
+		$columns		= 'm.id, m.image, m.description, m.count_products';
 		/*$groupsFull		= $columns;
 		$groupsFast		= 'm.id';
 		$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;*/
+
+		$columns .= I18nHelper::sqlCoalesce(['title', 'alias'], 'm', '', '', ',');
+
 
 		$wheres[]	= ' m.published = 1';
 
@@ -73,6 +77,7 @@ class PhocacartManufacturer
 		$q = ' SELECT DISTINCT '.$columns
 			.' FROM  #__phocacart_manufacturers AS m'
 			. (!empty($lefts) ? ' LEFT JOIN ' . implode( ' LEFT JOIN ', $lefts ) : '')
+			. I18nHelper::sqlJoin('#__phocacart_manufacturers_i18n', 'm')
 			. (!empty($wheres) ? ' WHERE ' . implode( ' AND ', $wheres ) : '')
 			//.' GROUP BY '.$groups
 			.' ORDER BY '.$orderingText;
@@ -147,13 +152,17 @@ class PhocacartManufacturer
         $ordering = PhocacartOrdering::getOrderingText($ordering, 4);//m
         if ($items != '') {
             $wheres[] = 'm.id IN (' . $items . ')';
-            $q = 'SELECT DISTINCT m.title, CONCAT(m.id, \'-\', m.alias) AS alias, '.$db->quote($manufacturerAlias).' AS parameteralias, '.$db->quote(ucfirst($manufacturerAlias)).' AS parametertitle FROM #__phocacart_manufacturers AS m'
-                . (!empty($wheres) ? ' WHERE ' . implode(' AND ', $wheres) : '')
+            $q = 'SELECT DISTINCT '.I18nHelper::sqlCoalesce(['title'], 'm').', '
+				.I18nHelper::sqlCoalesce(['alias'], 'm', '', 'concatid').', '
+				.$db->quote($manufacturerAlias).' AS parameteralias, '.$db->quote(ucfirst($manufacturerAlias)).' AS parametertitle FROM #__phocacart_manufacturers AS m'
+				. I18nHelper::sqlJoin('#__phocacart_manufacturers_i18n', 'm')
+				. (!empty($wheres) ? ' WHERE ' . implode(' AND ', $wheres) : '')
                 . ' GROUP BY m.alias, m.title'
                 . ' ORDER BY ' . $ordering;
 
             $db->setQuery($q);
             $o = $db->loadAssocList();
+
         }
         return $o;
     }

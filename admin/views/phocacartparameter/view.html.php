@@ -7,12 +7,12 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+
 use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Toolbar\ToolbarHelper;
-jimport( 'joomla.application.component.view' );
 
 class PhocaCartCpViewPhocacartParameter extends HtmlView
 {
@@ -31,17 +31,16 @@ class PhocaCartCpViewPhocacartParameter extends HtmlView
 		$this->form		= $this->get('Form');
 		$this->item		= $this->get('Item');
 
-		$media = new PhocacartRenderAdminmedia();
+		new PhocacartRenderAdminmedia();
 
 		$this->addToolbar();
 		parent::display($tpl);
 	}
 
 	protected function addToolbar() {
-
 		require_once JPATH_COMPONENT.'/helpers/'.$this->t['tasks'].'.php';
 		Factory::getApplication()->input->set('hidemainmenu', true);
-		$bar 		= Toolbar::getInstance('toolbar');
+
 		$user		= Factory::getUser();
 		$isNew		= ($this->item->id == 0);
 		$checkedOut	= !($this->item->checked_out == 0 || $this->item->checked_out == $user->get('id'));
@@ -49,7 +48,7 @@ class PhocaCartCpViewPhocacartParameter extends HtmlView
 		$canDo		= $class::getActions($this->t, $this->state->get('filter.parameter_id'));
 
 		$text = $isNew ? Text::_( $this->t['l'] . '_NEW' ) : Text::_($this->t['l'] . '_EDIT');
-		ToolbarHelper::title(   Text::_( $this->t['l'] . '_PARAMETER' ).': <small><small>[ ' . $text.' ]</small></small>' , 'align-justify');
+		ToolbarHelper::title(   Text::_( $this->t['l'] . '_PARAMETER' ).': <small><small>[ ' . $text.' ]</small></small>' , 'ellipsis-h');
 
 		// If not checked out, can save the item.
 		if (!$checkedOut && $canDo->get('core.edit')){
@@ -60,12 +59,12 @@ class PhocaCartCpViewPhocacartParameter extends HtmlView
 
 		if (empty($this->item->id))  {
 			ToolbarHelper::cancel($this->t['task'].'.cancel', 'JTOOLBAR_CANCEL');
-		}
-		else {
+		} else {
 			ToolbarHelper::cancel($this->t['task'].'.cancel', 'JTOOLBAR_CLOSE');
 		}
 		ToolbarHelper::divider();
+		ToolbarHelper::inlinehelp();
 		ToolbarHelper::help( 'screen.'.$this->t['c'], true );
 	}
 }
-?>
+

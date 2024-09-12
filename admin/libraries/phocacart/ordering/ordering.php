@@ -11,192 +11,183 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Phoca\PhocaCart\I18n\I18nHelper;
+
 class PhocacartOrdering
 {
-	public static function getOrderingText ($ordering, $type = 0) {
-
+	public static function getOrdering($ordering, $type = 0, bool $usei18n = false): array {
+		$usei18n = $usei18n && I18nHelper::useI18n();
 		switch ($type) {
 			case 1:// CATEGORY
 				switch ((int)$ordering) {
-					case 2: $orderingOutput	= 'c.ordering DESC';break;
-					case 3: $orderingOutput	= 'c.title ASC'; break;
-					case 4:$orderingOutput	= 'c.title DESC';break;
-					case 5:$orderingOutput	= 'c.date ASC';break;
-					case 6:$orderingOutput	= 'c.date DESC';break;
-					case 7:$orderingOutput	= 'c.count_products ASC';break;
-					case 8:$orderingOutput	= 'c.count_products DESC';break;
-					case 99:$orderingOutput	= 'RAND()';break;
-					case 1: default: $orderingOutput = 'c.ordering ASC'; break;
+					case 2: return ['c.ordering DESC'];
+					case 3: return ['c.title ASC'];
+					case 4: return ['c.title DESC'];
+					case 5: return ['c.date ASC'];
+					case 6: return ['c.date DESC'];
+					case 7: return ['c.count_products ASC'];
+					case 8: return ['c.count_products DESC'];
+					case 99: return ['RAND()'];
+					case 1: default:  return ['c.ordering ASC'];
 				}
-			break;
 
 			case 2:// ORDERS
 				switch ((int)$ordering) {
-					case 2:$orderingOutput	= 'o.ordering DESC';break;
-					case 3:$orderingOutput	= 'o.title ASC';break;
-					case 4:$orderingOutput	= 'o.title DESC';break;
-					case 5:$orderingOutput	= 'o.price ASC';break;
-					case 6:$orderingOutput	= 'o.price DESC';break;
-					case 7:$orderingOutput	= 'o.date ASC';break;
-					case 8:$orderingOutput	= 'o.date DESC';break;
-					case 1:default:$orderingOutput = 'o.ordering ASC';break;
+					case 2: return ['o.ordering DESC'];
+					case 3: return ['o.title ASC'];
+					case 4: return ['o.title DESC'];
+					case 5: return ['o.price ASC'];
+					case 6: return ['o.price DESC'];
+					case 7: return ['o.date ASC'];
+					case 8: return ['o.date DESC'];
+					case 1: default: return ['o.ordering ASC'];
 				}
-			break;
 
 			case 3:// TAGS
 				switch ((int)$ordering) {
-					case 2:$orderingOutput	= 't.ordering DESC';break;
-					case 3:$orderingOutput	= 't.title ASC';break;
-					case 4:$orderingOutput	= 't.title DESC';break;
-					case 5:$orderingOutput	= 't.id ASC';break;
-					case 6:$orderingOutput	= 't.id DESC';break;
-					case 7:$orderingOutput	= 't.count_products ASC';break;
-					case 8:$orderingOutput	= 't.count_products DESC';break;
-					case 99:$orderingOutput	= 'RAND()';break;
-					case 1:default:$orderingOutput = 't.ordering ASC';break;
+					case 2: return ['t.ordering DESC'];
+					case 3: return ['t.title ASC'];
+					case 4: return ['t.title DESC'];
+					case 5: return ['t.id ASC'];
+					case 6: return ['t.id DESC'];
+					case 7: return ['t.count_products ASC'];
+					case 8: return ['t.count_products DESC'];
+					case 99: return ['RAND()'];
+					case 1: default: return ['t.ordering ASC'];
 				}
-			break;
 
 			case 4:// MANUFACTURERS
 				switch ((int)$ordering) {
-					case 2:$orderingOutput	= 'm.ordering DESC';break;
-					case 3:$orderingOutput	= 'm.title ASC';break;
-					case 4:$orderingOutput	= 'm.title DESC';break;
-					case 5:$orderingOutput	= 'm.id ASC';break;
-					case 6:$orderingOutput	= 'm.id DESC';break;
-					case 7:$orderingOutput	= 'm.count_products ASC';break;
-					case 8:$orderingOutput	= 'm.count_products DESC';break;
-					case 99:$orderingOutput	= 'RAND()';break;
-					case 1:default:$orderingOutput = 'm.ordering ASC';break;
+					case 2: return ['m.ordering DESC'];
+					case 3: return ['m.title ASC'];
+					case 4: return ['m.title DESC'];
+					case 5: return ['m.id ASC'];
+					case 6: return ['m.id DESC'];
+					case 7: return ['m.count_products ASC'];
+					case 8: return ['m.count_products DESC'];
+					case 99: return ['RAND()'];
+					case 1: default: return ['m.ordering ASC'];
 				}
-			break;
 
 			case 5:// ATTRIBUTES
 				switch ((int)$ordering) {
-					case 2:$orderingOutput	= 'at.id DESC';break;
-					case 3:$orderingOutput	= 'at.title ASC, v.title ASC';break;
-					case 4:$orderingOutput	= 'at.title DESC, v.title DESC';break;
-					case 5:$orderingOutput	= 'v.id ASC';break;
-					case 6:$orderingOutput	= 'v.id DESC';break;
-					case 7:$orderingOutput	= 'at.ordering, v.ordering ASC';break;
-					case 8:$orderingOutput	= 'at.ordering, v.ordering DESC';break;
-					case 1:default:$orderingOutput = 'at.id ASC';break;
+					case 2: return ['at.id DESC'];
+					case 3: return ['at.title ASC', 'v.title ASC'];
+					case 4: return ['at.title DESC', 'v.title DESC'];
+					case 5: return ['v.id ASC'];
+					case 6: return ['v.id DESC'];
+					case 7: return ['at.ordering', 'v.ordering ASC'];
+					case 8: return ['at.ordering', 'v.ordering DESC'];
+					case 1: default: return ['at.id ASC'];
 				}
-			break;
 
 			case 6:// SPECIFICATION
 				switch ((int)$ordering) {
-					case 2:$orderingOutput	= 's.id DESC';break;
-					case 3:$orderingOutput	= 's.title ASC, s.value ASC';break;
-					case 4:$orderingOutput	= 's.title DESC, s.value DESC';break;
-					case 1:default:$orderingOutput = 's.id ASC';break;
+					case 2: return ['s.id DESC'];
+					case 3: return ['s.title ASC', 's.value ASC'];
+					case 4: return ['s.title DESC', 's.value DESC'];
+					case 1: default: return ['s.id ASC'];
 				}
-			break;
 
 			case 7:// CUSTOMERS (POS)
 				switch ((int)$ordering) {
-					case 2:$orderingOutput	= 'a.name DESC';break;
-					case 1:default:$orderingOutput = 'a.name ASC';break;
+					case 2: return ['a.name DESC'];
+					case 1: default: return ['a.name ASC'];
 				}
-			break;
 
 			case 8:// UNITS (POS)
 				switch ((int)$ordering) {
-					case 2:$orderingOutput	= 'a.title DESC';break;
-					case 1:default:$orderingOutput = 'a.title ASC';break;
+					case 2: return ['a.title DESC'];
+					case 1:default: return ['a.title ASC'];
 				}
-			break;
 
 			case 9:// SHIPPING METHODS (POS)
 				switch ((int)$ordering) {
-					case 2:$orderingOutput	= 'a.title DESC';break;
-					case 99:$orderingOutput	= 'RAND()';break;
-					case 1:default:$orderingOutput = 'a.title ASC';break;
+					case 2: return ['a.title DESC'];
+					case 99: return ['RAND()'];
+					case 1:default: return ['a.title ASC'];
 				}
-			break;
 
 			case 10:// PAYMENT METHODS (POS)
 				switch ((int)$ordering) {
-					case 2:$orderingOutput	= 'a.title DESC';break;
-					case 99:$orderingOutput	= 'RAND()';break;
-					case 1:default:$orderingOutput = 'a.title ASC';break;
+					case 2: return ['a.title DESC'];
+					case 99: return ['RAND()'];
+					case 1: default: return ['a.title ASC'];
 				}
-			break;
 
 			case 11:// PAYMENT METHODS (POS)
 				switch ((int)$ordering) {
-					case 3:$orderingOutput	= 'a.id ASC';break;
-					case 3:$orderingOutput	= 'a.id DESC';break;
-					case 1:$orderingOutput	= 'a.date ASC';break;
-					case 99:$orderingOutput	= 'RAND()';break;
-					case 2:default:$orderingOutput = 'a.date DESC';break;
+					case 3: return ['a.id ASC'];
+					case 4: return ['a.id DESC'];
+					case 1: return ['a.date ASC'];
+					case 99: return ['RAND()'];
+					case 2:default: return ['a.date DESC'];
 				}
-			break;
 
 			case 12:// PARAMETERS
 				switch ((int)$ordering) {
-					case 2:$orderingOutput	= 'pp.ordering DESC';break;
-					case 3:$orderingOutput	= 'pp.title ASC';break;
-					case 4:$orderingOutput	= 'pp.title DESC';break;
-					case 5:$orderingOutput	= 'pp.id ASC';break;
-					case 6:$orderingOutput	= 'pp.id DESC';break;
-					case 99:$orderingOutput	= 'RAND()';break;
-					case 1:default:$orderingOutput = 'pp.ordering ASC';break;
+					case 2: return ['pp.ordering DESC'];
+					case 3: return ['pp.title ASC'];
+					case 4: return ['pp.title DESC'];
+					case 5: return ['pp.id ASC'];
+					case 6: return ['pp.id DESC'];
+					case 99: return ['RAND()'];
+					case 1: default: return ['pp.ordering ASC'];
 				}
-			break;
 
 			case 13:// PARAMETER VALUES
 				switch ((int)$ordering) {
-					case 2:$orderingOutput	= 'pv.ordering DESC';break;
-					case 3:$orderingOutput	= 'pv.title ASC';break;
-					case 4:$orderingOutput	= 'pv.title DESC';break;
-					case 5:$orderingOutput	= 'pv.id ASC';break;
-					case 6:$orderingOutput	= 'pv.id DESC';break;
-					case 7:$orderingOutput	= 'pv.count_products ASC';break;
-					case 8:$orderingOutput	= 'pv.count_products DESC';break;
-					case 99:$orderingOutput	= 'RAND()';break;
-					case 1:default:$orderingOutput = 'pv.ordering ASC';break;
+					case 2: return ['pv.ordering DESC'];
+					case 3: return $usei18n ? ['coalecse(i18n_pv.title, pv.title) ASC'] : ['pv.title ASC'];
+					case 4: return $usei18n ? ['coalecse(i18n_pv.title, pv.title) DESC'] : ['pv.title DESC'];
+					case 5: return ['pv.id ASC'];
+					case 6: return ['pv.id DESC'];
+					case 7: return ['pv.count_products ASC'];
+					case 8: return ['pv.count_products DESC'];
+					case 99: return ['RAND()'];
+					case 1:default: return ['pv.ordering ASC'];
 				}
-			break;
 
 			default://PRODUCTS
 				switch ((int)$ordering) {
-					case 2:$orderingOutput	= 'c.id, pc.ordering DESC';break;
-					case 3:$orderingOutput	= 'a.title ASC';break;
-					case 4:$orderingOutput	= 'a.title DESC';break;
-					case 5:$orderingOutput	= 'a.price ASC';break;
-					case 6:$orderingOutput	= 'a.price DESC';break;
-					case 7:$orderingOutput	= 'a.date ASC';break;
-					case 8:$orderingOutput	= 'a.date DESC';break;
-					case 21:$orderingOutput	= 'a.date_update ASC';break;
-					case 22:$orderingOutput	= 'a.date_update DESC';break;
-					case 9:$orderingOutput	= 'rating ASC';break;
-					case 10:$orderingOutput	= 'rating DESC';break;
+					case 2: return ['c.id', 'pc.ordering DESC'];
+					case 3: return $usei18n ? ['coalesce(i18n_a.title, a.title) ASC'] : ['a.title ASC'];
+					case 4: return ['a.title DESC'];
+					case 5: return ['a.price ASC'];
+					case 6: return ['a.price DESC'];
+					case 7: return ['a.date ASC'];
+					case 8: return ['a.date DESC'];
+					case 21: return ['a.date_update ASC'];
+					case 22: return ['a.date_update DESC'];
+					case 9: return ['rating ASC'];
+					case 10: return ['rating DESC'];
 
 
-					case 11:$orderingOutput = 'a.id ASC';break;
-					case 12:$orderingOutput = 'a.id DESC';break;
-					case 13:$orderingOutput = 'a.sales ASC';break;
-					case 14:$orderingOutput = 'a.sales DESC';break;
-					case 15:$orderingOutput = 'a.hits ASC';break;
-					case 16:$orderingOutput = 'a.hits DESC';break;
-					case 17:$orderingOutput = 'ah.hits ASC';break;
-					case 18:$orderingOutput = 'ah.hits DESC';break;
+					case 11: return ['a.id ASC'];
+					case 12: return ['a.id DESC'];
+					case 13: return ['a.sales ASC'];
+					case 14: return ['a.sales DESC'];
+					case 15: return ['a.hits ASC'];
+					case 16: return ['a.hits DESC'];
+					case 17: return ['ah.hits ASC'];
+					case 18: return ['ah.hits DESC'];
 
-					case 19:$orderingOutput = 'a.sku ASC';break;
-					case 20:$orderingOutput = 'a.sku DESC';break;
+					case 19: return ['a.sku ASC'];
+					case 20: return ['a.sku DESC'];
 
-					case 23:$orderingOutput	= 'a.stock ASC';break;
-					case 24:$orderingOutput	= 'a.stock DESC';break;
-					case 25:$orderingOutput	= 'a.featured ASC';break;
-					case 26:$orderingOutput	= 'a.featured DESC';break;
+					case 23: return ['a.stock ASC'];
+					case 24: return ['a.stock DESC'];
+					case 25: return ['a.featured ASC'];
+					case 26: return ['a.featured DESC'];
 
-					case 99:$orderingOutput	= 'RAND()';break;
-					case 1:default:$orderingOutput = 'c.id, pc.ordering ASC';break;
+					case 99: return ['RAND()'];
+					case 1: default: return ['c.id', 'pc.ordering ASC'];
 				}
-			break;
 		}
-		return $orderingOutput;
+	}
+
+	public static function getOrderingText($ordering, $type = 0, bool $usei18n = false) {
+		return implode(', ', self::getOrdering($ordering, $type, $usei18n));
 	}
 
 	public static function renderOrderingFront( $selected, $type = 0) {

@@ -1611,12 +1611,6 @@ table.ph-report-table tr.ph-report-total-row td.ph-report-total-col1 {
 }
 
 
-
-
-
-
-
-
 /* Additional Box */
 .ph-admin-additional-box-img-box {
 	text-align: center;
@@ -1624,7 +1618,6 @@ table.ph-report-table tr.ph-report-total-row td.ph-report-total-col1 {
 	border-radius: 3px;
 	padding: 0.25rem;
 	background: #fff;
-	display:inline-block;
 	margin: 0 auto;
 }
 
@@ -1633,14 +1626,10 @@ table.ph-report-table tr.ph-report-total-row td.ph-report-total-col1 {
 }
 
 .ph-admin-additional-box {
-
-	float: right;
-	width: 35%;
 	border-radius: 0.25em;
 	margin: 0 0 0.75em 0.75em;
 	padding: 0.5em;
 	background:#ffde7d;
-
 }
 
 .ph-admin-additional-box.ph-box-warning {
@@ -2137,12 +2126,83 @@ a[target=_blank]::before {
 
 .ph-attributes-options-box {
 	display: flex;
+	flex-wrap: wrap;
 }
 
 .ph-attributes-options-box a {
 	margin: 0.2em;
 }
 
+/* select search */
+.ph-select-search-result {
+	display: grid;
+	gap: 0 .5rem;
+	grid-template-columns: 100px 1fr;
+}
+
+.select2-result:nth-child(2n) .ph-select-search-result {
+	background: rgba(var(--emphasis-color-rgb),.05);
+}
+
+.ph-select-search-result-image {
+	grid-row: 1 / 5;
+}
+
+.ph-select-search-result-image img {
+	max-width: 100%;
+}
+
+.ph-select-search-result-codes {
+	font-size: .8em;
+}
+
+.ph-select-search-result-categories {
+	font-size: .8em;
+	opacity: .8;
+}
+
+.ph-par-related .table-responsive {
+	overflow: visible;
+}
+
+.ph-par-related table .control-group {
+	margin: 0;
+}
+
+.ph-par-related table .control-group {
+	margin: 0 !important;;
+}
+
+.ph-par-related table tbody td {
+	padding: 0.25rem !important;
+	border: none;
+}
+
+.ph-par-related table tbody tr:nth-child(2n + 1) td {
+	background: rgba(var(--emphasis-color-rgb),.05);
+}
+
+.ph-fieldset-attribute-title,
+.ph-fieldset-specification-title,
+.ph-fieldset-specification-price,
+.ph-fieldset-specification-stock,
+.ph-fieldset-specification-weight {
+	display: flex;
+
+	.control-group {
+		display: block;
+		flex: 1;
+	}
+
+	.control-group.hidden {
+		display: none;
+	}
+}
+
+.ph-fieldset-attribute-publish,
+.ph-fieldset-specification-publish {
+	display: flex;
+}
 
 /* Hide objects in edit - administration - Product edit example */
 

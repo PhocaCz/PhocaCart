@@ -11,6 +11,7 @@ defined('_JEXEC') or die();
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+use Phoca\PhocaCart\I18n\I18nHelper;
 
 
 if ($this->p['typeview'] == 'option') {
@@ -33,8 +34,16 @@ if ($this->p['typeview'] == 'option') {
 		echo '<div class="ph-attributes-options-box">';
 
 		foreach ($this->items as $k => $v) {
-			$onclick= 'if (window.parent) window.parent.phAddValueCurrentAttributesOptions(\''.PhocacartText::filterValue($titleField, 'alphanumeric2').'\', \'' .$v['title'].'\');';
-			$onclick .= 'if (window.parent) window.parent.phAddValueCurrentAttributesOptions(\''.PhocacartText::filterValue($aliasField, 'alphanumeric2').'\', \'' .$v['alias'].'\');';
+			$onclick = '';
+			if (I18nHelper::isI18n()) {
+				foreach (I18nHelper::getI18nLanguages() as $language) {
+					$onclick .= 'if (window.parent) window.parent.phAddValueCurrentAttributesOptions(\'' . PhocacartText::filterValue($titleField, 'alphanumeric2') . '-' . $language->lang_code . '\', \'' . $v['title' .  '_' . $language->lang_id] . '\');';
+					$onclick .= 'if (window.parent) window.parent.phAddValueCurrentAttributesOptions(\'' . PhocacartText::filterValue($aliasField, 'alphanumeric2') . '-' . $language->lang_code . '\', \'' . $v['alias'  . '_' . $language->lang_id] . '\');';
+				}
+			} else {
+				$onclick .= 'if (window.parent) window.parent.phAddValueCurrentAttributesOptions(\'' . PhocacartText::filterValue($titleField, 'alphanumeric2') . '\', \'' . $v['title'] . '\');';
+				$onclick .= 'if (window.parent) window.parent.phAddValueCurrentAttributesOptions(\'' . PhocacartText::filterValue($aliasField, 'alphanumeric2') . '\', \'' . $v['alias'] . '\');';
+			}
 			$onclick .= 'if (window.parent) window.parent.phAddValueCurrentAttributesOptions(\''.PhocacartText::filterValue($imageField, 'alphanumeric2').'\', \'' .$v['image'].'\');';
 			$onclick .= 'if (window.parent) window.parent.phAddValueCurrentAttributesOptions(\''.PhocacartText::filterValue($imageSmallField, 'alphanumeric2').'\', \'' .$v['image_small'].'\');';
 			$onclick .= 'if (window.parent) window.parent.phAddValueCurrentAttributesOptions(\''.PhocacartText::filterValue($imageMediumField, 'alphanumeric2').'\', \'' .$v['image_medium'].'\');';
@@ -61,8 +70,17 @@ if ($this->p['typeview'] == 'option') {
 		echo '<div class="ph-attributes-options-box">';
 
 		foreach ($this->items as $k => $v) {
-			$onclick= 'if (window.parent) window.parent.phAddValueCurrentAttributesOptions(\''.PhocacartText::filterValue($titleField, 'alphanumeric2').'\', \'' .$v['title'].'\');';
-			$onclick .= 'if (window.parent) window.parent.phAddValueCurrentAttributesOptions(\''.PhocacartText::filterValue($aliasField, 'alphanumeric2').'\', \'' .$v['alias'].'\');';
+			$onclick = '';
+			if (I18nHelper::isI18n()) {
+				foreach (I18nHelper::getI18nLanguages() as $language) {
+					$onclick .= 'if (window.parent) window.parent.phAddValueCurrentAttributesOptions(\'' . PhocacartText::filterValue($titleField, 'alphanumeric2') . '-' . $language->lang_code . '\', \'' . $v['title' .  '_' . $language->lang_id] . '\');';
+					$onclick .= 'if (window.parent) window.parent.phAddValueCurrentAttributesOptions(\'' . PhocacartText::filterValue($aliasField, 'alphanumeric2') . '-' . $language->lang_code . '\', \'' . $v['alias'  . '_' . $language->lang_id] . '\');';
+				}
+			} else {
+				$onclick .= 'if (window.parent) window.parent.phAddValueCurrentAttributesOptions(\'' . PhocacartText::filterValue($titleField, 'alphanumeric2') . '\', \'' . $v['title'] . '\');';
+				$onclick .= 'if (window.parent) window.parent.phAddValueCurrentAttributesOptions(\'' . PhocacartText::filterValue($aliasField, 'alphanumeric2') . '\', \'' . $v['alias'] . '\');';
+			}
+
 			echo '<a href="#" onclick="'.$onclick.'"><span class="badge bg-primary">'.$v['title'].'</span></a>';
 		}
 		echo '</div>';

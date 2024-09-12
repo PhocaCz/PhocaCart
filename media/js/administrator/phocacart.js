@@ -419,7 +419,7 @@ jQuery(document).ready(function() {
 		}
 	});
 
-	const container = jQuery('.main-nav-container');
+	const container = jQuery('.main-nav-container a[href="index.php?option=com_phocacart"] + ul').parents('.main-nav-container');
 	if (container) {
 		const menu = container.children('ul');
 		if (menu) {
@@ -431,11 +431,14 @@ jQuery(document).ready(function() {
 					jQuery(this).removeClass('item-level-3').addClass('item-level-1');
 				});
 
+				const allContainers = jQuery('.main-nav-container');
+				const allMenus = allContainers.children('ul');
+
 				phSubmenu.prepend(jQuery('<li class="item item-level-1"><a href="#" class="no-dropdown ph-submenu ph-submenu-back"><span class="sidebar-item-title">' + Joomla.Text._('COM_PHOCACART_MENU_BACK') + '</span></a></li>'));
 				const phMenuSwitch = phSubmenu.find('.ph-submenu-back');
 				phMenuSwitch.click(function(e) {
 					e.preventDefault();
-					menu.css('display', 'block');
+					allMenus.css('display', 'block');
 					phSubmenu.css('display', 'none');
 				});
 
@@ -444,14 +447,173 @@ jQuery(document).ready(function() {
 				menuSwitch.click(function(e) {
 					e.preventDefault();
 					phSubmenu.css('display', 'block');
-					menu.css('display', 'none');
+					allMenus.css('display', 'none');
 				});
 
+				//console.log(container.length);
 				container.append(phSubmenu);
-				menu.css('display', 'none');
+				allMenus.css('display', 'none');
 			}
 		}
 	}
 })
 
 
+let phocaToastContainer = null;
+
+/**
+ * @param {string} message Message Text
+ * @param {string} type Toast color scheme class success|error
+ */
+const phocaToast = (message, type) => {
+	if (phocaToastContainer === null) {
+		phocaToastContainer = document.createElement('div');
+		phocaToastContainer.classList.add('toast-container', 'position-fixed', 'bottom-0', 'end-0', 'p-3');
+
+		document.body.appendChild(phocaToastContainer);
+	}
+
+	const toast = document.createElement('div');
+	toast.classList.add('toast', 'align-items-center', 'bg-gradient');
+	if (type === 'success') {
+		toast.classList.add('bg-success', 'text-white');
+	} else {
+		toast.classList.add('bg-danger', 'text-white');
+	}
+	toast.setAttribute('role', 'alert');
+	toast.setAttribute('aria-live', 'assertive');
+	toast.setAttribute('aria-atomic', 'true');
+
+	const toastBodyWrapper = document.createElement('div');
+	toastBodyWrapper.classList.add('d-flex');
+
+	const toastBody = document.createElement('div');
+	toastBody.classList.add('toast-body');
+	toastBody.textContent = message;
+
+	const toastButton = document.createElement('button');
+	toastButton.setAttribute('type', 'button');
+	toastButton.setAttribute('data-bs-dismiss', 'toast');
+	toastButton.setAttribute('aria-label', Joomla.Text._('COM_PHOCACART_AJAX_CLOSE'));
+	toastButton.classList.add('btn-close', 'btn-close-white', 'me-2', 'm-auto');
+
+	toast.appendChild(toastBodyWrapper);
+	toastBodyWrapper.appendChild(toastBody);
+	toastBodyWrapper.appendChild(toastButton);
+
+	phocaToastContainer.appendChild(toast);
+
+	const bootstrapToast = new bootstrap.Toast(toast);
+	bootstrapToast.show();
+};
+
+const phocaAjax = () => {
+	const targets = document.querySelectorAll('[data-phajax]');
+	targets.forEach((target) => {
+		target.addEventListener('click', (e) => {
+			e.preventDefault();
+			e.stopPropagation();
+
+			var xhr = new XMLHttpRequest();
+			xhr.open('POST', target.href, true);
+			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			xhr.responseType = 'json';
+
+			xhr.onload = () => {
+				// Check if the request was successful (status code 200)
+				if(xhr.status === 200) {
+					var jsonResponse = xhr.response;
+
+					if (jsonResponse.success) {
+						phocaToast(jsonResponse.message, 'success');
+
+						target.dataset.phajax = jsonResponse.data.phajax;
+						target.innerHTML = jsonResponse.data.content;
+					} else {
+						phocaToast(jsonResponse.message, 'error');
+					}
+				} else {
+					phocaToast(Joomla.Text._('COM_PHOCACART_AJAX_ERROR'), 'error');
+				}
+			};
+
+			xhr.onerror = () => {
+				phocaToast(Joomla.Text._('COM_PHOCACART_AJAX_ERROR'), 'error');
+			};
+
+			xhr.send(target.dataset.phajax);
+		});
+	});
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+	phocaAjax();
+});
+
+/* Barcode Scanning */
+
+let phVars = Joomla.getOptions('phVars');
+let phParams = Joomla.getOptions('phParams');
+let phScannerInput = '';
+let phLastScannerClear = 0;
+let urlItem = 'index.php?option=com_phocacart&view=phocacartitema&format=json&tmpl=component&' + phVars['token'] + '=1';
+let urlItemEdit = 'index.php?option=com_phocacart&task=phocacartitem.edit';
+let phListenScanner = false;
+
+jQuery(document).ready(function() {
+
+	if (phParams['barcode_scanning_product_list'] > 0) {
+		if (document.getElementById('phocacartitems') && document.getElementById('filter_search')) {
+			phListenScanner = true;
+		}
+	}
+	console.log(phListenScanner);
+
+	if (phListenScanner) {
+		document.addEventListener('keydown', (ev) => {
+						
+			if (ev.ctrlKey || ev.altKey) {
+				// Ignore command-like keys
+				return;
+			}
+
+			clearTimeout(phLastScannerClear);
+			phLastScannerClear = window.setTimeout(function(){
+				phScannerInput = '';
+			}, 500);
+
+			if (ev.key == 'Enter') {
+				// Submit
+				document.getElementById('filter_search').value = phScannerInput;
+
+				if (phParams['barcode_scanning_product_list'] == 2) {
+					jQuery.ajax({
+						url: urlItem + '&q=' + phScannerInput,
+						type: 'POST',
+						data: [],
+						dataType: 'JSON',
+						success:function(response){
+							if ( response.status == 1 ){
+								if (typeof response.items[0] !== 'undefined') {
+									if (response.items[0].id > 0) {
+										window.location.href = urlItemEdit + '&id=' + response.items[0].id;
+									}
+								}
+
+							}
+						}
+					});
+				}
+
+				// If product not found, set it to standard search where user gets info about not finding it
+				document.getElementById('filter_search').form.submit();
+			} else if (ev.key == 'Space') {
+				// IE
+				phScannerInput += ' '; 
+			} else if (ev.key.length == 1) {
+				// A character not a key like F12 or Backspace
+				phScannerInput += ev.key; 
+			}
+		});
+	}
+})
