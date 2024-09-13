@@ -449,4 +449,37 @@ class PhocacartTag
     public static function getActiveLabels($items, $ordering) {
         return self::getActiveItems(TagType::Label, $items, $ordering);
     }
+
+    public static function deleteTagsLabelsRelated(array $ids): bool
+    {
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        // The id of tags and labels is unique for both so we can delete IDs from both tables without asking their type
+        $resultTag = false;
+
+        $query = $db->getQuery(true)
+            ->delete('#__phocacart_tags_related')
+            ->whereIn($db->quoteName('tag_id'), $ids);
+
+        $db->setQuery($query);
+        if ($db->execute()) {
+            $resultTag = true;
+        }
+
+        $resultLabel = false;
+
+        $query = $db->getQuery(true)
+            ->delete('#__phocacart_taglabels_related')
+            ->whereIn($db->quoteName('tag_id'), $ids);
+
+        $db->setQuery($query);
+        if ($db->execute()) {
+            $resultLabel = true;
+        }
+        if ($resultTag && $resultLabel) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
