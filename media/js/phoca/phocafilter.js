@@ -342,10 +342,10 @@ function phRemoveFilter(paramV, value, isItemsView, urlItemsView, filteredProduc
 
     /* Handle pagination - when changing filter, set pagination to zero - to start */
     if (typeof paramsAll["start"] !== "undefined") {
-        paramsTypeStringNew["start"] = 0;
+        paramsTypeStringNew["start"] = '';// 0;
     }
     if (typeof paramsAll["limitstart"] !== "undefined") {
-        paramsTypeStringNew["limitstart"] = 0;
+        paramsTypeStringNew["limitstart"] = '';// 0;
     }
 
     if (uniqueValue == 1) {
@@ -515,10 +515,10 @@ function phSetFilter(paramV, value, isItemsView, urlItemsView, filteredProductsO
 
     /* Handle pagination - when changing filter, set pagination to zero - to start */
     if (typeof paramsAll["start"] !== "undefined") {
-        paramsTypeStringNew["start"] = 0;
+        paramsTypeStringNew["start"] = '';// 0
     }
     if (typeof paramsAll["limitstart"] !== "undefined") {
-        paramsTypeStringNew["limitstart"] = 0;
+        paramsTypeStringNew["limitstart"] = '';// 0;
     }
 
     if (uniqueValue == 1) {

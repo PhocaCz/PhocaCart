@@ -55,7 +55,8 @@ class PhocaCartModelItems extends BaseDatabaseModel
 
 		$this->setState('limit', $limit);
 		$this->setState('limitstart', $app->input->get('limitstart', 0, 'int'));
-		$this->setState('limitstart', ($this->getState('limit') != 0 ? (floor($this->getState('limitstart') / $this->getState('limit')) * $this->getState('limit')) : 0));
+		$this->setState('limitstart', ($this->getState('limit') != 0 ?  (int)(floor($this->getState('limitstart') / $this->getState('limit')) * $this->getState('limit')) : 0));
+
 		$this->setState('filter.language',$app->getLanguageFilter());
 		$this->setState('filter_order', $app->input->get('filter_order', 'ordering'));
 		$this->setState('filter_order_dir', $app->input->get('filter_order_Dir', 'ASC'));
@@ -118,6 +119,8 @@ class PhocaCartModelItems extends BaseDatabaseModel
 		$manufacturer_alias	= $paramsC->get( 'manufacturer_alias', 'manufacturer');
 		$manufacturer_alias	= $manufacturer_alias != '' ? trim(PhocacartText::filterValue($manufacturer_alias, 'alphanumeric'))  : 'manufacturer';
 
+		$this->pagination->hideEmptyLimitstart = true;
+
 		if (!empty($this->pagination)) {
 			if ($state->get('price_from') != '') { $this->pagination->setAdditionalUrlParam('price_from', $state->get('price_from'));}
 			if ($state->get('price_to') != '') { $this->pagination->setAdditionalUrlParam('price_to', $state->get('price_to'));}
@@ -149,7 +152,6 @@ class PhocaCartModelItems extends BaseDatabaseModel
 			// Format is sent per POST - can be removed if needed, works only with patch: https://issues.joomla.org/tracker/joomla-cms/44023
 			$this->pagination->setAdditionalUrlParam('format', null);
 		}
-
 
 		return $this->pagination;
 	}

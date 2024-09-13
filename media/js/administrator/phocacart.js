@@ -567,11 +567,11 @@ jQuery(document).ready(function() {
 			phListenScanner = true;
 		}
 	}
-	console.log(phListenScanner);
+	//console.log(phListenScanner);
 
 	if (phListenScanner) {
 		document.addEventListener('keydown', (ev) => {
-						
+
 			if (ev.ctrlKey || ev.altKey) {
 				// Ignore command-like keys
 				return;
@@ -609,10 +609,10 @@ jQuery(document).ready(function() {
 				document.getElementById('filter_search').form.submit();
 			} else if (ev.key == 'Space') {
 				// IE
-				phScannerInput += ' '; 
+				phScannerInput += ' ';
 			} else if (ev.key.length == 1) {
 				// A character not a key like F12 or Backspace
-				phScannerInput += ev.key; 
+				phScannerInput += ev.key;
 			}
 		});
 	}
