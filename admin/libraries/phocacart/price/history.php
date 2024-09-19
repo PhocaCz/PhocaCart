@@ -36,6 +36,7 @@ class PhocacartPriceHistory
 
 
 		$price		= PhocacartUtils::replaceCommaWithPoint($price);
+        $price      = PhocacartText::filterValue($price, 'float');
 
 		if (isset($history['price']) && $history['price'] == $price) {
 			// Do nothing

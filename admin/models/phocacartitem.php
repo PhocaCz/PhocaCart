@@ -301,7 +301,9 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 		$table->title					= htmlspecialchars_decode($table->title, ENT_QUOTES);
 		$table->alias					= ApplicationHelper::stringURLSafe($table->alias);
 		$table->price 					= PhocacartUtils::replaceCommaWithPoint($table->price);
+        $table->price                   = PhocacartText::filterValue($table->price, 'float');
 		$table->price_original 			= PhocacartUtils::replaceCommaWithPoint($table->price_original);
+        $table->price_original          = PhocacartText::filterValue($table->price_original, 'float');
 		$table->length 					= PhocacartUtils::replaceCommaWithPoint($table->length);
 		$table->width 					= PhocacartUtils::replaceCommaWithPoint($table->width);
 		$table->height 					= PhocacartUtils::replaceCommaWithPoint($table->height);

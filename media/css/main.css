@@ -2593,3 +2593,19 @@ form.ph-form-placeholder .ph-checkout-billing-row {
 }
 
 
+/* Possible Info about discounted product */
+/*
+.ph-item-box:has(> .pc-status-discount-product) {
+    background: #ffc107;
+}
+
+.pc-status-discount-product:before {
+    content: "Sale";
+    background: #d9534f;
+    color: #fff;
+    width: fit-content;
+    padding: 0.25em;
+    position:absolute;
+    right: 1em;
+}
+*/
