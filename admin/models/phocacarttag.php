@@ -93,8 +93,11 @@ class PhocaCartCpModelPhocacartTag extends AdminModel
 
 	public function delete(&$pks)
 	{
-		if (parent::delete($pks)) {
-			return $this->deleteI18nData($pks);
+
+        if (parent::delete($pks)) {
+            if (PhocacartTag::deleteTagsLabelsRelated($pks) && $this->deleteI18nData($pks)) {
+                return true;
+            }
 		}
 
 		return false;

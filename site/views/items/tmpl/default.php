@@ -427,6 +427,14 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 			$classAdditional[] = 'pc-status-featured';
 		}
 
+		if (isset($dP['discount']) && $dP['discount']) {
+            $classAdditional[] = 'pc-status-discount-product';
+        }
+
+        if (isset($dP['discountcart']) && $dP['discountcart']) {
+            $classAdditional[] = 'pc-status-discount-cart';
+        }
+
 		$dL['class_additional'] = !empty($classAdditional) ? implode(' ', $classAdditional) : '';// Additional class
 		$dL['product_header']	= PhocacartRenderFront::renderProductHeader($this->t['product_name_link'], $v, 'item', '', $lt);
         $dL['item']             = $v;
