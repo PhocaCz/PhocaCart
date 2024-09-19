@@ -89,7 +89,7 @@ class PhocacartLanguage
 
         // No language variables (no translation) for items in order (total items like shipping or payment titles)
         if ($type == 'order' && $order_language_variables == 0) {
-            return $title;;
+            return $title;
         }
 
         $o = '';

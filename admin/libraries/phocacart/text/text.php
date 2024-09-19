@@ -431,6 +431,11 @@ class PhocacartText {
                 return preg_replace("/[^\\w.,]/", '', $string);// Alphanumeric plus _ . ,
             break;
 
+            case 'float':
+                $pattern = '/[-+]?[0-9]+(\.[0-9]+)?([eE][-+]?[0-9]+)?/';
+                preg_match($pattern, $string, $matches);
+                return isset($matches[0]) ? (float) $matches[0] : 0.0;
+            break;
 
             case 'folder':
             case 'file':

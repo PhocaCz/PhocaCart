@@ -46,7 +46,7 @@ class PhocaCartModelCategory extends BaseDatabaseModel
 
 		$this->setState('limit', $limit);
 		$this->setState('limitstart', $app->input->get('limitstart', 0, 'int'));
-		$this->setState('limitstart', ($this->getState('limit') != 0 ? (floor($this->getState('limitstart') / $this->getState('limit')) * $this->getState('limit')) : 0));
+		$this->setState('limitstart', ($this->getState('limit') != 0 ? (int)(floor($this->getState('limitstart') / $this->getState('limit')) * $this->getState('limit')) : 0));
 		$this->setState('filter.language',$app->getLanguageFilter());
 		$this->setState('filter_order', $app->input->get('filter_order', 'ordering'));
 		$this->setState('filter_order_dir', $app->input->get('filter_order_Dir', 'ASC'));
@@ -65,6 +65,7 @@ class PhocaCartModelCategory extends BaseDatabaseModel
 			jimport('joomla.html.pagination');
 			$this->pagination = new PhocacartPagination( $this->getTotal($categoryId), $this->getState('limitstart'), $this->getState('limit') );
 		}
+        $this->pagination->hideEmptyLimitstart = true;
 		return $this->pagination;
 	}
 

@@ -73,7 +73,69 @@ $x = isset($this->item[0]) ? $this->item[0] : null;
 if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 
 	$idName			= 'VItemP'.(int)$x->id;
-	echo '<div class="'.$this->s['c']['row'].'">';
+
+    // FIRST - GET PRICE INFO (the price is not displayed here but we need the info about price e.g. for different classes)
+    $price 				= new PhocacartPrice;// Can be used by options
+    $priceItems = array();
+	if ($this->t['can_display_price']) {
+
+		$priceItems	= $price->getPriceItems($x->price, $x->taxid, $x->taxrate, $x->taxcalculationtype, $x->taxtitle, $x->unit_amount, $x->unit_unit, 1, 1, $x->group_price, $x->taxhide);
+		// Can change price and also SKU OR EAN (Advanced Stock and Price Management)
+		$price->getPriceItemsChangedByAttributes($priceItems, $this->t['attr_options'], $price, $x);
+
+		$dP					= array();
+		$dP['s']				= $this->s;
+		$dP['type']          = $x->type;// PRODUCTTYPE
+		$dP['priceitems']	= $priceItems;
+
+		$dP['priceitemsorig']= array();
+		if ($x->price_original != '' && $x->price_original > 0) {
+			$dP['priceitemsorig'] = $price->getPriceItems($x->price_original, $x->taxid, $x->taxrate, $x->taxcalculationtype, '', 0, '', 0, 1, null, $x->taxhide);
+		}
+		$dP['class']			= 'ph-item-price-box';
+		$dP['product_id']	= (int)$x->id;
+		$dP['typeview']		= 'Item';
+
+		// Display discount price
+		// Move standard prices to new variable (product price -> product discount)
+		$dP['priceitemsdiscount']		= $dP['priceitems'];
+		$dP['discount'] 					= PhocacartDiscountProduct::getProductDiscountPrice($x->id, $dP['priceitemsdiscount']);
+
+		// Display cart discount (global discount) in product views - under specific conditions only
+		// Move product discount prices to new variable (product price -> product discount -> product discount cart)
+		$dP['priceitemsdiscountcart']	= $dP['priceitemsdiscount'];
+		$dP['discountcart']				= PhocacartDiscountCart::getCartDiscountPriceForProduct($x->id, $x->catid, $dP['priceitemsdiscountcart']);
+
+		$dP['zero_price']		= 1;// Apply zero price if possible
+	}
+
+    // Additional class
+    $classAdditional = [];
+    if (PhocacartRenderFront::renderNewIcon($x->date, 1, 1)) {
+        $classAdditional[] = 'pc-status-new';
+    }
+    if (PhocacartRenderFront::renderHotIcon($x->sales, 1, 1)) {
+        $classAdditional[] = 'pc-status-hot';
+    }
+
+    if (PhocacartRenderFront::renderFeaturedIcon($x->featured, 1, 1)) {
+        $classAdditional[] = 'pc-status-featured';
+    }
+
+    if (isset($dP['discount']) && $dP['discount']) {
+        $classAdditional[] = 'pc-status-discount-product';
+    }
+
+    if (isset($dP['discountcart']) && $dP['discountcart']) {
+        $classAdditional[] = 'pc-status-discount-cart';
+    }
+
+    $classAdditionalOutput = !empty($classAdditional) ? ' '. implode(' ', $classAdditional) : '';// Additional class
+
+
+
+    // RENDER
+	echo '<div class="'.$this->s['c']['row'].$classAdditionalOutput.'">';
 
 	// === IMAGE PANEL
 	echo '<div id="phImageBox" class="'.$this->s['c']['col.xs12.sm5.md5'] .' ph-item-view-image-box">';
@@ -204,44 +266,9 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 
 	echo PhocacartRenderFront::renderHeader(array($title));
 
-
-
 	// :L: PRICE
-	$price 				= new PhocacartPrice;// Can be used by options
-
-
-	$priceItems = array();
 	if ($this->t['can_display_price']) {
-
-		$priceItems	= $price->getPriceItems($x->price, $x->taxid, $x->taxrate, $x->taxcalculationtype, $x->taxtitle, $x->unit_amount, $x->unit_unit, 1, 1, $x->group_price, $x->taxhide);
-		// Can change price and also SKU OR EAN (Advanced Stock and Price Management)
-		$price->getPriceItemsChangedByAttributes($priceItems, $this->t['attr_options'], $price, $x);
-
-		$d					= array();
-		$d['s']				= $this->s;
-		$d['type']          = $x->type;// PRODUCTTYPE
-		$d['priceitems']	= $priceItems;
-
-		$d['priceitemsorig']= array();
-		if ($x->price_original != '' && $x->price_original > 0) {
-			$d['priceitemsorig'] = $price->getPriceItems($x->price_original, $x->taxid, $x->taxrate, $x->taxcalculationtype, '', 0, '', 0, 1, null, $x->taxhide);
-		}
-		$d['class']			= 'ph-item-price-box';
-		$d['product_id']	= (int)$x->id;
-		$d['typeview']		= 'Item';
-
-		// Display discount price
-		// Move standard prices to new variable (product price -> product discount)
-		$d['priceitemsdiscount']		= $d['priceitems'];
-		$d['discount'] 					= PhocacartDiscountProduct::getProductDiscountPrice($x->id, $d['priceitemsdiscount']);
-
-		// Display cart discount (global discount) in product views - under specific conditions only
-		// Move product discount prices to new variable (product price -> product discount -> product discount cart)
-		$d['priceitemsdiscountcart']	= $d['priceitemsdiscount'];
-		$d['discountcart']				= PhocacartDiscountCart::getCartDiscountPriceForProduct($x->id, $x->catid, $d['priceitemsdiscountcart']);
-
-		$d['zero_price']		= 1;// Apply zero price if possible
-		echo $layoutP->render($d);
+		echo $layoutP->render($dP);
 	}
 
 	if ( isset($x->description) && $x->description != '') {
