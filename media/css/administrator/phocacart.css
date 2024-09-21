@@ -1996,7 +1996,7 @@ a[target=_blank]::before {
 }
 .ph-tr-suffix td {
 	border-top: 1px solid transparent;
-}*/
+}*//*
 .table-striped.join > tbody > tr.ph-tr-suffix:nth-child(4n) > *,
 .table-striped.join > tbody > tr:nth-child(4n-1) > *{
     --table-accent-bg: #fff;
@@ -2007,7 +2007,7 @@ a[target=_blank]::before {
     --table-accent-bg: var(--table-striped-bg);
     color: var(--table-striped-color);
 
-}
+}*/
 
 .table-striped.join > tbody > tr:nth-child(4n-1) > * {
 	border-bottom: 1px solid #fff;

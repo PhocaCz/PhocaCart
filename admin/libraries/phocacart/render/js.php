@@ -1275,6 +1275,49 @@ final class PhocacartRenderJs
         }
     }
 
+    public static function renderModalCommonIframeWindow($options = []) {
+
+        $s[] = ' jQuery(document).ready(function(){';
+        $s[] = '	jQuery(document).on("click", "a.phModalContainerCommonIframeButton", function (e) {';
+        $s[] = '      var src = jQuery(this).attr("data-src");';
+        $s[] = '      var height = "100%";';//jQuery(this).attr("data-height") || 300;// Does not work and it is solved by CSS
+        $s[] = '      var width = "100%";';//jQuery(this).attr("data-width") || 400;
+        $s[] = '      var id = jQuery(this).attr("data-id");';
+        $s[] = '      var idIframe = "#" + id + " iframe";';
+
+        // Loaded dynamically to not have previous src in iframe, see: components/com_phocacart/layouts/popup_container_iframe.php
+        $s[] = '      var idBody = "#" + id + " .modal-body";';
+        $iframe = '      jQuery(idBody).html(\'<iframe frameborder="0"';
+
+        if(isset($options['allow_geolocation']) && $options['allow_geolocation']) {
+            $iframe .= ' allow="geolocation"';
+        }
+        $iframe .= ' ></iframe>\');';
+        $s[] = $iframe;
+        // end iframe could be a past of layout file
+
+        $s[] = '      jQuery(idIframe).attr({"src":src, "height": height, "width": width});';
+
+        /*if(isset($options['allow_geolocation']) && $options['allow_geolocation']) {
+
+           $s[] = '       , "allow": "geolocation"';
+        }*/
+
+        //$s[] = '      });';
+        //$s[] = '      jQuery(id).modal();';
+
+    // Is loaded by HTML
+    //    $s[] = '      var modal = new bootstrap.Modal(document.getElementById(id), {});';
+    //    $s[] = '      modal.show();';
+
+
+        $s[] = '   });';
+        $s[] = ' });';
+
+        Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
+
+    }
+
     public final function __clone()
     {
         throw new Exception('Function Error: Cannot clone instance of Singleton pattern', 500);

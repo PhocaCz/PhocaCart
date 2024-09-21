@@ -369,20 +369,23 @@ class PhocaCartControllerCheckout extends FormController
         $item                  = array();
         $item['return']        = $this->input->get('return', '', 'string');
         $item['phshippingopt'] = $this->input->get('phshippingopt', array(), 'array');
+        // Must be array because one shipping plugin can be used in more methods
         $item['phshippingmethodfield'] = $this->input->get('phshippingmethodfield', array(), 'array');
         $guest                 = PhocacartUserGuestuser::getGuestUser();
         $msgSuffix             = '<span id="ph-msg-ns" class="ph-hidden"></span>';
 
         $checkPayment = 0;
-
-
-
+        $idShipping = 0;
         if (!empty($item['phshippingopt']) && isset($item['phshippingopt'][0]) && (int)$item['phshippingopt'][0] > 0) {
 
             $model = $this->getModel('checkout');
 
+            $idShipping = (int)$item['phshippingopt'][0];
+            $shippingParams = isset($item['phshippingmethodfield'][$idShipping]) ? $item['phshippingmethodfield'][$idShipping] : [];
+
+
             if ($guest) {
-                if (!$model->saveShippingGuest((int)$item['phshippingopt'][0], $item['phshippingmethodfield'])) {
+                if (!$model->saveShippingGuest($idShipping, $shippingParams)) {
                     $msg = Text::_('COM_PHOCACART_ERROR_DATA_NOT_STORED');
                     $app->enqueueMessage($msg . $msgSuffix, 'error');
                 } else {
@@ -392,7 +395,7 @@ class PhocaCartControllerCheckout extends FormController
                 }
 
             } else {
-                if (!$model->saveShipping((int)$item['phshippingopt'][0], $item['phshippingmethodfield'])) {
+                if (!$model->saveShipping($idShipping, $shippingParams)) {
                     $msg = Text::_('COM_PHOCACART_ERROR_DATA_NOT_STORED');
                     $app->enqueueMessage($msg . $msgSuffix, 'error');
                 } else {
@@ -415,7 +418,7 @@ class PhocaCartControllerCheckout extends FormController
             $cart->setInstance(2);//checkout
             $cart->setType(array(0, 1));
             $cart->setFullItems();
-            $cart->updatePayment((int)$item['phshippingopt'][0]);// check payment in cart if it is valid
+            $cart->updatePayment($idShipping);// check payment in cart if it is valid
         }
 
 
@@ -433,6 +436,8 @@ class PhocaCartControllerCheckout extends FormController
         $item                 = array();
         $item['return']       = $this->input->get('return', '', 'string');
         $item['phpaymentopt'] = $this->input->get('phpaymentopt', array(), 'array');
+        // Must be array because one shipping plugin can be used in more methods
+        $item['phpaymentmethodfield'] = $this->input->get('phpaymentmethodfield', array(), 'array');
         $item['phcoupon']     = $this->input->get('phcoupon', -1, 'string');// -1 ... no form data, '' ... form data yes but empty (e.g. when removing coupon)
         $item['phreward']     = $this->input->get('phreward', -1, 'int');   // -1 ... no form data, 0 ... form data yes but it is set to not use points (0)
         $guest                = PhocacartUserGuestuser::getGuestUser();
@@ -455,8 +460,11 @@ class PhocaCartControllerCheckout extends FormController
         // $couponId = -1 ... coupon will be ignored in model when saving to database because to not change the current value
         // $coupoiId = -2 ... coupon was included in sent payment form but it was empty (empty means that user just want to remove it), we need -2 for message only, in database we set it to 0
 
-
+        $idPayment = 0;
         if (!empty($item['phpaymentopt']) && isset($item['phpaymentopt'][0]) && (int)$item['phpaymentopt'][0] > 0) {
+
+            $idPayment = (int)$item['phpaymentopt'][0];
+            $paymentParams = isset($item['phpaymentmethodfield'][$idPayment]) ? $item['phshippingmethodfield'][$idPayment] : [];
 
             // Coupon
             if ($item['phcoupon'] === -1) {
@@ -534,7 +542,7 @@ class PhocaCartControllerCheckout extends FormController
             if ($guest) {
                 // 1) GUEST
                 // Guest enabled
-                if (!$model->savePaymentAndCouponGuest((int)$item['phpaymentopt'][0], $couponId)) {
+                if (!$model->savePaymentAndCouponGuest($idPayment, $couponId, $paymentParams)) {
                     $msg = Text::_('COM_PHOCACART_ERROR_DATA_NOT_STORED');
                     $app->enqueueMessage($msg . $msgSuffix, 'error');
                 } else {
@@ -545,7 +553,7 @@ class PhocaCartControllerCheckout extends FormController
 
                 // 2) PRE-GUEST/PRE-LOGIN - NOT LOGGED IN OR STILL NOT ENABLED GUEST CHECKOUT
                 // Guest not enabled yet MOVECOUPON
-                if (!$model->savePaymentAndCouponGuest((int)$item['phpaymentopt'][0], $couponId)) {
+                if (!$model->savePaymentAndCouponGuest($idPayment, $couponId, $paymentParams)) {
                     $msg = Text::_('COM_PHOCACART_ERROR_DATA_NOT_STORED');
                     $app->enqueueMessage($msg . $msgSuffix, 'error');
 
@@ -557,7 +565,7 @@ class PhocaCartControllerCheckout extends FormController
 
             } else {
                 // 3) LOGGED IN USER
-                if (!$model->savePaymentAndCouponAndReward((int)$item['phpaymentopt'][0], $couponId, $rewards['used'])) {
+                if (!$model->savePaymentAndCouponAndReward($idPayment, $couponId, $rewards['used'], $paymentParams)) {
                     $msg = Text::_('COM_PHOCACART_ERROR_DATA_NOT_STORED');
                     $app->enqueueMessage($msg . $msgSuffix, 'error');
                 } else {

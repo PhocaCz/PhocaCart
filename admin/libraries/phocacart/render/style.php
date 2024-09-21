@@ -193,6 +193,8 @@ class PhocacartRenderStyle
         $s['c']['modal-body']         = 'modal-body';
         $s['c']['modal-footer']       = 'modal-footer';
         $s['c']['modal-lg']           = 'modal-lg';
+        $s['c']['modal-xl']           = 'modal-xl';
+        $s['c']['modal-sm']           = 'modal-sm';
 
         $s['c']['controls']                      = 'controls';
         $s['c']['control-label']                 = 'control-label';
@@ -381,6 +383,8 @@ class PhocacartRenderStyle
                 $s['c']['modal-body']         = 'uk-modal-body';
                 $s['c']['modal-footer']       = 'uk-modal-footer';
                 $s['c']['modal-lg']           = 'uk-modal-lg';// not exist
+                $s['c']['modal-xl']           = 'uk-modal-xl';// not exist
+                $s['c']['modal-sm']           = 'uk-modal-sm';// not exist
 
                 $s['c']['controls']                      = 'uk-form-controls';
                 $s['c']['control-label']                 = 'uk-form-label';
@@ -515,6 +519,7 @@ class PhocacartRenderStyle
         $s['i']['globe']           = $pf . 'globe' . $sf;
         $s['i']['upload']          = $pf . 'upload' . $sf;
         $s['i']['filter']          = $pf . 'filter' . $sf;
+        $s['i']['marker']          = $pf . 'map-marker' . $sf;
 
 
         switch ($icons) {
@@ -580,6 +585,7 @@ class PhocacartRenderStyle
                 $s['i']['globe']           = $pf . 'globe' . $sf;
                 $s['i']['upload']          = $pf . 'upload' . $sf;
                 $s['i']['filter']          = $pf . 'filter' . $sf;
+                $s['i']['marker']          = $pf . 'map-marker' . $sf;
 
                 if ($icons == 'fa5') {
 
@@ -651,6 +657,7 @@ class PhocacartRenderStyle
                 $s['i']['globe']           = $pf . 'globe' . $sf;
                 $s['i']['upload']          = $pf . 'upload' . $sf;
                 $s['i']['filter']          = $pf . 'filter' . $sf;
+                $s['i']['marker']          = $pf . 'marker' . $sf;
 
 
             break;

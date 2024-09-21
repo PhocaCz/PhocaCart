@@ -72,9 +72,7 @@ class PhocacartUserGuestuser
 		$session = Factory::getSession();
 		if (!empty($shippingParams)) {
 			$session->set('guestshippingparams', $shippingParams, 'phocaCart');
-
-			$shipping = $session->get('guestshipping', false, 'phocaCart');
-
+			//$shipping = $session->get('guestshipping', false, 'phocaCart');
 			return true;
 		}
 		return false;

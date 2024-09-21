@@ -28,8 +28,6 @@ $s      = $d['s'];
 $col    = $d['col'];
 $colMobile    = $d['col_mobile'];
 
-
-
 echo '<div class="'.$s['c']['row-item'].' '.$s['c']["col.xs{$colMobile}.sm{$col}.md{$col}"].'">';
 echo '<div class="ph-item-box '.$d['lt'].'">';
 

@@ -12,10 +12,12 @@ use Joomla\CMS\Language\Text;
 $d          = $displayData;
 $s          = $d['s'];
 $d['close'] = '<button type="button" class="'.$d['s']['c']['modal-btn-close'].'"'.$d['s']['a']['modal-btn-close'].' aria-label="'.Text::_('COM_PHOCACART_CLOSE').'" '.$d['s']['a']['data-bs-dismiss-modal'].' ></button>';
+$modalClass = isset($d['modal-class']) ? $d['modal-class'] : 'modal-lg';
+
 
 ?>
 <div id="<?php echo $d['id'] ?>" class="<?php echo $s['c']['modal.zoom'] ?>"  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display:none">
-    <div class="<?php echo $s['c']['modal-dialog'] ?> <?php echo $s['c']['modal-lg'] ?>">
+    <div class="<?php echo $s['c']['modal-dialog'] ?> <?php echo $s['c'][$modalClass] ?>">
       <div class="<?php echo $s['c']['modal-content'] ?>">
         <div class="<?php echo $s['c']['modal-header'] ?>">
 		  <h5 class="<?php echo $d['s']['c']['modal-title'] ?>"><?php echo PhocacartRenderIcon::icon($d['icon'], '', ' ') .  $d['title'];  ?></h5>
@@ -30,7 +32,11 @@ $d['close'] = '<button type="button" class="'.$d['s']['c']['modal-btn-close'].'"
              */
 			?>
         </div>
-		<div class="<?php echo $s['c']['modal-footer'] ?>"></div>
+		<div class="<?php echo $s['c']['modal-footer'] ?>"><?php
+		    if (isset($d['closebutton']) && $d['closebutton'] == 1) {
+              echo '<button type="button" class="'.$s['c']['btn.btn-secondary'].'" '.$d['s']['a']['data-bs-dismiss-modal'].' >'.Text::_('COM_PHOCACART_CLOSE').'</button>';
+		    }
+		?></div>
 	   </div>
     </div>
 </div>
