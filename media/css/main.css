@@ -2131,11 +2131,14 @@ img.ph-lazyload:not([src]) {
     margin-right: 0.5em;
 }
 
+.phContainerPopup .modal-dialog,
+.phContainerPopup .modal-content,
 #phContainerPopup .modal-dialog,
 #phContainerPopup .modal-content {
     height: 95%;
 }
 
+.phContainerPopup .modal-body,
 #phContainerPopup .modal-body {
     /* 100% = dialog height, 120px = header + footer */
     /* bootstrap 4: max-height: calc(100% - 120px);

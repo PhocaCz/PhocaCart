@@ -269,7 +269,7 @@ class PhocaCartModelCheckout extends FormModel
 
 	}
 
-	public function savePaymentAndCouponAndReward($paymentId, $couponId, $reward) {
+	public function savePaymentAndCouponAndReward($paymentId, $couponId, $reward, $paymentParams = []) {
 		$app	= Factory::getApplication();
 		$user 	= PhocacartUser::getUser();
 		if ((int)$user->id < 1) {
@@ -318,6 +318,20 @@ class PhocaCartModelCheckout extends FormModel
 			$app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_CART_IS_EMPTY_PAYMENT_METHOD_CANNOT_BE_SET'), 'error');
 			return false;
 		}
+
+		// Store information from Payment method e.g. info about Branch (but test all the params)
+		$data['params_payment'] = '';
+		if (!empty($paymentParams)){
+
+			if (isset($isValidPayment[0]->method) && $isValidPayment[0]->method != ''){
+				Dispatcher::dispatch(new Event\Payment\CheckPaymentBranchFormFields('com_phocacart.checkout', $paymentParams, $isValidPayment[0], [
+					'pluginname' => $isValidPayment[0]->method,
+				]));
+				$data['params_payment']	= json_encode($paymentParams);
+			}
+		}
+
+
 
 		if (!$row->bind($data)) {
 			$this->setError($row->getError());
@@ -635,7 +649,7 @@ class PhocaCartModelCheckout extends FormModel
 		return false;
 	}
 
-	public function savePaymentAndCouponGuest($paymentId, $couponId) {
+	public function savePaymentAndCouponGuest($paymentId, $couponId, $paymentParams = []) {
 
 		$app = Factory::getApplication();
 		$payment 			= new PhocacartPayment();
@@ -653,6 +667,23 @@ class PhocaCartModelCheckout extends FormModel
 			}
 		} else {
 			if (PhocacartUserGuestuser::storePayment((int)$paymentId) &&  PhocacartUserGuestuser::storeCoupon((int)$couponId)) {
+
+			// Store information from Payment method e.g. info about Branch (but test all the params)
+			$dataPaymentParams = '';
+			if (!empty($paymentParams)){
+
+				if (isset($isValidPayment[0]->method) && $isValidPayment[0]->method != ''){
+					Dispatcher::dispatch(new Event\Payment\CheckPaymentBranchFormFields('com_phocacart.checkout',$paymentParams, $isValidPayment[0], [
+						'pluginname' => $isValidPayment[0]->method,
+					]));
+
+					$dataPaymentParams	= json_encode($paymentParams);
+				}
+			}
+
+			PhocacartUserGuestuser::storePaymentParams($dataPaymentParams);
+
+
 				return true;
 			}
 		}

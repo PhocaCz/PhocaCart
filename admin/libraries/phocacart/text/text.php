@@ -453,6 +453,19 @@ class PhocacartText {
                 return trim(htmlspecialchars(strip_tags($string), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'));
             break;
 
+            case 'text-br-span':
+                $string = strip_tags($string, '<br><span>');
+                $cleaned = preg_replace('/<br[^>]*>/i', '<br>', $string);
+                $cleaned = preg_replace('/<span[^>]*>/i', '<span>', $cleaned);
+                return trim($cleaned);
+            break;
+
+            case 'text-div':
+                $string = strip_tags($string, '<div>');
+                $cleaned = preg_replace('/<div[^>]*>/i', '<div>', $string);
+                return trim($cleaned);
+            break;
+
             case 'class':
                 $string = str_replace(' ', '-', strtolower($string));
                 return preg_replace("/[^\\w-]/", '', $string);// Alphanumeric plus _  -

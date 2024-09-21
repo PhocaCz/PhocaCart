@@ -1169,6 +1169,7 @@ class PhocacartCart
                 $this->shipping['costs']['method']             = $sI->method;
 
                 $this->shipping['costs']['params_shipping']    = !empty($this->shipping['params_shipping']) ? $this->shipping['params_shipping'] : array();
+                $this->shipping['costs']['params']             = !empty($sI->params) ? $sI->params : null;
 
                 // Update even the shipping info
                 $this->shipping['id']     = $sI->id;
@@ -1242,6 +1243,7 @@ class PhocacartCart
                 $this->payment['costs']['method']             = $pI->method;
 
                 $this->payment['costs']['params_payment']    = !empty($this->payment['params_payment']) ? $this->payment['params_payment'] : array();
+                $this->payment['costs']['params']             = !empty($pI->params) ? $pI->params : null;
 
                 // Update even the payment info
                 $this->payment['id']     = $pI->id;
