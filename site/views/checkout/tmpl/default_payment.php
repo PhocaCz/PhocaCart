@@ -52,7 +52,7 @@ if ($this->a->paymentnotused == 1) {
 	if (isset($this->t['paymentmethod']) && isset($this->t['paymentmethod']['title']) && $this->t['paymentmethod']['title'] != '') {
 
 		//echo '<div class="'.$this->s['c']['row'].'">';
-		echo '<div class="'.$this->s['c']['col.xs12.sm8.md8'].'">';
+		echo '<div class="'.$this->s['c']['col.xs12.sm8.md8'].' ph-checkout-payment-row-item">';
 
 		if (isset($this->t['paymentmethod']['image']) && $this->t['paymentmethod']['image'] != '') {
 			echo '<div class="ph-payment-image"><img src="'.Uri::base(true) .'/'. $this->t['paymentmethod']['image'].'" alt="'.htmlspecialchars(strip_tags($this->t['paymentmethod']['title'])).'" /></div>';
