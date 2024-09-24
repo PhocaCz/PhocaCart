@@ -270,7 +270,14 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 			}
 
 			// Trigger the before save event.
-			$result = Dispatcher::dispatch(new Event\Admin\Category\BeforeSave('com_phocacart.category', $table, $isNew, $data));
+            // Phoca Cart Admin Event
+			Dispatcher::dispatch(new Event\Admin\Category\BeforeSave($this->option.'.'.$this->name, $table, $isNew, $data));
+             // Joomla Core Event
+            $result = $app->triggerEvent($this->event_before_save, array($this->option.'.'.$this->name, $table, $isNew, $data));
+            if (\in_array(false, $result, true)) {
+                $this->setError($table->getError());
+                return false;
+            }
 
 			if (in_array(false, $result, true)) {
 				$this->setError($table->getError());
@@ -287,11 +294,21 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 			$this->cleanCache();
 
 			// Trigger the after save event.
-			Dispatcher::dispatch(new Event\Admin\Category\AfterSave('com_phocacart.category', $table, $isNew, $data));
+            // Phoca Cart Admin Event
+			Dispatcher::dispatch(new Event\Admin\Category\AfterSave($this->option.'.'.$this->name, $table, $isNew, $data));
+            // Joomla Core Event
+            // Dispatcher::dispatchAfterSave($this->event_after_save, $this->option . '.' . $this->name, $table, $isNew, $data);
+            $result = $app->triggerEvent($this->event_after_save, array($this->option.'.'.$this->name, $table, $isNew, $data));
+            if (\in_array(false, $result, true)) {
+                $this->setError($table->getError());
+                return false;
+            }
+
 		} catch (\Exception $e) {
 			$this->setError($e->getMessage());
 			return false;
 		}
+
 
 		if (isset($table->$key)) {
 			$this->setState($this->getName() . '.id', $table->$key);
@@ -459,12 +476,26 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 
 		if ($pks) {
 			$cids  = implode(',', $pks);
-			$query = 'DELETE FROM #__phocacart_categories WHERE id IN ( ' . implode(',', $pks) . ' )';
+			/*$query = 'DELETE FROM #__phocacart_categories WHERE id IN ( ' . implode(',', $pks) . ' )';
 			$db->setQuery($query);
 
 			if (!$db->execute()) {
 				throw new Exception('Database Error: Delete items in category', 500);
-			}
+			}*/
+
+            PluginHelper::importPlugin($this->events_map['delete']);
+            foreach ($pks as $i => $pk) {
+                if ($table->load($pk)) {
+                    if ($this->canDelete($table)) {
+                        if (!$table->delete($pk)) {
+                            throw new Exception($table->getError(), 500);
+                            return false;
+                        }
+                        $app->triggerEvent($this->event_after_delete, array($this->option.'.'.$this->name, $table));
+                    }
+                }
+            }
+
 
 			// DELETE PRODUCT CUSTOMER GROUPS
 			$query = 'DELETE FROM #__phocacart_item_groups WHERE item_id IN ( ' . $cids . ' ) AND type = 2';
