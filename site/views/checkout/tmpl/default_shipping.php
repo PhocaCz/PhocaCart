@@ -95,7 +95,7 @@ if ($this->a->shippingnotused == 1) {
 	if (isset($this->t['shippingmethod']) && isset($this->t['shippingmethod']['title']) && $this->t['shippingmethod']['title'] != '') {
 
 		//echo '<div class="'.$this->s['c']['row'].'">';
-		echo '<div class="'.$this->s['c']['col.xs12.sm8.md8'].'">';
+		echo '<div class="'.$this->s['c']['col.xs12.sm8.md8'].' ph-checkout-shipping-row-item">';
 
 		if (isset($this->t['shippingmethod']['image']) && $this->t['shippingmethod']['image'] != '') {
 			echo '<div class="ph-shipping-image"><img src="'.Uri::base(true) .'/'. $this->t['shippingmethod']['image'].'" alt="'.htmlspecialchars(strip_tags($this->t['shippingmethod']['title'])).'" /></div>';

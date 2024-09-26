@@ -495,24 +495,22 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 			return false;
 		}
 
-		// Trigger the onContentBeforeSave event.
+        // Phoca Cart Trigger the before event.
+		PluginHelper::importPlugin('pca');
+		$result = Dispatcher::dispatch(new Event\Admin\Item\BeforeSave($this->option.'.'.$this->name, $table, $isNew, $data));
+		// Store the data.
+		if (in_array(false, $result, true) || !$table->store()) {
+			$this->setError($table->getError());
+			return false;
+		}
+
+		// Joomla Core Trigger the onContentBeforeSave event.
 		PluginHelper::importPlugin($this->events_map['save']);
 		$result = Dispatcher::dispatchBeforeSave($this->event_before_save, $this->option . '.' . $this->name, $table, $isNew, $data);
 		if (in_array(false, $result, true)) {
 			$this->setError($table->getError());
 			return false;
 		}
-
-		// Trigger the before event.
-		PluginHelper::importPlugin('pca');
-		$result = Dispatcher::dispatch(new Event\Admin\Item\BeforeSave('com_phocacart.phocacartitem', $table, $isNew, $data));
-		// Store the data.
-		if (in_array(false, $result, true) || !$table->store()) {
-			$this->setError($table->getError());
-			return false;
-		}
-		// Trigger the after save event.
-		Dispatcher::dispatch(new Event\Admin\Item\AfterSave('com_phocacart.phocacartitem', $table, $isNew, $data));
 
 		// Test Thumbnails (Create if not exists)
 		if ($table->image != '') {
@@ -611,7 +609,11 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
         $this->saveI18nData($table->getId(), $i18nData);
         $this->cleanCache();
 
-		// Trigger the onContentAfterSave event. CUSTOM FIELDS
+
+        // Phoca Cart Trigger the after save event.
+		Dispatcher::dispatch(new Event\Admin\Item\AfterSave($this->option.'.'.$this->name, $table, $isNew, $data));
+
+        // Joomla Core Trigger the onContentAfterSave event. CUSTOM FIELDS
 		Dispatcher::dispatchAfterSave($this->event_after_save, $this->option . '.' . $this->name, $table, $isNew, $data);
 
 		$pkName = $table->getKeyName();
@@ -726,10 +728,24 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
 
         // 1. DELETE ITEMS
-        $query = 'DELETE FROM #__phocacart_products'
+       /* $query = 'DELETE FROM #__phocacart_products'
             . ' WHERE id IN ( ' . $cids . ' )';
         $this->_db->setQuery($query);
-        $this->_db->execute();
+        $this->_db->execute();*/
+
+        $app		= Factory::getApplication();
+        PluginHelper::importPlugin($this->events_map['delete']);
+        foreach ($pks as $i => $pk) {
+            if ($table->load($pk)) {
+                if ($this->canDelete($table)) {
+                    if (!$table->delete($pk)) {
+                        throw new Exception($table->getError(), 500);
+                        return false;
+                    }
+                    $app->triggerEvent($this->event_after_delete, array($this->option.'.'.$this->name, $table));
+                }
+            }
+        }
 
         // 2. DELETE ATTRIBUTE OPTIONS
         $query = 'SELECT id FROM #__phocacart_attributes WHERE product_id IN ( ' . $cids . ' )';

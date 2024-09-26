@@ -44,7 +44,7 @@
 
 			<field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" description="JFIELD_ACCESS_DESC" />
 
-			<field name="group" type="PhocacartGroups" multiple="true" table="6" layout="joomla.form.field.list-fancy-select" label="COM_PHOCACART_FIELD_CUSTOMER_GROUP_LABEL" description="COM_PHOCACART_FIELD_CUSTOMER_GROUP_DESC"  />
+			<field name="group" type="PhocacartGroups" multiple="true" table="5" layout="joomla.form.field.list-fancy-select" label="COM_PHOCACART_FIELD_CUSTOMER_GROUP_LABEL" description="COM_PHOCACART_FIELD_CUSTOMER_GROUP_DESC"  />
 
 			<field name="ordering" type="phocacartOrdering" table="discounts" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
 
