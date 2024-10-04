@@ -129,9 +129,12 @@ class PhocaCartCpModelPhocacartWishlist extends AdminModel
             // Now load products for this user
             $query = $db->getQuery(true)
                 ->select('w.id, p.title, p.title_long, p.alias, p.sku, p.catid')
-                ->select('GROUP_CONCAT(DISTINCT c.id) as catid, COUNT(pc.category_id) AS count_categories, p.catid AS preferred_catid')
-                ->select(I18nHelper::sqlCoalesce(['title', 'alias'], 'c', 'cat', 'groupconcatdistinct', '', '', false, true))
-                ->from($db->quoteName('#__phocacart_wishlists', 'w'))
+                ->select('GROUP_CONCAT(DISTINCT c.id) as catid, COUNT(pc.category_id) AS count_categories, p.catid AS preferred_catid');
+
+            if (I18nHelper::isI18n()) {
+                $query->select(I18nHelper::sqlCoalesce(['title', 'alias'], 'c', 'cat', 'groupconcatdistinct', '', '', false, true));
+            }
+            $query->from($db->quoteName('#__phocacart_wishlists', 'w'))
                 ->join('INNER', $db->quoteName('#__phocacart_products', 'p'), 'p.id = w.product_id')
                 ->join('LEFT', $db->quoteName('#__phocacart_product_categories', 'pc'), 'pc.product_id =  p.id')
                 ->join('LEFT', $db->quoteName('#__phocacart_categories', 'c'), 'c.id =  pc.category_id')
