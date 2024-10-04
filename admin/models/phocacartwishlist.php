@@ -129,8 +129,12 @@ class PhocaCartCpModelPhocacartWishlist extends AdminModel
             // Now load products for this user
             $query = $db->getQuery(true)
                 ->select('w.id, p.title, p.title_long, p.alias, p.sku, p.catid')
+                ->select('GROUP_CONCAT(DISTINCT c.id) as catid, COUNT(pc.category_id) AS count_categories, p.catid AS preferred_catid')
+                ->select(I18nHelper::sqlCoalesce(['title', 'alias'], 'c', 'cat', 'groupconcatdistinct', '', '', false, true))
                 ->from($db->quoteName('#__phocacart_wishlists', 'w'))
                 ->join('INNER', $db->quoteName('#__phocacart_products', 'p'), 'p.id = w.product_id')
+                ->join('LEFT', $db->quoteName('#__phocacart_product_categories', 'pc'), 'pc.product_id =  p.id')
+                ->join('LEFT', $db->quoteName('#__phocacart_categories', 'c'), 'c.id =  pc.category_id')
                 ->where('w.type = ' . WishListType::WatchDog)
                 ->where('w.user_id = ' . $user->id)
                 ->where('w.language = ' . $db->quote($lang))
@@ -138,6 +142,7 @@ class PhocaCartCpModelPhocacartWishlist extends AdminModel
                 ->order('w.id')
                 ->setLimit($limit);
             I18nHelper::query($query, '#__phocacart_products_i18n', ['title' => '', 'alias' => ''], ['title_long' => ''], 'p', $lang);
+            I18nHelper::query($query, '#__phocacart_categories_i18n', [], [], 'c', $lang);
 
             $db->setQuery($query);
             $products = $db->loadObjectList('id');
@@ -148,10 +153,27 @@ class PhocaCartCpModelPhocacartWishlist extends AdminModel
 
             $mailProducts = [];
             foreach ($products as $product) {
+
+                  if (isset($product->count_categories) && (int)$product->count_categories > 1) {
+
+                        $catidA	        = explode(',', $product->catid);
+                        $cattitleA	    = explode(',', $product->cattitle);
+                        $cataliasA	    = explode(',', $product->catalias);
+                        if (isset($product->preferred_catid) && (int)$product->preferred_catid > 0) {
+                            $key  = array_search((int)$product->preferred_catid, $catidA);
+                        } else {
+                            $key = 0;
+                        }
+                        $product->catid	    = $catidA[$key];
+                        $product->cattitle 	= $cattitleA[$key];
+                        $product->catalias 	= $cataliasA[$key];
+                  }
+
+                // TODO Force useI18n from admin
                 $mailProducts[] = [
                     'product_title' => $product->title_long ?: $product->title,
                     'product_sku'  => $product->sku,
-                    'product_url'  => Route::link('site', PhocacartRoute::getProductCanonicalLink($product->id, $product->catid, $product->alias, '', 0, $lang), false, Route::TLS_IGNORE, true),
+                    'product_url'  => Route::link('site', PhocacartRoute::getProductCanonicalLink($product->id, $product->catid, $product->alias, $product->catalias, (int)$product->preferred_catid, $lang), false, Route::TLS_IGNORE, true),
                 ];
             }
 

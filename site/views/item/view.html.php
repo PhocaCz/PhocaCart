@@ -125,7 +125,7 @@ class PhocaCartViewItem extends HtmlView
 		} else {
 
             // Possible redirect, by ID or by URL
-			$currentUrl = Uri::current();
+			$currentUrl = Uri::getInstance()->toString();
 			if ($this->item[0]->redirect_product_id && $this->item[0]->redirect_product_id != $this->item[0]->id) {
 				$redirectProduct = PhocacartProduct::getProductByProductId($this->item[0]->redirect_product_id);
 				$linkPreview     = PhocacartRoute::getItemRoute($redirectProduct->id, $redirectProduct->catid, '', '', [$redirectProduct->language]);
