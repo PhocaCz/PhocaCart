@@ -193,3 +193,8 @@ img {
 .ph-items .ph-cb {
     display: none;
 }
+
+
+.pc-modal .uk-modal-dialog.uk-width-auto .uk-modal-body iframe {
+    height: 65vh;
+}
