@@ -1277,6 +1277,9 @@ final class PhocacartRenderJs
 
     public static function renderModalCommonIframeWindow($options = []) {
 
+        $params         = PhocacartUtils::getComponentParameters();
+        $p['theme']     = $params->get('theme', 'bs5');
+
         $s[] = ' jQuery(document).ready(function(){';
         $s[] = '	jQuery(document).on("click", "a.phModalContainerCommonIframeButton", function (e) {';
         $s[] = '      var src = jQuery(this).attr("data-src");';
@@ -1286,7 +1289,13 @@ final class PhocacartRenderJs
         $s[] = '      var idIframe = "#" + id + " iframe";';
 
         // Loaded dynamically to not have previous src in iframe, see: components/com_phocacart/layouts/popup_container_iframe.php
-        $s[] = '      var idBody = "#" + id + " .modal-body";';
+
+        if ($p['theme'] != 'uikit') {
+            $s[] = '      var idBody = "#" + id + " .modal-body";';
+        } else {
+            $s[] = '      var idBody = "#" + id + " .uk-modal-body";';
+        }
+
         $iframe = '      jQuery(idBody).html(\'<iframe frameborder="0"';
 
         if(isset($options['allow_geolocation']) && $options['allow_geolocation']) {

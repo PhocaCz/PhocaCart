@@ -225,7 +225,7 @@ abstract class I18nHelper
      *
      * @since 5.0.0
      */
-    public static function sqlCoalesce(array $columns, string $mainTableAlias = 'a', string $columnAliasPrefix = '', string $type = '', string $prefix = '', string $suffix = '', bool $skipAs = false): string
+    public static function sqlCoalesce(array $columns, string $mainTableAlias = 'a', string $columnAliasPrefix = '', string $type = '', string $prefix = '', string $suffix = '', bool $skipAs = false, $forceI18n = false): string
     {
 
         $i18nTableAlias  = 'i18n_'. $mainTableAlias;
@@ -274,7 +274,7 @@ abstract class I18nHelper
         $columnsOutput = [];
         if (!empty($columns)) {
             foreach($columns as $column) {
-                if ($useI18n) {
+                if ($useI18n || $forceI18n) {
 
                     if (in_array($column, $columnsFallback)) {
                         $columnsOutput[] = $columnPrefix . 'COALESCE(' . $i18nTableAlias  . '.' . $column. ', ' . $mainTableAlias. '.' . $column . ')' . $columnSuffix

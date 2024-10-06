@@ -29,7 +29,7 @@ if ($params->get('watchdog_enable', 0)) {
       </div>
 <?php
     } else {
-        $return = base64_encode(Uri::current());
+        $return = base64_encode(Uri::getInstance()->toString());
         $link = Route::_('index.php?option=com_phocacart&task=wishlist.setwatchdog&id=' . $product->id . '&catid=' . $product->catid . '&return=' . $return);
 ?>
       <div class="ph-watchdog">

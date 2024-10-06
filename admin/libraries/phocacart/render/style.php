@@ -236,6 +236,7 @@ class PhocacartRenderStyle
 
 
         $s['c']['dropdown']             = 'dropdown';
+        $s['c']['modal']                = 'modal';
         $s['c']['dropdown-toggle']      = 'dropdown-toggle';
         $s['c']['dropdown-menu']        = 'dropdown-menu';
         $s['c']['dropdown-item']        = 'dropdown-item';
@@ -254,6 +255,7 @@ class PhocacartRenderStyle
         $s['a']['alert']                 = ' role="alert"';
         $s['a']['alert-close']           = ' data-bs-dismiss="alert"';
         $s['a']['dropdown']              = '';
+        $s['a']['modal']                 = '';
 
         $s['a']['lazyload']              = ' loading="lazy"';
 
@@ -383,7 +385,7 @@ class PhocacartRenderStyle
                 $s['c']['modal-body']         = 'uk-modal-body';
                 $s['c']['modal-footer']       = 'uk-modal-footer';
                 $s['c']['modal-lg']           = 'uk-modal-lg';// not exist
-                $s['c']['modal-xl']           = 'uk-modal-xl';// not exist
+                $s['c']['modal-xl']           = 'uk-width-auto';// not exist
                 $s['c']['modal-sm']           = 'uk-modal-sm';// not exist
 
                 $s['c']['controls']                      = 'uk-form-controls';
@@ -428,6 +430,7 @@ class PhocacartRenderStyle
                 $s['c']['dropdown-toggle']      = 'uk-dropdown-toggle';
                 $s['c']['dropdown-menu']        = 'uk-dropdown';
                 $s['c']['dropdown-item']        = 'uk-dropdown-item';
+                $s['c']['modal']                = 'uk-modal';
 
                 //$s['c']['px-3']                 = 'px-3';
                 //$s['c']['py-3']                 = 'py-3';
@@ -446,6 +449,7 @@ class PhocacartRenderStyle
                 $s['a']['alert-close']           = ' uk-close';
                 $s['a']['dropdown']              = ' uk-dropdown';
                 //$s['a']['dropdown']               = 'uk-dropdown="mode: click"';
+                $s['a']['modal']                = 'uk-modal';
 
             break;
 
