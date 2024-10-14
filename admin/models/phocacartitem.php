@@ -340,11 +340,11 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 		}
 
 		if (empty($table->redirect_product_id)) {
-			$table->redirect_product_id = null;
+			$table->redirect_product_id = 0;// null with $table->store(true)
 		}
 
 		if (empty($table->redirect_url)) {
-			$table->redirect_url = null;
+			$table->redirect_url = '';// null with $table->store(true)
 		}
 	}
 

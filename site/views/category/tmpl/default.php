@@ -204,12 +204,26 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 		$dSO 				= '';
 		$dA['class_btn']	= '';
 		$dA['class_icon']	= '';
+
+        // Possible to do (here in category view (html, raw) and even in items view (category, raw)
+        /*
+        if ($this->t['display_stock_status'] == 0) {
+            if status is not displayed and there is hide add to cart stock and stock < 1, should we hide the button too?
+            $stockStatus 				= array();
+			$stock 						= PhocacartStock::getStockItemsChangedByAttributes($stockStatus, $attributesOptions, $v);
+
+			if ($this->t['hide_add_to_cart_stock'] == 1 && (int)$stock < 1) {
+				$dA['class_btn'] 		= 'ph-visibility-hidden';// hide button
+				$dA['class_icon']		= 'ph-display-none';// hide icon
+				$addToCartHidden 			= 1;// used for displaying Ask Question
+			}
+        } else
+        */
+
 		if ($this->t['display_stock_status'] == 2 || $this->t['display_stock_status'] == 3) {
 
 			$stockStatus 				= array();
 			$stock 						= PhocacartStock::getStockItemsChangedByAttributes($stockStatus, $attributesOptions, $v);
-
-
 
 			if ($this->t['hide_add_to_cart_stock'] == 1 && (int)$stock < 1) {
 				$dA['class_btn'] 		= 'ph-visibility-hidden';// hide button
