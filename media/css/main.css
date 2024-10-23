@@ -245,6 +245,7 @@
     position: relative;
 }
 
+.row.ph-item-image-add-box,
 .ph-item-image-add-box {
     text-align: center;
     margin-top: 1em;
