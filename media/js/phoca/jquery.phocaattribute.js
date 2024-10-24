@@ -235,6 +235,8 @@ function phSetAttributeUrl(phSetValueByUser) {
 						jQuery("#" + attributeId + " option[data-value-alias='" + this + "']").attr("selected","selected");// Select box
 						jQuery(phSelectNameIdT + " div[data-value-alias='" + this + "']").addClass('on'); // Select Color or Image
 						jQuery("#" + attributeId + " input[data-value-alias='" + this + "']").attr("checked","checked");// Check box
+						// Need to set active label for Bootstrap checkboxes (checkbox is active, but BS label not)
+						jQuery("#" + attributeId + " input[data-value-alias='" + this + "']").parent().addClass('active');
 					})
 				}
 			} else {
@@ -316,7 +318,6 @@ jQuery(document).ready(function() {
 	//let phSelectboxASelected	=  phSelectboxA + ":selected";
 	// Select box
 	jQuery(document).on('change', phSelectboxA, function(e){
-
 
 
 		const phParams = Joomla.getOptions('phParamsPC');
@@ -418,7 +419,6 @@ jQuery(document).ready(function() {
         let phProductGroup = '.phjAddToCartV' + phTypeView + 'P' + phProductId;
         let phDataA1 = jQuery(phProductGroup).find('select').serialize();// All Selects
         let phDataA2 = jQuery(phProductGroup).find(':checkbox').serialize();// All Checkboxes
-
 		phAjaxChangeAttributeData(phProductId, phTypeView, phDataA1, phDataA2);
 		phSetAttributeUrl(1);
     })
