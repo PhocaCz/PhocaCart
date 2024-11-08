@@ -14,16 +14,8 @@
 defined('_JEXEC') or die();
 
 use Joomla\CMS\Mail\Mail;
-use Joomla\CMS\Factory;
-use Joomla\CMS\Mail\MailHelper;
-use Joomla\CMS\Log\Log;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Language\Text;
-use Joomla\CMS\Layout\FileLayout;
 
-
-
-class PhocacartEmailMail extends Mail{
+class PhocacartEmailMail extends Mail {
 
 	public function __construct($exceptions = true)
   	{

@@ -10,6 +10,7 @@ defined( '_JEXEC' ) or die();
 
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Log\Log;
+use Phoca\PhocaCart\Mail\MailHelper;
 use Phoca\PhocaCart\Mail\MailTemplate;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Router\Route;
@@ -95,7 +96,6 @@ class PhocaCartCpModelPhocacartWishlist extends AdminModel
         } else {
             $defLang = ComponentHelper::getParams('com_languages')->get('site', 'en-GB');
         }
-        $language = $app->getLanguage();
 
         // First find users that signed to any of products, which is on stock again
         $query = $db->getQuery(true)
@@ -155,7 +155,6 @@ class PhocaCartCpModelPhocacartWishlist extends AdminModel
 
             $mailProducts = [];
             foreach ($products as $product) {
-
                   if (isset($product->count_categories) && (int)$product->count_categories > 1) {
 
                         $catidA	        = explode(',', $product->catid);
@@ -179,18 +178,13 @@ class PhocaCartCpModelPhocacartWishlist extends AdminModel
                 ];
             }
 
-            $mailData = [
+            $mailData = MailHelper::prepareMailData([
                 'user_name' => $user->name,
                 'user_username' => $user->username,
                 'user_email' => $user->email,
                 'products' => $mailProducts,
-                'site_name' => $app->get('sitename'),
-                'site_url' => Uri::root(),
-            ];
+            ]);
 
-            /* TODO bypass Joomla Issue https://github.com/joomla/joomla-cms/issues/39228 */
-            $language->load('com_phocacart', JPATH_ADMINISTRATOR, $lang, true);
-            $language->load('com_phocacart', JPATH_SITE, $lang, true);
             $mailer = new MailTemplate('com_phocacart.watchdog', $lang);
             $mailer->addTemplateData($mailData);
             $mailer->addRecipient($user->email, $user->name);

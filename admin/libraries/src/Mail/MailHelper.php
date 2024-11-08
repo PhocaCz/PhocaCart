@@ -9,25 +9,81 @@
 
 namespace Phoca\PhocaCart\Mail;
 
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Mail\Mail;
-use Joomla\CMS\Mail\MailTemplate as JoomlaMailTemplate;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\User\UserFactoryInterface;
+use Joomla\Utilities\IpHelper;
+use Joomla\CMS\Mail\MailHelper as JoomlaMailHelper;
+use Phoca\PhocaCart\Helper\PhocaCartHelper;
 
 defined('_JEXEC') or die;
 
 abstract class MailHelper
 {
-    public static function prepareOrderMailData(\PhocacartOrderView $orderView, object $order, array $addresses, array $status)
+    private static function link(string $url, bool $xhtml = false, bool $absolute = true): string
+    {
+        $link = Route::link('site', $url, $xhtml, Route::TLS_IGNORE, $absolute);
+        if ($absolute) {
+            return $link;
+        }
+
+        // Bypass absolute links in href issue (JoomlaMailHelper::convertRelativeToAbsoluteUrls)
+        return preg_replace('~^/~', '', $link);
+    }
+
+    public static function parseRceipients(?string $recipients): array
+    {
+        $emails = explode(',', $recipients);
+
+        $emails = array_filter($emails, function($email) {
+            return JoomlaMailHelper::isEmailAddress($email);
+        });
+
+        return $emails;
+    }
+
+    public static function prepareMailData(array $mailData = []): array
+    {
+        $app = Factory::getApplication();
+        $user = $app->getIdentity();
+        $date = new Date();
+        $language = Factory::getApplication()->getLanguage();
+
+        $mailData = array_merge([
+            'site_name' => $app->get('sitename'),
+            'site_url' => Uri::root(true),
+            'site_link' => Uri::root(),
+
+            'user_logged' => !!$user->id,
+            'user_name' => $user->name,
+            'user_username' => $user->username,
+            'user_email' => $user->email,
+            'user_language' => $language->getName(),
+            'user_language_tag' => $language->getTag(),
+
+            'remote_ip' => IpHelper::getIp(),
+            'current_datetime' => $date->format(Text::_('DATE_FORMAT_LC6')),
+            'current_date' => $date->format(Text::_('DATE_FORMAT_LC4')),
+        ], $mailData);
+
+        return $mailData;
+    }
+
+    public static function prepareOrderMailData(\PhocacartOrderView $orderView, object $order, array $addresses, array $status): array
     {
         // Basic data
         $mailData = \PhocacartText::prepareReplaceText($orderView, $order->id, $order, $addresses, $status);
+        $mailData = array_merge(self::prepareMailData(), $mailData);
 
         $mailData['name_others']  = '';
         $mailData['sitename']     = Factory::getApplication()->getConfig()->get('sitename');
-        $mailData['status_title'] = $status['title'];
+        $mailData['status_title'] = Text::_($status['title']);
         $mailData['text_nr'] = Text::_('COM_PHOCACART_ORDER_NR');
-        $mailData['text_changed_to'] = Text::_('COM_PHOCACART_ORDER_NR');
+        $mailData['text_changed_to'] = Text::_('COM_PHOCACART_ORDER_STATUS_CHANGED_TO');
 
         // Billing and shipping address data
         $billingAddress = $addresses['b'];
@@ -66,5 +122,96 @@ abstract class MailHelper
         // Gifts
 
         return $mailData;
+    }
+
+    public static function prepareQuestionMailData(Table $question): array
+    {
+        $mailData = MailHelper::prepareMailData([
+            'name' => $question->name,
+            'phone' => $question->phone,
+            'email' => $question->email,
+            'message' => $question->message,
+            'message_html' => nl2br($question->message),
+            'product_id' => null,
+            'product_title' => null,
+            'product_title_long' => null,
+            'product_sku' => null,
+            'product_link_text' => null,
+            'product_link_html' => null,
+            'product_url' => null,
+            'category_id' => null,
+            'category_title' => null,
+            'category_title_long' => null,
+            'category_link_text' => null,
+            'category_link_html' => null,
+            'category_url' => null,
+        ]);
+
+        $lang = Factory::getApplication()->getLanguage()->getTag();
+
+        $category = null;
+        if ($question->category_id) {
+            $category = \PhocacartCategory::getCategoryById($question->category_id);
+
+            if ($category) {
+                $mailData['category_id']         = $category->id;
+                $mailData['category_title']      = $category->title;
+                $mailData['category_title_long'] = $category->title_long;
+                $link = \PhocacartRoute::getCategoryRoute($category->id, $category->alias, $lang);
+                $mailData['category_link_text']  = self::link($link);
+                $mailData['category_link_html']  = self::link($link, true);
+                $mailData['category_url']  = self::link($link, true, false);
+            }
+        }
+
+        if ($question->product_id) {
+            $product = \PhocacartProduct::getProduct($question->product_id, $question->category_id);
+
+            if ($product) {
+                $mailData['product_id']         = $product->id;
+                $mailData['product_title']      = $product->title;
+                $mailData['product_title_long'] = $product->title_long;
+                $mailData['product_sku']        = $product->sku;
+                if ($category) {
+                    $link = \PhocacartRoute::getProductCanonicalLink($product->id, $category->id, $product->alias, $category->alias, 0, $lang);
+                } else {
+                    $link = \PhocacartRoute::getProductCanonicalLink($product->id, $product->catid, $product->alias, $product->catalias, $product->preferred_catid, $lang);
+                }
+                $mailData['product_link_text'] = self::link($link);
+                $mailData['product_link_html'] = self::link($link, true);
+                $mailData['product_url'] = self::link($link, true, false);
+            }
+        }
+
+        return $mailData;
+    }
+
+    public static function questionMailRecipients(MailTemplate $mailer): bool
+    {
+        $hasRecipient = false;
+
+        if ($userId = PhocaCartHelper::param('send_email_question')) {
+            /** @var \Joomla\CMS\User\User $user */
+            $user = Factory::getContainer()->get(UserFactoryInterface::class)->loadUserById($userId);
+            if ($user->id) {
+                $mailer->addRecipient($user->email, $user->name);
+                $hasRecipient = true;
+            }
+        }
+
+        if ($emails = MailHelper::parseRceipients(PhocaCartHelper::param('send_email_question_others'))) {
+            if (!$hasRecipient) {
+                $email = array_shift($emails);
+                $mailer->addRecipient($email);
+            }
+
+            foreach ($emails as $email) {
+                $mailer->addRecipient($email, null, 'bcc');
+            }
+
+            $hasRecipient = true;
+        }
+
+        return $hasRecipient;
     }
 }
