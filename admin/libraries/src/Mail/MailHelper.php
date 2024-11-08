@@ -55,8 +55,8 @@ abstract class MailHelper
 
         $mailData = array_merge([
             'site_name' => $app->get('sitename'),
-            'site_url' => Uri::root(true),
             'site_link' => Uri::root(),
+            'site_url' => Uri::root(true),
 
             'user_logged' => !!$user->id,
             'user_name' => $user->name,
@@ -136,13 +136,13 @@ abstract class MailHelper
             'product_title' => null,
             'product_title_long' => null,
             'product_sku' => null,
-            'product_link_text' => null,
+            'product_link' => null,
             'product_link_html' => null,
             'product_url' => null,
             'category_id' => null,
             'category_title' => null,
             'category_title_long' => null,
-            'category_link_text' => null,
+            'category_link' => null,
             'category_link_html' => null,
             'category_url' => null,
         ]);
@@ -158,7 +158,7 @@ abstract class MailHelper
                 $mailData['category_title']      = $category->title;
                 $mailData['category_title_long'] = $category->title_long;
                 $link = \PhocacartRoute::getCategoryRoute($category->id, $category->alias, $lang);
-                $mailData['category_link_text']  = self::link($link);
+                $mailData['category_link']  = self::link($link);
                 $mailData['category_link_html']  = self::link($link, true);
                 $mailData['category_url']  = self::link($link, true, false);
             }
@@ -177,7 +177,7 @@ abstract class MailHelper
                 } else {
                     $link = \PhocacartRoute::getProductCanonicalLink($product->id, $product->catid, $product->alias, $product->catalias, $product->preferred_catid, $lang);
                 }
-                $mailData['product_link_text'] = self::link($link);
+                $mailData['product_link'] = self::link($link);
                 $mailData['product_link_html'] = self::link($link, true);
                 $mailData['product_url'] = self::link($link, true, false);
             }
@@ -213,5 +213,43 @@ abstract class MailHelper
         }
 
         return $hasRecipient;
+    }
+
+    public static function prepareWatchdogMailData(object $user, array $products, string $lang): array
+    {
+        $mailProducts = [];
+        foreach ($products as $product) {
+            if (isset($product->count_categories) && (int)$product->count_categories > 1) {
+                $catidA	        = explode(',', $product->catid);
+                $cattitleA	    = explode(',', $product->cattitle);
+                $cataliasA	    = explode(',', $product->catalias);
+                if (isset($product->preferred_catid) && (int)$product->preferred_catid > 0) {
+                    $key  = array_search((int)$product->preferred_catid, $catidA);
+                } else {
+                    $key = 0;
+                }
+                $product->catid	    = $catidA[$key];
+                $product->cattitle 	= $cattitleA[$key];
+                $product->catalias 	= $cataliasA[$key];
+            }
+
+            // TODO Force useI18n from admin
+            $mailProducts[] = [
+                'product_title' => $product->title_long ?: $product->title,
+                'product_sku'  => $product->sku,
+                'product_link'  => self::link(\PhocacartRoute::getProductCanonicalLink($product->id, $product->catid, $product->alias, $product->catalias, (int)$product->preferred_catid, $lang)),
+                'product_link_html'  => self::link(\PhocacartRoute::getProductCanonicalLink($product->id, $product->catid, $product->alias, $product->catalias, (int)$product->preferred_catid, $lang), true),
+                'product_url'  => self::link(\PhocacartRoute::getProductCanonicalLink($product->id, $product->catid, $product->alias, $product->catalias, (int)$product->preferred_catid, $lang), false, false),
+            ];
+        }
+
+        $mailData = MailHelper::prepareMailData([
+            'user_name' => $user->name,
+            'user_username' => $user->username,
+            'user_email' => $user->email,
+            'products' => $mailProducts,
+        ]);
+
+        return $mailData;
     }
 }

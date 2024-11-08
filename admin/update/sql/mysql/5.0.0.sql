@@ -209,9 +209,6 @@ ALTER TABLE `#__phocacart_parameter_values_related` DROP INDEX `i_parameter_id`,
 
 ALTER TABLE `#__phocacart_wishlists` ADD COLUMN `language` CHAR(7) NOT NULL DEFAULT '';
 
-INSERT INTO `#__mail_templates` (`template_id`, `extension`, `language`, `subject`, `body`, `htmlbody`, `attachments`, `params`) VALUES
-    ('com_phocacart.watchdog', 'com_phocacart', '', 'COM_PHOCACART_EMAIL_WATCHDOG_SUBJECT', 'COM_PHOCACART_EMAIL_WATCHDOG_BODY', 'COM_PHOCACART_EMAIL_WATCHDOG_HTMLBODY', '', '{"tags":["user_name","user_username","user_email","products","product_title","product_sku","product_url","site_name","site_url"]}');
-
 ALTER TABLE `#__phocacart_categories` ADD COLUMN `description_bottom` TEXT AFTER `description`;
 ALTER TABLE `#__phocacart_categories_i18n` ADD COLUMN `description_bottom` TEXT AFTER `description`;
 
@@ -262,8 +259,13 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_taxes_i18n` (
     KEY `idx_alias` (`alias`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO `#__mail_templates` (`template_id`, `extension`, `language`, `subject`, `body`, `htmlbody`, `attachments`, `params`) VALUES
-    ('com_phocacart.question', 'com_phocacart', '', 'COM_PHOCACART_EMAIL_QUESTION_SUBJECT', 'COM_PHOCACART_EMAIL_QUESTION_BODY', 'COM_PHOCACART_EMAIL_QUESTION_HTMLBODY', '', '{"tags":["name","email","phone","product_title","product_long_title","product_sku","product_link_text","product_link_html","product_url","category_title","category_long_title","category_link_text","category_link_html","category_url","site_name","site_link","site_url"]}');
+INSERT IGNORE INTO `#__mail_templates` (`template_id`, `extension`, `language`, `subject`, `body`, `htmlbody`, `attachments`, `params`) VALUES
+    ('com_phocacart.watchdog', 'com_phocacart', '', 'COM_PHOCACART_EMAIL_WATCHDOG_SUBJECT', 'COM_PHOCACART_EMAIL_WATCHDOG_BODY', 'COM_PHOCACART_EMAIL_WATCHDOG_HTMLBODY', '', '{"tags":["user_name","user_username","user_email","products","product_title","product_sku","product_link","product_url","site_name","site_link","site_url"]}');
+INSERT IGNORE INTO `#__mail_templates` (`template_id`, `extension`, `language`, `subject`, `body`, `htmlbody`, `attachments`, `params`) VALUES
+    ('com_phocacart.question', 'com_phocacart', '', 'COM_PHOCACART_EMAIL_QUESTION_SUBJECT', 'COM_PHOCACART_EMAIL_QUESTION_BODY', 'COM_PHOCACART_EMAIL_QUESTION_HTMLBODY', '', '{"tags":["name","email","phone","product_title","product_long_title","product_sku","product_link","product_url","category_title","category_long_title","category_link","category_url","site_name","site_link","site_url"]}');
+INSERT IGNORE INTO `#__mail_templates` (`template_id`, `extension`, `language`, `subject`, `body`, `htmlbody`, `attachments`, `params`) VALUES
+    ('com_phocacart.question.admin', 'com_phocacart', '', 'COM_PHOCACART_EMAIL_QUESTION_ADMIN_SUBJECT', 'COM_PHOCACART_EMAIL_QUESTION_ADMIN_BODY', 'COM_PHOCACART_EMAIL_QUESTION_ADMIN_HTMLBODY', '', '{"tags":["name","email","phone","product_title","product_long_title","product_sku","product_link","product_url","category_title","category_long_title","category_link","category_url","site_name","site_link","site_url"]}');
 
 INSERT INTO `#__mail_templates` (`template_id`, `extension`, `language`, `subject`, `body`, `htmlbody`, `attachments`, `params`) VALUES
-    ('com_phocacart.question.admin', 'com_phocacart', '', 'COM_PHOCACART_EMAIL_QUESTION_ADMIN_SUBJECT', 'COM_PHOCACART_EMAIL_QUESTION_ADMIN_BODY', 'COM_PHOCACART_EMAIL_QUESTION_ADMIN_HTMLBODY', '', '{"tags":["name","email","phone","product_title","product_long_title","product_sku","product_link_text","product_link_html","product_url","category_title","category_long_title","category_link_text","category_link_html","category_url","site_name","site_link","site_url"]}');
+    ('com_phocacart.submit_item', 'com_phocacart', '', 'COM_PHOCACART_EMAIL_SUBMIT_ITEM_SUBJECT', 'COM_PHOCACART_EMAIL_SUBMITE_ITEM_BODY', 'COM_PHOCACART_EMAIL_SUBMIT_ITEM_HTMLBODY', '', '{"tags":["user_name","user_username","user_email","products","product_title","product_sku","product_url","site_name","site_url"]}');
+
