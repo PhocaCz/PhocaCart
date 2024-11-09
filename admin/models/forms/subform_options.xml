@@ -73,7 +73,7 @@
     </fieldset>
 
     <fieldset name="advanced" class="ph-fieldset-specification-advanced">
-      <field name="color" type="color" showon="%%type:2[OR]%%type:5" label="COM_PHOCACART_FIELD_COLOR_LABEL" />
+      <field name="color" type="color" showon="" label="COM_PHOCACART_FIELD_COLOR_LABEL" />
 
       <field name="type" type="list" default="0" showon="%%type:20" label="COM_PHOCACART_FIELD_TYPE_ATTR_OPTIONS_LABEL" description="COM_PHOCACART_FIELD_TYPE_ATTR_OPTIONS_DESC">
         <option value="0">COM_PHOCACART_ATTR_TYPE_DEFAULT</option>
