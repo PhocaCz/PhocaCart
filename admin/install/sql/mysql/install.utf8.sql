@@ -504,6 +504,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_shipping_methods` (
   `code` varchar(100) NOT NULL DEFAULT '',
   `image` varchar(255) NOT NULL DEFAULT '',
   `type` tinyint(3) NOT NULL default '0',
+  `change_tax` tinyint(1) NOT NULL DEFAULT '0',
   `description` text,
   `description_info` text,
   `tracking_title` varchar(255) NOT NULL DEFAULT '',

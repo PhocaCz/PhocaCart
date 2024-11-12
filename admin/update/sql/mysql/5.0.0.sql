@@ -261,3 +261,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_taxes_i18n` (
     PRIMARY KEY  (`id`, `language`),
     KEY `idx_alias` (`alias`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+
+
+-- 5.0.0 Beta83
+ALTER TABLE `#__phocacart_shipping_methods` ADD COLUMN `change_tax` tinyint(1) NOT NULL DEFAULT '0';
