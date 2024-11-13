@@ -66,6 +66,15 @@ class PhocacartRouterrules extends MenuRules
                     unset($query['layout']);
                 }
 
+                // PHOCAEDIT - under review
+                // if we have category view but not categories view
+                // then some menu links like checkout, download, etc. get suffix id=0
+                // Remove it (still under review as some parts in Joomla can demand id=0
+                // to not throw error
+                if (isset($query['id']) && $query['id'] == 0) {
+                    unset($query['id']);
+                }
+
                 return;
             }
 
