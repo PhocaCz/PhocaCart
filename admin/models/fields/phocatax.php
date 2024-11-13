@@ -24,7 +24,7 @@ class JFormFieldPhocaTax extends FormField
 
 		$db = Factory::getDBO();
 
-		$query = 'SELECT a.title AS text, a.id AS value'
+		$query = 'SELECT a.title AS text, a.id AS value, tax_rate, calculation_type'
 		. ' FROM #__phocacart_taxes AS a'
 		. ' WHERE a.published = 1'
 		. ' ORDER BY a.ordering';
@@ -32,8 +32,10 @@ class JFormFieldPhocaTax extends FormField
 		$data = $db->loadObjectList();
 
 		if (!empty($data)) {
+
+			$price 	= new PhocacartPrice();
 			foreach($data as $k => $v) {
-				$data[$k]->text = Text::_($v->text);
+				$data[$k]->text = Text::_($v->text) . ' (' . $price->getTaxFormat($v->tax_rate, (int)$v->calculation_type) . ')';
 			}
 		}
 
