@@ -228,19 +228,19 @@ class PhocaCartCpModelPhocaCartSubmititem extends AdminModel
 				} else {
 					$data['alias'] = OutputFilter::stringURLSafe($data['title']);
 				}
-
-
-				if ($table->load(array('alias' => $data['alias']))){
-					$msg = Text::_('COM_PHOCACART_SAVE_WARNING');
-				}
-
-				list($title, $alias) = $this->generateNewTitle(0, $data['alias'], $data['title']);
-				$data['alias'] = $alias;
-
-				if (isset($msg)) {
-					Factory::getApplication()->enqueueMessage($msg, 'warning');
-				}
 			}
+
+			if ($table->load(array('alias' => $data['alias']))){
+				$msg = Text::_('COM_PHOCACART_SAVE_WARNING');
+			}
+
+			list($title, $alias) = $this->generateNewTitle(0, $data['alias'], $data['title']);
+			$data['alias'] = $alias;
+
+			if (isset($msg)) {
+				Factory::getApplication()->enqueueMessage($msg, 'warning');
+			}
+
 		} else if ($table->load(array('alias' => $data['alias'])) && ($table->id != $data['id'] || $data['id'] == 0)) {
 			//$this->setError(Text::_('COM_PHOCACART_ERROR_ITEM_UNIQUE_ALIAS'));
 			//return false;
