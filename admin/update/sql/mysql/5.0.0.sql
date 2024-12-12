@@ -269,3 +269,14 @@ INSERT IGNORE INTO `#__mail_templates` (`template_id`, `extension`, `language`, 
 INSERT INTO `#__mail_templates` (`template_id`, `extension`, `language`, `subject`, `body`, `htmlbody`, `attachments`, `params`) VALUES
     ('com_phocacart.submit_item', 'com_phocacart', '', 'COM_PHOCACART_EMAIL_SUBMIT_ITEM_SUBJECT', 'COM_PHOCACART_EMAIL_SUBMITE_ITEM_BODY', 'COM_PHOCACART_EMAIL_SUBMIT_ITEM_HTMLBODY', '', '{"tags":["user_name","user_username","user_email","products","product_title","product_sku","product_url","site_name","site_url"]}');
 
+
+INSERT INTO `#__mail_templates` (`template_id`, `extension`, `language`, `subject`, `body`, `htmlbody`, `attachments`, `params`)
+    SELECT
+        CONCAT('com_phocacart.order_status.', `id`),
+        'com_phocacart', '',
+        IF(`email_subject` = '', 'COM_PHOCACART_EMAIL_ORDER_STATUS_SUBJECT', `email_subject`),
+        'COM_PHOCACART_EMAIL_ORDER_STATUS_TEXTBODY',
+        IF(`email_send_format` in (0, 2), CONCAT(`email_text`, '{DOCUMENT}', `email_footer`), CONCAT(`email_text`, `email_footer`)),
+        '',
+        '{"tags":["user_name","user_username","user_email","document","product_title","product_sku","product_url","site_name","site_url"]}'
+    FROM `#__phocacart_order_statuses`;
