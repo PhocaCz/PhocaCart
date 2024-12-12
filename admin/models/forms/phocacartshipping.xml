@@ -25,6 +25,11 @@
 
 			<field name="tax_id" type="phocatax" label="COM_PHOCACART_FIELD_TAX_LABEL" description="COM_PHOCACART_FIELD_TAX_DESC" />
 
+			<field name="change_tax" type="list" default="0" label="COM_PHOCACART_FIELD_SHIPPING_CHANGE_TAX_LABEL" description="COM_PHOCACART_FIELD_SHIPPING_CHANGE_TAX_DESC">
+				<option	value="0">COM_PHOCACART_NO</option>
+				<option value="1">COM_PHOCACART_YES</option>
+			</field>
+
 			<field name="image" type="media" label="COM_PHOCACART_FIELD_IMAGE_LABEL" description="COM_PHOCACART_FIELD_IMAGE_DESC" />
 
 			<field name="description" type="phocaeditor" i18n="true" buttons="true" hide="pagebreak,readmore" filter="\Phoca\PhocaCart\Input\InputHelper::filterText" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />

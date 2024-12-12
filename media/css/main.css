@@ -2513,7 +2513,12 @@ form.ph-form-placeholder input.form-control:focus,
     box-shadow: 0px 0px 0px 2px transparent;
 }
 
-/* .ph-form-input-box input:not(:focus):valid ~ label */
+/* For pasting values with doubleclick, mouse wheel click, etc:
+.ph-form-input-box input:not(:placeholder-shown) ~ label,
+ - in this case the html needs to include e.g. placeholder=" "
+*/
+
+/*.ph-form-input-box input:not(:focus):valid ~ label,*/
 .ph-form-input-box select ~ label,
 .ph-form-input-box input.form-control:focus ~ label,
 .ph-form-input-box input.form-control:not([value='']) ~ label {

@@ -337,30 +337,42 @@ class PhocaCartViewCheckout extends HtmlView
                 if (!empty($this->t['shippingmethods']) && count($this->t['shippingmethods']) == 1 && $this->t['automatic_shipping_method_setting'] == 1) {
                     if (isset($this->t['shippingmethods'][0]->id) && (int)$this->t['shippingmethods'][0]->id > 0) {
 
-                        $shippingStored = 0;
-                        if ($this->a->login == 1 && isset($this->u->id) && $this->u->id > 0) {
-                            if ($shipping->storeShippingRegistered($this->t['shippingmethods'][0]->id, $this->u->id)) {
-                                $shippingStored = 1;
+                        // Don't set it in case the parameter Skip Shipping Methods parameter meets criteria:
+                        $sOCh = array();// Shipping Options Checkout
+                        // PRODUCTTYPE - Digital products are even gift vouchers
+                        $sOCh['all_digital_products'] = isset($total[0]['countdigitalproducts']) && isset($total[0]['countallproducts']) && (int)$total[0]['countdigitalproducts'] == $total[0]['countallproducts'] ? 1 : 0;
+                        $shippingNotUsed              = PhocacartShipping::isShippingNotUsed($sOCh);// REVERSE
+
+                        if ($shippingNotUsed) {
+                            // e.g. we have digital products and we set in parameter Skip Shipping Methods that we skip shipping methods
+                            // so even there is one shipping method found, it cannot be set
+                        } else {
+
+                            $shippingStored = 0;
+                            if ($this->a->login == 1 && isset($this->u->id) && $this->u->id > 0) {
+                                if ($shipping->storeShippingRegistered($this->t['shippingmethods'][0]->id, $this->u->id)) {
+                                    $shippingStored = 1;
+                                }
+                            } else if ($this->a->login == 2) {
+                                if (PhocacartUserGuestuser::storeShipping((int)$this->t['shippingmethods'][0]->id)) {
+                                    $shippingStored = 1;
+                                }
                             }
-                        } else if ($this->a->login == 2) {
-                            if (PhocacartUserGuestuser::storeShipping((int)$this->t['shippingmethods'][0]->id)) {
-                                $shippingStored = 1;
+
+                            if ($shippingStored == 1) {
+                                $shippingId = (int)$this->t['shippingmethods'][0]->id;// will be used for payment - updated now
+                                $this->cart->addShippingCosts($shippingId);           // add the costs to cart so it has updated information
+
+                                $this->t['shippingmethod'] = $this->cart->getShippingCosts();
+
+                                $this->a->shippingadded             = 1;
+                                $this->a->shippingview              = 1;
+                                $this->a->shippingedit              = 0;
+                                $this->a->shippingdisplayeditbutton = 0;
+                                $scrollTo                           = 'phcheckoutpaymentedit';
+
+
                             }
-                        }
-
-                        if ($shippingStored == 1) {
-                            $shippingId = (int)$this->t['shippingmethods'][0]->id;// will be used for payment - updated now
-                            $this->cart->addShippingCosts($shippingId);           // add the costs to cart so it has updated information
-
-                            $this->t['shippingmethod'] = $this->cart->getShippingCosts();
-
-                            $this->a->shippingadded             = 1;
-                            $this->a->shippingview              = 1;
-                            $this->a->shippingedit              = 0;
-                            $this->a->shippingdisplayeditbutton = 0;
-                            $scrollTo                           = 'phcheckoutpaymentedit';
-
-
                         }
                     }
                 }

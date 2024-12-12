@@ -381,26 +381,28 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 		$user = Factory::getUser();
 
 		// ALIAS
+
 		if (in_array($input->get('task'), array('apply', 'save', 'save2new')) && (!isset($data['id']) || (int) $data['id'] == 0)) {
+
 			if ($data['alias'] == null) {
-				if (Factory::getConfig()->get('unicodeslugs') == 1) {
-					$data['alias'] = OutputFilter::stringURLUnicodeSlug($data['title']);
-				} else {
-					$data['alias'] = OutputFilter::stringURLSafe($data['title']);
-				}
+                if (Factory::getConfig()->get('unicodeslugs') == 1) {
+                    $data['alias'] = OutputFilter::stringURLUnicodeSlug($data['title']);
+                } else {
+                    $data['alias'] = OutputFilter::stringURLSafe($data['title']);
+                }
+            }
 
+            if ($table->load(array('alias' => $data['alias']))){
+                $msg = Text::_('COM_PHOCACART_SAVE_WARNING');
+            }
 
-				if ($table->load(array('alias' => $data['alias']))){
-					$msg = Text::_('COM_PHOCACART_SAVE_WARNING');
-				}
+            list($title, $alias) = $this->generateNewTitle(0, $data['alias'], $data['title']);
+            $data['alias'] = $alias;
 
-				list($title, $alias) = $this->generateNewTitle(0, $data['alias'], $data['title']);
-				$data['alias'] = $alias;
+            if (isset($msg)) {
+                Factory::getApplication()->enqueueMessage($msg, 'warning');
+            }
 
-				if (isset($msg)) {
-					Factory::getApplication()->enqueueMessage($msg, 'warning');
-				}
-			}
 		} else if ($table->load(array('alias' => $data['alias'])) && ($table->getId() != $data['id'] || $data['id'] == 0)) {
 			$this->setError(Text::_('COM_PHOCACART_ERROR_ITEM_UNIQUE_ALIAS'));
 			return false;

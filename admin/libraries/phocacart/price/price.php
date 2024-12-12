@@ -136,9 +136,15 @@ class PhocacartPrice
             $this->setCurrency((int)$forceCurrency);
         }
 
-        if ($price < 0) {
-            $negative = 1;
-
+        // Due to backward compatibility (previously discounts were always - now they can be +
+        // e.g. Discount with added value -10
+        // is marked as negative but it has reversed value in options so it needs to be transformed to positive (only design issue)
+        if ($negative == 1 && $price < 0) {
+            $negativeSign = 0;
+        } else if ($price < 0) {
+            $negativeSign = 1;
+        } else {
+            $negativeSign = $negative;
         }
 
         // If negative is forced by parameter but the price is 0 in real - skip the negative sign
@@ -158,7 +164,10 @@ class PhocacartPrice
         // Round after exchange rate
         $price = $this->roundPrice($price);
 
-        if ($negative) {
+
+        if ($negative == 1 && $price < 0) {
+            $price = abs($price);
+        } else if ($price < 0) {
             $price = abs($price);
         }
 
@@ -194,7 +203,8 @@ class PhocacartPrice
         }
 
         $o = '';
-        if ($negative) {
+
+        if ($negativeSign == 1) {
 
             $o = '- ' . $pricePrefix . $price . $priceSuffix;
         } else {

@@ -591,7 +591,7 @@ class PhocacartShipping
 
 
 
-	public function getShippingMethod($shippingId)
+	public function getShippingMethod($shippingId, $total = [])
 	{
 		$db = Factory::getDBO();
 
@@ -603,11 +603,42 @@ class PhocacartShipping
 
 		$columns = I18nHelper::sqlCoalesce(['title', 'description'], 's');
 
-		$query = ' SELECT s.id, s.tax_id, s.cost, s.cost_additional, s.calculation_type, s.method, s.params, s.image,'
+		$taxId = 's.tax_id';
+		$taxIdColumn = 's.tax_id';
+
+		// CHANGE TAX OF SHIPPING BASED ON PRODUCT TAXES - set the highest rate, cannot mix percentage and fixed value taxes
+		if (!empty($total['tax'])) {
+
+			$query = 'SELECT change_tax FROM #__phocacart_shipping_methods WHERE id = '.(int)$shippingId . ' ORDER BY id  LIMIT 1';
+			$db->setQuery($query);
+			$change_tax = $db->loadResult();
+
+			if (isset($change_tax) && (int)$change_tax == 1) {
+
+				$highestTaxRateId = 0;
+				$highestTaxRate   = -1;
+
+				foreach ($total['tax'] as $k => $v) {
+					if (isset($v['taxid']) && $v['rate']) {
+						if ((float)$v['rate'] > (float)$highestTaxRate) {
+							$highestTaxRateId = $v['taxid'];
+							$highestTaxRate   = $v['rate'];
+						}
+					}
+				}
+				if ((int)$highestTaxRateId > 0 || (int)$highestTaxRateId == 0) {
+					$taxId       = (int)$highestTaxRateId;
+					$taxIdColumn = (int)$highestTaxRateId . ' AS tax_id';
+				}
+			}
+		}
+
+
+		$query = ' SELECT s.id, '.$taxIdColumn.', s.cost, s.cost_additional, s.calculation_type, s.method, s.params, s.image,'
 				.' t.id as taxid, '.I18nHelper::sqlCoalesce(['title'], 't', 'tax').', t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.tax_hide as taxhide'
 				.', ' . $columns
 				.' FROM #__phocacart_shipping_methods AS s'
-				.' LEFT JOIN #__phocacart_taxes AS t ON t.id = s.tax_id'
+				.' LEFT JOIN #__phocacart_taxes AS t ON t.id = '.$taxId
 				. I18nHelper::sqlJoin('#__phocacart_taxes_i18n', 't')
 				. I18nHelper::sqlJoin('#__phocacart_shipping_methods_i18n', 's')
 				.' WHERE s.id = '.(int)$shippingId
@@ -616,7 +647,6 @@ class PhocacartShipping
 		$db->setQuery($query);
 
 		$shipping = $db->loadObject();
-
 
 		if (isset($shipping->params)) {
 			$registry = new Registry;

@@ -1124,11 +1124,14 @@ class PhocacartCart
         $shippingObject = new PhocacartShipping();
 
         $shippingObject->setType($this->type);
-        $sI = $shippingObject->getShippingMethod((int)$shippingId);
+
 
         if (!isset($this->total[0])) {
             $this->total[0] = array();
         }
+
+        $sI = $shippingObject->getShippingMethod((int)$shippingId, $this->total[0]);
+
         $shippingValid = $shippingObject->checkAndGetShippingMethod((int)$shippingId, $this->total[0]);
         if (!$shippingValid) {
             PhocacartShipping::removeShipping();// In case user has in cart shipping method which does not exists
