@@ -504,6 +504,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_shipping_methods` (
   `code` varchar(100) NOT NULL DEFAULT '',
   `image` varchar(255) NOT NULL DEFAULT '',
   `type` tinyint(3) NOT NULL default '0',
+  `change_tax` tinyint(1) NOT NULL DEFAULT '0',
   `description` text,
   `description_info` text,
   `tracking_title` varchar(255) NOT NULL DEFAULT '',
@@ -2032,13 +2033,9 @@ INSERT INTO `#__phocacart_form_fields` ( `title`, `label`, `description`, `type`
 
 INSERT INTO `#__phocacart_groups` (`id`, `title`, `published`, `display_price`, `display_addtocart`, `display_attributes`, `ordering`, `type`) VALUES (1, 'COM_PHOCACART_DEFAULT', '1', '1', '1', '1', '1', '1');
 
-INSERT INTO `#__mail_templates` (`template_id`, `extension`, `language`, `subject`, `body`, `htmlbody`, `attachments`, `params`) VALUES
-    ('com_phocacart.watchdog', 'com_phocacart', '', 'COM_PHOCACART_EMAIL_WATCHDOG_SUBJECT', 'COM_PHOCACART_EMAIL_WATCHDOG_BODY', 'COM_PHOCACART_EMAIL_WATCHDOG_HTMLBODY', '', '{"tags":["user_name","user_username","user_email","products","product_title","product_sku","product_link","product_url","site_name","site_link","site_url"]}');
-INSERT INTO `#__mail_templates` (`template_id`, `extension`, `language`, `subject`, `body`, `htmlbody`, `attachments`, `params`) VALUES
-    ('com_phocacart.question', 'com_phocacart', '', 'COM_PHOCACART_EMAIL_QUESTION_SUBJECT', 'COM_PHOCACART_EMAIL_QUESTION_BODY', 'COM_PHOCACART_EMAIL_QUESTION_HTMLBODY', '', '{"tags":["name","email","phone","product_title","product_long_title","product_sku","product_link","product_url","category_title","category_long_title","category_link","category_url","site_name","site_link","site_url"]}');
-INSERT INTO `#__mail_templates` (`template_id`, `extension`, `language`, `subject`, `body`, `htmlbody`, `attachments`, `params`) VALUES
-    ('com_phocacart.question.admin', 'com_phocacart', '', 'COM_PHOCACART_EMAIL_QUESTION_ADMIN_SUBJECT', 'COM_PHOCACART_EMAIL_QUESTION_ADMIN_BODY', 'COM_PHOCACART_EMAIL_QUESTION_ADMIN_HTMLBODY', '', '{"tags":["name","email","phone","product_title","product_long_title","product_sku","product_link","product_url","category_title","category_long_title","category_link","category_url","site_name","site_link","site_url"]}');
-
+-- INSERT -> REPLACE
+REPLACE INTO `#__mail_templates` (`template_id`, `extension`, `language`, `subject`, `body`, `htmlbody`, `attachments`, `params`) VALUES
+    ('com_phocacart.watchdog', 'com_phocacart', '', 'COM_PHOCACART_EMAIL_WATCHDOG_SUBJECT', 'COM_PHOCACART_EMAIL_WATCHDOG_BODY', 'COM_PHOCACART_EMAIL_WATCHDOG_HTMLBODY', '', '{"tags":["user_name","user_username","user_email","product_title","product_sku","product_url","site_name","site_url"]}');
 
 INSERT INTO `#__phocacart_content_types` (`id`, `title`, `context`, `published`, `ordering`, `params`)
     VALUES (1, 'COM_PHOCACART_CONTENT_TYPE_CATEGORY_DEFAULT', 'category', 1, 1, '{}');
