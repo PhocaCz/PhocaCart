@@ -281,74 +281,46 @@ class PhocacartOrderStatus
             $bodyOthers = PhocacartText::completeText($bodyOthers, $mailData, 2);
 
             $document = '';
-            switch ($emailSend) {
-                case 1:
-                    $orderRender = new PhocacartOrderRender();
+            $orderRender = new PhocacartOrderRender();
+            if (in_array($emailSendFormat, [0, 2])) {
+                switch ($emailSend) {
+                    case 1: // Order
+                        $documentNumber = $orderNumber;
+                        $attachmentName = strip_tags(Text::_('COM_PHOCACART_ORDER') . '_' . $documentNumber) . '.pdf';
+                        $attachmentTitle = Text::_('COM_PHOCACART_ORDER_NR') . '_' . $documentNumber;
 
-                    if (in_array($emailSendFormat, [0, 2])) {
-                        $document = $orderRender->render($order->id, 1, 'mail', $orderToken);
-                        $body .= '<br><br>' . $document;
-                        $bodyOthers .= '<br><br>' . $document;
-                    }
+                        break;
+                    case 2: // Invoice
+                        $documentNumber = PhocacartOrder::getInvoiceNumber($order->id, $order->date, $order->invoice_number);
+                        $attachmentName    = strip_tags(Text::_('COM_PHOCACART_INVOICE') . '_' . $documentNumber) . '.pdf';
+                        $attachmentTitle = Text::_('COM_PHOCACART_INVOICE_NR') . '_' . $documentNumber;
 
-                    if (Pdf::load() && in_array($emailSendFormat, [1, 2])) {
-                        $orderNumber       = PhocacartOrder::getOrderNumber($order->id, $order->date, $order->order_number);
-                        $attachmentName    = strip_tags(Text::_('COM_PHOCACART_ORDER') . '_' . $orderNumber) . '.pdf';
-                        $attachmentContent = Pdf::renderPdf([
-                            'title'    => Text::_('COM_PHOCACART_ORDER_NR') . ': ' . $orderNumber,
-                            'filename' => $attachmentName,
-                            'output'   => $orderRender->render($order->id, 1, 'pdf', $orderToken),
-                        ]);
-                    }
-
-                    break;
-                case 2:
-
-                    $orderRender = new PhocacartOrderRender();
-
-                    $invoiceNumber = PhocacartOrder::getInvoiceNumber($order->id, $order->date, $order->invoice_number);
-
-
-                    // If invoice is not created yet, it cannot be sent
-                    if ($invoiceNumber == '') {
-                        PhocacartLog::add(3, 'Status changed - sending email: The invoice should have been attached to the email, but it doesn not exist yet. Check order status settings and billing settings.', $order->id, 'Order ID: ' . $order->id . ', Status ID: ' . $status['id']);
-                    } else {
-                        if (in_array($emailSendFormat, [0, 2])) {
-                            $document = $orderRender->render($order->id, 2, 'mail', $orderToken);
-                            $body .= '<br><br>' . $document;
-                            $bodyOthers .= '<br><br>' . $document;
+                        if (!$documentNumber) {
+                            PhocacartLog::add(3, 'Status changed - sending email: The invoice should have been attached to the email, but it does not exist yet. Check order status settings and billing settings.', $order->id, 'Order ID: ' . $order->id . ', Status ID: ' . $status['id']);
                         }
 
-                        if (Pdf::load() && in_array($emailSendFormat, [1, 2])) {
-                            $attachmentName    = strip_tags(Text::_('COM_PHOCACART_INVOICE') . '_' . $invoiceNumber) . '.pdf';
-                            $attachmentContent = Pdf::renderPdf([
-                                'title'    => Text::_('COM_PHOCACART_INVOICE_NR') . ': ' . $invoiceNumber,
-                                'filename' => $attachmentName,
-                                'output'   => $orderRender->render($order->id, 2, 'pdf', $orderToken),
-                            ]);
-                        }
-                    }
+                        break;
+                    case 3: // Delivery note
+                        $documentNumber = $orderNumber;
+                        $attachmentName = strip_tags(Text::_('COM_PHOCACART_DELIVERY_NOTE') . '_' . $documentNumber) . '.pdf';
+                        $attachmentTitle = Text::_('COM_PHOCACART_DELIVERY_NOTE_NR') . '_' . $documentNumber;
 
-                    break;
-                case 3:
-                    $orderRender = new PhocacartOrderRender();
+                        break;
+                }
 
-                    if (in_array($emailSendFormat, [0, 2])) {
-                        $document = $orderRender->render($order->id, 3, 'mail', $orderToken);
-                        $body .= '<br><br>' . $document;
-                        $bodyOthers .= '<br><br>' . $document;
-                    }
+                if ($documentNumber) {
+                    $document   = $orderRender->render($order->id, $emailSend, 'mail', $orderToken);
+                    $body       .= '<br><br>' . $document;
+                    $bodyOthers .= '<br><br>' . $document;
+                }
+            }
 
-                    if (Pdf::load() && in_array($emailSendFormat, [1, 2])) {
-                        $attachmentName    = strip_tags(Text::_('COM_PHOCACART_ORDER') . '_' . $orderNumber) . '.pdf';
-                        $attachmentContent = Pdf::renderPdf([
-                            'title'    => Text::_('COM_PHOCACART_ORDER_NR') . ': ' . $orderNumber,
-                            'filename' => $attachmentName,
-                            'output'   => $orderRender->render($order->id, 3, 'pdf', $orderToken),
-                        ]);
-                    }
-
-                    break;
+            if (Pdf::load() && in_array($emailSendFormat, [1, 2])) {
+                $attachmentContent = Pdf::renderPdf([
+                    'title'    => $attachmentTitle,
+                    'filename' => $attachmentName,
+                    'output'   => $orderRender->render($order->id, $emailSend, 'pdf', $orderToken),
+                ]);
             }
 
             // Email Footer
@@ -358,7 +330,7 @@ class PhocacartOrderStatus
         }
 
         // CUSTOMER
-        // TODO
+        // TODO - is it needed???
         self::handleLangPlugin($pLang, $order, $subject);
         self::handleLangPlugin($pLang, $order, $body);
 
@@ -409,14 +381,16 @@ class PhocacartOrderStatus
             }
             $mailer->addRecipient($recipient);
             try {
-                $mailer->send();
+                if ($mailer->send()) {
+                    $app = Factory::getApplication();
+                    if ($app->isClient('administrator')) {
+                        $app->enqueueMessage(Text::_('COM_PHOCACART_EMAIL_CUSTOMER_SENT'));
+                    }
 
-                $app = Factory::getApplication();
-                if ($app->isClient('administrator')) {
-                    $app->enqueueMessage(Text::_('COM_PHOCACART_EMAIL_CUSTOMER_SENT'));
+                    $notificationResult = 1;
+                } else {
+                    $notificationResult = 0;
                 }
-
-                $notificationResult = 1;
             } catch (\Exception $exception) {
                 $notificationResult = 0;
                 Factory::getApplication()->enqueueMessage(Text::_($exception->errorMessage()), 'warning');
@@ -426,7 +400,7 @@ class PhocacartOrderStatus
         // ------
         // OTHERS
         if ($recipientOthers != '' && JoomlaMailHelper::isEmailAddress($recipientOthers)) {
-            $mailer = new MailTemplate('com_phocacart.order_status_admin.' . $status['id'], $order->user_lang);
+            $mailer = new MailTemplate('com_phocacart.order_status.' . $status['id'], $order->default_lang);
             $mailData['document'] = $document;
             $mailer->addTemplateData($mailData);
             if ($attachmentContent) {
@@ -437,11 +411,11 @@ class PhocacartOrderStatus
                 $mailer->addRecipient($email, null, 'bcc');
             }
             try {
-                $mailer->send();
-
-                $app = Factory::getApplication();
-                if ($app->isClient('administrator')) {
-                    $app->enqueueMessage(Text::_('COM_PHOCACART_EMAIL_OTHERS_SENT'));
+                if ($mailer->send()) {
+                    $app = Factory::getApplication();
+                    if ($app->isClient('administrator')) {
+                        $app->enqueueMessage(Text::_('COM_PHOCACART_EMAIL_OTHERS_SENT'));
+                    }
                 }
             } catch (\Exception $exception) {
                 Factory::getApplication()->enqueueMessage(Text::_($exception->errorMessage()), 'warning');
