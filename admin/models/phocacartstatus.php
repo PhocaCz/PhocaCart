@@ -14,6 +14,8 @@ use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Log\Log;
+use Phoca\PhocaCart\Mail\MailHelper;
+
 jimport('joomla.application.component.modeladmin');
 
 class PhocaCartCpModelPhocaCartStatus extends AdminModel
@@ -90,39 +92,32 @@ class PhocaCartCpModelPhocaCartStatus extends AdminModel
 		}*/
 	}
 
-	public function delete(&$cid = array()) {
-
-
+	public function delete(&$cid = [])
+	{
+		$error 	= false;
 		if (count( $cid )) {
-			ArrayHelper::toInteger($cid);
-			//$cids = implode( ',', $cid );
-			//$app 	= Factory::getApplication();
-			$error 	= 0;
-			if (!empty($cid)) {
-				foreach ($cid as $k => $v) {
-					$query = 'SELECT type FROM #__phocacart_order_statuses WHERE id ='.(int)$v;
-					$this->_db->setQuery($query);
-					$type = $this->_db->loadRow();
-					if (isset($type[0]) && $type[0] == 1) {
-						$error = 1;
-					} else {
-						$query = 'DELETE FROM #__phocacart_order_statuses'
-							. ' WHERE id = '.(int)$v;
-						$this->_db->setQuery( $query );
-						$this->_db->execute();
-					}
+			$cid = ArrayHelper::toInteger($cid);
 
+			if ($cid) {
+				foreach ($cid as $statusId) {
+					$this->_db->setQuery('SELECT type FROM #__phocacart_order_statuses WHERE id =' . $statusId);
+					if ($this->_db->loadResult()) {
+						$error = true;
+					} else {
+						$this->_db->setQuery('DELETE FROM #__phocacart_order_statuses WHERE id = ' . $statusId);
+						$this->_db->execute();
+
+						MailHelper::deleteOrderStatusMailTemplates($statusId);
+					}
 				}
 			}
 		}
+
 		if ($error) {
 			$this->setError(Text::_('COM_PHOCACART_ERROR_DEFAULT_ITEMS_CANNOT_BE_DELETED'));
-			//$app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_DEFAULT_ITEMS_CANNOT_BE_DELETED'));
-			return false;
-		} else {
-			return true;
 		}
 
+		return !$error;
 	}
 
 	public function publish(&$pks, $value = 1)
@@ -186,10 +181,6 @@ class PhocaCartCpModelPhocaCartStatus extends AdminModel
 	}
 
 	public function save($data) {
-
-
-
-
 		if (!isset($data['date'])) {
 			$data['date'] = Factory::getDate()->toSql();;
 		}
@@ -206,7 +197,15 @@ class PhocaCartCpModelPhocaCartStatus extends AdminModel
 
 
 
-	    return parent::save($data);
+	    if (parent::save($data)) {
+		    $id = $this->getState($this->getName() . '.id');
+			$status = $this->getItem($id);
+			MailHelper::checkOrderStatusMailTemplates($status);
+
+			return true;
+	    }
+
+		return false;
     }
 }
-?>
+
