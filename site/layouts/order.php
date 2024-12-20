@@ -81,6 +81,9 @@ $display_reward_points_pos				= $d['params']->get( 'display_reward_points_pos', 
 
 $display_time_of_supply_invoice			= $d['params']->get( 'display_time_of_supply_invoice', 0 );
 
+$tax_calculation_sales	 			 = $d['params']->get( 'tax_calculation_sales', 1);
+$tax_calculation_sales_change_subtotal = $d['params']->get( 'tax_calculation_sales_change_subtotal', 0);
+
 
 $store_logo = PhocacartUtils::realCleanImageUrl($store_logo);
 $store_logo_pos = PhocacartUtils::realCleanImageUrl($store_logo_pos);
@@ -843,6 +846,26 @@ if ($tax_calculation > 0) {
 }
 
 if (!empty($d['total'])) {
+
+    // Corect subtotal in case the sales are deducted from prices with VAT (subtotal is without VAT so such needs to be added)
+    if ($tax_calculation_sales	== 2 && $tax_calculation_sales_change_subtotal == 1) {
+
+        $brutto = 0;
+        $netto = 0;
+        $dbrutto = 0;
+        $rounding = 0;
+        $tax = 0;
+        foreach($d['total'] as $k => $v) {
+            if ($v->type == 'brutto') { $brutto = $brutto + $v->amount;}
+            if ($v->type == 'dbrutto') { $dbrutto = $dbrutto + $v->amount;}
+            if ($v->type == 'tax') { $tax = $tax + $v->amount;}
+            if ($v->type == 'rounding') { $rounding = $rounding + $v->amount;}
+        }
+        $netto = $brutto - $dbrutto - $tax - $rounding;
+
+    }
+
+
 	foreach($d['total'] as $k => $v) {
 
 		// display or not display shipping and payment methods with zero amount
@@ -854,8 +877,15 @@ if (!empty($d['total'])) {
 			$t[] = '<tr '.$totalF.'>';
 			$t[] = '<td colspan="'.$tColspanLeft.'"></td>';
 			$t[] = '<td colspan="'.$tColspanMid.'"><b>'. PhocacartLanguage::renderTitle($v->title, $v->title_lang, array(0 => array($v->title_lang_suffix, ' '), 1 => array($v->title_lang_suffix2, ' '))).'</b></td>';
-			$t[] = '<td style="text-align:right" colspan="'.$tColspanRight.'"><b>'.$d['price']->getPriceFormat($v->amount).'</b></td>';
-			$t[] = '</tr>';
+
+            if ($tax_calculation_sales	== 2 && $tax_calculation_sales_change_subtotal == 1) {
+                $t[] = '<td style="text-align:right" colspan="'.$tColspanRight.'"><b>'.$d['price']->getPriceFormat($netto).'</b></td>';
+            } else {
+                $t[] = '<td style="text-align:right" colspan="'.$tColspanRight.'"><b>'.$d['price']->getPriceFormat($v->amount).'</b></td>';
+            }
+
+
+            $t[] = '</tr>';
 
 			if ($pR) { $oPr[] = $pP->printLineColumns(array(PhocacartLanguage::renderTitle($v->title, $v->title_lang, array(0 => array($v->title_lang_suffix, ' '), 1 => array($v->title_lang_suffix2, ' '))), $d['price']->getPriceFormat($v->amount))); }
 
@@ -1035,6 +1065,7 @@ if ($d['format'] == 'pdf' && $d['type'] == 2 && ($d['qrcode'] != '' || $pdf_invo
 // -----------------------
 // TAX RECAPITULATION
 // -----------------------
+
 if (($display_tax_recapitulation_invoice == 1 && $d['type'] == 2 ) ||  ($display_tax_recapitulation_pos == 1 && $d['type'] == 4 )) {
 
 

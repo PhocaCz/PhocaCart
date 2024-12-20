@@ -129,8 +129,7 @@ class PhocacartOrderCalculation
 
 						case 'sbrutto':
 						case 'pbrutto':
-						case 'dbrutto':
-
+						//case 'dbrutto':
 						break;
 
 
@@ -196,6 +195,18 @@ class PhocacartOrderCalculation
 
 							}
 							$this->total[$currencyId]['discount'] += $price->roundPrice($dNetto);
+						break;
+
+						case 'dbrutto':
+							$dBrutto = $v['amount']*$r;
+							if (isset($this->items[$id]->discount)) {
+								$this->items[$id]->discount += $price->roundPrice($dBrutto);
+
+							} else {
+								$this->items[$id]->discount = $price->roundPrice($dBrutto);
+
+							}
+							$this->total[$currencyId]['discount'] += $price->roundPrice($dBrutto);
 						break;
 
 					}

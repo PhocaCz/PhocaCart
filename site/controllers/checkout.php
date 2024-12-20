@@ -728,6 +728,7 @@ class PhocaCartControllerCheckout extends FormController
             $cart->setInstance(2);//checkout
             $cart->setType(array(0, 1));
             $cart->setFullItems();
+            //$cart->roundTotalAmount();
             $fullItems = $cart->getFullItems();
             $total     = $cart->getTotal();
 

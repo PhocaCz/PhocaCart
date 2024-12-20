@@ -49,6 +49,7 @@ class PhocaCartViewPayment extends HtmlView
 			$o['bas']		= $order->getItemBaS($id, 1);
 			$o['products'] 	= $order->getItemProducts($id);
 			$o['total'] 	= $order->getItemTotal($id);
+			$o['productdiscounts'] 	= $order->getItemProductDiscounts($id);
 
 
 			$form = '';

@@ -60,6 +60,8 @@ class PhocacartOrder
         $order_language       = $pC->get('order_language', 0);
         $skip_shipping_method = $pC->get('skip_shipping_method', 0);
         $skip_payment_method  = $pC->get('skip_payment_method', 0);
+        $tax_calculation_sales  = $pC->get('tax_calculation_sales', 1);
+
 
 
 
@@ -695,6 +697,7 @@ class PhocacartOrder
 
             // DISCOUNTS
             $this->cleanTable('phocacart_order_discounts', $row->id);
+            // Possible TO DO - dbrutto
             if ($total[2]['dnetto'] > 0) {
                 $this->saveOrderDiscounts(Text::_('COM_PHOCACART_PRODUCT_DISCOUNT'), $total[2], $row->id);
             }
@@ -742,7 +745,6 @@ class PhocacartOrder
             // BE AWARE***********
             // $d is newly defined so use d2
             // *******************
-
 
             // TOTAL
             if (!empty($total[0])) {
@@ -807,7 +809,7 @@ class PhocacartOrder
                     $d2['type']               = 'dnetto';
                     $d2['amount']             = '-' . $total[2]['dnetto'];
                     $d2['ordering']           = $ordering;
-                    $d2['published']          = 1;
+                    $d2['published']          = $tax_calculation_sales == 2 ? 0: 1;// publish based on tax_calculation_sales parameter
                     $d2['item_id']            = $d2['item_id_c'] = $d2['item_id_r'] = $d2['item_id_p'] = 0;
                     $this->saveOrderTotal($d2);
                     $ordering++;
@@ -820,7 +822,7 @@ class PhocacartOrder
                     $d2['type']               = 'dbrutto';
                     $d2['amount']             = '-' . $total[2]['dbrutto'];
                     $d2['ordering']           = $ordering;
-                    $d2['published']          = 0;
+                    $d2['published']          = $tax_calculation_sales == 2 ? 1: 0;// publish based on tax_calculation_sales parameter
                     $d2['item_id']            = $d2['item_id_c'] = $d2['item_id_r'] = $d2['item_id_p'] = 0;
                     $this->saveOrderTotal($d2);
                     $ordering++;
@@ -848,7 +850,7 @@ class PhocacartOrder
                     $d2['type']               = 'dnetto';
                     $d2['amount']             = '-' . $total[3]['dnetto'];
                     $d2['ordering']           = $ordering;
-                    $d2['published']          = 1;
+                    $d2['published']          = $tax_calculation_sales == 2 ? 0: 1;// publish based on tax_calculation_sales parameter
                     $d2['item_id']            = $d2['item_id_c'] = $d2['item_id_r'] = $d2['item_id_p'] = 0;
                     $this->saveOrderTotal($d2);
                     $ordering++;
@@ -861,7 +863,7 @@ class PhocacartOrder
                     $d2['type']               = 'dbrutto';
                     $d2['amount']             = '-' . $total[3]['dbrutto'];
                     $d2['ordering']           = $ordering;
-                    $d2['published']          = 0;
+                    $d2['published']          = $tax_calculation_sales == 2 ? 1: 0;// publish based on tax_calculation_sales parameter
                     $d2['item_id']            = $d2['item_id_c'] = $d2['item_id_r'] = $d2['item_id_p'] = 0;
                     $this->saveOrderTotal($d2);
                     $ordering++;
@@ -895,7 +897,7 @@ class PhocacartOrder
                     $d2['type']      = 'dnetto';
                     $d2['amount']    = '-' . $total[4]['dnetto'];
                     $d2['ordering']  = $ordering;
-                    $d2['published'] = 1;
+                    $d2['published'] = $tax_calculation_sales == 2 ? 0: 1;// publish based on tax_calculation_sales parameter
                     $d2['item_id']   = $d2['item_id_c'] = $d2['item_id_r'] = $d2['item_id_p'] = 0;
                     $this->saveOrderTotal($d2);
                     $ordering++;
@@ -913,7 +915,7 @@ class PhocacartOrder
                     $d2['type']      = 'dbrutto';
                     $d2['amount']    = '-' . $total[4]['dbrutto'];
                     $d2['ordering']  = $ordering;
-                    $d2['published'] = 0;
+                    $d2['published'] = $tax_calculation_sales == 2 ? 1: 0;// publish based on tax_calculation_sales parameter
                     $d2['item_id']   = $d2['item_id_c'] = $d2['item_id_r'] = $d2['item_id_p'] = 0;
                     $this->saveOrderTotal($d2);
                     $ordering++;
@@ -1375,8 +1377,17 @@ class PhocacartOrder
         $userGroups           = PhocacartGroup::getGroupsById((int)$d['user_id'], 1, 1);
         $d['user_groups']     = serialize($userGroups);
 
-
+/*
+        if (!isset($d['country'])) {
+            $d['country'] = 0;
+        }
+        if (!isset($d['region'])) {
+            $d['region'] = 0;
+        }
+*/
         unset($d['id']);// we do new autoincrement
+
+
         $row = Table::getInstance('PhocacartOrderUsers', 'Table', array());
 
 
@@ -1386,6 +1397,7 @@ class PhocacartOrder
             $app->enqueueMessage($msg, 'error');
             return false;
         }
+
 
 
         if (!$row->check()) {

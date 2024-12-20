@@ -375,6 +375,7 @@ class PhocacartShipping
 			$cart					= new PhocacartCartRendercheckout();
 			$cart->setType($this->type);
 			$cart->setFullItems();
+			//$cart->roundTotalAmount();
 			$total					= $cart->getTotal();
 			$totalFinal				= $total[0];
 			//$currentShippingId 		= $cart->getShippingId();

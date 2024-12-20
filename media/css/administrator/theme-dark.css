@@ -1,4 +1,4 @@
-@media (prefers-color-scheme: dark) {
+[data-bs-theme=dark] {
 
     .ph-cpanel-info-box, 
     .ph-cpanel-tips-box,
@@ -56,11 +56,11 @@
        /* background-color: transparent;*/
     }
 
-    .subhead .btn:not([disabled]):active, .subhead .btn:not([disabled]):focus, .subhead .btn:not([disabled]):hover {
+    /*.subhead .btn:not([disabled]):active, .subhead .btn:not([disabled]):focus, .subhead .btn:not([disabled]):hover {
         background-color: var(--subhead-btn-accent);
         border-color: var(--subhead-btn-accent);
         color: hsla(0,0%,100%,.9);
-    }
+    }*/
 
     .subhead .btn.btn-warning {
         --subhead-btn-accent: #ffb514;
@@ -143,7 +143,7 @@
 /* Select 2 */
 
 
-@media (prefers-color-scheme: dark) {
+[data-bs-theme=dark] {
 
     .select2-container .select2-choice {
         color: #fff;

@@ -247,7 +247,8 @@ class PhocaCartModelItem extends BaseDatabaseModel
             I18nHelper::sqlCoalesce(['title'], 'c', 'cat'),
             I18nHelper::sqlCoalesce(['alias'], 'c', 'cat'),
             I18nHelper::sqlCoalesce(['title'], 'm', 'manufacturer'),
-            I18nHelper::sqlCoalesce(['link'], 'm', 'manufacturer')
+            I18nHelper::sqlCoalesce(['link'], 'm', 'manufacturer'),
+            I18nHelper::sqlCoalesce(['description'], 'm', 'manufacturer')
         ]);
 
 

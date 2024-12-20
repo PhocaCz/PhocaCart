@@ -144,7 +144,6 @@ if (isset($d['discount']) && $d['discount']) {
     echo $labelBrutto . $priceBrutto;
 
 
-
 	// PRODUCT DISCOUNT
     $displayPriceItems = PhocaCartPrice::displayPriceItems($d['priceitemsdiscount'], 'pricediscount');// Display Netto, Tax, Brutto?
 	if (isset ($d['discount']) && $d['discount'] && $displayPrice == 1) {

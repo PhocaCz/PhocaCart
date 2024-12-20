@@ -166,7 +166,6 @@ class PhocaCartViewCheckout extends HtmlView
         $this->a->shippingnotused = PhocacartShipping::isShippingNotUsed($sOCh);
         $this->a->paymentnotused  = PhocacartPayment::isPaymentNotUsed($pOCh);
 
-
         // COUPONS - Coupon can be added in payment method or below calculation
         $this->t['couponcodevalue'] = '';
         if ($this->cart->getCouponCode() != '') {

@@ -10,6 +10,7 @@
  */
 defined('_JEXEC') or die();
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 
 class PhocacartDiscountProduct
 {
@@ -187,7 +188,9 @@ class PhocacartDiscountProduct
 
 
         $paramsC                            = PhocacartUtils::getComponentParameters();
-        $display_discount_product_views         = $paramsC->get('display_discount_product_views', 0);// 0 ... disabled, 1 ... enabled, 2 ... enabled - quantity rule is ignored
+        $display_discount_product_views     = $paramsC->get('display_discount_product_views', 0);// 0 ... disabled, 1 ... enabled, 2 ... enabled - quantity rule is ignored
+        $tax_calculation                    = $paramsC->get( 'tax_calculation', 0 );
+        $tax_calculation_sales =            $paramsC->get('tax_calculation_sales', 1);
 
         if (isset($params['ignore_view_rule']) && $params['ignore_view_rule'] == 1) {
            // Different modules like countdown module
@@ -201,22 +204,44 @@ class PhocacartDiscountProduct
 
         $discount = self::getProductDiscount($productId, 1, 1, $params);
 
-
         if (isset($discount['discount']) && isset($discount['calculation_type'])) {
 
             $price                   = new PhocacartPrice();
-            $priceItems['bruttotxt'] = $discount['title'];
-            $priceItems['nettotxt']  = $discount['title'];
+            $priceItems['bruttotxt'] = $discount['title'] != '' ? $discount['title'] . ' ' . Text::_('COM_PHOCACART_EXCL_TAX_SUFFIX') : Text::_('COM_PHOCACART_DISCOUNT'). ' ' . Text::_('COM_PHOCACART_EXCL_TAX_SUFFIX');
+            $priceItems['nettotxt']  = $discount['title'] != '' ? $discount['title'] . ' ' . Text::_('COM_PHOCACART_INCL_TAX_SUFFIX') : Text::_('COM_PHOCACART_DISCOUNT'). ' ' . Text::_('COM_PHOCACART_INCL_TAX_SUFFIX');
+            if ($tax_calculation == 0) {
+                $priceItems['bruttotxt'] = $discount['title'] != '' ? $discount['title'] : Text::_('COM_PHOCACART_DISCOUNT');
+                $priceItems['nettotxt']  = $discount['title'] != '' ? $discount['title'] : Text::_('COM_PHOCACART_DISCOUNT');
+            }
+
             $quantity                = 1;      //Quantity for displaying the price in items,category and product view is always 1
             $total                   = array();// not used in product view
 
             if ($discount['calculation_type'] == 0) {
                 // FIXED AMOUNT
-                if (isset($priceItems['netto']) && $priceItems['netto'] > 0) {
-                    $r = $discount['discount'] * 100 / $priceItems['netto'];
-                } else {
-                    $r = 0;
-                }
+                if ($tax_calculation_sales == 2) {
+
+                        if (isset($priceItems['brutto']) && $priceItems['brutto'] > 0) {
+                            //$r = $discount['discount'] / $v['quantity'] * 100 / $v['netto'];// Ratio to use it for brutto and tax
+                            // PRODUCT DISCOUNT - DON'T DIVIDE IT INTO QUANTITY
+                            //if you set 500 fixed amount as discount - it applies to each quantity
+                            $r = $discount['discount'] * 100 / $priceItems['brutto'];
+
+                        } else {
+                            $r = 0;
+                        }
+
+                    } else {
+                        if (isset($priceItems['netto']) && $priceItems['netto'] > 0) {
+                            //$r = $discount['discount'] / $v['quantity'] * 100 / $v['netto'];// Ratio to use it for brutto and tax
+                            // PRODUCT DISCOUNT - DON'T DIVIDE IT INTO QUANTITY
+                            //if you set 500 fixed amount as discount - it applies to each quantity
+                            $r = $discount['discount'] * 100 / $priceItems['netto'];
+
+                        } else {
+                            $r = 0;
+                        }
+                    }
                 // The function works with ratio, so we need to recalculate fixed amount to ratio even in this case
                 // the amount will be not divided into more items like it is in checkout
                 // so only because of compatibility to the function used in checkout we use ratio instead of fixed amount
