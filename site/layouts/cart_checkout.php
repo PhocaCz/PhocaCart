@@ -436,7 +436,7 @@ if (!empty($d['fullitems'][1])) {
 		echo '<div class="'.$cTotT.' ph-cart-subtotal-netto-txt">'.Text::_('COM_PHOCACART_SUBTOTAL').'</div>';
 
 		if ($p['tax_calculation_sales'] == 2 && $p['tax_calculation_sales_change_subtotal'] == 1) {
-			$subTotalFromBrutto = $d['total'][0]['subtotalbrutto'] - $d['total'][0]['taxsum'] - $d['total'][0]['rounding'];
+			$subTotalFromBrutto = $d['total'][0]['subtotalbrutto'] - $d['total'][0]['taxsum'];// - $d['total'][0]['rounding'];
 			echo '<div class="'.$cTotB.' ph-right ph-cart-subtotal-netto">'.$price->getPriceFormat($subTotalFromBrutto).'</div>';
 
 		} else {
@@ -721,7 +721,7 @@ if (!empty($d['fullitems'][1])) {
 
 	// ---
 	// Tax Recapitulation Possible part to display TC
-	if(!empty($d['total'][0]['taxrecapitulation']['items'])) {
+/*	if(!empty($d['total'][0]['taxrecapitulation']['items'])) {
 
 		echo '<table class="pc-tax-recapitulation">';
 
@@ -764,7 +764,7 @@ if (!empty($d['fullitems'][1])) {
 
 		echo '</table>';
 	}
-
+*/
 	// END TAX RECAPITULATION
 	// ---
 

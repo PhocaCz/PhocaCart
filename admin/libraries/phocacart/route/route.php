@@ -532,9 +532,25 @@ class PhocacartRoute
 				$link .= '&layout='.$item->query['layout'];
 			}
 
-			if (isset($item->id) && ((int)$item->id > 0)) {
-				$link .= '&Itemid='.$item->id;
-			}
+            // Under review
+            $views = PhocacartUtilsSettings::getViews();
+            $viewsNoId = $views['withoutid'];
+            // Views without ID are mostly menu link views and in multilanguage feature we cannot assign Itemid so it can be transformed to association menu link
+
+            // Possible todo - add only in multilanguage is enabled
+            //if (Multilanguage::isEnabled()){
+            if (isset($item->query['view']) &&  !in_array($item->query['view'], $viewsNoId)){
+                if (isset($item->id) && ((int)$item->id > 0)) {
+                    $link .= '&Itemid=' . $item->id;
+               }
+            }
+            // }
+
+            /*
+            if (isset($item->id) && ((int)$item->id > 0)) {
+                $link .= '&Itemid=' . $item->id;
+            }
+            */
 
 			if (Multilanguage::isEnabled() || I18nHelper::useI18n()) {
                 $lang = $lang[0] ?? '';
@@ -590,7 +606,8 @@ class PhocacartRoute
 		}
 
 		// Don't check ID for specific views. e.g. categories view does not have ID
-		$notCheckIdArray = ['categories', 'checkout', 'comparison', 'download', 'terms', 'account', 'orders', 'payment', 'info', 'wishlist', 'pos', 'submit'];
+        $views = PhocacartUtilsSettings::getViews();
+        $notCheckIdArray =  $views['withoutidspec'];
 
 		if(!$items) {
 			$itemId =  $app->input->get('Itemid', 0, 'int');

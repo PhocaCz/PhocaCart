@@ -131,7 +131,25 @@ class PhocaCartModelItem extends BaseDatabaseModel
 			$wheres[] = " a.stock > 0";
 		}
 
-		$query = ' SELECT a.id, a.title, a.title_long, a.alias, a.catid, c.id AS categoryid, c.title AS categorytitle, c.alias AS categoryalias'
+
+        $columns = [
+			'a.id',
+            'a.catid',
+            'c.id AS categoryid'
+		];
+
+        $columns = array_merge($columns, [
+            I18nHelper::sqlCoalesce(['title'], 'a'),
+            I18nHelper::sqlCoalesce(['alias'], 'a'),
+            I18nHelper::sqlCoalesce(['title_long'], 'a'),
+            I18nHelper::sqlCoalesce(['title'], 'c', 'category'),
+            I18nHelper::sqlCoalesce(['alias'], 'c', 'category')
+        ]);
+
+
+
+
+		$query = ' SELECT ' . implode(',', $columns)
 				.' FROM #__phocacart_products AS a'
 				.' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id'
 				.' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id';
@@ -139,6 +157,9 @@ class PhocaCartModelItem extends BaseDatabaseModel
 			$query .= ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3'// type 3 is product
 					. ' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2';// type 2 is category
 		}
+
+        $query .= I18nHelper::sqlJoin('#__phocacart_products_i18n', 'a');
+        $query .= I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'c');
 
 		$query .= ' WHERE ' . implode( ' AND ', $wheres )
 				.' ORDER BY pc.ordering '.$order;

@@ -18,6 +18,7 @@ use Joomla\CMS\Component\Router\Rules\NomenuRules;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\Database\ParameterType;
+use Phoca\PhocaCart\Event\Payment\BeforeSetPaymentForm;
 use Phoca\PhocaCart\I18n\I18nHelper;
 
 require_once(JPATH_ADMINISTRATOR . '/components/com_phocacart/libraries/bootstrap.php');
@@ -27,8 +28,10 @@ class PhocacartRouter extends RouterView
     protected $noIDs = false;
 
     public function __construct($app = null, $menu = null) {
-        $viewsNoId = array('checkout', 'comparison', 'download', 'terms', 'account', 'orders', 'payment', 'info', 'wishlist', 'pos', 'submit');
-        $viewsId   = array('feed');
+
+        $views = PhocacartUtilsSettings::getViews();
+        $viewsNoId = $views['withoutid']; // array('checkout', 'comparison', 'download', 'terms', 'account', 'orders', 'payment', 'info', 'wishlist', 'pos', 'submit');
+        $viewsId   = $views['withid']; // array('feed');
 
         $params = ComponentHelper::getParams('com_phocacart');;
         $this->noIDs = (bool)$params->get('remove_sef_ids');

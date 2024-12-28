@@ -245,7 +245,7 @@ if (!empty($d['fullitems'])) {
 		echo '<div class="'.$cT.' ph-small ph-cart-subtotal-netto-txt">'.Text::_('COM_PHOCACART_SUBTOTAL').'</div>';
 
 		if ($p['tax_calculation_sales'] == 2 && $p['tax_calculation_sales_change_subtotal'] == 1) {
-			$subTotalFromBrutto = $d['total'][0]['subtotalbrutto'] - $d['total'][0]['taxsum'] - $d['total'][0]['rounding'];
+			$subTotalFromBrutto = $d['total'][0]['subtotalbrutto'] - $d['total'][0]['taxsum'];// - $d['total'][0]['rounding'];
 			echo '<div class="'.$cP.' ph-small ph-right ph-cart-subtotal-netto">'.$price->getPriceFormat($subTotalFromBrutto).'</div>';
 
 		} else {
