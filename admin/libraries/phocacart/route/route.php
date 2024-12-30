@@ -274,8 +274,8 @@ class PhocacartRoute
 		}
 
 		$link = 'index.php?option=com_phocacart&view=item&id='. $id.'&catid='.$catid;
-
-		return self::_buildLink($link, $needles, $lang);
+		$buildLink = self::_buildLink($link, $needles, $lang);
+        return $buildLink;
 	}
 
 	public static function getCheckoutRoute($id = 0, $catid = 0, string $lang = '')

@@ -10,6 +10,11 @@ defined('_JEXEC') or die();
 
 use Joomla\CMS\Component\Router\Rules\MenuRules;
 
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Component\Router\RouterView;
+use Joomla\CMS\Language\Multilanguage;
+use Joomla\CMS\Plugin\PluginHelper;
+
 
 use Joomla\CMS\Component\Router\Rules\NomenuRules;
 use Joomla\CMS\Component\Router\Rules\StandardRules;
@@ -18,7 +23,120 @@ use Joomla\Registry\Registry;
 class PhocacartRouterrules extends MenuRules
 {
     public function preprocess(&$query) {
-        parent::preprocess($query);
+
+        // BE AWARE TODO - change in Joomla 6
+        // Temporary solution as Joomla core includes unsoved bug:
+
+        //parent::preprocess($query);
+
+        $active = $this->router->menu->getActive();
+
+        /**
+         * If the active item id is not the same as the supplied item id or we have a supplied item id and no active
+         * menu item then we just use the supplied menu item and continue
+         */
+        if (isset($query['Itemid']) && ($active === null || $query['Itemid'] != $active->id)) {
+            return;
+        }
+
+        // Get query language
+        $language = $query['lang'] ?? '*';
+
+        // Set the language to the current one when multilang is enabled and item is tagged to ALL
+        if (Multilanguage::isEnabled() && $language === '*') {
+            $language = $this->router->app->get('language');
+        }
+
+        if (!isset($this->lookup[$language])) {
+            $this->buildLookup($language);
+        }
+
+        // Check if the active menu item matches the requested query
+        if ($active !== null && isset($query['Itemid'])) {
+            // Check if active->query and supplied query are the same
+            $match = true;
+
+            foreach ($active->query as $k => $v) {
+                if (isset($query[$k]) && $v !== $query[$k]) {
+                    // Compare again without alias
+                    if (\is_string($v) && $v == current(explode(':', $query[$k], 2))) {
+                        continue;
+                    }
+
+                    $match = false;
+                    break;
+                }
+            }
+
+            if ($match) {
+                // Just use the supplied menu item
+                return;
+            }
+        }
+
+        $needles = $this->router->getPath($query);
+
+        $layout = isset($query['layout']) && $query['layout'] !== 'default' ? ':' . $query['layout'] : '';
+
+        if ($needles) {
+
+            foreach ($needles as $view => $ids) {
+
+                $viewLayout = $view . $layout;
+
+                if ($layout && isset($this->lookup[$language][$viewLayout])) {
+                    if (\is_bool($ids)) {
+                        $query['Itemid'] = $this->lookup[$language][$viewLayout];
+
+                        return;
+                    }
+
+                    foreach ($ids as $id => $segment) {
+                        if (isset($this->lookup[$language][$viewLayout][(int) $id])) {
+                            $query['Itemid'] = $this->lookup[$language][$viewLayout][(int) $id];
+
+                            return;
+                        }
+                    }
+                }
+
+                if (isset($this->lookup[$language][$view])) {
+                    if (\is_bool($ids)) {
+                        $query['Itemid'] = $this->lookup[$language][$view];
+
+                        return;
+                    }
+                    foreach ($ids as $id => $segment) {
+
+                        if (isset($this->lookup[$language][$view][(int) $id])) {
+                            $query['Itemid'] = $this->lookup[$language][$view][(int) $id];
+
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
+        // TODO: Remove this whole block in 6.0 as it is a bug
+        /*if (!$this->sefparams->get('strictrouting', 0)) {
+            // Check if the active menuitem matches the requested language
+            if (
+                $active && $active->component === 'com_' . $this->router->getName()
+                && ($language === '*' || \in_array($active->language, ['*', $language]) || !Multilanguage::isEnabled())
+            ) {
+                $query['Itemid'] = $active->id;
+
+                return;
+            }
+
+            // If not found, return language specific home link
+            $default = $this->router->menu->getDefault($language);
+
+            if (!empty($default->id)) {
+                $query['Itemid'] = $default->id;
+            }
+        }*/
     }
 
     protected function buildLookup($language = '*') {

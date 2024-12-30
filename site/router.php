@@ -110,14 +110,20 @@ class PhocacartRouter extends RouterView
 
         parent::__construct($app, $menu);
 
-        $this->attachRule(new MenuRules($this));
+        // We cannot use standard Menu rules as it includes unsolved bug in Joomla core:
+        // libraries/src/Component/Router/Rules/MenuRules.php line cca 169
+       // $this->attachRule(new MenuRules($this));
         $this->attachRule(new PhocacartRouterrules($this));
         $this->attachRule(new StandardRules($this));
         $this->attachRule(new NomenuRules($this));
     }
 
     public function getCategoriesSegment($id, $query) {
-        return $this->getCategorySegment($id, $query);
+
+        $path[0] = '1:root';// we don't use root but it is needed when building urls with joomla methods
+        return $path;
+        // UNDER REVIEW
+        //return $this->getCategorySegment($id, $query);
     }
 
     public function getItemsSegment($id, $query) {
@@ -126,7 +132,6 @@ class PhocacartRouter extends RouterView
 
     public function getCategorySegment($id, $query) {
         $category = PhocacartCategory::getCategoryById($id);
-
         if ($category) {
 
             // We cannot use the same way like getItemSegment, because in getItemSegment, we get the alias of product
@@ -164,6 +169,7 @@ class PhocacartRouter extends RouterView
         return [];
     }
 
+    /* Called by libraries/src/Component/Router/RouterView.php 113 */
     public function getItemSegment($id, $query) {
 
         static $cache = [];
@@ -206,6 +212,7 @@ class PhocacartRouter extends RouterView
 
             $id .= ':' . $cache[$cacheKey];
         }
+
 
         if ($this->noIDs) {
             list($void, $segment) = explode(':', $id, 2);
