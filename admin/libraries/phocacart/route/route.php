@@ -577,6 +577,7 @@ class PhocacartRoute
 
 		// Find menu items of current language
 		$items = $menus->getItems($attributes, $values);
+        $itemsLang = [];
 
 		// Multilanguage feature - find only items of selected language (e.g. when language module displays flags of different language - each language can have own menu item)
 		if (!empty($lang)) {
@@ -622,14 +623,21 @@ class PhocacartRoute
 
 		$match = null;
 		// FIRST - test active menu link
-		foreach($needles as $needle => $id) {
-			if (isset($active->query['option']) && $active->query['option'] == $component->option
-				&& isset($active->query['view']) && $active->query['view'] == $needle
-				&& (in_array($needle, $notCheckIdArray) || (isset($active->query['id']) && $active->query['id'] == $id ))
-			) {
-				$match = $active;
-			}
-		}
+		// But not if multilanguage is enabled - if enabled, there can other language item alternative
+
+        if (Multilanguage::isEnabled() && !empty($itemsLang)) {
+            // Possible todo for categories view only
+        } else {
+
+            foreach ($needles as $needle => $id) {
+                if (isset($active->query['option']) && $active->query['option'] == $component->option
+                    && isset($active->query['view']) && $active->query['view'] == $needle
+                    && (in_array($needle, $notCheckIdArray) || (isset($active->query['id']) && $active->query['id'] == $id))
+                ) {
+                    $match = $active;
+                }
+            }
+        }
 
 		if(isset($match)) {
 			return $match;
@@ -640,6 +648,7 @@ class PhocacartRoute
 		//          as last the categories view should be checked, it has no ID so we skip the checking
 		//          of ID for categories view with OR: in_array($needle, $notCheckIdArray) ||
 		foreach($needles as $needle => $id) {
+
 			foreach($items as $item) {
 				// Correct problems when system returns differently null or 0
 				if (!isset($item->query['id'])) {
@@ -675,6 +684,25 @@ class PhocacartRoute
 				}
 			}
 		}
+
+
+        // LAST - test active menu link
+		// We tested active menu link but not if multilangauge is enabled - because of possible alternative langauge menus
+        // If we didn't find anything, at least set the active menu link
+        // see the FIRST part
+
+        if (!$match && Multilanguage::isEnabled()) {
+
+            foreach ($needles as $needle => $id) {
+                if (isset($active->query['option']) && $active->query['option'] == $component->option
+                    && isset($active->query['view']) && $active->query['view'] == $needle
+                    && (in_array($needle, $notCheckIdArray) || (isset($active->query['id']) && $active->query['id'] == $id))
+                ) {
+                    $match = $active;
+                }
+            }
+        }
+
 
 		return $match;
 	}

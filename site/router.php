@@ -120,6 +120,7 @@ class PhocacartRouter extends RouterView
 
     public function getCategoriesSegment($id, $query) {
 
+
         $path[0] = '1:root';// we don't use root but it is needed when building urls with joomla methods
         return $path;
         // UNDER REVIEW
