@@ -436,8 +436,13 @@ if (!empty($d['fullitems'][1])) {
 		echo '<div class="'.$cTotT.' ph-cart-subtotal-netto-txt">'.Text::_('COM_PHOCACART_SUBTOTAL').'</div>';
 
 		if ($p['tax_calculation_sales'] == 2 && $p['tax_calculation_sales_change_subtotal'] == 1) {
-			$subTotalFromBrutto = $d['total'][0]['subtotalbrutto'] - $d['total'][0]['taxsum'];// - $d['total'][0]['rounding'];
-			echo '<div class="'.$cTotB.' ph-right ph-cart-subtotal-netto">'.$price->getPriceFormat($subTotalFromBrutto).'</div>';
+
+			// $d['total'][4]['rounding'] is not the final rounding but rounding after discounts
+			//$subTotalFromBrutto = $d['total'][0]['subtotalbrutto'] - $d['total'][0]['taxsum'] - $d['total'][4]['rounding'];
+			// This method is used, because tax calculation can change the subtotal/total calculation
+			$dBrutto = $d['total'][2]['dbrutto'] + $d['total'][3]['dbrutto'] + $d['total'][4]['dbrutto'] + $d['total'][5]['dbrutto'];
+			$subTotalFromBrutto = $d['total'][0]['brutto'] + $dBrutto - $d['total'][0]['taxsum'] - $d['total'][0]['rounding'];
+ 			echo '<div class="'.$cTotB.' ph-right ph-cart-subtotal-netto">'.$price->getPriceFormat($subTotalFromBrutto).'</div>';
 
 		} else {
 			echo '<div class="' . $cTotB . ' ph-right ph-cart-subtotal-netto">' . $price->getPriceFormat($d['total'][1]['netto']) . '</div>';
@@ -721,7 +726,7 @@ if (!empty($d['fullitems'][1])) {
 
 	// ---
 	// Tax Recapitulation Possible part to display TC
-/*	if(!empty($d['total'][0]['taxrecapitulation']['items'])) {
+	/* if(!empty($d['total'][0]['taxrecapitulation']['items'])) {
 
 		echo '<table class="pc-tax-recapitulation">';
 
