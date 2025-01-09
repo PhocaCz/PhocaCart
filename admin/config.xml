@@ -1040,6 +1040,17 @@
                 <option value="4">COM_PHOCACART_BASED_CUSTOMER_SHIPPING_ADDRESS_IF_EMPTY_BILLING_ADDRESS</option>
             </field>
 
+            <field name="tax_calculation_sales" type="list" default="1" label="COM_PHOCACART_FIELD_TAX_CALCULATION_SALES_LABEL" description="COM_PHOCACART_FIELD_TAX_CALCULATION_SALES_DESC">
+                <option value="1">COM_PHOCACART_TAX_EXCLUSIVE_AMOUNT</option>
+                <option value="2">COM_PHOCACART_TAX_INCLUSIVE_AMOUNT</option>
+                <!--<option value="0">COM_PHOCACART_NO_TAX_PRICE</option>-->
+            </field>
+
+            <field name="tax_calculation_sales_change_subtotal" type="list" default="0" label="COM_PHOCACART_FIELD_TAX_CALCULATION_SALES_CHANGE_SUBTOTAL_LABEL" description="COM_PHOCACART_FIELD_TAX_CALCULATION_SALES_CHANGE_SUBTOTAL_DESC">
+                <option value="0">COM_PHOCACART_NO</option>
+                <option value="1">COM_PHOCACART_YES</option>
+            </field>
+
 
             <field name="delivery_billing_same_rules" type="list" default="1" label="COM_PHOCACART_SAME_DELIVERY_BILLING_ADDRESS_INFLUENCE_RULES_LABEL" description="COM_PHOCACART_SAME_DELIVERY_BILLING_ADDRESS_INFLUENCE_RULES_DESC">
                 <option value="0">COM_PHOCACART_NO</option>

@@ -40,6 +40,7 @@ class PhocaCartCpModelPhocacartOrder extends AdminModel
 			$form = Form::getInstance('com_phocacart.order.bas', (string)$this->fieldsbas['xml'], $options, false, false);
 			$order= new PhocacartOrderView();
 			$data = $order->getItemBaS($orderId);
+
 			$this->preprocessForm($form, $data);
 			$form->bind($data);
 		} catch (Exception $e) {
@@ -64,17 +65,32 @@ class PhocaCartCpModelPhocacartOrder extends AdminModel
         /** @var Form $form */
 		$form = $this->loadForm('com_phocacart.phocacartorder', 'phocacartorder', ['control' => 'jform', 'load_data' => $loadData]);
 
+
+
 		if (empty($form)) {
 			return false;
 		}
 
-        PhocacartFormUser::loadAddressForm($form, true, true, false, true, false);
+        // is the order made by guest
+        $guest = false;
+        $userId = $form->getValue('user_id');
+        if ($userId === 0) {
+            $guest = true;
+        }
+
+        PhocacartFormUser::loadAddressForm($form, true, true, false, true, $guest);
 
 		return $form;
 	}
 
     protected function preprocessForm(Form $form, $data, $group = 'content') {
-        PhocacartFormUser::loadAddressForm($form, true, true, false, true, false);
+
+        $guest = false;
+        $userId = isset($data->user_id) ? $data->user_id : 0;
+        if ($userId === 0) {
+            $guest = true;
+        }
+        PhocacartFormUser::loadAddressForm($form, true, true, false, true, $guest);
 
         parent::preprocessForm($form, $data, $group);
     }

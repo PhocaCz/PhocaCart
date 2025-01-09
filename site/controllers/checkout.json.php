@@ -556,7 +556,7 @@ class PhocaCartControllerCheckout extends FormController
 
                 //$catid	= PhocacartProduct::getCategoryByProductId((int)$item['id']);
                 $cart->setFullItems();
-
+                $cart->roundTotalAmount();
                 $o = $o2 = '';
                 // Content of the cart
 
@@ -784,7 +784,7 @@ class PhocaCartControllerCheckout extends FormController
             }
 
             $cart->setFullItems();
-
+            $cart->roundTotalAmount();
             $o = $o2 = '';
 
             ob_start();

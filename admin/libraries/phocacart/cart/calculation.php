@@ -9,6 +9,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 
@@ -56,6 +57,7 @@ class PhocacartCartCalculation
         $total['weight']          = 0;
         $total['volume']          = 0;
         $total['dnetto']          = 0;
+        $total['dbrutto']         = 0;
         $total['quantity']        = 0;
 
         $total['length'] = 0;
@@ -92,6 +94,7 @@ class PhocacartCartCalculation
         $total['rounding_currency'] = 0;
 
         $total['wdnetto']           = 0;//Subtotal after all discounts
+        $total['wdbrutto']          = 0;//Subtotal after all discounts
         $total['rounding_currency'] = 0;
 
         foreach ($items as $k => $v) {
@@ -155,10 +158,10 @@ class PhocacartCartCalculation
             $fullItems[$k]['rewardproducttxtsuffix'] = '';
             $fullItems[$k]['points_needed']          = 0;
             $fullItems[$k]['points_received']        = 0;
-            $fullItems[$k]['type']                    = 0;
-            $fullItems[$k]['owner_id']                = null;
-            $fullItems[$k]['owner_name']              = null;
-            $fullItems[$k]['owner_ordering']          = null;
+            $fullItems[$k]['type']                   = 0;
+            $fullItems[$k]['owner_id']               = null;
+            $fullItems[$k]['owner_name']             = null;
+            $fullItems[$k]['owner_ordering']         = null;
 
 
             // GROUP QUANTITY
@@ -192,16 +195,16 @@ class PhocacartCartCalculation
             }
 
             if (isset($itemD->id) && (int)$itemD->id > 0) {
-                $fullItems[$k]['title'] = $itemD->title;
-                $fullItems[$k]['catid'] = $itemD->catid;
-                $fullItems[$k]['alias'] = $itemD->alias;
-                $fullItems[$k]['sku']   = $itemD->sku;
-                $fullItems[$k]['image'] = $itemD->image;
-                $fullItems[$k]['type']  = $itemD->type;
+                $fullItems[$k]['title']    = $itemD->title;
+                $fullItems[$k]['catid']    = $itemD->catid;
+                $fullItems[$k]['alias']    = $itemD->alias;
+                $fullItems[$k]['sku']      = $itemD->sku;
+                $fullItems[$k]['image']    = $itemD->image;
+                $fullItems[$k]['type']     = $itemD->type;
                 $fullItems[$k]['owner_id'] = $itemD->owner_id;
                 if ($itemD->owner_id) {
                     if ($vendor = PhocacartVendor::getVendor($itemD->owner_id)) {
-                        $fullItems[$k]['owner_name'] = $vendor->title;
+                        $fullItems[$k]['owner_name']     = $vendor->title;
                         $fullItems[$k]['owner_ordering'] = $vendor->ordering;
                     }
                 }
@@ -372,33 +375,33 @@ class PhocacartCartCalculation
                                             // Price
                                             if ($attrib->operator == '-') {
 
-                                                $nettoBefore = $fullItems[$k]['netto'];
+                                                $nettoBefore            = $fullItems[$k]['netto'];
                                                 $fullItems[$k]['netto'] -= $priceA['netto'];
                                                 if ($fullItems[$k]['netto'] < 0) {
-                                                    $total['netto'] -= ($nettoBefore * $fQ);
+                                                    $total['netto']         -= ($nettoBefore * $fQ);
                                                     $fullItems[$k]['netto'] = 0;
 
                                                 } else {
                                                     $total['netto'] -= ($priceA['netto'] * $fQ);
                                                 }
 
-                                                $bruttoBefore = $fullItems[$k]['brutto'];
+                                                $bruttoBefore            = $fullItems[$k]['brutto'];
                                                 $fullItems[$k]['brutto'] -= $priceA['brutto'];
-                                                if ($fullItems[$k]['brutto'] < 0 ) {
-                                                    $total['brutto'] -= ($bruttoBefore * $fQ);
+                                                if ($fullItems[$k]['brutto'] < 0) {
+                                                    $total['brutto']         -= ($bruttoBefore * $fQ);
                                                     $fullItems[$k]['brutto'] = 0;
                                                 } else {
 
                                                     $total['brutto'] -= ($priceA['brutto'] * $fQ);
                                                 }
 
-                                                $taxBefore = $fullItems[$k]['tax'];
+                                                $taxBefore            = $fullItems[$k]['tax'];
                                                 $fullItems[$k]['tax'] -= $priceA['tax'];
-                                                if ($fullItems[$k]['tax'] < 0 ) {
+                                                if ($fullItems[$k]['tax'] < 0) {
                                                     $total['tax'][$taxKey]['tax']    -= ($taxBefore * $fQ);
                                                     $total['tax'][$taxKey]['netto']  -= ($nettoBefore * $fQ);
                                                     $total['tax'][$taxKey]['brutto'] -= ($bruttoBefore * $fQ);
-                                                    $fullItems[$k]['tax'] = 0;
+                                                    $fullItems[$k]['tax']            = 0;
                                                 } else {
 
                                                     $total['tax'][$taxKey]['tax']    -= ($priceA['tax'] * $fQ);
@@ -409,9 +412,9 @@ class PhocacartCartCalculation
 
                                             } else if ($attrib->operator == '+') {
 
-                                                $fullItems[$k]['brutto']         += $priceA['brutto'];// * multiply in render checkout
-                                                $fullItems[$k]['netto']          += $priceA['netto']; // * multiply in render checkout
-                                                $fullItems[$k]['tax']            += $priceA['tax'];   // * multiply in render checkout
+                                                $fullItems[$k]['brutto'] += $priceA['brutto'];// * multiply in render checkout
+                                                $fullItems[$k]['netto']  += $priceA['netto']; // * multiply in render checkout
+                                                $fullItems[$k]['tax']    += $priceA['tax'];   // * multiply in render checkout
 
                                                 $total['netto']                  += ($priceA['netto'] * $fQ);
                                                 $total['brutto']                 += ($priceA['brutto'] * $fQ);
@@ -435,11 +438,11 @@ class PhocacartCartCalculation
 
                                     // Volume
                                     if ($attrib->operator_volume == '-') {
-                                        $fullItems[$k]['volume'] 	-= $attrib->volume;
-                                        $fullItems[$k]['volume'] < 0 ? $fullItems[$k]['volume'] = 0 : $total['volume']	-= ($attrib->volume * $fullItems[$k]['quantity']);
-                                    }  else if ($attrib->operator_volume == '+') {
-                                        $fullItems[$k]['volume'] 	+= $attrib->volume;
-                                        $total['volume']			+= ($attrib->volume * $fullItems[$k]['quantity']);
+                                        $fullItems[$k]['volume'] -= $attrib->volume;
+                                        $fullItems[$k]['volume'] < 0 ? $fullItems[$k]['volume'] = 0 : $total['volume'] -= ($attrib->volume * $fullItems[$k]['quantity']);
+                                    } else if ($attrib->operator_volume == '+') {
+                                        $fullItems[$k]['volume'] += $attrib->volume;
+                                        $total['volume']         += ($attrib->volume * $fullItems[$k]['quantity']);
                                     }
 
 
@@ -600,8 +603,8 @@ class PhocacartCartCalculation
 
 
         $reward               = new PhocacartReward();
-        $rewards = array();
-        $rewards['used'] = $reward->checkReward((int)$rewardCart['used']);
+        $rewards              = array();
+        $rewards['used']      = $reward->checkReward((int)$rewardCart['used']);
         $rewards['usedtotal'] = 0;
 
         foreach ($fullItems as $k => $v) {
@@ -656,6 +659,8 @@ class PhocacartCartCalculation
     // ================
     public function calculateProductDiscounts(&$fullItems, &$fullItemsGroup, &$total) {
 
+        $paramsC               = PhocacartUtils::getComponentParameters();
+        $tax_calculation_sales = $paramsC->get('tax_calculation_sales', 1);
 
         foreach ($fullItems as $k => $v) {
 
@@ -678,17 +683,33 @@ class PhocacartCartCalculation
 
                 if ($discount['calculation_type'] == 0) {
                     // FIXED AMOUNT
-                    if (isset($v['netto']) && $v['netto'] > 0) {
-                        //$r = $discount['discount'] / $v['quantity'] * 100 / $v['netto'];// Ratio to use it for brutto and tax
-                        // PRODUCT DISCOUNT - DON'T DIVIDE IT INTO QUANTITY
-                        //if you set 500 fixed amount as discount - it applies to each quantity
-                        $r = $discount['discount'] * 100 / $v['netto'];
+
+                    if ($tax_calculation_sales == 2) {
+
+                        if (isset($v['brutto']) && $v['brutto'] > 0) {
+                            //$r = $discount['discount'] / $v['quantity'] * 100 / $v['netto'];// Ratio to use it for brutto and tax
+                            // PRODUCT DISCOUNT - DON'T DIVIDE IT INTO QUANTITY
+                            //if you set 500 fixed amount as discount - it applies to each quantity
+                            $r = $discount['discount'] * 100 / $v['brutto'];
+
+                        } else {
+                            $r = 0;
+                        }
 
                     } else {
-                        $r = 0;
+                        if (isset($v['netto']) && $v['netto'] > 0) {
+                            //$r = $discount['discount'] / $v['quantity'] * 100 / $v['netto'];// Ratio to use it for brutto and tax
+                            // PRODUCT DISCOUNT - DON'T DIVIDE IT INTO QUANTITY
+                            //if you set 500 fixed amount as discount - it applies to each quantity
+                            $r = $discount['discount'] * 100 / $v['netto'];
+
+                        } else {
+                            $r = 0;
+                        }
                     }
 
                     PhocacartCalculation::calculateDiscountFixedAmount($r, $v['quantity'], $fullItems[$k], $total, $v['taxkey']);
+
 
                 } else {
                     // PERCENTAGE
@@ -701,13 +722,28 @@ class PhocacartCartCalculation
 
             }
 
-            $fullItems[$k]['final'] = $fullItems[$k]['netto'] && !$this->posbruttocalculation ? $fullItems[$k]['netto'] * $v['quantity'] : $fullItems[$k]['brutto'] * $v['quantity'];
+            //$fullItems[$k]['final'] = $fullItems[$k]['netto'] && !$this->posbruttocalculation ? $fullItems[$k]['netto'] * $v['quantity'] : $fullItems[$k]['brutto'] * $v['quantity'];
 
-            if (isset($fullItems[$k]['nettodiscount']) && !$this->posbruttocalculation) {
-                $fullItems[$k]['finaldiscount'] = $fullItems[$k]['nettodiscount'] * $v['quantity'];
-            } else if (isset($fullItems[$k]['bruttodiscount'])) {
-                $fullItems[$k]['finaldiscount'] = $fullItems[$k]['bruttodiscount'] * $v['quantity'];
+            if ($tax_calculation_sales == 2) {
+                $fullItems[$k]['final'] = $fullItems[$k]['brutto'] ? $fullItems[$k]['brutto'] * $v['quantity'] : $fullItems[$k]['netto'] * $v['quantity'];
+
+                if (isset($fullItems[$k]['bruttodiscount'])) {
+                    $fullItems[$k]['finaldiscount'] = $fullItems[$k]['bruttodiscount'] * $v['quantity'];
+                } else if (isset($fullItems[$k]['bruttodiscount'])) {
+                    $fullItems[$k]['finaldiscount'] = $fullItems[$k]['bruttodiscount'] * $v['quantity'];
+                }
+
+            } else {
+                $fullItems[$k]['final'] = $fullItems[$k]['netto'] && !$this->posbruttocalculation ? $fullItems[$k]['netto'] * $v['quantity'] : $fullItems[$k]['brutto'] * $v['quantity'];
+
+                if (isset($fullItems[$k]['nettodiscount']) && !$this->posbruttocalculation) {
+                    $fullItems[$k]['finaldiscount'] = $fullItems[$k]['nettodiscount'] * $v['quantity'];
+                } else if (isset($fullItems[$k]['bruttodiscount'])) {
+                    $fullItems[$k]['finaldiscount'] = $fullItems[$k]['bruttodiscount'] * $v['quantity'];
+                }
+
             }
+
 
             if ($this->correctsubtotal) {
                 $this->correctSubTotal($fullItems[$k], $total);
@@ -722,7 +758,9 @@ class PhocacartCartCalculation
 
         // If there are more cart discounts e.g. separated by different rules
         // remove the suffix because it will be not valid
-        $discountSuffixItems = array();
+        $discountSuffixItems   = array();
+        $paramsC               = PhocacartUtils::getComponentParameters();
+        $tax_calculation_sales = $paramsC->get('tax_calculation_sales', 1);
 
         foreach ($fullItems as $k => $v) {
 
@@ -764,6 +802,12 @@ class PhocacartCartCalculation
                             $total['discountcartfixedamount'][$discountId]['netto'] = $v['netto'] * $v['quantity'];
                         }
 
+                        if (isset($total['discountcartfixedamount'][$discountId]['brutto'])) {
+                            $total['discountcartfixedamount'][$discountId]['brutto'] += $v['brutto'] * $v['quantity'];
+                        } else {
+                            $total['discountcartfixedamount'][$discountId]['brutto'] = $v['brutto'] * $v['quantity'];
+                        }
+
 
                         $total['discountcartfixedamount'][$discountId]['discount'] = $discountAmount;
                         $fullItems[$k]['discountcartfixedid']                      = $discountId;
@@ -780,7 +824,7 @@ class PhocacartCartCalculation
                             // e.g. 5% and 10% then the 10% in () will be misleading
                             $total['discountcarttxtsuffix'] = '';
                         } else {
-                             $price                          = new PhocacartPrice();
+                            $price                          = new PhocacartPrice();
                             $total['discountcarttxtsuffix'] = ' (' . $price->cleanPrice($discount['discount']) . ' %)';
                         }
 
@@ -792,7 +836,12 @@ class PhocacartCartCalculation
                 }
             }
 
-            $fullItems[$k]['final'] = $fullItems[$k]['netto'] && !$this->posbruttocalculation ? $fullItems[$k]['netto'] * $v['quantity'] : $fullItems[$k]['brutto'] * $v['quantity'];
+
+            if ($tax_calculation_sales == 2) {
+                $fullItems[$k]['final'] = $fullItems[$k]['brutto'] ? $fullItems[$k]['brutto'] * $v['quantity'] : $fullItems[$k]['netto'] * $v['quantity'];
+            } else {
+                $fullItems[$k]['final'] = $fullItems[$k]['netto'] && !$this->posbruttocalculation ? $fullItems[$k]['netto'] * $v['quantity'] : $fullItems[$k]['brutto'] * $v['quantity'];
+            }
 
 
             /*
@@ -815,44 +864,68 @@ class PhocacartCartCalculation
      */
     public function recalculateCartDiscounts(&$fullItems, &$fullItemsGroup, &$total) {
 
+        $paramsC               = PhocacartUtils::getComponentParameters();
+        $tax_calculation_sales = $paramsC->get('tax_calculation_sales', 1);
+
         foreach ($fullItems as $k => $v) {
 
 
             // Fixed amount - we need to recalculate
             $dF = $v['discountcartfixedid'];
 
-            if (isset($total['discountcartfixedamount'][$dF]['discount']) && isset($total['discountcartfixedamount'][$dF]['netto'])) {
+            if ($tax_calculation_sales == 2) {
+                if (isset($total['discountcartfixedamount'][$dF]['discount']) && isset($total['discountcartfixedamount'][$dF]['brutto'])) {
+                    $dPRel = 0;
+                    if ($total['discountcartfixedamount'][$dF]['brutto'] > 0) {
+                        $dPRel = $total['discountcartfixedamount'][$dF]['discount'] / $total['discountcartfixedamount'][$dF]['brutto'];
+                    }
+                    // CART DISCOUNT - DIVIDE IT INTO QUANTITY
+                    $dPFix = $dPRel * $v['brutto'] * $v['quantity'];
 
-                $dPRel = 0;
-                if ($total['discountcartfixedamount'][$dF]['netto'] > 0) {
-                    $dPRel = $total['discountcartfixedamount'][$dF]['discount'] / $total['discountcartfixedamount'][$dF]['netto'];
+                    if ($v['netto'] > 0) {
+                        $r = $dPFix * 100 / $v['brutto'] / $v['quantity'];// Ratio to use it for brutto and tax but you need to divide it into qunatity
+                    } else {
+                        $r = 0;
+                    }
+
+                    PhocacartCalculation::calculateDiscountFixedAmount($r, $v['quantity'], $fullItems[$k], $total, $v['taxkey']);
+                    PhocacartCalculation::correctItemsIfNull($fullItems[$k]);
+                    PhocacartCalculation::correctTotalIfNull($total, $v['taxkey']);
                 }
-                // CART DISCOUNT - DIVIDE IT INTO QUANTITY
-                $dPFix = $dPRel * $v['netto'] * $v['quantity'];
+                $fullItems[$k]['final'] = $fullItems[$k]['brutto'] ? $fullItems[$k]['brutto'] * $v['quantity'] : $fullItems[$k]['netto'] * $v['quantity'];
 
-                if ($v['netto'] > 0) {
-                    $r = $dPFix * 100 / $v['netto'] / $v['quantity'];// Ratio to use it for brutto and tax but you need to divide it into qunatity
-                } else {
-                    $r = 0;
+                if (isset($fullItems[$k]['bruttodiscount'])) {
+                    $fullItems[$k]['finaldiscount'] = $fullItems[$k]['bruttodiscount'] * $v['quantity'];
+                } else if (isset($fullItems[$k]['nettodiscount'])) {
+                    $fullItems[$k]['finaldiscount'] = $fullItems[$k]['nettodiscount'] * $v['quantity'];
                 }
 
+            } else {
+                if (isset($total['discountcartfixedamount'][$dF]['discount']) && isset($total['discountcartfixedamount'][$dF]['netto'])) {
+                    $dPRel = 0;
+                    if ($total['discountcartfixedamount'][$dF]['netto'] > 0) {
+                        $dPRel = $total['discountcartfixedamount'][$dF]['discount'] / $total['discountcartfixedamount'][$dF]['netto'];
+                    }
+                    // CART DISCOUNT - DIVIDE IT INTO QUANTITY
+                    $dPFix = $dPRel * $v['netto'] * $v['quantity'];
 
-                PhocacartCalculation::calculateDiscountFixedAmount($r, $v['quantity'], $fullItems[$k], $total, $v['taxkey']);
+                    if ($v['netto'] > 0) {
+                        $r = $dPFix * 100 / $v['netto'] / $v['quantity'];// Ratio to use it for brutto and tax but you need to divide it into qunatity
+                    } else {
+                        $r = 0;
+                    }
 
+                    PhocacartCalculation::calculateDiscountFixedAmount($r, $v['quantity'], $fullItems[$k], $total, $v['taxkey']);
+                    PhocacartCalculation::correctItemsIfNull($fullItems[$k]);
+                    PhocacartCalculation::correctTotalIfNull($total, $v['taxkey']);
+                }
+                $fullItems[$k]['final'] = $fullItems[$k]['netto'] && !$this->posbruttocalculation ? $fullItems[$k]['netto'] * $v['quantity'] : $fullItems[$k]['brutto'] * $v['quantity'];
 
-                PhocacartCalculation::correctItemsIfNull($fullItems[$k]);
-                PhocacartCalculation::correctTotalIfNull($total, $v['taxkey']);
-
-
-            }
-
-            $fullItems[$k]['final'] = $fullItems[$k]['netto'] && !$this->posbruttocalculation ? $fullItems[$k]['netto'] * $v['quantity'] : $fullItems[$k]['brutto'] * $v['quantity'];
-
-
-            if (isset($fullItems[$k]['nettodiscount']) && !$this->posbruttocalculation) {
-                $fullItems[$k]['finaldiscount'] = $fullItems[$k]['nettodiscount'] * $v['quantity'];
-            } else if (isset($fullItems[$k]['bruttodiscount'])) {
-                $fullItems[$k]['finaldiscount'] = $fullItems[$k]['bruttodiscount'] * $v['quantity'];
+                if (isset($fullItems[$k]['nettodiscount']) && !$this->posbruttocalculation) {
+                    $fullItems[$k]['finaldiscount'] = $fullItems[$k]['nettodiscount'] * $v['quantity'];
+                } else if (isset($fullItems[$k]['bruttodiscount'])) {
+                    $fullItems[$k]['finaldiscount'] = $fullItems[$k]['bruttodiscount'] * $v['quantity'];
+                }
             }
 
             if ($this->correctsubtotal) {
@@ -878,6 +951,9 @@ class PhocacartCartCalculation
         $couponO->setType($this->type);
         $couponO->setCoupon($coupon['id']);
         $couponDb = $couponO->getCoupon();
+
+        $paramsC               = PhocacartUtils::getComponentParameters();
+        $tax_calculation_sales = $paramsC->get('tax_calculation_sales', 1);
 
         foreach ($fullItems as $k => $v) {
 
@@ -918,6 +994,19 @@ class PhocacartCartCalculation
                             $total['couponcartfixedamount'][$validCouponId]['netto'] = $v['netto'] * $v['quantity'];
                         }
 
+                        if (isset($total['couponcartfixedamount'][$validCouponId]['brutto'])) {
+                            $total['couponcartfixedamount'][$validCouponId]['brutto'] += $v['brutto'] * $v['quantity'];
+                        } else {
+                            $total['couponcartfixedamount'][$validCouponId]['brutto'] = $v['brutto'] * $v['quantity'];
+                        }
+                        /*
+                                                if (isset($total['couponcartfixedamount'][$validCouponId]['netto'])) {
+                                                    $total['couponcartfixedamount'][$validCouponId]['netto'] += $v['brutto'] * $v['quantity'];
+                                                } else {
+                                                    $total['couponcartfixedamount'][$validCouponId]['netto'] = $v['brutto'] * $v['quantity'];
+                                                }*/
+
+
                         $total['couponcartfixedamount'][$validCouponId]['discount'] = $validCouponAmount;
                         $fullItems[$k]['couponcartfixedid']                         = $validCouponId;
 
@@ -942,24 +1031,32 @@ class PhocacartCartCalculation
             if ($validCoupon == 1) {
                 $coupon['valid'] = $validCoupon;
             }
-            $fullItems[$k]['final'] = $fullItems[$k]['netto'] && !$this->posbruttocalculation ? $fullItems[$k]['netto'] * $v['quantity'] : $fullItems[$k]['brutto'] * $v['quantity'];
+            //$fullItems[$k]['final'] = $fullItems[$k]['netto'] && !$this->posbruttocalculation ? $fullItems[$k]['netto'] * $v['quantity'] : $fullItems[$k]['brutto'] * $v['quantity'];
+
+            if ($tax_calculation_sales == 2) {
+                $fullItems[$k]['final'] = $fullItems[$k]['brutto'] ? $fullItems[$k]['brutto'] * $v['quantity'] : $fullItems[$k]['netto'] * $v['quantity'];
+            } else {
+                $fullItems[$k]['final'] = $fullItems[$k]['netto'] && !$this->posbruttocalculation ? $fullItems[$k]['netto'] * $v['quantity'] : $fullItems[$k]['brutto'] * $v['quantity'];
+            }
 
             /*
              *
              * Must be done in recalculateCartCoupons for fixed coupons
              */
-            if (isset($couponDb['calculation_type']) && $couponDb['calculation_type'] != 0) {
+            /*if (isset($couponDb['calculation_type']) && $couponDb['calculation_type'] != 0) {
                 if (isset($fullItems[$k]['nettodiscount']) && !$this->posbruttocalculation) {
                     $fullItems[$k]['finaldiscount'] = $fullItems[$k]['nettodiscount'] * $v['quantity'];
                 } else if (isset($fullItems[$k]['bruttodiscount'])) {
                     $fullItems[$k]['finaldiscount'] = $fullItems[$k]['bruttodiscount'] * $v['quantity'];
                 }
-            }
+            }*/
 
             if ($this->correctsubtotal) {
                 $this->correctSubTotal($fullItems[$k], $total);
             }
         }
+
+
     }
 
     /*
@@ -967,37 +1064,72 @@ class PhocacartCartCalculation
      */
     public function recalculateCartCoupons(&$fullItems, &$fullItemsGroup, &$total) {
 
+        $paramsC               = PhocacartUtils::getComponentParameters();
+        $tax_calculation_sales = $paramsC->get('tax_calculation_sales', 1);
+
         foreach ($fullItems as $k => $v) {
 
             $dF = $v['couponcartfixedid'];
 
-            if (isset($total['couponcartfixedamount'][$dF]['discount']) && isset($total['couponcartfixedamount'][$dF]['netto'])) {
+            if ($tax_calculation_sales == 2) {
 
-                $dPRel = 0;
-                if ($total['couponcartfixedamount'][$dF]['netto'] > 0) {
-                    $dPRel = $total['couponcartfixedamount'][$dF]['discount'] / $total['couponcartfixedamount'][$dF]['netto'];
+                if (isset($total['couponcartfixedamount'][$dF]['discount']) && isset($total['couponcartfixedamount'][$dF]['brutto'])) {
+                    $dPRel = 0;
+                    if ($total['couponcartfixedamount'][$dF]['brutto'] > 0) {
+                        $dPRel = $total['couponcartfixedamount'][$dF]['discount'] / $total['couponcartfixedamount'][$dF]['brutto'];
+                    }
+                    // CART DISCOUNT - DIVIDE IT INTO QUANTITY
+                    $dPFix = $dPRel * $v['brutto'] * $v['quantity'];
+
+                    if ($v['netto'] > 0) {
+                        $r = $dPFix * 100 / $v['brutto'] / $v['quantity'];// Ratio to use it for brutto and tax but you need to divide it into qunatity
+                    } else {
+                        $r = 0;
+                    }
+
+                    PhocacartCalculation::calculateDiscountFixedAmount($r, $v['quantity'], $fullItems[$k], $total, $v['taxkey']);
+                    PhocacartCalculation::correctItemsIfNull($fullItems[$k]);
+                    PhocacartCalculation::correctTotalIfNull($total, $v['taxkey']);
                 }
-                // CART DISCOUNT - DIVIDE IT INTO QUANTITY
-                $dPFix = $dPRel * $v['netto'] * $v['quantity'];
+                $fullItems[$k]['final'] = $fullItems[$k]['brutto'] ? $fullItems[$k]['brutto'] * $v['quantity'] : $fullItems[$k]['netto'] * $v['quantity'];
 
-                if ($v['netto'] > 0) {
-                    $r = $dPFix * 100 / $v['netto'] / $v['quantity'];// Ratio to use it for brutto and tax but you need to divide it into qunatity
-                } else {
-                    $r = 0;
+                if (isset($fullItems[$k]['bruttodiscount'])) {
+                    $fullItems[$k]['finaldiscount'] = $fullItems[$k]['bruttodiscount'] * $v['quantity'];
+                } else if (isset($fullItems[$k]['nettodiscount'])) {
+                    $fullItems[$k]['finaldiscount'] = $fullItems[$k]['nettodiscount'] * $v['quantity'];
                 }
 
+            } else {
 
-                PhocacartCalculation::calculateDiscountFixedAmount($r, $v['quantity'], $fullItems[$k], $total, $v['taxkey']);
-                PhocacartCalculation::correctItemsIfNull($fullItems[$k]);
-                PhocacartCalculation::correctTotalIfNull($total, $v['taxkey']);
-            }
 
-            $fullItems[$k]['final'] = $fullItems[$k]['netto'] && !$this->posbruttocalculation ? $fullItems[$k]['netto'] * $v['quantity'] : $fullItems[$k]['brutto'] * $v['quantity'];
+                if (isset($total['couponcartfixedamount'][$dF]['discount']) && isset($total['couponcartfixedamount'][$dF]['netto'])) {
 
-            if (isset($fullItems[$k]['nettodiscount']) && !$this->posbruttocalculation) {
-                $fullItems[$k]['finaldiscount'] = $fullItems[$k]['nettodiscount'] * $v['quantity'];
-            } else if (isset($fullItems[$k]['bruttodiscount'])) {
-                $fullItems[$k]['finaldiscount'] = $fullItems[$k]['bruttodiscount'] * $v['quantity'];
+                    $dPRel = 0;
+                    if ($total['couponcartfixedamount'][$dF]['netto'] > 0) {
+                        $dPRel = $total['couponcartfixedamount'][$dF]['discount'] / $total['couponcartfixedamount'][$dF]['netto'];
+                    }
+                    // CART DISCOUNT - DIVIDE IT INTO QUANTITY
+                    $dPFix = $dPRel * $v['netto'] * $v['quantity'];
+
+                    if ($v['netto'] > 0) {
+                        $r = $dPFix * 100 / $v['netto'] / $v['quantity'];// Ratio to use it for brutto and tax but you need to divide it into quantity
+                    } else {
+                        $r = 0;
+                    }
+
+
+                    PhocacartCalculation::calculateDiscountFixedAmount($r, $v['quantity'], $fullItems[$k], $total, $v['taxkey']);
+                    PhocacartCalculation::correctItemsIfNull($fullItems[$k]);
+                    PhocacartCalculation::correctTotalIfNull($total, $v['taxkey']);
+                }
+
+                $fullItems[$k]['final'] = $fullItems[$k]['netto'] && !$this->posbruttocalculation ? $fullItems[$k]['netto'] * $v['quantity'] : $fullItems[$k]['brutto'] * $v['quantity'];
+
+                if (isset($fullItems[$k]['nettodiscount']) && !$this->posbruttocalculation) {
+                    $fullItems[$k]['finaldiscount'] = $fullItems[$k]['nettodiscount'] * $v['quantity'];
+                } else if (isset($fullItems[$k]['bruttodiscount'])) {
+                    $fullItems[$k]['finaldiscount'] = $fullItems[$k]['bruttodiscount'] * $v['quantity'];
+                }
             }
 
             if ($this->correctsubtotal) {
@@ -1020,9 +1152,17 @@ class PhocacartCartCalculation
 
         // Fix when discount is larger than final netto (this can happen due to rounding, so it can happen that netto is e.g. - 0.01
 
+        $paramsC               = PhocacartUtils::getComponentParameters();
+        $tax_calculation_sales = $paramsC->get('tax_calculation_sales', 1);
+
         if ($total['netto'] < 0) {
-            $item['finaldiscount'] += $total['netto'];
-            $total['netto']        = 0;
+            //$item['finaldiscount'] += $total['netto'];
+            if ($tax_calculation_sales == 2) {
+                $item['finaldiscount'] += $total['brutto'];
+            } else {
+                $item['finaldiscount'] += $total['netto'];
+            }
+            $total['netto'] = 0;
         }
 
         // Fixed VAT
@@ -1049,7 +1189,27 @@ class PhocacartCartCalculation
                 // the floats are the same
             } else {
 
-                $item['netto']  = $nettoRoundedCorrected / $quantityCorrect;
+                $item['netto'] = $nettoRoundedCorrected / $quantityCorrect;
+
+                if ($tax_calculation_sales == 2) {
+                    $item['final'] = $item['brutto'] ? $item['brutto'] * $quantityCorrect : $item['netto'] * $quantityCorrect;
+
+                    if (isset($item['bruttodiscount'])) {
+                        $item['finaldiscount'] = $item['bruttodiscount'] * $quantityCorrect;
+                    } else if (isset($item['nettodiscount'])) {
+                        $item['finaldiscount'] = $item['nettodiscount'] * $quantityCorrect;
+                    }
+                } else {
+                    // if netto changed, we need to change others too:
+                    $item['final'] = $item['netto'] && !$this->posbruttocalculation ? $item['netto'] * $quantityCorrect : $item['brutto'] * $quantityCorrect;
+                    if (isset($item['nettodiscount']) && !$this->posbruttocalculation) {
+                        $item['finaldiscount'] = $item['nettodiscount'] * $quantityCorrect;
+                    } else if (isset($item['bruttodiscount'])) {
+                        $item['finaldiscount'] = $item['bruttodiscount'] * $quantityCorrect;
+                    }
+                }
+
+
                 $total['netto'] = $total['netto'] + ($nettoRoundedCorrected / $item['quantity']) - ($nettoNotRounded / $quantityCorrect);
 
 
@@ -1058,7 +1218,7 @@ class PhocacartCartCalculation
                         if ($kT == $item['taxkey']) {
 
                             $total['tax'][$kT]['netto']  = $vT['netto'] + ($nettoRoundedCorrected / $item['quantity']) - ($nettoNotRounded / $quantityCorrect);
-                            $total['tax'][$kT]['tax']   = $vT['tax'];
+                            $total['tax'][$kT]['tax']    = $vT['tax'];
                             $total['tax'][$kT]['brutto'] = $total['tax'][$kT]['tax'] + $total['tax'][$kT]['netto'];
                         }
                     }
@@ -1107,14 +1267,16 @@ class PhocacartCartCalculation
 
 
         $app                      = Factory::getApplication();
-        $paramsC = PhocacartUtils::getComponentParameters();
+        $paramsC                  = PhocacartUtils::getComponentParameters();
         $rounding_calculation_fad = $paramsC->get('rounding_calculation_fixed_amount_discount', -1);
+        $tax_calculation_sales    = $paramsC->get('tax_calculation_sales', 1);
 
         if ($rounding_calculation_fad < 0) {
             return;
         }
 
-        $discount = 0;
+        $discount       = 0;
+        $discountBrutto = 0;
         if (!empty($total['discountcartfixedamount'])) {
             foreach ($total['discountcartfixedamount'] as $k => $v) {
                 if (isset($v['discount'])) {
@@ -1123,24 +1285,51 @@ class PhocacartCartCalculation
                     } else {
                         $discount = $v['discount'];// one product - whole cart discount goes to one product
                     }
+
+                    if (isset($v['brutto']) && $v['brutto'] < $v['discount']) {
+                        $discountBrutto = $v['brutto']; // more pieces of product - so the cart discount is divided to more pieces of products, but max to cart discount fixed amount
+                    } else {
+                        $discountBrutto = $v['discount'];// one product - whole cart discount goes to one product
+                    }
                 }
             }
         }
 
-        if (isset($total['dnetto']) && $total['dnetto'] > 0 && $discount > 0) {
-            $dif = $discount - $total['dnetto'];
+        if ($tax_calculation_sales == 2) {
+            if (isset($total['dbrutto']) && $total['dbrutto'] > 0 && $discountBrutto > 0) {
+                $dif = $discountBrutto - $total['dbrutto'];
 
-            if ($dif > 0) {
-                $total['rounding'] += $dif;
-                $total['dnetto']   = $discount;
+               /* if (abs($dif < 0.01)) {
+                    $dif = 0;
+                    $total['dbrutto']  = $discountBrutto;
+                }*/
 
-            } else if ($dif < 0) {
-                $total['rounding'] -= $dif;
-                $total['dnetto']   = $discount;
-                $total['netto']    += $dif;
+                if ($dif > 0) {
+                    $total['rounding'] += $dif;
+                    $total['dbrutto']  = $discountBrutto;
+
+                } else if ($dif < 0) {
+                    $total['rounding'] -= $dif;
+                    $total['dbrutto']  = $discountBrutto;
+                    $total['brutto']   += $dif;
+                }
+            }
+        } else {
+            if (isset($total['dnetto']) && $total['dnetto'] > 0 && $discount > 0) {
+                $dif = $discount - $total['dnetto'];
+
+                if ($dif > 0) {
+                    $total['rounding'] += $dif;
+                    $total['dnetto']   = $discount;
+
+                } else if ($dif < 0) {
+                    $total['rounding'] -= $dif;
+                    $total['dnetto']   = $discount;
+                    $total['netto']    += $dif;
+
+                }
 
             }
-
         }
 
         return;
@@ -1148,40 +1337,71 @@ class PhocacartCartCalculation
 
     public function roundFixedAmountCoupon(&$total) {
 
-        $app                      = Factory::getApplication();
-        $paramsC = PhocacartUtils::getComponentParameters();
+        //$app                      = Factory::getApplication();
+        $paramsC                  = PhocacartUtils::getComponentParameters();
         $rounding_calculation_fac = $paramsC->get('rounding_calculation_fixed_amount_coupon', -1);
+        $tax_calculation_sales    = $paramsC->get('tax_calculation_sales', 1);
 
         if ($rounding_calculation_fac < 0) {
             return;
         }
 
-        $discount = 0;
+        $discount       = 0;
+        $discountBrutto = 0;
         if (!empty($total['couponcartfixedamount'])) {
             foreach ($total['couponcartfixedamount'] as $k => $v) {
+
                 if (isset($v['discount'])) {
                     if (isset($v['netto']) && $v['netto'] < $v['discount']) {
                         $discount = $v['netto']; // more pieces of product - so the cart discount is divided to more pieces of products, but max to cart discount fixed amount
                     } else {
                         $discount = $v['discount'];// one product - whole cart discount goes to one product
                     }
+
+                    if (isset($v['brutto']) && $v['brutto'] < $v['discount']) {
+                        $discountBrutto = $v['brutto']; // more pieces of product - so the cart discount is divided to more pieces of products, but max to cart discount fixed amount
+                    } else {
+                        $discountBrutto = $v['discount'];// one product - whole cart discount goes to one product
+                    }
                 }
             }
         }
 
-        if (isset($total['dnetto']) && $total['dnetto'] > 0 && $discount > 0) {
-            $dif = $discount - $total['dnetto'];
+        if ($tax_calculation_sales == 2) {
+            if (isset($total['dbrutto']) && $total['dbrutto'] > 0 && $discountBrutto > 0) {
+                $dif = $discountBrutto - $total['dbrutto'];
 
-            if ($dif > 0) {
-                $total['rounding'] += $dif;
-                $total['dnetto']   = $discount;
+               /* if (abs($dif < 0.01)) {
+                    $dif = 0;
+                    $total['dbrutto']  = $discountBrutto;
+                }*/
 
-            } else if ($dif < 0) {
-                $total['rounding'] -= $dif;
-                $total['dnetto']   = $discount;
+                if ($dif > 0) {
+                    $total['rounding'] += $dif;
+                    $total['dbrutto']  = $discountBrutto;
+
+                } else if ($dif < 0) {
+                    $total['rounding'] -= $dif;
+                    $total['dbrutto']  = $discountBrutto;
+                    $total['brutto']   += $dif;
+                }
+            }
+        } else {
+            if (isset($total['dnetto']) && $total['dnetto'] > 0 && $discount > 0) {
+                $dif = $discount - $total['dnetto'];
+
+                if ($dif > 0) {
+                    $total['rounding'] += $dif;
+                    $total['dnetto']   = $discount;
+
+                } else if ($dif < 0) {
+                    $total['rounding'] -= $dif;
+                    $total['dnetto']   = $discount;
+                    $total['netto']    += $dif;
+
+                }
 
             }
-
         }
 
         return;
@@ -1204,6 +1424,9 @@ class PhocacartCartCalculation
             return false;
         }
 
+        $paramsC                  = PhocacartUtils::getComponentParameters();
+        $tax_calculation_sales    = $paramsC->get('tax_calculation_sales', 1);
+
         $price = new PhocacartPrice();
         //$paramsC 						= PhocacartUtils::getComponentParameters();
         //$rounding_calculation			= $paramsC->get( 'rounding_calculation', 1 );
@@ -1215,11 +1438,19 @@ class PhocacartCartCalculation
         $totalDC = 0; // total in default currency
         $totalOR = 0; // total in order currency
 
+        $totalDCBrutto = 0;
+        $totalORBrutto = 0;
+
 
         // Subtotal
         if (isset($total[1]['netto'])) {
             $totalDC += $price->roundPrice($total[1]['netto']);
             $totalOR += $price->roundPrice($total[1]['netto'] * $cr);
+        }
+
+        if (isset($total[1]['subtotalbrutto'])) {
+            $totalDCBrutto += $price->roundPrice($total[0]['subtotalbrutto']);
+            $totalORBrutto += $price->roundPrice($total[0]['subtotalbrutto'] * $cr);
         }
 
         // - Reward points
@@ -1234,10 +1465,20 @@ class PhocacartCartCalculation
             $totalOR -= $price->roundPrice($total[2]['dnetto'] * $cr);
         }
 
+        if (isset($total[2]['dbrutto'])) {
+            $totalDCBrutto -= $price->roundPrice($total[2]['dbrutto']);
+            $totalORBrutto -= $price->roundPrice($total[2]['dbrutto'] * $cr);
+        }
+
         // - Discount cart
         if (isset($total[3]['dnetto'])) {
             $totalDC -= $price->roundPrice($total[3]['dnetto']);
             $totalOR -= $price->roundPrice($total[3]['dnetto'] * $cr);
+        }
+
+        if (isset($total[3]['dbrutto'])) {
+            $totalDCBrutto -= $price->roundPrice($total[3]['dbrutto']);
+            $totalORBrutto -= $price->roundPrice($total[3]['dbrutto'] * $cr);
         }
 
         // - Coupon cart
@@ -1246,11 +1487,26 @@ class PhocacartCartCalculation
             $totalOR -= $price->roundPrice($total[4]['dnetto'] * $cr);
         }
 
+        if (isset($total[4]['dbrutto'])) {
+            $totalDCBrutto -= $price->roundPrice($total[4]['dbrutto']);
+            $totalORBrutto -= $price->roundPrice($total[4]['dbrutto'] * $cr);
+        }
+
+        /*if (isset($total[4]['dbrutto'])) {
+            // must be added: subtotal = subtotal + (dbrutto - dnetto)
+            $totalDC -= $price->roundPrice($total[4]['dbrutto']);
+            $totalOR -= $price->roundPrice($total[4]['dbrutto'] * $cr);
+        }*/
+
+
         // + VAT
         if (!empty($total[0]['tax'])) {
             foreach ($total[0]['tax'] as $k => $v) {
+
                 $totalDC += $price->roundPrice($v['tax']);
                 $totalOR += $price->roundPrice($v['tax'] * $cr);
+                //$totalDCBrutto -= $price->roundPrice($v['tax']); included in dbrutto
+                //$totalORBrutto -= $price->roundPrice($v['tax'] * $cr);
             }
         }
 
@@ -1273,12 +1529,27 @@ class PhocacartCartCalculation
         // 1) NO ROUNDING - CORRECTION ONLY
         // ------------------------
         // 1a) CORRECT BRUTTO - DEFAULT CURRENCY
-        $diff = $total[0]['brutto'] - $totalDC;
-        if (!($price->roundPrice($diff) > -0.01 && $price->roundPrice($diff) < 0.01)) {
-            $total[0]['rounding'] = $price->roundPrice($diff);
-        } else {
-            $total[0]['rounding'] = 0;
-        }
+
+      /*  if ($tax_calculation_sales == 2) {
+            $diffBrutto = $total[0]['brutto'] - $totalDCBrutto;
+            if (!($price->roundPrice($diffBrutto) > -0.01 && $price->roundPrice($diffBrutto) < 0.01)) {
+                $total[0]['rounding'] = $price->roundPrice($diffBrutto);
+
+            } else {
+                $total[0]['rounding'] = 0;
+            }
+        } else {*/
+
+
+            $diff = $total[0]['brutto'] - $totalDC;
+            if (!($price->roundPrice($diff) > -0.01 && $price->roundPrice($diff) < 0.01)) {
+                $total[0]['rounding'] = $price->roundPrice($diff);
+
+            } else {
+                $total[0]['rounding'] = 0;
+            }
+       // }
+
 
         // 1b) CORRECT BRUTTO - ORDER CURRENCY
         if ($cr > 1 || $cr < 1) {
@@ -1292,27 +1563,34 @@ class PhocacartCartCalculation
 
             }
 
-
-            $diff = $price->roundPrice($totalBruttoCurrency) - $price->roundPrice($totalOR);
-            if (!($price->roundPrice($diff) > -0.01 && $price->roundPrice($diff) < 0.01)) {
-                $total[0]['rounding_currency'] = $price->roundPrice($diff);
-            } else {
-                $total[0]['rounding_currency'] = 0;
-            }
+          /*  if ($tax_calculation_sales == 2) {
+                $diffBrutto = $price->roundPrice($totalBruttoCurrency) - $price->roundPrice($totalOR);
+                if (!($price->roundPrice($diffBrutto) > -0.01 && $price->roundPrice($diffBrutto) < 0.01)) {
+                    $total[0]['rounding_currency'] = $price->roundPrice($diffBrutto);
+                } else {
+                    $total[0]['rounding_currency'] = 0;
+                }
+            } else {*/
+                $diff = $price->roundPrice($totalBruttoCurrency) - $price->roundPrice($totalOR);
+                if (!($price->roundPrice($diff) > -0.01 && $price->roundPrice($diff) < 0.01)) {
+                    $total[0]['rounding_currency'] = $price->roundPrice($diff);
+                } else {
+                    $total[0]['rounding_currency'] = 0;
+                }
+           // }
             return true;
         }
-
-
     }
 
     public function roundTotalAmount(&$total) {
 
         $price                      = new PhocacartPrice();
-        $paramsC = PhocacartUtils::getComponentParameters();
-        $rounding_calculation = $paramsC->get('rounding_calculation', 1);
+        $paramsC                    = PhocacartUtils::getComponentParameters();
+        $rounding_calculation       = $paramsC->get('rounding_calculation', 1);
         $rounding_calculation_total = $paramsC->get('rounding_calculation_total', 2);
         $currencyRate               = PhocacartCurrency::getCurrentCurrencyRateIfNotDefault();
 
+        $tax_calculation_sales    = $paramsC->get('tax_calculation_sales', 1);
 
         if (!isset($total['brutto'])) {
             return false;
@@ -1325,6 +1603,9 @@ class PhocacartCartCalculation
         // Each currency has own total rounding and brutto
         if ($rounding_calculation_total > -1) {
 
+
+            // Brutto tax does not include the rounding which happens before final rounding (rounding of fixed amount coupon or rounding of fixed amount discount)
+            $total['brutto_tax'] = $total['brutto_tax'] - $total['rounding'];
 
             if ($currencyRate > 1 || $currencyRate < 1) {
 
@@ -1370,19 +1651,32 @@ class PhocacartCartCalculation
             // 2b) ROUNDING DEFAULT CURRENCY
             $brutto = round($total['brutto'], (int)$rounding_calculation_total, $rounding_calculation);
             $diff   = $price->roundPrice($brutto) - $price->roundPrice($total['brutto']);
+
+
             if (!($price->roundPrice($diff) > -0.01 && $price->roundPrice($diff) < 0.01)) {
                 $total['rounding'] += $diff;
+                //if ($tax_calculation_sales == 2) {
+                    // The start value rounding can be set by rounding coupon or discount amount, so in case of brutto method, this needs to be included
+                    //$total['taxrecapitulation']['rounding']		+= $diff;
+                //}
                 //$total['taxrecapitulation']['rounding']		+= $diff;
             }
+
             $total['brutto'] = $price->roundPrice($brutto);
             //$total['taxrecapitulation']['brutto']			= $price->roundPrice($brutto);
 
             $bruttoTax = round($total['brutto_tax'], (int)$rounding_calculation_total, $rounding_calculation);
 
+
+
             $diffTax = $price->roundPrice($bruttoTax) - $price->roundPrice($total['brutto_tax']);
+
+
+
             if (!($price->roundPrice($diffTax) > -0.01 && $price->roundPrice($diffTax) < 0.01)) {
                 //$total['rounding']							+= $diff;
                 $total['taxrecapitulation']['rounding'] += $diffTax;
+
             }
             $total['brutto_tax']                  = $price->roundPrice($bruttoTax);
             $total['taxrecapitulation']['brutto'] = $price->roundPrice($bruttoTax);
@@ -1391,6 +1685,7 @@ class PhocacartCartCalculation
 
         // Final correction
         // Correct float, so we can compare to zero
+
         if (isset($total['rounding'])) {
             if ($price->roundPrice($total['rounding']) > -0.01 && $price->roundPrice($total['rounding']) < 0.01) {
                 $total['rounding'] = (int)0;
@@ -1449,7 +1744,6 @@ class PhocacartCartCalculation
                 $total['taxrecapitulation']['brutto_currency_incl_rounding'] = $total['taxrecapitulation']['brutto_currency'] + $price->roundPrice($total['taxrecapitulation']['rounding_currency']);
             }
         }
-
 
         return true;
 
@@ -1510,7 +1804,7 @@ class PhocacartCartCalculation
 
         // Currency
         $total['taxrecapitulation']['currency_rate']     = $currencyRate;
-        $total['taxrecapitulation']['brutto_currency'] = 0;
+        $total['taxrecapitulation']['brutto_currency']   = 0;
         $total['taxrecapitulation']['rounding_currency'] = 0;
 
         $total['taxrecapitulation']['brutto_incl_rounding']          = 0;
@@ -1523,6 +1817,7 @@ class PhocacartCartCalculation
         // there are 3 SETTINGS: Tax for products, Tax for Shipping and Tax for Payment $total['brutto'] can include amount of products which don't not belong to tax
         // $total['brutto_tax'] is brutt but only for taxable items (products, shipping, payment)
         $total['brutto_tax']          = $total['brutto'];
+
         $total['brutto_currency_tax'] = $total['brutto_currency'];
         if ($tax_calculation == 0) {
             $total['brutto_tax']          -= $total['netto'];
@@ -1554,20 +1849,33 @@ class PhocacartCartCalculation
                         $tax = 0;
                         // EXCLUSIVE TAX
                     } else if ($tax_calculation == 1) {
+
                         if ($v['type'] == 2) { // FIX
                             $brutto = $netto + $tax;
 
                         } else { // Percentage
                             $tax = $netto * ($rate / 100);
-                            if ($round == 1) {
-                                $tax = $price->roundPrice($tax);
+
+                            $diffBrutto = $total['brutto'] - $brutto;
+                            // In such a small difference let the brutto have rounded
+                            if (abs($diffBrutto) < 0.01) {
+                                $brutto = $total['brutto'];
+                                $tax    = $brutto - $netto;
+                                $tax    = $price->roundPrice($tax);
+                            } else {
+                                if ($round == 1) {
+                                    $tax = $price->roundPrice($tax);
+                                }
+                                $brutto = $netto + $tax;
                             }
-                            $brutto = $netto + $tax;
+                            //$brutto = $netto + $tax;
+
                         }
                         // INCLUSIVE TAX
                     } else if ($tax_calculation == 2) {
                         if ($v['type'] == 2) { // FIX
                             $netto = $brutto - $tax;
+
                         } else { // Percentage
 
                             $tax = $brutto - ($brutto / (($rate / 100) + 1));
@@ -1587,13 +1895,13 @@ class PhocacartCartCalculation
 
 
                 $total['taxrecapitulation']['items'][$k]['title']              = $v['title'];
-                $total['taxrecapitulation']['items'][$k]['title_lang'] = $v['title_lang'];
+                $total['taxrecapitulation']['items'][$k]['title_lang']         = $v['title_lang'];
                 $total['taxrecapitulation']['items'][$k]['title_lang_suffix2'] = $v['title_lang_suffix2'];
                 $total['taxrecapitulation']['items'][$k]['netto']              = $netto;
                 $total['taxrecapitulation']['items'][$k]['tax']                = $tax;
                 $total['taxrecapitulation']['items'][$k]['brutto']             = $brutto;
-                $total['taxrecapitulation']['items'][$k]['taxid']               = $taxId;
-                $total['taxrecapitulation']['items'][$k]['taxhide']             = $taxHide;
+                $total['taxrecapitulation']['items'][$k]['taxid']              = $taxId;
+                $total['taxrecapitulation']['items'][$k]['taxhide']            = $taxHide;
 
                 // Currency
                 //	$bruttoCurrency = $price->roundPrice($netto * $currencyRate) + $price->roundPrice($tax * $currencyRate);
@@ -1608,7 +1916,7 @@ class PhocacartCartCalculation
 
                 if ($tax_recapitulation == 2) {
                     $total['tax'][$k]['netto']  = $netto;
-                    $total['tax'][$k]['tax']   = $tax;
+                    $total['tax'][$k]['tax']    = $tax;
                     $total['tax'][$k]['brutto'] = $brutto;
                     //$total['tax'][$k]['brutto_currency']	= $bruttoCurrency;
                 }
@@ -1637,12 +1945,12 @@ class PhocacartCartCalculation
         if (isset($shippingCosts['taxkey']) && (int)$shippingCosts['taxkey']) {
 
             $netto  = $shippingCosts['netto'];
-            $tax   = $shippingCosts['tax'];
+            $tax    = $shippingCosts['tax'];
             $brutto = $shippingCosts['brutto'];
             $taxkey = $shippingCosts['taxkey'];
 
-             $taxId = $shippingCosts['taxid'];
-             $taxHide = $shippingCosts['taxhide'];
+            $taxId   = $shippingCosts['taxid'];
+            $taxHide = $shippingCosts['taxhide'];
 
 
             // Nothing to fix
@@ -1662,13 +1970,13 @@ class PhocacartCartCalculation
                 //	$total['taxrecapitulation']['netto'] 					+= $netto;
             } else {
                 $total['taxrecapitulation']['items'][$taxkey]['title']              = $shippingCosts['taxtxt'];
-                $total['taxrecapitulation']['items'][$taxkey]['title_lang'] = $shippingCosts['tax_title_lang'];
-                $total['taxrecapitulation']['items'][$taxkey]['title_lang_suffix'] = $shippingCosts['tax_title_suffix'];
+                $total['taxrecapitulation']['items'][$taxkey]['title_lang']         = $shippingCosts['tax_title_lang'];
+                $total['taxrecapitulation']['items'][$taxkey]['title_lang_suffix']  = $shippingCosts['tax_title_suffix'];
                 $total['taxrecapitulation']['items'][$taxkey]['title_lang_suffix2'] = $shippingCosts['tax_title_suffix2'] != '' ? '(' . $shippingCosts['tax_title_suffix2'] . ')' : '';
                 $total['taxrecapitulation']['items'][$taxkey]['netto']              = $netto;
                 $total['taxrecapitulation']['netto_incl_sp']                        = $netto;
-                $total['taxrecapitulation']['items'][$taxkey]['taxid']               = $taxId;
-                $total['taxrecapitulation']['items'][$taxkey]['taxhide']             = $taxHide;
+                $total['taxrecapitulation']['items'][$taxkey]['taxid']              = $taxId;
+                $total['taxrecapitulation']['items'][$taxkey]['taxhide']            = $taxHide;
 
                 //	$total['taxrecapitulation']['netto'] 					= $netto;
             }
@@ -1707,12 +2015,12 @@ class PhocacartCartCalculation
 
         if (isset($paymentCosts['taxkey']) && (int)$paymentCosts['taxkey']) {
 
-            $netto  = $paymentCosts['netto'];
-            $tax   = $paymentCosts['tax'];
-            $brutto = $paymentCosts['brutto'];
-            $taxkey = $paymentCosts['taxkey'];
-            $taxId = $paymentCosts['taxid'];
-             $taxHide = $paymentCosts['taxhide'];
+            $netto   = $paymentCosts['netto'];
+            $tax     = $paymentCosts['tax'];
+            $brutto  = $paymentCosts['brutto'];
+            $taxkey  = $paymentCosts['taxkey'];
+            $taxId   = $paymentCosts['taxid'];
+            $taxHide = $paymentCosts['taxhide'];
 
             /*if ($correct_tax_recapitulation == 1) {
 
@@ -1730,13 +2038,13 @@ class PhocacartCartCalculation
                 //$total['taxrecapitulation']['netto_incl_sp'] 			+= $netto;
             } else {
                 $total['taxrecapitulation']['items'][$taxkey]['title']              = $paymentCosts['taxtxt'];
-                $total['taxrecapitulation']['items'][$taxkey]['title_lang'] = $paymentCosts['tax_title_lang'];
-                $total['taxrecapitulation']['items'][$taxkey]['title_lang_suffix'] = $paymentCosts['tax_title_suffix'];
+                $total['taxrecapitulation']['items'][$taxkey]['title_lang']         = $paymentCosts['tax_title_lang'];
+                $total['taxrecapitulation']['items'][$taxkey]['title_lang_suffix']  = $paymentCosts['tax_title_suffix'];
                 $total['taxrecapitulation']['items'][$taxkey]['title_lang_suffix2'] = $paymentCosts['tax_title_suffix2'] != '' ? '(' . $paymentCosts['tax_title_suffix2'] . ')' : '';
                 $total['taxrecapitulation']['items'][$taxkey]['netto']              = $netto;
                 $total['taxrecapitulation']['netto_incl_sp']                        = $netto;
-                $total['taxrecapitulation']['items'][$taxkey]['taxid']               = $taxId;
-                $total['taxrecapitulation']['items'][$taxkey]['taxhide']             = $taxHide;
+                $total['taxrecapitulation']['items'][$taxkey]['taxid']              = $taxId;
+                $total['taxrecapitulation']['items'][$taxkey]['taxhide']            = $taxHide;
                 //$total['taxrecapitulation']['netto'] 					= $netto;
             }
 

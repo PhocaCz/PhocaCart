@@ -33,7 +33,10 @@ $p['zero_payment_price_calculation']	= $d['params']->get( 'zero_payment_price_ca
 $p['display_reward_points_receive_info']= $d['params']->get( 'display_reward_points_receive_info', 0 );
 $p['display_webp_images']				= $d['params']->get( 'display_webp_images', 0 );
 $p['display_zero_total']			    = $d['params']->get( 'display_zero_total', 0 );
-$p['checkout_separate_by_owner']			    = $d['params']->get( 'checkout_separate_by_owner', 0 );
+$p['checkout_separate_by_owner']		= $d['params']->get( 'checkout_separate_by_owner', 0 );
+$p['tax_calculation_sales']	 			= $d['params']->get( 'tax_calculation_sales', 1);
+$p['tax_calculation_sales_change_subtotal']= $d['params']->get( 'tax_calculation_sales_change_subtotal', 0);
+
 
 //$p['min_quantity_calculation']	= $d['params']->get( 'min_quantity_calculation', 0 ); set in product xml - product options, not in global
 
@@ -431,7 +434,19 @@ if (!empty($d['fullitems'][1])) {
 		echo '<div class="'.$r.' ph-cart-subtotal-box ph-checkout-cart-row-subtotal-box ph-checkout-cart-row-subtotal">';
 		echo '<div class="'.$cTotE.'"></div>';
 		echo '<div class="'.$cTotT.' ph-cart-subtotal-netto-txt">'.Text::_('COM_PHOCACART_SUBTOTAL').'</div>';
-		echo '<div class="'.$cTotB.' ph-right ph-cart-subtotal-netto">'.$price->getPriceFormat($d['total'][1]['netto']).'</div>';
+
+		if ($p['tax_calculation_sales'] == 2 && $p['tax_calculation_sales_change_subtotal'] == 1) {
+
+			// $d['total'][4]['rounding'] is not the final rounding but rounding after discounts
+			//$subTotalFromBrutto = $d['total'][0]['subtotalbrutto'] - $d['total'][0]['taxsum'] - $d['total'][4]['rounding'];
+			// This method is used, because tax calculation can change the subtotal/total calculation
+			$dBrutto = $d['total'][2]['dbrutto'] + $d['total'][3]['dbrutto'] + $d['total'][4]['dbrutto'] + $d['total'][5]['dbrutto'];
+			$subTotalFromBrutto = $d['total'][0]['brutto'] + $dBrutto - $d['total'][0]['taxsum'] - $d['total'][0]['rounding'];
+ 			echo '<div class="'.$cTotB.' ph-right ph-cart-subtotal-netto">'.$price->getPriceFormat($subTotalFromBrutto).'</div>';
+
+		} else {
+			echo '<div class="' . $cTotB . ' ph-right ph-cart-subtotal-netto">' . $price->getPriceFormat($d['total'][1]['netto']) . '</div>';
+		}
 		echo '</div>';// end row
 	}
 
@@ -446,27 +461,36 @@ if (!empty($d['fullitems'][1])) {
 
 	// PRODUCT DISCOUNT
 
-	if ($d['total'][2]['dnetto']) {
+	if ($d['total'][2]['dnetto'] || $d['total'][2]['dbrutto']) {
 		echo '<div class="'.$r.' ph-cart-product-discount-box ph-checkout-cart-row-discount-product-box ph-checkout-cart-row-subtotal">';
 		echo '<div class="'.$cTotE.'"></div>';
 		echo '<div class="'.$cTotT.' ph-cart-product-discount-txt">'.Text::_('COM_PHOCACART_PRODUCT_DISCOUNT').'</div>';
-		echo '<div class="'.$cTotB.' ph-right ph-cart-product-discount">'.$price->getPriceFormat($d['total'][2]['dnetto'], 1).'</div>';
+		if ($p['tax_calculation_sales'] == 2) {
+			echo '<div class="' . $cTotB . ' ph-right ph-cart-product-discount">' . $price->getPriceFormat($d['total'][2]['dbrutto'], 1) . '</div>';
+		} else {
+			echo '<div class="' . $cTotB . ' ph-right ph-cart-product-discount">' . $price->getPriceFormat($d['total'][2]['dnetto'], 1) . '</div>';
+		}
 		echo '</div>';// end row
 	}
 
 	// CART DISCOUNT
 
-	if ($d['total'][3]['dnetto']) {
+	if ($d['total'][3]['dnetto'] || $d['total'][3]['dbrutto']) {
 	    echo '<div class="'.$r.' ph-cart-discount-box ph-checkout-cart-row-discount-cart-box ph-checkout-cart-row-subtotal">';
 		echo '<div class="'.$cTotE.'"></div>';
 		echo '<div class="'.$cTotT.' ph-cart-cart-discount-txt">'.Text::_('COM_PHOCACART_CART_DISCOUNT').$d['total'][3]['discountcarttxtsuffix'].'</div>';
-		echo '<div class="'.$cTotB.' ph-right ph-cart-cart-discount">'.$price->getPriceFormat($d['total'][3]['dnetto'], 1).'</div>';
+		if ($p['tax_calculation_sales'] == 2) {
+			echo '<div class="'.$cTotB.' ph-right ph-cart-cart-discount">'.$price->getPriceFormat($d['total'][3]['dbrutto'], 1).'</div>';
+		} else {
+			echo '<div class="'.$cTotB.' ph-right ph-cart-cart-discount">'.$price->getPriceFormat($d['total'][3]['dnetto'], 1).'</div>';
+		}
+
 		echo '</div>';// end row
 	}
 
 	// COUPON
 
-	if ($d['total'][4]['dnetto'] && $d['couponvalid']) {
+	if (($d['total'][4]['dnetto'] || $d['total'][4]['dbrutto']) && $d['couponvalid']) {
 		$couponTitle = Text::_('COM_PHOCACART_COUPON');
 		if (isset($d['coupontitle']) && $d['coupontitle'] != '') {
 			$couponTitle = $d['coupontitle'];
@@ -474,7 +498,11 @@ if (!empty($d['fullitems'][1])) {
 		echo '<div class="'.$r.' ph-cart-coupon-box ph-checkout-cart-row-discount-coupon-box ph-checkout-cart-row-subtotal">';
 		echo '<div class="'.$cTotE.'"></div>';
 		echo '<div class="'.$cTotT.' ph-cart-coupon-txt">'.$couponTitle.$d['total'][4]['couponcarttxtsuffix'].'</div>';
-		echo '<div class="'.$cTotB.' ph-checkout-total-coupon ph-right ph-cart-coupon">'.$price->getPriceFormat($d['total'][4]['dnetto'], 1).'</div>';
+		if ($p['tax_calculation_sales'] == 2) {
+			echo '<div class="' . $cTotB . ' ph-checkout-total-coupon ph-right ph-cart-coupon">' . $price->getPriceFormat($d['total'][4]['dbrutto'], 1) . '</div>';
+		} else {
+			echo '<div class="' . $cTotB . ' ph-checkout-total-coupon ph-right ph-cart-coupon">' . $price->getPriceFormat($d['total'][4]['dnetto'], 1) . '</div>';
+		}
 		echo '</div>';// end row
 	}
 
@@ -696,14 +724,15 @@ if (!empty($d['fullitems'][1])) {
 	}
 
 
+	// ---
 	// Tax Recapitulation Possible part to display TC
-	/*if(!empty($d['total'][0]['taxrecapitulation']['items'])) {
+	/* if(!empty($d['total'][0]['taxrecapitulation']['items'])) {
 
 		echo '<table class="pc-tax-recapitulation">';
 
 		echo '<tr><th>'.Text::_('COM_PHOCACART_TAX_TITLE').'</th><th>'.Text::_('COM_PHOCACART_TAX_BASIS').'</th><th>'.Text::_('COM_PHOCACART_TAX_TAX').'</th><th>'.Text::_('COM_PHOCACART_TAX_TOTAL').'</th></tr>';
 
-		/*if ($d['total'][0]['brutto_currency'] !== 0) {
+		if ($d['total'][0]['brutto_currency'] !== 0) {
 
 			foreach($d['total'][0]['taxrecapitulation']['items'] as $k => $v) {
 				echo '<tr><td>'.$v['title'].'</td><td>'.$price->getPriceFormat($v['netto']).'</td><td>'.$price->getPriceFormat($v['tax']).'</td><td>'.$price->getPriceFormat($v['brutto_currency'], 0, 1).' '.'</td></tr>';
@@ -713,7 +742,7 @@ if (!empty($d['fullitems'][1])) {
 				echo '<tr><td>'.Text::_('COM_PHOCACART_TOTAL').'</td><td colspan="3">'.$price->getPriceFormat($d['total'][0]['brutto_currency'], 0, 1).'</td></tr>';
 			}
 
-		} else {*//*
+		} else {
 
 
 		$b = 0; $c = 0;
@@ -724,16 +753,25 @@ if (!empty($d['fullitems'][1])) {
 
 			if (!($price->roundPrice($d['total'][0]['taxrecapitulation']['rounding']) > -0.01 && $price->roundPrice($d['total'][0]['taxrecapitulation']['rounding'] < 0.01)) == 1) {
 
-				echo '<tr><td>'.Text::_('COM_PHOCACART_ROUNDING').'</td><td colspan="3">'.$price->getPriceFormat($d['total'][0]['taxrecapitulation']['rounding_currency'], 0, 1).' '.'</td></tr>';
+				//echo '<tr><td>'.Text::_('COM_PHOCACART_ROUNDING').'</td><td colspan="3">'.$price->getPriceFormat($d['total'][0]['taxrecapitulation']['rounding_currency'], 0, 1).' '.'</td></tr>';
 				//- *$price->getPriceFormat($d['total'][0]['taxrecapitulation']['rounding_currency'])*//*.
 				$c = $d['total'][0]['taxrecapitulation']['rounding'];
 			}
-			echo '<tr><td>'.Text::_('COM_PHOCACART_TOTAL').'</td><td colspan="3">'.$price->getPriceFormat($d['total'][0]['brutto'])./*' '.$price->getPriceFormat($d['total'][0]['brutto_currency']).' <b>'.$b.'</b> <b>'.($b + $c).*//*'</b></td></tr>';
+			//echo '<tr><td>'.Text::_('COM_PHOCACART_ROUNDING_B').'</td><td colspan="3">'.$price->getPriceFormat($d['total'][0]['brutto'] - $b).'</td></tr>';
 
-		//}
+			echo '<tr><td>'.Text::_('COM_PHOCACART_ROUNDING').'</td><td colspan="3">'.$price->getPriceFormat($d['total'][0]['taxrecapitulation']['rounding'] ).'</td></tr>';
+			echo '<tr><td>'.Text::_('COM_PHOCACART_TOTAL').'</td><td colspan="3">'.$price->getPriceFormat($d['total'][0]['brutto']);
+
+			//echo ' '.$price->getPriceFormat($d['total'][0]['brutto_currency']).' <b>'.$b.'</b> <b>'.($b + $c);
+			echo '</b></td></tr>';
+
+		}
 
 		echo '</table>';
-	} */
+	}
+*/
+	// END TAX RECAPITULATION
+	// ---
 
 	// Possible points received
 
