@@ -587,8 +587,8 @@ final class PhocacartCategory
              } else {
                  $columns   .= ', c.title, c.alias';
              }*/
-            $columns .= I18nHelper::sqlCoalesce(['title', 'alias'], 'c', '', '', ',');
-            $columns .= ', c.icon_class, c.image, c.description, c.count_products';
+            $columns .= I18nHelper::sqlCoalesce(['title', 'alias', 'description'], 'c', '', '', ',');
+            $columns .= ', c.icon_class, c.image, c.count_products';
             $query   = 'SELECT ' . $columns
                 . ' FROM #__phocacart_categories AS c'
                 . I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'c')

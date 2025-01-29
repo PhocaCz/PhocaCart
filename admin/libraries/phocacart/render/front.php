@@ -176,7 +176,7 @@ class PhocacartRenderFront
         }
 
         if ($type == 'item' && $render_canonical_url == 1) {
-            $canonical = PhocacartRoute::getProductCanonicalLink($item->id, $item->catid, $item->alias, $item->catalias, $item->preferred_catid);
+            $canonical = Route::_(PhocacartRoute::getProductCanonicalLink($item->id, $item->catid, $item->alias, $item->catalias, $item->preferred_catid), true, Route::TLS_IGNORE, true);
             $document->addHeadLink(htmlspecialchars($canonical), 'canonical');
         }
 

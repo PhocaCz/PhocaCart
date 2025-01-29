@@ -17,18 +17,13 @@ jimport( 'joomla.application.component.view' );
 
 class PhocaCartCpViewPhocacartReports extends HtmlView
 {
-
 	protected $state;
 	protected $t;
 	protected $r;
 	protected $s;
 	protected $params;
-
 	protected $items 	= array();
 	protected $total	= array();
-
-
-
 
 	function display($tpl = null) {
 
@@ -39,6 +34,8 @@ class PhocaCartCpViewPhocacartReports extends HtmlView
 		$this->t['date_from'] 	= $this->state->get('filter.date_from', PhocacartDate::getCurrentDate(30));
 		$this->t['date_to'] 	= $this->state->get('filter.date_to', PhocacartDate::getCurrentDate());
 		$this->t['date_days'] 	= PhocacartDate::getDateDays($this->t['date_from'], $this->t['date_to']);
+		$this->t['report_type'] = $this->state->get('filter.report_type', 0);
+		$this->t['order_status'] = $this->state->get('filter.order_status', 0);
 
 		$this->params			= PhocacartUtils::getComponentParameters();
 		$app				= Factory::getApplication();
@@ -51,22 +48,36 @@ class PhocaCartCpViewPhocacartReports extends HtmlView
 		}
 
 		$this->t['data_error'] 			= 0;
-		$this->t['data_possible_days'] 	= 365;
+		$this->t['data_possible_days'] 	= PhocacartUtilsSettings::getReportLimitDays();
 		if ($count > (int)$this->t['data_possible_days']) {
 			$this->state->set('filter.date_to', '');
 			$this->state->set('filter.date_from', '');
 			$this->t['data_error'] = 1;
+			$this->t['data_error_message'] = Text::_('COM_PHOCACART_SELECT_INTERVAL_THAT_HAS_FEWER_DAYS_THAN_LIMIT'). ' '. Text::_('COM_PHOCACART_LIMIT_IS'). ': '.$this->t['data_possible_days'];
 		}
 
 		if ($this->t['data_error'] == 0) {
 
-			$items				= $this->get('Items');
-			$orderCalc 			= new PhocacartOrderCalculation();
-			$orderCalc->calculateOrderItems($items);
-			$this->items		= $orderCalc->getItems();
-			$this->total		= $orderCalc->getTotal();
-			$this->currencies 	= $orderCalc->getCurrencies();
+			switch ($this->t['report_type']) {
 
+				case 2:
+					$this->items		= $this->get('Items');
+					$this->total		= false;
+					$this->currencies 	= false;
+				break;
+
+				case 0:
+				case 1:
+				default:
+					$items				= $this->get('Items');
+					$orderCalc 			= new PhocacartOrderCalculation();
+					$orderCalc->calculateOrderItems($items);
+					$this->items		= $orderCalc->getItems();
+					$this->total		= $orderCalc->getTotal();
+					$this->currencies 	= $orderCalc->getCurrencies();
+				break;
+
+			}
 		}
 
 		if (count($errors = $this->get('Errors'))) {
@@ -74,9 +85,7 @@ class PhocaCartCpViewPhocacartReports extends HtmlView
 			return false;
 		}
 
-
 		$media = new PhocacartRenderAdminmedia();
-
 
 		$this->addToolbar();
 		parent::display($tpl);
@@ -95,9 +104,6 @@ class PhocaCartCpViewPhocacartReports extends HtmlView
 		$bar = Toolbar::getInstance( 'toolbar' );
 		$dhtml = '<a href="index.php?option=com_phocacart" class="btn btn-primary btn-small"><i class="icon-home-2" title="'.Text::_('COM_PHOCACART_CONTROL_PANEL').'"></i> '.Text::_('COM_PHOCACART_CONTROL_PANEL').'</a>';
 		$bar->appendButton('Custom', $dhtml);
-
-
-
 
 		$linkTxt 		= Route::_( 'index.php?option=com_phocacart&view=phocacartreports&tmpl=component&format=raw' );
 		// Direct download
@@ -147,6 +153,9 @@ class PhocaCartCpViewPhocacartReports extends HtmlView
 			'a.date' 			=> Text::_($this->t['l'] . '_DATE'),
 			'a.order_number' 	=> Text::_($this->t['l'] . '_ORDER_NUMBER'),
 			'a.currency_code'	=> Text::_($this->t['l'] . '_CURRENCY'),
+
+			// Only for products, eliminate in stanard report, see: administrator/components/com_phocacart/models/phocacartreports.php line cca 301
+			'op.title'	=> Text::_($this->t['l'] . '_PRODUCT_TITLE'),
 			//'a.type'			=> Text::_($this->t['l'] . '_TYPE')
 		);
 	}
