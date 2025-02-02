@@ -157,7 +157,14 @@ class Schema
                 $offers['itemCondition'] = 'https://schema.org/DamagedCondition';
                 break;
         }
-        if ($product->stock > 0) {
+
+        $hide_attributes_item	= $params->get('hide_attributes_item', 0 );
+        $stock_checking			= $params->get( 'stock_checking', 0 );
+        $stock_status		    = array();
+        $attr_options		    = $hide_attributes_item == 0 ? \PhocacartAttribute::getAttributesAndOptions((int)$product->id) : array();
+        $stock                  = \PhocacartStock::getStockItemsChangedByAttributes($stock_status, $attr_options, $product);
+
+        if ($stock > 0 || $stock_checking == 0) {
             $offers['availability'] = 'https://schema.org/InStock';
         } else {
             $offers['availability'] = 'https://schema.org/OutOfStock';
