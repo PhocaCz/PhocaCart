@@ -137,6 +137,9 @@ class Schema
         $offers = [];
         $offers['@type'] = 'Offer';
         $offers['price'] = $product->price;
+        $price  = new \PhocacartPrice();
+        $productPrice= $price->getPriceFormatRaw($product->price, 0, 0, 0, 2, '.', '');
+        $offers['price'] = $productPrice;
         $offers['priceCurrency'] = \PhocacartCurrency::getCurrency()->code;
         $offers['url'] = Route::_(\PhocacartRoute::getProductCanonicalLink($product->id, $product->catid, $product->alias, $product->catalias), true, Route::TLS_IGNORE, true);
         switch ($product->condition) {
