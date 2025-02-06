@@ -12,10 +12,12 @@ namespace Phoca\PhocaCart\Mail;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\User\UserFactoryInterface;
+use Joomla\Filesystem\File;
 use Joomla\Utilities\IpHelper;
 use Joomla\CMS\Mail\MailHelper as JoomlaMailHelper;
 use Phoca\PhocaCart\Helper\PhocaCartHelper;
@@ -253,6 +255,25 @@ abstract class MailHelper
         return $mailData;
     }
 
+    public static function addAttachments(MailTemplate $mailer, ?array $attachments): void
+    {
+        if (!$attachments) {
+            return;
+        }
+
+        $pathAttachment = \PhocacartPath::getPath('attachmentfile');
+
+        foreach ($attachments as $attachment) {
+            if ($attachment['file_attachment'] ?? '') {
+                $attachmentPath = $pathAttachment['orig_abs_ds'] . $attachment['file_attachment'];
+
+                if (File::exists($attachmentPath)) {
+                    $mailer->addAttachment(pathinfo($attachmentPath, PATHINFO_FILENAME), $attachmentPath);
+                }
+            }
+        }
+    }
+
     public static function checkOrderStatusMailTemplates(object $status): void
     {
         if ($status->email_customer) {
@@ -278,4 +299,58 @@ abstract class MailHelper
         MailTemplate::deleteTemplate('com_phocacart.order_status.gift.' . $statusId);
     }
 
+    public static function renderBody(string $layoutFile, string $format, array $data): string
+    {
+        return LayoutHelper::render('phocacart.mail.' . $format . '.' . $layoutFile, $data, null, ['client' => 'site']);
+    }
+
+    public static function renderOrderBody(object $order, string $format): string
+    {
+        $orderView = new \PhocacartOrderView();
+
+        $displayData = [];
+        $displayData['params'] = \PhocacartUtils::getComponentParameters();
+        $displayData['common'] = $orderView->getItemCommon($order->id);
+        $displayData['price'] = new \PhocacartPrice();
+        $displayData['price']->setCurrency($displayData['common']->currency_id);
+        $displayData['bas'] = $orderView->getItemBaS($order->id, 1);
+        if(!isset($displayData['bas']['b'])) {
+            $displayData['bas']['b'] = [];
+        }
+        if(!isset($displayData['bas']['s'])) {
+            $displayData['bas']['s'] = [];
+        }
+        $displayData['products'] = $orderView->getItemProducts($order->id);
+        $displayData['discounts'] = $orderView->getItemProductDiscounts($order->id, 0);
+        $displayData['total'] = $orderView->getItemTotal($order->id, 1);
+        $displayData['taxrecapitulation'] = $orderView->getItemTaxRecapitulation($order->id);
+        $displayData['preparereplace'] = \PhocacartText::prepareReplaceText($orderView, $order->id, $displayData['common'], $displayData['bas']);
+        $displayData['qrcode'] = \PhocacartText::completeText($displayData['params']->get( 'pdf_invoice_qr_code', '' ), $displayData['preparereplace'], 1);
+
+        $blocks = [];
+        $displayData['blocks'] = &$blocks;
+
+        return self::renderBody('order', $format, $displayData);
+    }
+
+    public static function renderArticle(int|string $articleId, array $replaceData, array $billingAddress, array $shippingAddress): ?string
+    {
+        if (!$articleId) {
+            return null;
+        }
+
+        if (is_numeric($articleId)) {
+            $article = \PhocacartRenderFront::renderArticle($articleId, 'mail');
+        } else {
+            $article = $articleId;
+        }
+
+        if ($article) {
+            $article 	= \PhocacartText::completeText($article, $replaceData);
+            $article 	= \PhocacartText::completeTextFormFields($article, $billingAddress, $shippingAddress);
+            return $article;
+        }
+
+        return null;
+    }
 }

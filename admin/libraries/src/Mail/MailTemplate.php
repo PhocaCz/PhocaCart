@@ -64,4 +64,27 @@ class MailTemplate extends JoomlaMailTemplate
 
         return parent::replaceTags($text, $tags, $isHtml);
     }
+
+    /**
+     * Updates or creates if not exists mail template
+     *
+     * @param   string  $key
+     * @param   string  $subject
+     * @param   string  $body
+     * @param   array   $tags
+     * @param   string  $htmlbody
+     *
+     * @return bool
+     *
+     * @since 5.0.0
+     */
+    public static function checkTemplate(string $key, string $subject, string $body, array $tags, string $htmlbody = ''): bool
+    {
+        $template = self::getTemplate($key, '');
+
+        if ($template)
+            return self::updateTemplate($key, $subject, $body, $tags, $htmlbody);
+        else
+            return self::createTemplate($key, $subject, $body, $tags, $htmlbody);
+    }
 }

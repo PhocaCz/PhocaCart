@@ -54,7 +54,6 @@ class PhocacartOrderRender
 		$wa->registerAndUseStyle('com_phocacart.main', 'com_phocacart/main.css', array('version' => 'auto'));
 		//HTMLHelper::stylesheet('media/com_phocacart/css/main.css' );
 
-		$app 			= Factory::getApplication();
 		$order			= new PhocacartOrderView();
 		$d['common']	= $order->getItemCommon($id);
 		$d['price'] 	= new PhocacartPrice();
@@ -149,8 +148,6 @@ class PhocacartOrderRender
         // user per function: PhocacartText::completeText($pdf_invoice_qr_code, $d['preparereplace'], 1);
 		$d['preparereplace']    = PhocacartText::prepareReplaceText($order, $id, $d['common'], $d['bas']);
 
-		// QR CODE IN PDF
-		$d['qrcode']	= '';
 		// QR code can be rendered even outsite PDF
 		$d['qrcode'] 	= PhocacartText::completeText($pdf_invoice_qr_code, $d['preparereplace'], 1);
 		if ($type == 2 && $format == 'pdf') {
@@ -174,19 +171,7 @@ class PhocacartOrderRender
 				$d['qrcode'] = PhocacartText::completeTextFormFields($d['qrcode'], $d['bas']['b'], $d['bas']['s']);
 			}
 		}
-		//if ($type == 4 && $format == 'raw') {
-			// POS RECEIPT IS MANAGED BY SPECIFIC RULES
-			// array instead of output will be returned
-			//return $layout->render($d);
 
-		//} else {
-
-
-			return $layout->render($d);
-		//}
-
-
+		return $layout->render($d);
 	}
 }
-
-?>

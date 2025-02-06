@@ -201,10 +201,26 @@ class PhocacartOrderStatus
         }
     }
 
+    /**
+     * @param   object              $order
+     * @param   PhocacartOrderView  $orderView
+     * @param   array               $status
+     * @param   array               $addresses
+     * @param   string              $orderToken
+     * @param   bool                $notifyUser
+     * @param   bool                $notifyOthers
+     * @param                       $emailSend
+     * @param                       $emailSendFormat
+     *
+     * @return int  1 ... sent, 0 ... not sent, -1 ... not sent (error)
+     *
+     * @throws Exception
+     * @since 1.0.0
+     */
     private static function sendOrderEmail(object $order, PhocacartOrderView $orderView, array $status, array $addresses, string $orderToken, bool $notifyUser, bool $notifyOthers, $emailSend, $emailSendFormat): int
     {
-        $recipient       = '';// Customer/Buyer
-        $recipientOthers = '';// others
+        $recipient       = ''; // Customer/Buyer
+        $recipientOthers = ''; // others
         $bcc             = '';
         $subject         = '';
         $notificationResult = -1;
@@ -226,20 +242,20 @@ class PhocacartOrderStatus
             }
         }
 
-        // PDF Feature
-        $attachmentContent = '';
-        $attachmentName    = '';
+        if (!JoomlaMailHelper::isEmailAddress($recipient) && !JoomlaMailHelper::isEmailAddress($recipientOthers)) {
+            return 0;
+        }
 
         // ------------------------
         // BUILD EMAIL for customer or others
         // ------------------------
 
+        // PDF Feature
+        $attachmentContent = '';
+        $attachmentName    = '';
+
         // Set language of order for the customer
         $pLang = new PhocacartLanguage();
-
-        if (!JoomlaMailHelper::isEmailAddress($recipient) && !JoomlaMailHelper::isEmailAddress($recipientOthers)) {
-            return 0;
-        }
 
         $orderNumber = PhocacartOrder::getOrderNumber($order->id, $order->date, $order->order_number);
 
@@ -261,7 +277,7 @@ class PhocacartOrderStatus
 
             // REPLACE
             $mailData = MailHelper::prepareOrderMailData($orderView, $order, $addresses, $status);
-            $mailData['email']        = $recipient;// Overwrites the $mailData
+            $mailData['email']       = $recipient;
             $mailData['emailothers'] = $recipientOthers;
 
             // EMAIL CUSTOMER
@@ -309,9 +325,10 @@ class PhocacartOrderStatus
                 }
 
                 if ($documentNumber) {
-                    $document   = $orderRender->render($order->id, $emailSend, 'mail', $orderToken);
-                    $body       .= '<br><br>' . $document;
-                    $bodyOthers .= '<br><br>' . $document;
+                    //$document   = $orderRender->render($order->id, $emailSend, 'mail', $orderToken);
+                    $document = MailHelper::renderOrderBody($order, 'html');
+                    $body       .= $document;
+                    $bodyOthers .= $document;
                 }
             }
 
@@ -324,7 +341,7 @@ class PhocacartOrderStatus
             }
 
             // Email Footer
-            $body .= '<br><br>' . PhocacartText::completeText($status['email_footer'], $mailData, 1);
+            $body .= PhocacartText::completeText($status['email_footer'], $mailData, 1);
         } finally {
             $pLang->setLanguageBack();
         }
@@ -341,44 +358,15 @@ class PhocacartOrderStatus
         // ---------
         // CUSTOMERS
         if (JoomlaMailHelper::isEmailAddress($recipient)) {
-            // Notify
-            // 1 ... sent
-            // 0 ... not sent
-            // -1 ... not sent (error)
-
-            // Additional attachments
-            $attachment = null;
-            if (isset($status['email_attachments']) && !empty($status['email_attachments'])) {
-                $attachmentA = json_decode($status['email_attachments'], true);
-
-                if (!empty($attachmentA)) {
-
-                    $attachment     = array();
-                    $pathAttachment = PhocacartPath::getPath('attachmentfile');
-
-                    foreach ($attachmentA as $v) {
-                        if (isset($v['file_attachment']) && $v['file_attachment'] != '') {
-                            $pathAttachmentFile = $pathAttachment['orig_abs_ds'] . $v['file_attachment'];
-
-                            if (Joomla\CMS\Filesystem\File::exists($pathAttachmentFile)) {
-                                $attachment[] = $pathAttachmentFile;
-                            }
-                        }
-                    }
-                }
-            }
-
             $mailer = new MailTemplate('com_phocacart.order_status.' . $status['id'], $order->user_lang);
             $mailData['document'] = $document;
             $mailer->addTemplateData($mailData);
+
             if ($attachmentContent) {
                 $mailer->addAttachment($attachmentName, $attachmentContent);
             }
-            if ($attachment) {
-                foreach ($attachment as $file) {
-                    $mailer->addAttachment(pathinfo($file, PATHINFO_FILENAME), $file);
-                }
-            }
+            MailHelper::addAttachments($mailer, json_decode($status['email_attachments'], true));
+
             $mailer->addRecipient($recipient);
             try {
                 if ($mailer->send()) {
@@ -403,9 +391,11 @@ class PhocacartOrderStatus
             $mailer = new MailTemplate('com_phocacart.order_status.' . $status['id'], $order->default_lang);
             $mailData['document'] = $document;
             $mailer->addTemplateData($mailData);
+
             if ($attachmentContent) {
                 $mailer->addAttachment($attachmentName, $attachmentContent);
             }
+
             $mailer->addRecipient($recipientOthers);
             foreach ($bcc as $email) {
                 $mailer->addRecipient($email, null, 'bcc');
@@ -439,7 +429,7 @@ class PhocacartOrderStatus
         $attachmentBuyer     = ''; // buyer of gift coupons gets all coupons - not like recipients - recipients only get own coupons
 
         if ($status['activate_gift']) {
-            PhocaCartCoupon::activateAllGiftsByOrderId($order->id);
+            PhocacartCoupon::activateAllGiftsByOrderId($order->id);
         }
 
         if (!$status['email_gift']) {
@@ -799,7 +789,7 @@ class PhocacartOrderStatus
         self::updatePoints($order->id, $changePointsNeeded, $changePointsReceived);
         self::updateDownload($order->id, $status['download']);
         $notificationResult = self::sendOrderEmail($order, $orderView, $status, $addresses, $orderToken, $notifyUser, $notifyOthers, $emailSend, $emailSendFormat);
-        self::sendGiftEmail($order, $orderView, $status, $addresses, $orderToken);
+        //self::sendGiftEmail($order, $orderView, $status, $addresses, $orderToken);
 
         return $notificationResult;
     }
