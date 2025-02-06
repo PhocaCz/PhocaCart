@@ -885,8 +885,8 @@ class PhocacartCart
         $calc->correctTotalItems($this->total, $this->shipping['costs'], $this->payment['costs']);
 
         // 2) MAKE TAX RECAPITULATION and correct total by tax recapitulation if asked
-
         $calc->taxRecapitulation($this->total[0], $this->shipping['costs'], $this->payment['costs']);
+
         // 3) CORRECT TOTAL ITEMS (Rounding), CORRECT CURRENCY TOTAL ITEMS (Rounding for each item) - AGAIN WHEN TOTAL CHANGED BY TAX RECAPITULATION
         $options = array();
 

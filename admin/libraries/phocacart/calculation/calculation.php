@@ -19,9 +19,13 @@ class PhocacartCalculation
 		// $taxCalcType 1 ... percentage, 2 ... fixed amount (be aware it is not the tax calculation set in options: brutto, netto, none)
 		$taxCalcType 			= $priceItems['taxcalctype'];
 
-		$dB 					= $price->roundPrice($priceItems['brutto'] * $discount / 100);
-		$dN 					= $price->roundPrice($priceItems['netto'] * $discount / 100);
-		$dT 					= $price->roundPrice($priceItems['tax'] * $discount / 100);
+		//t $dB 					= $price->roundPrice($priceItems['brutto'] * $discount / 100);
+		//t $dN 					= $price->roundPrice($priceItems['netto'] * $discount / 100);
+		//t $dT 					= $price->roundPrice($priceItems['tax'] * $discount / 100);
+
+		$dB 					= $priceItems['brutto'] * $discount / 100;
+		$dN 					= $priceItems['netto'] * $discount / 100;
+		$dT 					= $priceItems['tax'] * $discount / 100;
 
 
 
@@ -63,9 +67,13 @@ class PhocacartCalculation
 		$priceItems['taxdiscount'] 		= 0;
 
 
-		$dB = $price->roundPrice($priceItems['brutto'] * $ratio/100);
-		$dN = $price->roundPrice($priceItems['netto'] * $ratio/100);
-		$dT = $price->roundPrice($priceItems['tax'] * $ratio/100);
+		//t $dB = $price->roundPrice($priceItems['brutto'] * $ratio/100);
+		//t $dN = $price->roundPrice($priceItems['netto'] * $ratio/100);
+		//t $dT = $price->roundPrice($priceItems['tax'] * $ratio/100);
+
+		$dB = $priceItems['brutto'] * $ratio/100;
+		$dN = $priceItems['netto'] * $ratio/100;
+		$dT = $priceItems['tax'] * $ratio/100;
 
 
 		// Price before discount
@@ -151,9 +159,6 @@ class PhocacartCalculation
 			}
 
 		}
-
-
-
 		return true;
 	}
 

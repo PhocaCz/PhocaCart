@@ -1075,6 +1075,7 @@
             </field>
 
             <field name="rounding_calculation" type="list" default="1" label="COM_PHOCACART_FIELD_ROUNDING_CALCULATION_LABEL" description="COM_PHOCACART_FIELD_ROUNDING_CALCULATION_DESC">
+                <option value="0">COM_PHOCACART_NOT_ROUND</option>
                 <option value="1">COM_PHOCACART_ROUND_HALF_UP</option>
                 <option value="2">COM_PHOCACART_ROUND_HALF_DOWN</option>
             </field>
