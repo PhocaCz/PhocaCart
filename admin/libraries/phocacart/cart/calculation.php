@@ -1052,7 +1052,7 @@ class PhocacartCartCalculation
             }*/
 
             if ($this->correctsubtotal) {
-                $this->correctSubTotal($fullItems[$k], $total);
+               // $this->correctSubTotal($fullItems[$k], $total);
             }
         }
 
@@ -1136,6 +1136,7 @@ class PhocacartCartCalculation
                 $this->correctSubTotal($fullItems[$k], $total);
             }
 
+
         }
     }
 
@@ -1189,7 +1190,11 @@ class PhocacartCartCalculation
                 // the floats are the same
             } else {
 
+                $nettoBefore = $item['netto'];
                 $item['netto'] = $nettoRoundedCorrected / $quantityCorrect;
+                $nettoAfter = $item['netto'];
+                $differenceNetto = $nettoAfter - $nettoBefore;
+
 
                 if ($tax_calculation_sales == 2) {
                     $item['final'] = $item['brutto'] ? $item['brutto'] * $quantityCorrect : $item['netto'] * $quantityCorrect;
@@ -1209,15 +1214,17 @@ class PhocacartCartCalculation
                     }
                 }
 
+              //  $total['netto'] = $total['netto'] + ((($nettoRoundedCorrected / $item['quantity']) - ($nettoNotRounded / $quantityCorrect)) * $item['quantity']);
 
-                $total['netto'] = $total['netto'] + ($nettoRoundedCorrected / $item['quantity']) - ($nettoNotRounded / $quantityCorrect);
+                $total['netto'] = $total['netto'] + ($differenceNetto * $quantityCorrect);
 
 
                 if (!empty($total['tax'])) {
                     foreach ($total['tax'] as $kT => $vT) {
                         if ($kT == $item['taxkey']) {
 
-                            $total['tax'][$kT]['netto']  = $vT['netto'] + ($nettoRoundedCorrected / $item['quantity']) - ($nettoNotRounded / $quantityCorrect);
+                            //$total['tax'][$kT]['netto']  = $vT['netto'] + ((($nettoRoundedCorrected / $item['quantity']) - ($nettoNotRounded / $quantityCorrect)) * $item['quantity']);
+                            $total['tax'][$kT]['netto']  = $vT['netto'] + ($differenceNetto * $quantityCorrect);
                             $total['tax'][$kT]['tax']    = $vT['tax'];
                             $total['tax'][$kT]['brutto'] = $total['tax'][$kT]['tax'] + $total['tax'][$kT]['netto'];
                         }
@@ -1823,16 +1830,14 @@ class PhocacartCartCalculation
             $total['brutto_tax']          -= $total['netto'];
             $total['brutto_currency_tax'] -= $price->roundPrice($total['netto'] * $currencyRate);
         }
-
-
         if (!empty($total['tax']) && $tax_calculation > 0) {
             foreach ($total['tax'] as $k => $v) {
 
                 $total['taxsum'] += $v['tax'];
                 $netto           = $v['netto'];
-                $tax             = $price->roundPrice($v['tax']);
+                $tax             = $v['tax'];//t $price->roundPrice($v['tax']);
                 $brutto          = $v['brutto'];
-                $rate            = $price->roundPrice($v['rate']);
+                $rate            = $v['rate'];//t $price->roundPrice($v['rate']);
                 $taxId           = $v['taxid'];
                 $taxHide         = $v['taxhide'];
 
@@ -1879,6 +1884,7 @@ class PhocacartCartCalculation
                         } else { // Percentage
 
                             $tax = $brutto - ($brutto / (($rate / 100) + 1));
+
                             if ($round == 1) {
                                 $tax = $price->roundPrice($tax);
                             }

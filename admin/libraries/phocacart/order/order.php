@@ -110,7 +110,6 @@ class PhocacartOrder
             $d['params_user'] = $address[0]->params_user;
         }
 
-
         $cart  = new PhocacartCartRendercheckout();
         $cart->setInstance(3);//order
         $cart->setType($this->type);

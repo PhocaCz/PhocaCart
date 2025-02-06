@@ -123,8 +123,11 @@ if ($this->a->paymentnotused == 1) {
 
 	//echo '<div class="'.$this->s['c']['row'].' ph-checkout-shipping-cost-box">';
 
+	echo '<div class="'.$this->s['c']['row'].' ph-checkout-payment-items-box">';
+
 	foreach($this->t['paymentmethods'] as $k => $v) {
 
+		echo '<div class="'.$this->s['c']['row'].' ph-checkout-payment-item">';
 
 		$checked = '';
 		if (isset($v->selected) && $v->selected == 1 ) {
@@ -210,6 +213,8 @@ if ($this->a->paymentnotused == 1) {
 		echo '</div>';// end row second column
 		//echo '<div class="ph-cb grid"></div>';
 
+		echo '</div>'; // end checkout payment item
+
 	}
 
 	//echo '<div class="ph-cb"></div>';
@@ -231,7 +236,7 @@ if ($this->a->paymentnotused == 1) {
 		//echo '<div class="ph-cb"></div>';
 	}
 
-	//echo '</div>';// end payment cost box
+	echo '</div>';// end payment items box
 	//echo '</div>';// end payment row
 
 	//echo '<div class="ph-cb"></div>';

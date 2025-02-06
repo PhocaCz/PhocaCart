@@ -12,6 +12,7 @@ use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\Language\Text;
 
 $layout 	= new FileLayout('report', null, array('component' => 'com_phocacart'));
+$layoutP 	= new FileLayout('report_products', null, array('component' => 'com_phocacart'));
 if (!empty($this->items) && !empty($this->t['date_days'])) {
 	$d				= array();
 	$d['s']         = $this->s;
@@ -21,6 +22,8 @@ if (!empty($this->items) && !empty($this->t['date_days'])) {
 	$d['date_from']	= $this->t['date_from'];
 	$d['date_to']	= $this->t['date_to'];
 	$d['format']	= $this->t['format'];
+	$d['report_type']	= $this->t['report_type'];
+	$d['order_status'] = $this->t['order_status'];
 
 /*	if ($d['format'] == 'raw') {
 		header('Content-Type: text/txt');
@@ -48,7 +51,13 @@ if (!empty($this->items) && !empty($this->t['date_days'])) {
 	if ($d['format'] == 'raw') {
 		echo '<html><head><title>'.Text::_('COM_PHOCACART_REPORT').'</title></head><body>';
 	}
-	echo $layout->render($d);
+
+	if ($this->t['report_type'] == 2) {
+		echo $layoutP->render($d);
+	} else {
+		echo $layout->render($d);
+	}
+
 	if ($d['format'] == 'raw') {
 		echo '</body></html>';
 	}

@@ -318,9 +318,6 @@ class PhocacartPrice
 
     public function getPriceItems($price, $taxId, $tax, $taxCalculationType, $taxTitle = '', $baseAmount = 0, $baseUnit = '', $zeroPrice = 0, $round = 1, $groupPrice = null, $taxHide = []) {
 
-
-
-
         // We need to round because if not
         // BRUTTO          0.15  ... 0.15
         // TAX             0.025 ... 0.03
@@ -559,6 +556,10 @@ class PhocacartPrice
 
         if (!$price) {
             $price = 0;
+        }
+
+        if ($rounding == 0) {
+            return $price;
         }
 
         $priceR = round($price, $this->price_decimals, $rounding);

@@ -9,6 +9,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
+
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
@@ -338,6 +340,36 @@ class PhocacartUtilsSettings
 		);
 	}
 
+    public static function getShopTypesForm() {
+
+        $a = [];
+        $types = self::getShopTypes();
+        foreach($types as $k => $v) {
+            $a[] = HTMLHelper::_('select.option', $k, $v, 'value', 'text');
+        }
+
+        return $a;
+    }
+
+    public static function getReportTypes() {
+		return array(
+			0 => Text::_('COM_PHOCACART_DEFAULT'),
+			1 => Text::_('COM_PHOCACART_DEFAULT_STATUS_DATE'),
+            2 => Text::_('COM_PHOCACART_PRODUCTS'),
+		);
+	}
+
+    public static function getReportTypesForm() {
+
+        $a = [];
+        $types = self::getReportTypes();
+        foreach($types as $k => $v) {
+            $a[] = HTMLHelper::_('select.option', $k, $v, 'value', 'text');
+        }
+
+        return $a;
+    }
+
 	public static function getLangQuery($column, $lang) {
 
 		$db 				= Factory::getDbo();
@@ -440,6 +472,10 @@ class PhocacartUtilsSettings
         // Question is managed by product id, not by question id
         $views['withidspec']  = ['question'];
         return $views;
+    }
+
+    public static function getReportLimitDays() {
+        return 365;
     }
 
 }

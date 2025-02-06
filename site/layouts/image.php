@@ -47,6 +47,8 @@ if ($d['t']['display_webp_images'] == 1) {
 
 
 } else {
+
+    //list($width, $height) = getimagesize(JPATH_BASE . str_replace(Joomla\CMS\Uri\Uri::base(true), '', $d['src']));
     echo '<img';
     echo isset($d['src']) ? ' src="'.$d['src'].'"' : ' src=""';
     echo isset($d['alt-value']) ? ' alt="'.$d['alt-value'].'"' : ' alt=""';

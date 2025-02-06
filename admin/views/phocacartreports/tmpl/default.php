@@ -117,9 +117,14 @@ echo '</select>'. "\n"
 .'</div>'. "\n";
 
 $listShopType	= $this->escape($this->state->get('filter.shop_type'));
-$shopTypes 		= PhocacartUtilsSettings::getShopTypes();
+if ($listShopType == '') {
+    // '' is not the default value, it should be disabled
+    $listShopType = 0;
+}
+$shopTypes 		= PhocacartUtilsSettings::getShopTypesForm();
+array_unshift($shopTypes, HTMLHelper::_('select.option', '', '' . Text::_('COM_PHOCACART_SELECT_SHOP_TYPE') . '', 'value', 'text', true));
 echo '<div class="ph-inline-param">'. "\n"
-.'<label for="sortTable" class="element-invisible">'.Text::_('COM_PHOCACART_SELECT_CURRENCY').'</label>'. "\n"
+.'<label for="sortTable" class="element-invisible">'.Text::_('COM_PHOCACART_SELECT_SHOP_TYPE').'</label>'. "\n"
 .'<select class="form-select" name="filter_shop_type" id="shopTypeTable" class="input-medium">'. "\n"
 . HTMLHelper::_('select.options', $shopTypes, 'value', 'text', $listShopType). "\n"
 .'</select>'. "\n"
@@ -132,6 +137,23 @@ echo '<div class="ph-inline-param">'. "\n"
 .'<label for="sortTable" class="element-invisible">'.Text::_('COM_PHOCACART_SELECT_ORDER_STATUS').'</label>'. "\n"
 .'<select class="form-select" name="filter_order_status" id="orderStatusTable" class="input-medium">'. "\n"
 . HTMLHelper::_('select.options', $orderStatuses, 'value', 'text', $listOrderStatus). "\n"
+.'</select>'. "\n"
+.'</div>'. "\n";
+
+
+$listReportType	= $this->escape($this->state->get('filter.report_type'));
+$reportTypes 		= PhocacartUtilsSettings::getReportTypesForm();
+if ($listReportType == '') {
+    // '' is not the default value, it should be disabled
+    $listReportType = 0;
+}
+
+array_unshift($reportTypes, HTMLHelper::_('select.option', '', '' . Text::_('COM_PHOCACART_SELECT_REPORT_TYPE') . '', 'value', 'text', true));
+
+echo '<div class="ph-inline-param">'. "\n"
+.'<label for="sortTable" class="element-invisible">'.Text::_('COM_PHOCACART_SELECT_REPORT_TYPE').'</label>'. "\n"
+.'<select class="form-select" name="filter_report_type" id="reportTypeTable" class="input-medium">'. "\n"
+. HTMLHelper::_('select.options', $reportTypes, 'value', 'text', $listReportType). "\n"
 .'</select>'. "\n"
 .'</div>'. "\n";
 
@@ -181,9 +203,18 @@ echo '<input class="btn btn-success" type="submit" name="submit" value="'.Text::
 
 echo '<div class="ph-cb"></div>';
 
+
+if ($this->t['data_error'] > 0 && $this->t['data_error_message'] != '') {
+    echo '<div class="alert alert-warning">'.$this->t['data_error_message'].'</div>';
+}
+
 echo '<div class="ph-admin-stat-row">';
+
 echo $this->loadTemplate('report');
+
 echo '</div>';// end row
+
+echo '<div class="alert alert-warning">'.Text::_('COM_PHOCACART_NOTE_FILTER_VALUES_VALID_FOR_SELECTED_STATISTICS').'</div>';
 
 echo '<input type="hidden" name="task" value="" />'. "\n"
 //.'<input type="hidden" name="filter_order" value="'.$listOrder.'" />'. "\n"

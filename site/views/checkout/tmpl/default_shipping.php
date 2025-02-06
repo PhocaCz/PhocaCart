@@ -201,8 +201,11 @@ if ($this->a->shippingnotused == 1) {
 
 	//echo '<div class="'.$this->s['c']['row'].' ph-checkout-shipping-cost-box">';
 
+	echo '<div class="'.$this->s['c']['row'].' ph-checkout-shipping-items-box">';
+
 	foreach($this->t['shippingmethods'] as $k => $v) {
 
+		echo '<div class="'.$this->s['c']['row'].' ph-checkout-shipping-item">';
 
 		$checked = '';
 		if (isset($v->selected) && $v->selected == 1 ) {
@@ -300,11 +303,13 @@ if ($this->a->shippingnotused == 1) {
 		echo '</div>';// end row second column
 		//echo '<div class="ph-cb grid"></div>';
 
+		echo '</div>'; // end checkout shipping item
+
 	}
 
 	//echo '<div class="ph-cb"></div>';
 
-	//echo '</div>';// end shipping cost box
+	echo '</div>';// end shipping items box
 	//echo '</div>';// end shipping row
 
 	//echo '<div class="ph-cb"></div>';

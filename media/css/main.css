@@ -2601,6 +2601,16 @@ form.ph-form-placeholder .ph-checkout-billing-row {
     margin-bottom: 1em;
 }
 
+.ph-shipping-price-box,
+.ph-shipping-title-box,
+.ph-payment-price-box,
+.ph-payment-title-box{
+    display: flex;
+    flex-direction:column;
+    justify-content: center;
+    margin: 1em 0;
+}
+
 
 /* Possible Info about discounted product */
 /*

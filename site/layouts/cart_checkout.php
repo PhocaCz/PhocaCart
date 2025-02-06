@@ -768,8 +768,8 @@ if (!empty($d['fullitems'][1])) {
 		}
 
 		echo '</table>';
-	}
-*/
+	}*/
+
 	// END TAX RECAPITULATION
 	// ---
 

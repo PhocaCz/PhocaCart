@@ -1266,14 +1266,24 @@ table.ph-report-table tr td {
 	padding: 0.2em 1em;
 }
 
+.ph-report-product-attributes {
+	font-size: small;
+	color: #777;
+}
+
 .ph-report-brutto,
 .ph-report-tax,
 .ph-report-netto,
 .ph-report-rounding {
 	text-align: right;
 }
+
+.ph-report-quantity,
 .ph-report-currency {
 	text-align: center;
+}
+.ph-report-product-title {
+	text-align: left;
 }
 
 table.ph-report-table tr#phReportTotalRow0{
