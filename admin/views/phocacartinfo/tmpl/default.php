@@ -206,6 +206,16 @@ $o .= '</div>';
 $o .= '<div class="phTemplateItemsBox">';
 $o .= '<div class="phTemplateItemsInfo">'.Text::_('COM_PHOCACART_ADMIN_TEMPLATE_INFO1'). '</div>';
 
+$o .= '<div class="phTemplateItems">';
+
+$o .= '<div class="phTemplateItem"><a href="https://www.phoca.cz/phocacart-extensions/3-templates" target="_blank">'.HTMLHelper::_('image', $pathImg . 'thumb-template-premiere.webp', 'Phoca Cart - Phoca Premiere Template' ) .'</a><div class="phTemplateItemTitle">Phoca Cart - Phoca <b>Premiere</b> Template</div></div>';
+
+$o .= '<div class="phTemplateItem"><a href="https://www.phoca.cz/phocacart-extensions/3-templates" target="_blank">'.HTMLHelper::_('image', $pathImg . 'thumb-template-horizon.webp', 'Phoca Cart - Phoca Horizon Template' ) .'</a><div class="phTemplateItemTitle">Phoca Cart - Phoca <b>Horizon</b> Template</div></div>';
+
+$o .= '<div class="phTemplateItem"><a href="https://www.phoca.cz/phocacart-extensions/3-templates" target="_blank">'.HTMLHelper::_('image', $pathImg . 'thumb-template-gourmet.webp', 'Phoca Cart - Phoca Gourmet Template' ) .'</a><div class="phTemplateItemTitle">Phoca Cart - Phoca <b>Gourmet</b> Template</div></div>';
+
+$o .= '</div>';
+
 $o .= '<div class="phTemplateItemsInfo">'.Text::_('COM_PHOCACART_ADMIN_TEMPLATE_INFO2'). '</div>';
 
 $o .= '<div class="phTemplateItems">';
@@ -215,13 +225,13 @@ $o .= '<div class="phTemplateItem"><a href="https://www.phoca.cz/phocacart-exten
 $o .= '<div class="phTemplateItem"><a href="https://www.phoca.cz/phocacart-extensions/3-templates" target="_blank">'.HTMLHelper::_('image', $pathImg . 'thumb-template-tools.webp', 'Phoca Cart - Cassiopeia - Tools Child Template' ) .'</a><div class="phTemplateItemTitle">Cassiopeia Child Template - Phoca Cart <b>Tools</b></div></div>';
 
 $o .= '<div class="phTemplateItem"><a href="https://www.phoca.cz/phocacart-extensions/3-templates" target="_blank">'.HTMLHelper::_('image', $pathImg . 'thumb-template-furniture.webp', 'Phoca Cart - Cassiopeia - Furniture Child Template' ) .'</a><div class="phTemplateItemTitle">Cassiopeia Child Template - Phoca Cart <b>Furniture</b></div></div>';
-
+/*
 $o .= '<div class="phTemplateItem"><a href="https://www.phoca.cz/phocacart-extensions/3-templates" target="_blank">'.HTMLHelper::_('image', $pathImg . 'thumb-template-beauty.webp', 'Phoca Cart - Cassiopeia - Beauty Child Template' ) .'</a><div class="phTemplateItemTitle">Cassiopeia Child Template - Phoca Cart <b>Beauty</b></div></div>';
 
 $o .= '<div class="phTemplateItem"><a href="https://www.phoca.cz/phocacart-extensions/3-templates" target="_blank">'.HTMLHelper::_('image', $pathImg . 'thumb-template-fashion.webp', 'Phoca Cart - Cassiopeia - Fashion Child Template' ) .'</a><div class="phTemplateItemTitle">Cassiopeia Child Template - Phoca Cart <b>Fashion</b></div></div>';
 
             $o .= '<div class="phTemplateItem"><a href="https://www.phoca.cz/phocacart-extensions/3-templates" target="_blank">'.HTMLHelper::_('image', $pathImg . 'thumb-template-food.webp', 'Phoca Cart - Cassiopeia - Food Child Template' ) .'</a><div class="phTemplateItemTitle">Cassiopeia Child Template - Phoca Cart <b>Food</b></div></div>';
-
+*/
 $o .= '</div>';
 
 
