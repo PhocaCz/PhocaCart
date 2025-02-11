@@ -149,7 +149,7 @@ echo '<civ class="ph-right-cp">';
 
 
 echo '<div class="ph-extension-info-box ph-cpanel-info-box">';
-echo '<div class="ph-cpanel-logo">'.HTMLHelper::_('image', $this->t['i'] . 'logo-'.str_replace('phoca', 'phoca-', $this->t['c']).'.png', 'Phoca.cz') . '</div>';
+echo '<div class="ph-cpanel-logo">'.HTMLHelper::_('image', $this->t['i'] . 'logo-'.str_replace('phoca', 'phoca-', $this->t['c']).'.svg', 'Phoca.cz') . '</div>';
 echo '<div class="ph-cpanel-logo-seal">'. HTMLHelper::_('image', $this->t['i'] . 'logo-phoca.png', 'Phoca.cz' ).'</div>';
 
 echo '<h3>'.  Text::_($this->t['l'] . '_VERSION').'</h3>'

@@ -19,7 +19,7 @@ echo $r->startCp();
 echo '<div class="ph-box-info">';
 
 echo '<div style="float:right;margin:10px;">' . HTMLHelper::_('image', $this->t['i'] . 'logo-phoca.png', 'Phoca.cz' ) .'</div>'
-	. '<div class="ph-cpanel-logo">'.HTMLHelper::_('image', $this->t['i'] . 'logo-'.str_replace('phoca', 'phoca-', $this->t['c']).'.png', 'Phoca.cz') . '</div>'
+	. '<div class="ph-cpanel-logo">'.HTMLHelper::_('image', $this->t['i'] . 'logo-'.str_replace('phoca', 'phoca-', $this->t['c']).'.svg', 'Phoca.cz') . '</div>'
 	.'<h3>'.Text::_($this->t['component_head']).' - '. Text::_($this->t['l'].'_INFORMATION').'</h3>'
 	.'<div style="clear:both;"></div>';
 
