@@ -22,14 +22,14 @@ $displayData['styles'] = &$styles;
 /* Blocks to use in MailTemplate */
 $blocks = [
   'styles' => $this->sublayout('styles', $displayData),
-  'header' => $this->sublayout('header', $displayData),
-  'info' => $this->sublayout('info', $displayData),
-  'billing' => $this->sublayout('billing', $displayData),
-  'shipping' => $this->sublayout('shipping', $displayData),
-  'products' => $this->sublayout('products', $displayData),
-  'totals' => $this->sublayout('totals', $displayData),
-  'link' => $this->sublayout('link', $displayData),
-  'downloads' => $this->sublayout('downloads', $displayData),
+  'html_header' => $this->sublayout('header', $displayData),
+  'html_info' => $this->sublayout('info', $displayData),
+  'html_billing' => $this->sublayout('billing', $displayData),
+  'html_shipping' => $this->sublayout('shipping', $displayData),
+  'html_products' => $this->sublayout('products', $displayData),
+  'html_totals' => $this->sublayout('totals', $displayData),
+  'html_link' => $this->sublayout('link', $displayData),
+  'html_downloads' => $this->sublayout('downloads', $displayData),
 ];
 $displayData['blocks'] = &$blocks;
 ?>
@@ -39,27 +39,27 @@ $displayData['blocks'] = &$blocks;
     <tbody>
       <tr>
         <td style="width: 50%;">
-            <?= $blocks['header']; ?>
+            <?= $blocks['html_header']; ?>
         </td>
         <td style="width: 20px;"></td>
         <td style="width: 50%;">
-            <?= $blocks['info']; ?>
+            <?= $blocks['html_info']; ?>
         </td>
       </tr>
     </tbody>
   </table>
 
-  <?= $blocks['link']; ?>
+  <?= $blocks['html_link']; ?>
 
   <table style="<?= $styles['w100'] ?>">
     <tbody>
       <tr>
         <td style="width: 50%;">
-            <?= $blocks['billing']; ?>
+            <?= $blocks['html_billing']; ?>
         </td>
         <td style="width: 20px;"></td>
         <td style="width: 50%;">
-            <?= $blocks['shipping']; ?>
+            <?= $blocks['html_shipping']; ?>
         </td>
       </tr>
     </tbody>
@@ -67,12 +67,12 @@ $displayData['blocks'] = &$blocks;
 
   <?= MailHelper::renderArticle((int)$params->get( 'order_global_top_desc', 0 ), $displayData['preparereplace'], $displayData['bas']['b'], $displayData['bas']['s']); ?>
 
-  <?= $blocks['products']; ?>
-  <?= $blocks['totals']; ?>
+  <?= $blocks['html_products']; ?>
+  <?= $blocks['html_totals']; ?>
 
   <?= MailHelper::renderArticle((int)$params->get( 'order_global_middle_desc', 0 ), $displayData['preparereplace'], $displayData['bas']['b'], $displayData['bas']['s']); ?>
 
-  <?= $blocks['downloads']; ?>
+  <?= $blocks['html_downloads']; ?>
 
   <?= MailHelper::renderArticle((int)$params->get( 'order_global_bottom_desc', 0 ), $displayData['preparereplace'], $displayData['bas']['b'], $displayData['bas']['s']); ?>
 </div>

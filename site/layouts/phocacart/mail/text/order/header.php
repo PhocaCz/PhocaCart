@@ -23,18 +23,13 @@ use Phoca\PhocaCart\Mail\MailHelper;
  * Parameters
  */
 $store_title = $params->get('store_title', '');
-$store_logo = $params->get( 'store_logo', '' );
-$store_info = MailHelper::renderArticle((int)$params->get( 'store_info', '' ), [], [], []);
+$store_info = MailHelper::renderArticle((int)$params->get( 'store_info', '' ), [], [], [], false);
 //$store_logo = \PhocacartUtils::realCleanImageUrl($store_logo);
 
 if ($store_title != '') {
-	echo '<h3>'.$store_title.'</h3>';
-}
-
-if ($store_logo != '') {
-	echo '<div><img class="ph-idnr-header-img" src="'.Uri::root(false). ''.$store_logo.'" style="max-width: 200px; max-height: 200px" /></div>';
+	echo $store_title . "\n" . str_repeat('-', strlen($store_title)) . "\n\n";
 }
 
 if ($store_info != '') {
-	echo '<div>'.$store_info.'</div>';
+	echo $store_info . "\n\n";
 }

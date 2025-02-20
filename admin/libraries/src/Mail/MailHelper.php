@@ -21,6 +21,7 @@ use Joomla\Filesystem\File;
 use Joomla\Utilities\IpHelper;
 use Joomla\CMS\Mail\MailHelper as JoomlaMailHelper;
 use Phoca\PhocaCart\Helper\PhocaCartHelper;
+use Phoca\PhocaCart\Utils\TextUtils;
 
 defined('_JEXEC') or die;
 
@@ -343,7 +344,7 @@ abstract class MailHelper
         return self::renderBody('order', $format, $displayData);
     }
 
-    public static function renderArticle(int|string $articleId, array $replaceData, array $billingAddress, array $shippingAddress): ?string
+    public static function renderArticle(int|string $articleId, array $replaceData, array $billingAddress, array $shippingAddress, bool $allowHtml = true): ?string
     {
         if (!$articleId) {
             return null;
@@ -358,6 +359,11 @@ abstract class MailHelper
         if ($article) {
             $article 	= \PhocacartText::completeText($article, $replaceData);
             $article 	= \PhocacartText::completeTextFormFields($article, $billingAddress, $shippingAddress);
+
+            if (!$allowHtml) {
+                $article = TextUtils::htmlToPlainText($article);
+            }
+
             return $article;
         }
 

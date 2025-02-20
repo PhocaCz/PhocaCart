@@ -25,4 +25,20 @@ class TextUtils
 
         return '';
     }
+
+    public static function htmlToPlainText(string $html): string
+    {
+        $text = $html;
+
+        /* TODO some better parser */
+        $text = str_replace('</p>', "\n\n", $text);
+        $text = str_replace('<br>', "\n", $text);
+        $text = str_replace('<br/>', "\n", $text);
+        $text = str_replace('<br />', "\n", $text);
+
+        $text = strip_tags($text);
+
+        return $text;
+    }
+
 }
