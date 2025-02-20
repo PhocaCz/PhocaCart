@@ -18,15 +18,15 @@ use Phoca\PhocaCart\Dispatcher\Dispatcher;
 use Phoca\PhocaCart\Mail\MailHelper;
 
 echo '<div><h1>'.Text::_('COM_PHOCACART_ORDER').'</h1></div>';
-echo '<div><b>'.Text::_('COM_PHOCACART_ORDER_NR').'</b>: '.PhocacartOrder::getOrderNumber($displayData['common']->id, $displayData['common']->date, $displayData['common']->order_number).'</div>';
-echo '<div><b>'.Text::_('COM_PHOCACART_ORDER_DATE').'</b>: '.HTMLHelper::date($displayData['common']->date, 'DATE_FORMAT_LC4').'</div>';
+echo '<div><b>'.Text::_('COM_PHOCACART_ORDER_NR').'</b>: '.PhocacartOrder::getOrderNumber($displayData['order']->id, $displayData['order']->date, $displayData['order']->order_number).'</div>';
+echo '<div><b>'.Text::_('COM_PHOCACART_ORDER_DATE').'</b>: '.HTMLHelper::date($displayData['order']->date, 'DATE_FORMAT_LC4').'</div>';
 
 
-if (isset($displayData['common']->paymenttitle) && $displayData['common']->paymenttitle != '') {
-    echo '<div><b>'.Text::_('COM_PHOCACART_PAYMENT').'</b>: '.$displayData['common']->paymenttitle.'</div>';
+if (isset($displayData['order']->paymenttitle) && $displayData['order']->paymenttitle != '') {
+    echo '<div><b>'.Text::_('COM_PHOCACART_PAYMENT').'</b>: '.$displayData['order']->paymenttitle.'</div>';
 }
 
-if (isset($displayData['common']->shippingtitle) && $displayData['common']->shippingtitle != '') {
-    echo '<div><b>'.Text::_('COM_PHOCACART_SHIPPING').'</b>: '.$displayData['common']->shippingtitle.'</div>';
+if (isset($displayData['order']->shippingtitle) && $displayData['order']->shippingtitle != '') {
+    echo '<div><b>'.Text::_('COM_PHOCACART_SHIPPING').'</b>: '.$displayData['order']->shippingtitle.'</div>';
 }
 

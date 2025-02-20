@@ -222,7 +222,6 @@ class PhocacartOrderStatus
         $recipient       = ''; // Customer/Buyer
         $recipientOthers = ''; // others
         $bcc             = '';
-        $subject         = '';
         $notificationResult = -1;
 
         if ($notifyUser) {
@@ -263,38 +262,9 @@ class PhocacartOrderStatus
         // which language version the customer got
         $pLang->setLanguage($order->user_lang);
         try {
-            // EMAIL CUSTOMER
-            $body = $status['email_text'];
-            if (!$body) {
-                $body = '{text_nr}: {ordernumber} - {text_changed_to}: {status_title}';
-            }
-
-            // EMAIL OTHERS
-            $bodyOthers = $status['email_text_others'];
-            if (!$bodyOthers) {
-                $bodyOthers = '{text_nr}: {ordernumber} - {text_changed_to}: {status_title}';
-            }
-
-            // REPLACE
             $mailData = MailHelper::prepareOrderMailData($orderView, $order, $addresses, $status);
             $mailData['email']       = $recipient;
             $mailData['emailothers'] = $recipientOthers;
-
-            // EMAIL CUSTOMER
-            if (!$status['email_subject']) {
-                $subject = '{sitename} - {status_title} {text_nr}: {ordernumber}';
-            }
-            $subject = PhocacartText::completeText($subject, $mailData, 1);
-
-            // EMAIL OTHERS
-            if (!$status['email_subject_others']) {
-                $subjectOthers = '{sitename} - {status_title} {text_nr}: {ordernumber}';
-            }
-            $subjectOthers = PhocacartText::completeText($subjectOthers, $mailData, 1);
-
-            // COMPLETE BODY
-            $body       = PhocacartText::completeText($body, $mailData, 1);
-            $bodyOthers = PhocacartText::completeText($bodyOthers, $mailData, 2);
 
             $document = '';
             $orderRender = new PhocacartOrderRender();
@@ -327,8 +297,6 @@ class PhocacartOrderStatus
                 if ($documentNumber) {
                     //$document   = $orderRender->render($order->id, $emailSend, 'mail', $orderToken);
                     $document = MailHelper::renderOrderBody($order, 'html');
-                    $body       .= $document;
-                    $bodyOthers .= $document;
                 }
             }
 
@@ -339,21 +307,9 @@ class PhocacartOrderStatus
                     'output'   => $orderRender->render($order->id, $emailSend, 'pdf', $orderToken),
                 ]);
             }
-
-            // Email Footer
-            $body .= PhocacartText::completeText($status['email_footer'], $mailData, 1);
         } finally {
             $pLang->setLanguageBack();
         }
-
-        // CUSTOMER
-        // TODO - is it needed???
-        self::handleLangPlugin($pLang, $order, $subject);
-        self::handleLangPlugin($pLang, $order, $body);
-
-        // OTHERS
-        self::handleLangPluginOthers($subjectOthers);
-        self::handleLangPluginOthers($bodyOthers);
 
         // ---------
         // CUSTOMERS

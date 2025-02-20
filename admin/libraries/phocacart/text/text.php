@@ -116,16 +116,14 @@ class PhocacartText {
 
             $r['downloadlinkforce'] 	= PhocacartPath::getRightPathLink(PhocacartRoute::getDownloadRoute());
 
-
             $r['downloadlink'] = '';
             $products 	= $order->getItemProducts($orderId);
             $isDownload = false;
 
 			if(!empty($products) && isset($common->order_token) && $common->order_token != '') {
-				foreach ($products as $k => $v) {
-
+				foreach ($products as $v) {
 				    if (!empty($v->downloads)) {
-				        foreach ($v->downloads as $k2 => $v2) {
+				        foreach ($v->downloads as $v2) {
 
                             // Main Product Download File
                             if (isset($v2->published) && $v2->published == 1 && isset($v2->download_file) && $v2->download_file != '' && isset($v2->download_folder) && $v2->download_folder != '' && isset($v2->download_token) && $v2->download_token != '') {
@@ -138,7 +136,7 @@ class PhocacartText {
 
 					// Product Attribute Option Download File
                     if (!empty($v->attributes)) {
-                        foreach ($v->attributes as $k2 => $v2) {
+                        foreach ($v->attributes as $v2) {
                             if (isset($v2->download_published) && $v2->download_published == 1 && isset($v2->download_file) && $v2->download_file != '' && isset($v2->download_folder) && $v2->download_folder != '') {
                                 $isDownload = true;
                                 break;
@@ -149,7 +147,6 @@ class PhocacartText {
 			}
 
             if ($isDownload) {
-
                 if ($email_downloadlink_description != '') {
                     $r['downloadlink'] .= '<div>'.$email_downloadlink_description.'</div>';
                 }
@@ -164,7 +161,6 @@ class PhocacartText {
 			}
 
 		} else {
-
             $r['downloadlinkforce'] = '';
             $r['downloadlink'] = '';
 		    // Guests
@@ -178,7 +174,6 @@ class PhocacartText {
             $isDownload = false;
 
 			$downloadO 	= '';
-
 
 			if(!empty($products) && isset($common->order_token) && $common->order_token != '' && $download_guest_access > 0) {
 				$downloadO	= '<p>&nbsp;</p><h4>'.Text::_('COM_PHOCACART_DOWNLOAD_LINKS').'</h4>';
@@ -230,9 +225,6 @@ class PhocacartText {
                 }
                 $r['downloadlink'] .= $downloadO;
             }
-
-
-
 		}
 
 
@@ -366,13 +358,11 @@ class PhocacartText {
             $r['venderusername']    = $vendor->username;
         }
 
-
         // Specific Case - QR Code inside {invoiceqr} parameter
         $pdf_invoice_qr_code_translated = PhocacartText::completeText($pdf_invoice_qr_code, $r, 1);
         $r['invoiceqr']                 = PhocacartUtils::getQrImage($pdf_invoice_qr_code_translated);
 
 		return $r;
-
 	}
 
     /**

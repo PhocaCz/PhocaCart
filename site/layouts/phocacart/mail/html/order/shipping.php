@@ -49,8 +49,8 @@ if (!empty($displayData['bas']['b'])) {
     }
 
 	$addressDescription = '';
-	if ($displayData['common']->oidn_spec_shipping_desc) {
-        echo MailHelper::renderArticle($displayData['common']->oidn_spec_shipping_desc, $displayData['preparereplace'], $displayData['bas']['b'], $displayData['bas']['s']);
+	if ($displayData['order']->oidn_spec_shipping_desc) {
+        echo MailHelper::renderArticle($displayData['order']->oidn_spec_shipping_desc, $displayData['preparereplace'], $displayData['bas']['b'], $displayData['bas']['s']);
     } else {
         echo MailHelper::renderArticle((int)$params->get( 'oidn_global_shipping_desc', 0 ), $displayData['preparereplace'], $displayData['bas']['b'], $displayData['bas']['s']);
 	}

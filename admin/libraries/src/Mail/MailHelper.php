@@ -276,18 +276,28 @@ abstract class MailHelper
 
     public static function checkOrderStatusMailTemplates(object $status): void
     {
+        $tags = [
+            'html_document', 'text_document', 'legacy_document', 'document',
+            'ordernumber', 'status_title', 'sitename',
+            'html_header', 'html_info', 'html_billing', 'html_shipping', 'html_products', 'html_totals', 'html_link',  'html_downloads',
+            'text_header', 'text_info', 'text_billing', 'text_shipping', 'text_products', 'text_totals', 'text_link',  'text_downloads',
+        ];
+
         if ($status->email_customer) {
-            $tags = [];
             MailTemplate::checkTemplate('com_phocacart.order_status.' . $status->id, 'COM_PHOCACART_EMAIL_ORDER_STATUS_SUBJECT', 'COM_PHOCACART_EMAIL_ORDER_STATUS_BODY', $tags, 'COM_PHOCACART_EMAIL_ORDER_STATUS_HTMLBODY');
         }
 
         if ($status->email_others) {
-            $tags = [];
             MailTemplate::checkTemplate('com_phocacart.order_status.notification.' . $status->id, 'COM_PHOCACART_EMAIL_ORDER_STATUS_NOTIFICATION_SUBJECT', 'COM_PHOCACART_EMAIL_ORDER_STATUS_NOTIFICATION_BODY', $tags, 'COM_PHOCACART_EMAIL_ORDER_STATUS_NOTIFICATION_HTMLBODY');
         }
 
+        $tags = [
+            'html_document', 'text_document', 'legacy_document', 'document',
+            'ordernumber', 'status_title', 'sitename',
+            'html_header', 'html_info', 'html_billing', 'html_shipping', 'html_products', 'html_totals', 'html_link',  'html_downloads',
+            'text_header', 'text_info', 'text_billing', 'text_shipping', 'text_products', 'text_totals', 'text_link',  'text_downloads',
+        ];
         if ($status->email_gift) {
-            $tags = [];
             MailTemplate::checkTemplate('com_phocacart.order_status.gift.' . $status->id, 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_SUBJECT', 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_BODY', $tags, 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_HTMLBODY');
         }
     }
@@ -310,9 +320,9 @@ abstract class MailHelper
 
         $displayData = [];
         $displayData['params'] = \PhocacartUtils::getComponentParameters();
-        $displayData['common'] = $orderView->getItemCommon($order->id);
+        $displayData['order'] = $orderView->getItemCommon($order->id);
         $displayData['price'] = new \PhocacartPrice();
-        $displayData['price']->setCurrency($displayData['common']->currency_id);
+        $displayData['price']->setCurrency($displayData['order']->currency_id);
         $displayData['bas'] = $orderView->getItemBaS($order->id, 1);
         if(!isset($displayData['bas']['b'])) {
             $displayData['bas']['b'] = [];
@@ -324,7 +334,7 @@ abstract class MailHelper
         $displayData['discounts'] = $orderView->getItemProductDiscounts($order->id, 0);
         $displayData['total'] = $orderView->getItemTotal($order->id, 1);
         $displayData['taxrecapitulation'] = $orderView->getItemTaxRecapitulation($order->id);
-        $displayData['preparereplace'] = \PhocacartText::prepareReplaceText($orderView, $order->id, $displayData['common'], $displayData['bas']);
+        $displayData['preparereplace'] = \PhocacartText::prepareReplaceText($orderView, $order->id, $displayData['order'], $displayData['bas']);
         $displayData['qrcode'] = \PhocacartText::completeText($displayData['params']->get( 'pdf_invoice_qr_code', '' ), $displayData['preparereplace'], 1);
 
         $blocks = [];

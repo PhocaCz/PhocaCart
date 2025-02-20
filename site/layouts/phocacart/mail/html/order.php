@@ -15,8 +15,13 @@ use Phoca\PhocaCart\Mail\MailHelper;
 /** @var Joomla\Registry\Registry $params */
 $params = $displayData['params'];
 
+/* Styles are defined in styles sublayout */
+$styles= [];
+$displayData['styles'] = &$styles;
+
 /* Blocks to use in MailTemplate */
 $blocks = [
+  'styles' => $this->sublayout('styles', $displayData),
   'header' => $this->sublayout('header', $displayData),
   'info' => $this->sublayout('info', $displayData),
   'billing' => $this->sublayout('billing', $displayData),
@@ -24,15 +29,10 @@ $blocks = [
   'products' => $this->sublayout('products', $displayData),
   'totals' => $this->sublayout('totals', $displayData),
   'link' => $this->sublayout('link', $displayData),
+  'downloads' => $this->sublayout('downloads', $displayData),
 ];
 $displayData['blocks'] = &$blocks;
-
-/* Styles are defined in styles sublayout */
-$styles= [];
-$displayData['styles'] = &$styles;
 ?>
-
-<?= $this->sublayout('styles', $displayData); ?>
 
 <div style="<?= $styles['fs-normal'] . $styles['w100'] ?>">
   <table style="<?= $styles['w100'] ?>">
@@ -48,6 +48,8 @@ $displayData['styles'] = &$styles;
       </tr>
     </tbody>
   </table>
+
+  <?= $blocks['link']; ?>
 
   <table style="<?= $styles['w100'] ?>">
     <tbody>
@@ -69,5 +71,8 @@ $displayData['styles'] = &$styles;
   <?= $blocks['totals']; ?>
 
   <?= MailHelper::renderArticle((int)$params->get( 'order_global_middle_desc', 0 ), $displayData['preparereplace'], $displayData['bas']['b'], $displayData['bas']['s']); ?>
+
+  <?= $blocks['downloads']; ?>
+
   <?= MailHelper::renderArticle((int)$params->get( 'order_global_bottom_desc', 0 ), $displayData['preparereplace'], $displayData['bas']['b'], $displayData['bas']['s']); ?>
 </div>
