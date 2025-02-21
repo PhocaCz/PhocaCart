@@ -41,4 +41,8 @@ class TextUtils
         return $text;
     }
 
+    public static function underline(string $text, string $underlineChar = '-'): string
+    {
+        return $text . "\n" . str_repeat($underlineChar, strlen($text));
+    }
 }

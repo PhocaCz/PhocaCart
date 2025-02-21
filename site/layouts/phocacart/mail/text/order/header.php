@@ -18,6 +18,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Plugin\PluginHelper;
 use Phoca\PhocaCart\Dispatcher\Dispatcher;
 use Phoca\PhocaCart\Mail\MailHelper;
+use Phoca\PhocaCart\Utils\TextUtils;
 
 /*
  * Parameters
@@ -27,7 +28,7 @@ $store_info = MailHelper::renderArticle((int)$params->get( 'store_info', '' ), [
 //$store_logo = \PhocacartUtils::realCleanImageUrl($store_logo);
 
 if ($store_title != '') {
-	echo $store_title . "\n" . str_repeat('-', strlen($store_title)) . "\n\n";
+    echo TextUtils::underline($store_title, '=') . "\n\n";
 }
 
 if ($store_info != '') {

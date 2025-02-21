@@ -34,14 +34,14 @@ if ($products) {
         echo $product->quantity . "\t";
         echo $product->sku . ' - ' . $product->title . "\t";
         if (!empty($product->attributes)) {
-            echo '(';
+            $printAttributes = [];
             foreach ($product->attributes as $attribute) {
-                echo $attribute->attribute_title . ' ' . $attribute->option_title .': ' . htmlspecialchars(urldecode($attribute->option_value), ENT_QUOTES, 'UTF-8') . ',';
+                $printAttributes[] = $attribute->attribute_title . ' ' . $attribute->option_title .': ' . htmlspecialchars(urldecode($attribute->option_value), ENT_QUOTES, 'UTF-8');
             }
-            echo ')';
+            echo '(' . implode(', ', $printAttributes) . ')';
         }
 
         echo $displayData['price']->getPriceFormat((int)$product->quantity * $product->brutto) . "\n";
 	}
-    echo "\n";
+    echo "\n\n";
 }

@@ -18,7 +18,7 @@ $styles = [
     'fs-large' => 'font-size: 16px;',
     'fs-xlarge' => 'font-size: 20px;',
     'w100' => 'width: 100%;',
-    'hidden' => 'display: none;',
+    'hidden' => 'display: none; max-height: 0px; overflow: hidden;',
     'button' => 'display: inline-block; padding: 8 16px; color: #fff; background-color: #2e486b; border: 8px solid #2e486b; font-size: 16px; font-weight: bold; text-decoration: none;',
 ];
 ?>

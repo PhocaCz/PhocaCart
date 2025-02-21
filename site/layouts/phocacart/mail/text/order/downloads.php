@@ -7,6 +7,7 @@
  */
 
 use Joomla\CMS\Language\Text;
+use Phoca\PhocaCart\Utils\TextUtils;
 
 defined('_JEXEC') or die();
 
@@ -56,9 +57,9 @@ foreach ($products as $product) {
 
 if ($downloads) {
 ?>
-<?= Text::_('COM_PHOCACART_DOWNLOAD_LINKS') ?>
+<?= TextUtils::underline(Text::_('COM_PHOCACART_DOWNLOAD_LINKS')) . "\n\n"  ?>
 <?php foreach ($downloads as $productDownloads) { ?>
-<?= $productDownloads['title'] ?>
+<?= $productDownloads['title'] . "\n" ?>
 <?php foreach ($productDownloads['downloads'] as $download) { ?>
 <?php
   if ($order->user_id) {

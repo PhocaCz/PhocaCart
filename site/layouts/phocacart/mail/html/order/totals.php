@@ -38,7 +38,7 @@ if (!empty($displayData['total'])) {
         echo '<tr>';
 
         echo '<td style="text-align: right" align="right" valign="top">' . ($isStrong ? '<strong>' : '');
-        echo PhocacartLanguage::renderTitle($total->title, $total->title_lang, array(0 => array($total->title_lang_suffix, ' '), 1 => array($total->title_lang_suffix2, ' ')));
+        echo PhocacartLanguage::renderTitle($total->title, $total->title_lang, [0 => [$total->title_lang_suffix, ' '], 1 => [$total->title_lang_suffix2, ' ']]);
         echo ($isStrong ? '</strong>' : '') . '</td>';
 
         echo '<td style="text-align: right; width: 100px" align="right" valign="top" width="100">' . ($isStrong ? '<strong>' : '');

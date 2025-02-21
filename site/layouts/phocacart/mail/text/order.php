@@ -16,8 +16,8 @@ use Phoca\PhocaCart\Mail\MailHelper;
 $params = $displayData['params'];
 
 /* Blocks to use in MailTemplate */
-$blocks = [
-  'text_header' => $this->sublayout('header', $displayData),
+$displayData['blocks'] = [
+  'header' => $this->sublayout('header', $displayData),
   'info' => $this->sublayout('info', $displayData),
   'billing' => $this->sublayout('billing', $displayData),
   'shipping' => $this->sublayout('shipping', $displayData),
@@ -26,27 +26,26 @@ $blocks = [
   'link' => $this->sublayout('link', $displayData),
   'downloads' => $this->sublayout('downloads', $displayData),
 ];
-$displayData['blocks'] = &$blocks;
 ?>
 
-<?= $blocks['text_header']; ?>
+<?= $displayData['blocks']['header']; ?>
 
-<?= $blocks['text_info']; ?>
+<?= $displayData['blocks']['info']; ?>
 
-<?= $blocks['text_link']; ?>
+<?= $displayData['blocks']['link']; ?>
 
-<?= $blocks['text_billing']; ?>
+<?= $displayData['blocks']['billing']; ?>
 
-<?= $blocks['text_shipping']; ?>
+<?= $displayData['blocks']['shipping']; ?>
 
 <?= MailHelper::renderArticle((int)$params->get( 'order_global_top_desc', 0 ), $displayData['preparereplace'], $displayData['bas']['b'], $displayData['bas']['s'], false); ?>
 
-<?= $blocks['text_products']; ?>
+<?= $displayData['blocks']['products']; ?>
 
-<?= $blocks['text_totals']; ?>
+<?= $displayData['blocks']['totals']; ?>
 
 <?= MailHelper::renderArticle((int)$params->get( 'order_global_middle_desc', 0 ), $displayData['preparereplace'], $displayData['bas']['b'], $displayData['bas']['s'], false); ?>
 
-<?= $blocks['text_downloads']; ?>
+<?= $displayData['blocks']['downloads']; ?>
 
 <?= MailHelper::renderArticle((int)$params->get( 'order_global_bottom_desc', 0 ), $displayData['preparereplace'], $displayData['bas']['b'], $displayData['bas']['s'], false); ?>

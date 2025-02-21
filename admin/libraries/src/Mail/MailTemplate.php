@@ -10,8 +10,10 @@
 namespace Phoca\PhocaCart\Mail;
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Mail\Mail;
 use Joomla\CMS\Mail\MailTemplate as JoomlaMailTemplate;
+use Joomla\Filesystem\Path;
 
 defined('_JEXEC') or die;
 
@@ -63,6 +65,20 @@ class MailTemplate extends JoomlaMailTemplate
         }, $text);
 
         return parent::replaceTags($text, $tags, $isHtml);
+    }
+
+    public function addInlineImage(?string $imageFile, string $name = 'shop-logo'): void
+    {
+        if (!$imageFile) {
+            return;
+        }
+
+        $imageFile = Path::check(JPATH_ROOT . '/' . HTMLHelper::_('cleanImageURL', $imageFile)->url);
+        if (is_file(urldecode($imageFile))) {
+            $this->mailer->addAttachment($imageFile, $name, 'base64', mime_content_type($imageFile), 'inline');
+
+            $this->addLayoutTemplateData(['inline.' . $name => $name]);
+        }
     }
 
     /**

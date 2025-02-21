@@ -278,10 +278,10 @@ abstract class MailHelper
     public static function checkOrderStatusMailTemplates(object $status): void
     {
         $tags = [
-            'html_document', 'text_document', 'legacy_document', 'document',
+            'html.document', 'text.document', 'document',
             'ordernumber', 'status_title', 'sitename',
-            'html_header', 'html_info', 'html_billing', 'html_shipping', 'html_products', 'html_totals', 'html_link',  'html_downloads',
-            'text_header', 'text_info', 'text_billing', 'text_shipping', 'text_products', 'text_totals', 'text_link',  'text_downloads',
+            'html.header', 'html.info', 'html.billing', 'html.shipping', 'html.products', 'html.totals', 'html.link',  'html.downloads',
+            'text.header', 'text.info', 'text.billing', 'text.shipping', 'text.products', 'text.totals', 'text.link',  'text.downloads',
         ];
 
         if ($status->email_customer) {
@@ -315,7 +315,7 @@ abstract class MailHelper
         return LayoutHelper::render('phocacart.mail.' . $format . '.' . $layoutFile, $data, null, ['client' => 'site']);
     }
 
-    public static function renderOrderBody(object $order, string $format): string
+    public static function renderOrderBody(object $order, string $format, array &$mailData): string
     {
         $orderView = new \PhocacartOrderView();
 
@@ -341,7 +341,13 @@ abstract class MailHelper
         $blocks = [];
         $displayData['blocks'] = &$blocks;
 
-        return self::renderBody('order', $format, $displayData);
+        $result = self::renderBody('order', $format, $displayData);
+
+        foreach ($blocks as $name => $block) {
+            $mailData[$format . '.' . $name] = $block;
+        }
+
+        return $result;
     }
 
     public static function renderArticle(int|string $articleId, array $replaceData, array $billingAddress, array $shippingAddress, bool $allowHtml = true): ?string

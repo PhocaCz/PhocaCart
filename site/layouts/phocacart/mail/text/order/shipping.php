@@ -20,7 +20,7 @@ use Phoca\PhocaCart\Dispatcher\Dispatcher;
 use Phoca\PhocaCart\Mail\MailHelper;
 use Phoca\PhocaCart\Utils\TextUtils;
 
-echo Text::_('COM_PHOCACART_SHIPPING_ADDRESS');
+echo TextUtils::underline(Text::_('COM_PHOCACART_SHIPPING_ADDRESS')) . "\n\n";
 
 if (!empty($displayData['bas']['b'])) {
     if (($displayData['bas']['b']['ba_sa'] ?? 0) || ($displayData['bas']['s']['ba_sa'] ?? 0)) {

@@ -16,6 +16,7 @@ use Joomla\CMS\Mail\MailHelper as JoomlaMailHelper;
 use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\Filesystem\Path;
 use Phoca\PhocaCart\Container\Container;
 use Phoca\PhocaCart\Dispatcher\Dispatcher;
 use Phoca\PhocaCart\Exception\PhocaCartException;
@@ -295,8 +296,9 @@ class PhocacartOrderStatus
                 }
 
                 if ($documentNumber) {
-                    //$document   = $orderRender->render($order->id, $emailSend, 'mail', $orderToken);
-                    $document = MailHelper::renderOrderBody($order, 'html');
+                    $document   = $orderRender->render($order->id, $emailSend, 'mail', $orderToken);
+                    $mailData['html.document'] = MailHelper::renderOrderBody($order, 'html', $mailData);
+                    $mailData['text.document'] = MailHelper::renderOrderBody($order, 'text', $mailData);
                 }
             }
 
@@ -317,10 +319,12 @@ class PhocacartOrderStatus
             $mailer = new MailTemplate('com_phocacart.order_status.' . $status['id'], $order->user_lang);
             $mailData['document'] = $document;
             $mailer->addTemplateData($mailData);
+            $mailer->addInlineImage(\PhocacartUtils::getComponentParameters()->get( 'store_logo'));
 
             if ($attachmentContent) {
                 $mailer->addAttachment($attachmentName, $attachmentContent);
             }
+
             MailHelper::addAttachments($mailer, json_decode($status['email_attachments'], true));
 
             $mailer->addRecipient($recipient);
@@ -344,9 +348,10 @@ class PhocacartOrderStatus
         // ------
         // OTHERS
         if ($recipientOthers != '' && JoomlaMailHelper::isEmailAddress($recipientOthers)) {
-            $mailer = new MailTemplate('com_phocacart.order_status.' . $status['id'], $order->default_lang);
+            $mailer = new MailTemplate('com_phocacart.order_status.notification.' . $status['id'], $order->default_lang);
             $mailData['document'] = $document;
             $mailer->addTemplateData($mailData);
+            $mailer->addInlineImage(\PhocacartUtils::getComponentParameters()->get( 'store_logo'));
 
             if ($attachmentContent) {
                 $mailer->addAttachment($attachmentName, $attachmentContent);
@@ -559,7 +564,8 @@ class PhocacartOrderStatus
         // Send mail to buyer
         if ($buyerEmail && $attachmentBuyer) {
             $pdfData['output']          = $attachmentBuyer;
-            $buyerAttachmentContent     = Pdf::renderInitializedPdf($pdf, $content, $document, $pdfData);
+
+            $buyerAttachmentContent     = PhocaPDFRender::renderInitializedPdf($pdf, $content, $document, $pdfData);
             $buyerAttachmentName        = $pdfData['filename'];
 
             $pLang->setLanguageBack();
@@ -608,7 +614,7 @@ class PhocacartOrderStatus
                 }
 
                 if (isset($bodyRecipient[$k]['output']) /*&& $bodyRecipient[$k]['output'] != ''*/) {
-                    $recipeintBody = $recipientBody . $bodyRecipient[$k]['output'];
+                    $recipientBody = $recipientBody . $bodyRecipient[$k]['output'];
                     $recipientBody = PhocacartText::completeText($recipientBody, $replacements, 3);
                     $recipientBody = PhocacartText::completeTextFormFields($recipientBody, $addresses['b'], $addresses['s']);
                 }
@@ -624,10 +630,10 @@ class PhocacartOrderStatus
                     $content              = new stdClass();
                     $document             = new stdClass();
                     $pdfData['output'] = '';
-                    Pdf::initializePdf($pdf, $content, $document, $pdfData);
+                    PhocaPDFRender::initializePdf($pdf, $content, $document, $pdfData);
 
                     $pdfData['output']          = $attachmentRecipient[$k]['output'];
-                    $recipientAttachmentContent    = Pdf::renderInitializedPdf($attachmentRecipient[$k]['pdf'], $attachmentRecipient[$k]['content'], $attachmentRecipient[$k]['document'], $pdfData);
+                    $recipientAttachmentContent    = PhocaPDFRender::renderInitializedPdf($attachmentRecipient[$k]['pdf'], $attachmentRecipient[$k]['content'], $attachmentRecipient[$k]['document'], $pdfData);
                     $recipientAttachmentName       = $pdfData['filename'];
                 }
 
@@ -745,7 +751,7 @@ class PhocacartOrderStatus
         self::updatePoints($order->id, $changePointsNeeded, $changePointsReceived);
         self::updateDownload($order->id, $status['download']);
         $notificationResult = self::sendOrderEmail($order, $orderView, $status, $addresses, $orderToken, $notifyUser, $notifyOthers, $emailSend, $emailSendFormat);
-        //self::sendGiftEmail($order, $orderView, $status, $addresses, $orderToken);
+        self::sendGiftEmail($order, $orderView, $status, $addresses, $orderToken);
 
         return $notificationResult;
     }

@@ -33,9 +33,7 @@ if (!empty($displayData['total'])) {
             continue;
 		}
 
-        $isStrong = in_array($total->type, ['netto', 'brutto']);
-
-        echo PhocacartLanguage::renderTitle($total->title, $total->title_lang, array(0 => array($total->title_lang_suffix, ' '), 1 => array($total->title_lang_suffix2, ' ')));
+        echo PhocacartLanguage::renderTitle($total->title, $total->title_lang, [0 => [$total->title_lang_suffix, ' '], 1 => [$total->title_lang_suffix2, ' ']]) . ': ';
 
         if ($total->type == 'netto') {
             echo $displayData['price']->getPriceFormat($recalcNetto ? $netto : $total->amount);
