@@ -1062,7 +1062,7 @@ class PhocacartOrderStatus
 						}
 
 						if (isset($bodyRecipient[$k]['output']) /*&& $bodyRecipient[$k]['output'] != ''*/) {
-							$recipeintBody = $recipientBody . $bodyRecipient[$k]['output'];
+							$recipientBody = $recipientBody . $bodyRecipient[$k]['output'];
 							$recipientBody = PhocacartText::completeText($recipientBody, $r, 3);
 							$recipientBody = PhocacartText::completeTextFormFields($recipientBody, $bas['b'], $bas['s']);
 						}
@@ -1077,7 +1077,7 @@ class PhocacartOrderStatus
 							$pdf                  = new stdClass();
 							$content              = new stdClass();
 							$document             = new stdClass();
-							$statidData['output'] = '';
+							$staticData['output'] = '';
 							PhocaPDFRender::initializePDF($pdf, $content, $document, $staticData);
 
 							$staticData['pdf_destination'] = 'S';
