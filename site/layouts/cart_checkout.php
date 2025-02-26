@@ -726,7 +726,9 @@ if (!empty($d['fullitems'][1])) {
 
 	// ---
 	// Tax Recapitulation Possible part to display TC
-	/* if(!empty($d['total'][0]['taxrecapitulation']['items'])) {
+
+	// bdump(); comment;
+	/*if(!empty($d['total'][0]['taxrecapitulation']['items'])) {
 
 		echo '<table class="pc-tax-recapitulation">';
 

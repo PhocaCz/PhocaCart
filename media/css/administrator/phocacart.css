@@ -1691,10 +1691,13 @@ table.ph-report-table tr.ph-report-total-row td.ph-report-total-col1 {
 	border-top: 3px solid #eee;
 	margin-bottom: 1em;
 }
+.ph-cpanel-logo {
+	margin-bottom: 1em;
+}
 .ph-cpanel-logo img {
 	/*transform: scale(0.6);
 	transform-origin: 0 50%;*/
-	max-width: 70%;
+	width: 16rem;
 	height: auto;
 }
 

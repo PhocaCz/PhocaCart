@@ -10,18 +10,20 @@
 	}
 
     .ph-cpanel-logo {
-        padding: 0.5em;
-        background: rgb(255,255,255, 0.5);
-        margin-bottom: 1em
+       /* padding: 0.5em;
+        background: rgb(255,255,255, 0.5);*/
+        margin-bottom: 1em;
+    }
+
+    .ph-cpanel-logo img {
+        filter: invert(1) brightness(2);
+        width: 16rem;
     }
 
     .ph-box-info .ph-cpanel-logo {
         display: inline-block;
     }
 
-    .ph-box-info .ph-cpanel-logo img {
-        max-width: 100%;
-    }
 
     .ph-cp-item-icon {
         background: rgb(72, 86, 106);

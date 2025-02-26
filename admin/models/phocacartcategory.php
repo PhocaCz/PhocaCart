@@ -726,6 +726,88 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 		return $ordering;
 	}
 
+    public function batch($commands, $pks, $contexts)
+	{
+
+		// Sanitize user ids.
+		$pks = array_unique($pks);
+		ArrayHelper::toInteger($pks);
+
+		// Remove any values of zero.
+		if (array_search(0, $pks, true)) {
+			unset($pks[array_search(0, $pks, true)]);
+		}
+
+		if (empty($pks)) {
+			$this->setError(Text::_('JGLOBAL_NO_ITEM_SELECTED'));
+			return false;
+		}
+
+		$done = false;
+
+		if (!empty($commands['assetgroup_id'])) {
+			if (!$this->batchAccess($commands['assetgroup_id'], $pks)) {
+				return false;
+			}
+
+			$done = true;
+		}
+
+		//PHOCAEDIT - Parent is by Phoca 0 not 1 like by Joomla!
+		$comCat =false;
+		if ($commands['category_id'] == '') {
+			$comCat = false;
+		} else if ( $commands['category_id'] == '0') {
+			$comCat = true;
+		} else if ((int)$commands['category_id'] > 0) {
+			$comCat = true;
+		}
+
+		if ($comCat)
+		//if (isset($commands['category_id']))
+		{
+			$cmd = ArrayHelper::getValue($commands, 'move_copy', 'c');
+
+			if ($cmd == 'c')
+			{
+				$result = $this->batchCopy($commands['category_id'], $pks, $contexts);
+				if (is_array($result))
+				{
+					$pks = $result;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			elseif ($cmd == 'm' && !$this->batchMove($commands['category_id'], $pks, $contexts))
+			{
+				return false;
+			}
+			$done = true;
+		}
+
+		if (!empty($commands['language_id']))
+		{
+			if (!$this->batchLanguage($commands['language_id'], $pks, $contexts))
+			{
+				return false;
+			}
+
+			$done = true;
+		}
+
+		if (!$done) {
+			$this->setError(Text::_('JLIB_APPLICATION_ERROR_INSUFFICIENT_BATCH_INFORMATION'));
+			return false;
+		}
+
+		// Clear the cache
+		$this->cleanCache();
+
+		return true;
+	}
+
 	protected function generateNewTitle($category_id, $alias, $title)
 	{
 		// Alter the title & alias

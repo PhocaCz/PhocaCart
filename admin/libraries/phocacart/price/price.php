@@ -522,10 +522,10 @@ class PhocacartPrice
      * ROUNDING - TAX EXCLUSIVE - ROUND UP
      * ROUNDING - TAX INCLUSIVE - ROUND DOWN
      */
-    public function roundPrice($price, $type = 'price') {
+    public function roundPrice($price, $forceRounding = -1) {
 
-        $app = Factory::getApplication();
-        //$paramsC 					= PhocacartUtils::getComponentParameters();
+        //$app = Factory::getApplication();
+        //$paramsC 			  = PhocacartUtils::getComponentParameters();
         $paramsC              = PhocacartUtils::getComponentParameters();
         $rounding_calculation = $paramsC->get('rounding_calculation', 1);
 
@@ -550,8 +550,15 @@ class PhocacartPrice
 
         }*/
 
-
+        // 1 PHP_ROUND_HALF_UP
+        // 2 PHP_ROUND_HALF_DOWN
+        // 3 PHP_ROUND_HALF_EVEN
+        // 4 PHP_ROUND_HALF_ODD
         $rounding = $rounding_calculation; // 1 ... up, 2 ... down
+
+        if ($forceRounding != -1) {
+            $rounding = (int)$forceRounding;
+        }
 
 
         if (!$price) {

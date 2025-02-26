@@ -162,7 +162,8 @@ class PhocaCartViewItem extends HtmlView
 			$this->t['reviews']				= PhocacartReview::getReviewsByProduct((int)$id);
 
 			if ($this->t['enable_price_history']) {
-				$this->t['price_history_data']	= PhocacartPriceHistory::getPriceHistoryChartById((int)$id);
+                $currencyRate      = PhocacartCurrency::getCurrentCurrencyRateIfNotDefault();
+				$this->t['price_history_data']	= PhocacartPriceHistory::getPriceHistoryChartById((int)$id, $currencyRate);
 			}
 
 			$this->t['parameters_output']	= PhocacartParameter::getParametersRendered((int)$id, $this->t['item_display_parameters']);
