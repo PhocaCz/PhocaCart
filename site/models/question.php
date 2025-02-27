@@ -126,6 +126,9 @@ class PhocaCartModelQuestion extends FormModel
 		// Everything OK - send email
 		if ($params->get('send_email_question', 0) > 0 || $params->get('send_email_question_others', '') != '') {
             $mailData = MailHelper::prepareQuestionMailData($row);
+            $mailData['html.document'] = MailHelper::renderBody('question', 'html', [], $mailData);
+            $mailData['text.document'] = MailHelper::renderBody('question', 'text', [], $mailData);
+
 			$mailer = new MailTemplate('com_phocacart.question.admin');
 			$mailer->addTemplateData($mailData);
 

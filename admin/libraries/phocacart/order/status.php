@@ -319,7 +319,6 @@ class PhocacartOrderStatus
             $mailer = new MailTemplate('com_phocacart.order_status.' . $status['id'], $order->user_lang);
             $mailData['document'] = $document;
             $mailer->addTemplateData($mailData);
-            $mailer->addInlineImage(\PhocacartUtils::getComponentParameters()->get( 'store_logo'));
 
             if ($attachmentContent) {
                 $mailer->addAttachment($attachmentName, $attachmentContent);
@@ -351,7 +350,6 @@ class PhocacartOrderStatus
             $mailer = new MailTemplate('com_phocacart.order_status.notification.' . $status['id'], $order->default_lang);
             $mailData['document'] = $document;
             $mailer->addTemplateData($mailData);
-            $mailer->addInlineImage(\PhocacartUtils::getComponentParameters()->get( 'store_logo'));
 
             if ($attachmentContent) {
                 $mailer->addAttachment($attachmentName, $attachmentContent);
@@ -549,11 +547,6 @@ class PhocacartOrderStatus
             $recipient->mailData['text.document'] = MailHelper::renderGiftBody($order, 'text', $gifts, $recipient->mailData);
 
             $mailer->addTemplateData($recipient->mailData);
-            $mailer->addInlineImage(\PhocacartUtils::getComponentParameters()->get('store_logo'));
-
-            foreach ($recipient->gifts as $gift) {
-                $mailer->addInlineImage($gift['gift_image'], 'gift-image-' . $gift['id']);
-            }
 
             if ($recipient->pdfFile) {
                 $mailer->addAttachment($recipient->pdfFileName, $recipient->pdfFile);

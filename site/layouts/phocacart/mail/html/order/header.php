@@ -8,32 +8,23 @@
 
 defined('_JEXEC') or die();
 
-/** @var array $displayData */
-/** @var Joomla\Registry\Registry $params */
-$params = $displayData['params'];
-
-use Joomla\CMS\Language\Text;
-use Joomla\CMS\Uri\Uri;
-use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Plugin\PluginHelper;
-use Phoca\PhocaCart\Dispatcher\Dispatcher;
 use Phoca\PhocaCart\Mail\MailHelper;
 
-/*
- * Parameters
- */
-$store_title = $params->get('store_title');
-$store_logo = $params->get( 'store_logo');
-$store_info = MailHelper::renderArticle((int)$params->get( 'store_info'), [], [], []);
+/** @var array $displayData */
+/** @var Joomla\Registry\Registry $params */
+/** @var array $attachments */
+$params = $displayData['params'];
+$attachments = &$displayData['attachments'];
 
-if ($store_title) {
+if ($store_title = $params->get('store_title')) {
 	echo '<h3>'.$store_title.'</h3>';
 }
 
-if ($store_logo) {
-    echo '<div class="ph__logo"><img src="cid:shop-logo" alt="" style="max-width: 200px; max-height: 200px" /></div>';
+if ($store_logo = $params->get( 'store_logo')) {
+    $attachments['store-logo'] = $store_logo;
+    echo '<div class="ph__logo"><img src="cid:store-logo" alt="" style="max-width: 200px; max-height: 200px" /></div>';
 }
 
-if ($store_info) {
+if ($store_info = MailHelper::renderArticle((int)$params->get( 'store_info'), [], [], [])) {
 	echo '<div>'.$store_info.'</div>';
 }

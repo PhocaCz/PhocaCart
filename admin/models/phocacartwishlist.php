@@ -155,6 +155,9 @@ class PhocaCartCpModelPhocacartWishlist extends AdminModel
 
             $mailData = MailHelper::prepareWatchdogMailData($user, $products, $lang);
             $mailer = new MailTemplate('com_phocacart.watchdog', $lang);
+            $mailData['html.document'] = MailHelper::renderBody('watchdog', 'html', [], $mailData);
+            $mailData['text.document'] = MailHelper::renderBody('watchdog', 'text', [], $mailData);
+
             $mailer->addTemplateData($mailData);
             $mailer->addRecipient($user->email, $user->name);
             try {

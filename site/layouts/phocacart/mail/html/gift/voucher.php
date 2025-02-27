@@ -8,18 +8,19 @@
 
 defined('_JEXEC') or die();
 
+use Joomla\CMS\Language\Text;
+
 /** @var array $displayData */
 /** @var array $styles */
+/** @var array $attachments */
 
 $styles = &$displayData['styles'];
+$attachments = &$displayData['attachments'];
 
-use Joomla\CMS\Language\Text;
-use Joomla\CMS\Uri\Uri;
-use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Plugin\PluginHelper;
-use Phoca\PhocaCart\Dispatcher\Dispatcher;
-use Phoca\PhocaCart\Mail\MailHelper;
 foreach ($displayData['gifts'] as $gift) {
+   if ($gift['gift_image']) {
+       $attachments['gift-image-' . $gift['id']] = $gift['gift_image'];
+   }
 ?>
 <div style="<?= $styles['ph-gift-voucher-box'] . ($styles[$gift['gift_class_name']]['ph-gift-voucher-box'] ?? '') ?>">
     <?php if ($gift['gift_title']) { ?>

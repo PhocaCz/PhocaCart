@@ -307,9 +307,29 @@ abstract class MailHelper
         MailTemplate::deleteTemplate('com_phocacart.order_status.gift.' . $statusId);
     }
 
-    public static function renderBody(string $layoutFile, string $format, array $data): string
+    public static function renderBody(string $layoutFile, string $format, array $data, array &$mailData): string
     {
-        return LayoutHelper::render('phocacart.mail.' . $format . '.' . $layoutFile, $data, null, ['client' => 'site']);
+        $blocks         = [];
+        $data['blocks'] = &$blocks;
+
+        $attachments         = [];
+        $data['attachments'] = &$attachments;
+
+        $data['mailData'] = &$mailData;
+
+        $result = LayoutHelper::render('phocacart.mail.' . $format . '.' . $layoutFile, $data, null, ['client' => 'site']);
+
+        foreach ($blocks as $name => $block) {
+            $mailData[$format . '.' . $name] = $block;
+        }
+
+        if (isset($mailData['attachments'])) {
+            $mailData['attachments'] = array_merge($mailData['attachments'], $data['attachments']);
+        } else {
+            $mailData['attachments'] = $attachments;
+        }
+
+        return $result;
     }
 
     public static function renderOrderBody(object $order, string $format, array &$mailData): string
@@ -335,16 +355,7 @@ abstract class MailHelper
         $displayData['preparereplace'] = \PhocacartText::prepareReplaceText($orderView, $order->id, $displayData['order'], $displayData['bas']);
         $displayData['qrcode'] = \PhocacartText::completeText($displayData['params']->get( 'pdf_invoice_qr_code', '' ), $displayData['preparereplace'], 1);
 
-        $blocks = [];
-        $displayData['blocks'] = &$blocks;
-
-        $result = self::renderBody('order', $format, $displayData);
-
-        foreach ($blocks as $name => $block) {
-            $mailData[$format . '.' . $name] = $block;
-        }
-
-        return $result;
+        return self::renderBody('order', $format, $displayData, $mailData);
     }
 
     public static function renderGiftBody(object $order, string $format, array $gifts, array &$mailData): string
@@ -364,22 +375,9 @@ abstract class MailHelper
         if(!isset($displayData['bas']['s'])) {
             $displayData['bas']['s'] = [];
         }
-        $displayData['products'] = $orderView->getItemProducts($order->id);
-        $displayData['discounts'] = $orderView->getItemProductDiscounts($order->id, 0);
-        $displayData['total'] = $orderView->getItemTotal($order->id, 1);
-        $displayData['taxrecapitulation'] = $orderView->getItemTaxRecapitulation($order->id);
         $displayData['preparereplace'] = \PhocacartText::prepareReplaceText($orderView, $order->id, $displayData['order'], $displayData['bas']);
 
-        $blocks = [];
-        $displayData['blocks'] = &$blocks;
-
-        $result = self::renderBody('gift', $format, $displayData);
-
-        foreach ($blocks as $name => $block) {
-            $mailData[$format . '.' . $name] = $block;
-        }
-
-        return $result;
+        return self::renderBody('gift', $format, $displayData, $mailData);
     }
 
     public static function renderArticle(int|string $articleId, array $replaceData, array $billingAddress, array $shippingAddress, bool $allowHtml = true): ?string

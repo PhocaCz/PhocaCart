@@ -67,7 +67,18 @@ class MailTemplate extends JoomlaMailTemplate
         return parent::replaceTags($text, $tags, $isHtml);
     }
 
-    public function addInlineImage(?string $imageFile, string $name = 'shop-logo'): void
+    public function addTemplateData($data, $plain = false)
+    {
+        if (isset($data['attachments']) && is_array($data['attachments'])) {
+            foreach ($data['attachments'] as $id => $file) {
+                $this->addInlineImage($file, $id);
+            }
+        }
+
+        parent::addTemplateData($data, $plain);
+    }
+
+    public function addInlineImage(?string $imageFile, string $name): void
     {
         if (!$imageFile) {
             return;
