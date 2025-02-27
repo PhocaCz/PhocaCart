@@ -120,10 +120,6 @@ abstract class MailHelper
             }
         }
 
-        // Products
-
-        // Gifts
-
         return $mailData;
     }
 
@@ -300,6 +296,7 @@ abstract class MailHelper
         ];
         if ($status->email_gift) {
             MailTemplate::checkTemplate('com_phocacart.order_status.gift.' . $status->id, 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_SUBJECT', 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_BODY', $tags, 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_HTMLBODY');
+            MailTemplate::checkTemplate('com_phocacart.order_status.gift_notification.' . $status->id, 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_NOTIFICATION_SUBJECT', 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_NOTIFICATION_BODY', $tags, 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_NOTIFICATION_HTMLBODY');
         }
     }
 
@@ -342,6 +339,41 @@ abstract class MailHelper
         $displayData['blocks'] = &$blocks;
 
         $result = self::renderBody('order', $format, $displayData);
+
+        foreach ($blocks as $name => $block) {
+            $mailData[$format . '.' . $name] = $block;
+        }
+
+        return $result;
+    }
+
+    public static function renderGiftBody(object $order, string $format, array $gifts, array &$mailData): string
+    {
+        $orderView = new \PhocacartOrderView();
+
+        $displayData = [];
+        $displayData['params'] = \PhocacartUtils::getComponentParameters();
+        $displayData['order'] = $orderView->getItemCommon($order->id);
+        $displayData['gifts'] = $gifts;
+        $displayData['price'] = new \PhocacartPrice();
+        $displayData['price']->setCurrency($displayData['order']->currency_id);
+        $displayData['bas'] = $orderView->getItemBaS($order->id, 1);
+        if(!isset($displayData['bas']['b'])) {
+            $displayData['bas']['b'] = [];
+        }
+        if(!isset($displayData['bas']['s'])) {
+            $displayData['bas']['s'] = [];
+        }
+        $displayData['products'] = $orderView->getItemProducts($order->id);
+        $displayData['discounts'] = $orderView->getItemProductDiscounts($order->id, 0);
+        $displayData['total'] = $orderView->getItemTotal($order->id, 1);
+        $displayData['taxrecapitulation'] = $orderView->getItemTaxRecapitulation($order->id);
+        $displayData['preparereplace'] = \PhocacartText::prepareReplaceText($orderView, $order->id, $displayData['order'], $displayData['bas']);
+
+        $blocks = [];
+        $displayData['blocks'] = &$blocks;
+
+        $result = self::renderBody('gift', $format, $displayData);
 
         foreach ($blocks as $name => $block) {
             $mailData[$format . '.' . $name] = $block;

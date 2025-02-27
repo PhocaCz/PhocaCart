@@ -376,6 +376,38 @@ class PhocacartOrderStatus
         return $notificationResult;
     }
 
+    private static function giftEmailRecipient(string $email, array $mailData, ?array $pdfData, bool $isBuyer = false): object
+    {
+        $mailData['email'] = $email;
+        $mailData['emailgiftrecipient'] = null;
+        $mailData['namegiftrecipient'] = null;
+        $mailData['namegiftsender'] = null;
+        $mailData['validtogift'] = null;
+
+        $recipient = new stdClass();
+        $recipient->isBuyer = $isBuyer;
+        $recipient->email = $email;
+        $recipient->gifts = [];
+        $recipient->attachments = [];
+        $recipient->mailData = $mailData;
+
+        if ($pdfData) {
+            $recipient->pdf = new stdClass();
+            $recipient->pdfContent  = new stdClass();
+            $recipient->pdfDocument = new stdClass();
+            Pdf::initializePdf($recipient->pdf, $recipient->pdfContent, $recipient->pdfDocument, $pdfData);
+        } else {
+            $recipient->pdf = null;
+            $recipient->pdfContent = null;
+            $recipient->pdfDocument = null;
+        }
+
+        $recipient->pdfFile = null;
+        $recipient->pdfFileName = null;
+
+        return $recipient;
+    }
+
     private static function sendGiftEmail(object $order, PhocacartOrderView $orderView, array $status, $addresses, $orderToken): void
     {
         if ($status['activate_gift']) {
@@ -388,13 +420,33 @@ class PhocacartOrderStatus
 
         // Get all Gifts stored for this order
         $gifts = PhocacartCoupon::getGiftsByOrderId($order->id);
+        $pLang = new PhocacartLanguage();
 
         if (!$gifts) {
             return;
         }
 
-        $recipientsEmails = [];
-        $buyerEmail = null;
+        $recipients = [];
+        $buyer      = null;
+        $mailData   = MailHelper::prepareOrderMailData($orderView, $order, $addresses, $status);
+        $pdfData    = null;
+
+        if (in_array($status['email_gift_format'], [1, 2]) && Pdf::load()) {
+            $orderNumber = PhocacartOrder::getOrderNumber($order->id, $order->date, $order->order_number);
+
+            if (count($gifts) > 1) {
+                $giftVoucherText = Text::_('COM_PHOCACART_GIFT_VOUCHERS');
+            } else {
+                $giftVoucherText = Text::_('COM_PHOCACART_GIFT_VOUCHER');
+            }
+
+            $pdfData = [
+                'title'    => Text::_('COM_PHOCACART_ORDER_NR') . ': ' . $orderNumber . ' - ' . $giftVoucherText,
+                'subject'  => Text::_('COM_PHOCACART_ORDER_NR') . ': ' . $orderNumber . ' - ' . $giftVoucherText,
+                'filename' => strip_tags($giftVoucherText . '_' . $orderNumber) . '.pdf',
+                'keywords' => '',
+            ];
+        }
 
         if (in_array($status['email_gift'], [2, 3])) {
             foreach ($gifts as $gift) {
@@ -402,255 +454,130 @@ class PhocacartOrderStatus
                 // One order can include more gifts
                 // And one order can include more recipients - e.g. two gifts for different users will be bought in one order
                 if (JoomlaMailHelper::isEmailAddress($gift['gift_recipient_email'] ?? '')) {
-                    $recipientsEmails[$gift['gift_recipient_email']] = $gift['gift_recipient_email'];
+                    $recipients[$gift['gift_recipient_email']] = self::giftEmailRecipient($gift['gift_recipient_email'], $mailData, $pdfData);
                 }
             }
         }
+
+        // All - users or others get the documents in user language - to save the memory when creating e.g. PDF documents. Even it is better that others see
+        // which language version the customer got
+        $pLang->setLanguage($order->user_lang);
 
         // Can we send the email to buyer email
         if (in_array($status['email_gift'], [1, 3])) {
             if (self::canSendEmail($orderToken, $order)) {
                 $buyerEmail = self::getRecipient($addresses);
-                if (!JoomlaMailHelper::isEmailAddress($buyerEmail)) {
-                    $buyerEmail = null;
+                if (JoomlaMailHelper::isEmailAddress($buyerEmail)) {
+                    $buyer = self::giftEmailRecipient($buyerEmail, $mailData, $pdfData, true);
                 }
             } else {
                 PhocacartLog::add(2, 'Order Status - Notify - ERROR', $order->id, Text::_('COM_PHOCACART_NO_USER_ORDER_FOUND') . ' ' . Text::_('COM_PHOCACART_GIFT_VOUCHER'));
             }
         }
 
-        if (!$buyerEmail && !$recipientsEmails) {
+        if (!$recipients) {
             return;
         }
 
-        /* TODO az pocad OK */
-
-        $layout = new FileLayout('gift_voucher', null, ['component' => 'com_phocacart', 'client' => 0]);
-        $config = Factory::getApplication()->getConfig();
-        $pLang  = new PhocacartLanguage();
-        $price  = new PhocacartPrice();
-
-        $bodyRecipient       = [];// body for all recipients - each recipient has own body
-        $attachmentRecipient = [];// attachment for all recipients - each recipient has own attachment (for example PDF with generaded coupons)
-        $buyerBody           = ''; // buyer of gift coupons has another body
-        $attachmentBuyer     = ''; // buyer of gift coupons gets all coupons - not like recipients - recipients only get own coupons
-
-        if (count($gifts) > 1) {
-            $giftVoucherText = Text::_('COM_PHOCACART_GIFT_VOUCHERS');
-        } else {
-            $giftVoucherText = Text::_('COM_PHOCACART_GIFT_VOUCHER');
+        if ($buyer) {
+            $buyer->gifts = $gifts;
         }
-
-        // Build email or paste gift vouchers - do them when at least one should get the email with gift voucher
-
-        // Part for buyer only
-        if ($buyerEmail) {
-            $buyerBody = $status['email_text_gift_sender'];
-            if (!$buyerBody) {
-                $buyerBody = Text::_('COM_PHOCACART_ORDER_NR') . ': {ordernumber} - ' . $giftVoucherText . '<br>';
-            }
-
-            $replacements          = PhocacartText::prepareReplaceText($orderView, $order->id, $order, $addresses, $status);
-            $replacements['email'] = $buyerEmail;// Overwrites the $replacements
-
-            if ($status['email_subject_gift_sender'] != '') {
-                $buyerSubject = PhocacartText::completeText($status['email_subject_gift_sender'], $replacements, 1);
-            } else if ($status['title'] != '') {
-                $buyerSubject = $config->get('sitename') . ' - ' . $status['title'] . ' ' . Text::_('COM_PHOCACART_ORDER_NR') . ': ' . $replacements['ordernumber'] . ' - ' . $giftVoucherText;
-            }
-
-            $buyerBody = PhocacartText::completeText($buyerBody, $replacements, 1);
-            $buyerBody = PhocacartText::completeTextFormFields($buyerBody, $addresses['b'], $addresses['s']);
-
-            // All - users or others get the documents in user language - to save the memory when creating e.g. PDF documents. Even it is better that others see
-            // which language version the customer got
-            $pLang->setLanguage($order->user_lang);
-        }
-
-        // Prepare PDF
-        if (Pdf::load() && in_array($status['email_gift_format'], [1, 2])) {
-            $orderNumber = PhocacartOrder::getOrderNumber($order->id, $order->date, $order->order_number);
-
-            $pdfData     = [
-                'title' => Text::_('COM_PHOCACART_ORDER_NR') . ': ' . $orderNumber . ' - ' . $giftVoucherText,
-                'filename' => strip_tags($giftVoucherText . '_' . $orderNumber) . '.pdf',
-            ];
-
-            // Initialize PDF for buyer which gets all the coupons
-            // we need to initilaize PDF here because we need tcpdf classed in template output
-            $pdf      = new stdClass();
-            $content  = new stdClass();
-            $document = new stdClass();
-            Pdf::initializePdf($pdf, $content, $document, $pdfData);
-        }
-
-        // Start to prepare gift vouchers (HTML or PDF) based on recipients
         foreach ($gifts as $gift) {
-            $recipientUnique = $gift['gift_recipient_email'];
+            $recipients[$gift['gift_recipient_email']]->gifts[]                        = $gift;
+            $recipients[$gift['gift_recipient_email']]->mailData['emailgiftrecipient'] = $gift['gift_recipient_email'];
+            $recipients[$gift['gift_recipient_email']]->mailData['namegiftrecipient']  = $gift['gift_recipient_name'] ?? '';
+            $recipients[$gift['gift_recipient_email']]->mailData['namegiftsender']     = $gift['gift_sender_name'] ?? '';
+            $recipients[$gift['gift_recipient_email']]->mailData['validtogift']        = $gift['valid_to'] ? HTMLHelper::date($gift['valid_to'], Text::_('DATE_FORMAT_LC1')) : '';
+        }
 
-            // Gift voucher rendered to mail: create body for buyer but even for all gift voucher recipients
-            if ($status['email_gift_format'] == 0 || $status['email_gift_format'] == 2) {
-                $d               = $gift;
-                $d['typeview']   = 'Order';
-                $d['product_id'] = $gift['gift_product_id'];
+        $pdfLayout = new FileLayout('gift_voucher', null, ['component' => 'com_phocacart', 'client' => 0]);
+        $price     = new PhocacartPrice();
 
-                $d['discount']   = $price->getPriceFormat($gift['discount']);
-                $d['valid_from'] = HTMLHelper::date($gift['valid_from'], Text::_('DATE_FORMAT_LC3'));
-                $d['valid_to']   = HTMLHelper::date($gift['valid_to'], Text::_('DATE_FORMAT_LC3'));
-                $d['format']     = 'mail';
+        if (in_array($status['email_gift_format'], [1, 2]) && Pdf::load()) {
+            // Prepare PDF data
+            foreach ($recipients as $recipient) {
+                foreach ($recipient->gifts as $gift) {
+                    $displayData               = $gift;
+                    $displayData['typeview']   = 'Order';
+                    $displayData['product_id'] = $gift['gift_product_id'];
 
-                $layoutOutput = $layout->render($d);
+                    $displayData['discount']   = $price->getPriceFormat($gift['discount']);
+                    $displayData['valid_from'] = HTMLHelper::date($gift['valid_from'], Text::_('DATE_FORMAT_LC3'));
+                    $displayData['valid_to']   = HTMLHelper::date($gift['valid_to'], Text::_('DATE_FORMAT_LC3'));
+                    $displayData['format']     = 'pdf';
 
-                // Render each coupon to buyer body
-                $buyerBody .= $layoutOutput;
-                $buyerBody .= '<div>&nbsp;</div>';
+                    // recipient PDF content
+                    $displayData['pdf_instance'] = $recipient->pdf; // we need tcpdf instance in output to use different tcpdf functions
+                    $recipient->attachments[]    = $pdfLayout->render($displayData);
 
-                // Render each coupon to each recipient body
-                if (!isset($bodyRecipient[$recipientUnique])) {
-                    $bodyRecipient[$recipientUnique]                     = array();// Each recipient will have own body
-                    $bodyRecipient[$recipientUnique]['body_initialized'] = true;
-                    $bodyRecipient[$recipientUnique]['data']             = $gift;
-                    $bodyRecipient[$recipientUnique]['output']           = '';
+                    // buyer PDF content (receives all vouchers)
+                    $displayData['pdf_instance'] = $buyer->pdf; // we need tcpdf instance in output to use different tcpdf functions
+                    $buyer->attachments[]        = $pdfLayout->render($displayData);
                 }
+            }
 
-                if (isset($bodyRecipient[$recipientUnique]['body_initialized']) && $bodyRecipient[$recipientUnique]['body_initialized']) {
-                    $bodyRecipient[$recipientUnique]['output'] .= $layoutOutput;
-                    $bodyRecipient[$recipientUnique]['output'] .= '<div>&nbsp;</div>';
-                }
+            // Create PDFs for recipients
+            foreach ($recipients as $recipient) {
+                $pdfData['output']      = implode('<div>&nbsp;</div>', $recipient->attachments);
+                $recipient->pdfFile     = PhocaPDFRender::renderInitializedPdf($recipient->pdf, $recipient->pdfContent, $recipient->pdfDocument, $pdfData);
+                $recipient->pdfFileName = $pdfData['filename'];
+            }
+
+            // Create DPF for buyer
+            if ($buyer) {
+                $pdfData['output']  = implode('<div>&nbsp;</div>', $buyer->attachments);
+                $buyer->pdfFile     = PhocaPDFRender::renderInitializedPdf($buyer->pdf, $buyer->pdfContent, $buyer->pdfDocument, $pdfData);
+                $buyer->pdfFileName = $pdfData['filename'];
+            }
+        }
+
+        if ($buyer) {
+            $recipients[] = $buyer;
+        }
+
+        $allSent = true;
+        foreach ($recipients as $recipient) {
+            if ($recipient->isBuyer) {
+                $mailer = new MailTemplate('com_phocacart.order_status.gift_notification.' . $status['id'], $order->user_lang);
             } else {
-                // We don't send the voucher in email body but e.g. only as PDF so we still need to initiate mail body for recipient
-                if (!isset($bodyRecipient[$recipientUnique])) {
-                    $bodyRecipient[$recipientUnique]                     = array();// Each recipient will have own body
-                    $bodyRecipient[$recipientUnique]['body_initialized'] = true;
-                    $bodyRecipient[$recipientUnique]['data']             = $gift;
-                    $bodyRecipient[$recipientUnique]['output']           = '';
-                }
+                $mailer = new MailTemplate('com_phocacart.order_status.gift.' . $status['id'], $order->user_lang);
             }
 
-            if (Pdf::load() && in_array($status['email_gift_format'], [1, 2])) {
-                $d               = $gift;
-                $d['typeview']   = 'Order';
-                $d['product_id'] = $gift['gift_product_id'];
+            $recipient->mailData['gift_count']    = count($recipient->gifts);
+            $recipient->mailData['gift_multiple'] = count($recipient->gifts) > 1;
+            $recipient->mailData['html.document'] = MailHelper::renderGiftBody($order, 'html', $gifts, $recipient->mailData);
+            $recipient->mailData['text.document'] = MailHelper::renderGiftBody($order, 'text', $gifts, $recipient->mailData);
 
-                $d['discount']   = $price->getPriceFormat($gift['discount']);
-                $d['valid_from'] = HTMLHelper::date($gift['valid_from'], Text::_('DATE_FORMAT_LC3'));
-                $d['valid_to']   = HTMLHelper::date($gift['valid_to'], Text::_('DATE_FORMAT_LC3'));
-                $d['format']     = 'pdf';
+            $mailer->addTemplateData($recipient->mailData);
+            $mailer->addInlineImage(\PhocacartUtils::getComponentParameters()->get('store_logo'));
 
-                // Render each coupon to buyer PDF
-                $d['pdf_instance'] = $pdf;// we need tcpdf instance in output to use different tcpdf functions
-                $attachmentBuyer   .= $layout->render($d);
+            foreach ($recipient->gifts as $gift) {
+                $mailer->addInlineImage($gift['gift_image'], 'gift-image-' . $gift['id']);
+            }
 
+            if ($recipient->pdfFile) {
+                $mailer->addAttachment($recipient->pdfFileName, $recipient->pdfFile);
+            }
 
-                // Because of token in tcpdf, each recipient needs own tcpdf instance
-                // Initialize PDF for each recipient
-                // we need to initilaize PDF here because we need tcpdf classed in template output
-                if (!isset($attachmentRecipient[$recipientUnique]['pdf_initialized'])) {
-                    $attachmentRecipient[$recipientUnique]                    = array();
-                    $attachmentRecipient[$recipientUnique]['pdf_initialized'] = true;
-                    $attachmentRecipient[$recipientUnique]['pdf']             = new stdClass();
-                    $attachmentRecipient[$recipientUnique]['content']         = new stdClass();
-                    $attachmentRecipient[$recipientUnique]['document']        = new stdClass();
-                    $attachmentRecipient[$recipientUnique]['count']           = 0;
-                    $attachmentRecipient[$recipientUnique]['output']          = '';
-                    Pdf::initializePdf($attachmentRecipient[$recipientUnique]['pdf'], $attachmentRecipient[$recipientUnique]['content'], $attachmentRecipient[$recipientUnique]['document'], $pdfData);
+            $mailer->addRecipient($recipient->email);
+            try {
+                if ($mailer->send()) {
+                    $app = Factory::getApplication();
+                } else {
+                    $allSent = false;
+                    PhocacartLog::add(2, 'Order Status - Notify - ERROR - Gift voucher not sent', $order->id, 'Email with gift voucher not sent to (' . $recipient->email . ')');
                 }
-
-                if (isset($attachmentRecipient[$recipientUnique]['pdf_initialized']) && $attachmentRecipient[$recipientUnique]['pdf_initialized']) {
-                    $d['pdf_instance']                               = $attachmentRecipient[$recipientUnique]['pdf'];// we need tcpdf instance in output to use different tcpdf functions
-                    $attachmentRecipient[$recipientUnique]['output'] .= $layout->render($d);
-                    $attachmentRecipient[$recipientUnique]['count']++;
-                }
+            }
+            catch (\Exception $exception) {
+                Factory::getApplication()->enqueueMessage(Text::_($exception->errorMessage()), 'warning');
             }
         }
 
-        // Send mail to buyer
-        if ($buyerEmail && $attachmentBuyer) {
-            $pdfData['output']          = $attachmentBuyer;
-
-            $buyerAttachmentContent     = PhocaPDFRender::renderInitializedPdf($pdf, $content, $document, $pdfData);
-            $buyerAttachmentName        = $pdfData['filename'];
-
-            $pLang->setLanguageBack();
-
-            // CUSTOMER
-            self::handleLangPlugin($pLang, $order, $buyerSubject);
-            self::handleLangPlugin($pLang, $order, $buyerBody);
-
-            $notifyGift = PhocacartEmail::sendEmail('', '', $buyerEmail, $buyerSubject, $buyerBody, true, null, null, null, $buyerAttachmentContent, $buyerAttachmentName);
-
-            if (!$notifyGift) {
-                PhocacartLog::add(2, 'Order Status - Notify - ERROR - Gift voucher not sent', $order->id, 'Email with gift voucher not sent to buyer (' . $buyerEmail . ')');
-            }
-        }
-
-        // Send mail to all recipients
-        foreach ($recipientsEmails as $k => $v) {
-            if (isset($bodyRecipient[$k]['output']) /*&& $bodyRecipient[$k]['output'] != '' - body (built by voucher) can be empty if we set the voucher in PDF only*/) {
-
-                $sitename           = $config->get('sitename');
-                $recipientEmptyBody = 0;
-                if ($status['email_text_gift_recipient'] == '') {
-                    $recipientEmptyBody = 1;
-                }
-                $recipientBody = $status['email_text_gift_recipient'];
-
-                $replacements                         = PhocacartText::prepareReplaceText($orderView, $order->id, $order, $addresses, $status);
-                $replacements['emailgiftrecipient'] = $v;// Overwrites the $replacements
-                $replacements['namegiftrecipient']  = isset($bodyRecipient[$k]['data']['gift_recipient_name']) ? $bodyRecipient[$k]['data']['gift_recipient_name'] : '';
-                $replacements['namegiftsender']     = isset($bodyRecipient[$k]['data']['gift_sender_name']) ? $bodyRecipient[$k]['data']['gift_sender_name'] : '';
-                $replacements['validtogift']        = isset($bodyRecipient[$k]['data']['valid_to']) ? HTMLHelper::date($bodyRecipient[$k]['data']['valid_to'], Text::_('DATE_FORMAT_LC1')) : '';
-
-
-                if (isset($attachmentRecipient[$k]['count']) && (int) $attachmentRecipient[$k]['count'] > 1) {
-                    $giftVoucherText = Text::_('COM_PHOCACART_GIFT_VOUCHERS');
-                }
-
-                if ($status['email_subject_gift_recipient'] != '') {
-                    $recipientSubject = PhocacartText::completeText($status['email_subject_gift_recipient'], $replacements, 3);
-                } else if ($status['title'] != '') {
-                    $recipientSubject = $sitename . ' - ' . $status['title'] . ' ' . Text::_('COM_PHOCACART_ORDER_NR') . ': ' . $replacements['ordernumber'] . ' - ' . $giftVoucherText;
-                }
-
-                if (isset($bodyRecipient[$k]['output']) /*&& $bodyRecipient[$k]['output'] != ''*/) {
-                    $recipientBody = $recipientBody . $bodyRecipient[$k]['output'];
-                    $recipientBody = PhocacartText::completeText($recipientBody, $replacements, 3);
-                    $recipientBody = PhocacartText::completeTextFormFields($recipientBody, $addresses['b'], $addresses['s']);
-                }
-
-
-                $recipientAttachmentContent = '';
-                $recipientAttachmentName    = '';
-
-                if (isset($attachmentRecipient[$k]['output']) && $attachmentRecipient[$k]['output'] != '' && isset($attachmentRecipient[$k]['pdf']) && $attachmentRecipient[$k]['content'] && $attachmentRecipient[$k]['document']) {
-
-                    // Initialize new PDF for each recipient
-                    $pdf                  = new stdClass();
-                    $content              = new stdClass();
-                    $document             = new stdClass();
-                    $pdfData['output'] = '';
-                    PhocaPDFRender::initializePdf($pdf, $content, $document, $pdfData);
-
-                    $pdfData['output']          = $attachmentRecipient[$k]['output'];
-                    $recipientAttachmentContent    = PhocaPDFRender::renderInitializedPdf($attachmentRecipient[$k]['pdf'], $attachmentRecipient[$k]['content'], $attachmentRecipient[$k]['document'], $pdfData);
-                    $recipientAttachmentName       = $pdfData['filename'];
-                }
-
-                $pLang->setLanguageBack();
-
-                // CUSTOMER
-                self::handleLangPlugin($pLang, $order, $recipientSubject);
-                self::handleLangPlugin($pLang, $order, $recipientBody);
-
-                if ($recipientEmptyBody == 1) {
-                    $recipientBody = Text::_('COM_PHOCACART_ORDER_NR') . ': ' . $orderNumber . ' - ' . $giftVoucherText . '<br>' . $recipientBody;
-                }
-
-                $notifyGift = PhocacartEmail::sendEmail('', '', $v, $recipientSubject, $recipientBody, true, null, null, null, $recipientAttachmentContent, $recipientAttachmentName);
-
-                if (!$notifyGift) {
-                    PhocacartLog::add(2, 'Order Status - Notify - ERROR - Gift voucher not sent', $order->id, 'Email with gift voucher not sent to recipient (' . $v . ')');
-                }
+        if ($app->isClient('administrator')) {
+            if ($allSent) {
+                $app->enqueueMessage(Text::_('COM_PHOCACART_EMAIL_GIFTS_SENT'));
+            } else {
+                $app->enqueueMessage(Text::_('COM_PHOCACART_EMAIL_GIFTS_NOT_SENT'), $app::MSG_WARNING);
             }
         }
     }
