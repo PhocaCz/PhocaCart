@@ -68,6 +68,8 @@ class PhocaCartCpViewPhocacartReports extends HtmlView
 			switch ($this->t['report_type']) {
 
 				case 2:
+				case 3:
+				case 4:
 
 
 					$this->items	= $this->get('Items');

@@ -354,8 +354,10 @@ class PhocacartUtilsSettings
     public static function getReportTypes() {
 		return array(
 			0 => Text::_('COM_PHOCACART_DEFAULT'),
-			1 => Text::_('COM_PHOCACART_DEFAULT_STATUS_DATE'),
+			1 => Text::_('COM_PHOCACART_DEFAULT_PAYMENT_DATE'),
             2 => Text::_('COM_PHOCACART_PRODUCTS'),
+            3 => Text::_('COM_PHOCACART_SHIPPING'),
+            4 => Text::_('COM_PHOCACART_PAYMENT'),
 		);
 	}
 
@@ -363,6 +365,21 @@ class PhocacartUtilsSettings
 
         $a = [];
         $types = self::getReportTypes();
+        foreach($types as $k => $v) {
+            $a[] = HTMLHelper::_('select.option', $k, $v, 'value', 'text');
+        }
+
+        return $a;
+    }
+
+    public static function getPaymentTypesForm() {
+
+        $a = [];
+        $types = array(
+            0 => Text::_('COM_PHOCACART_ALL'),
+            1 => Text::_('COM_PHOCACART_PAID'),
+            2 => Text::_('COM_PHOCACART_UNPAID'),
+        );
         foreach($types as $k => $v) {
             $a[] = HTMLHelper::_('select.option', $k, $v, 'value', 'text');
         }

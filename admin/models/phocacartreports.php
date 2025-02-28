@@ -60,6 +60,9 @@ class PhocaCartCpModelPhocacartReports extends ListModel
 		$reportType = $app->getUserStateFromRequest($this->context.'.filter.report_type', 'filter_report_type', '');
 		$this->setState('filter.report_type', $reportType);
 
+		$paymentType = $app->getUserStateFromRequest($this->context.'.filter.payment_type', 'filter_payment_type', '');
+		$this->setState('filter.payment_type', $paymentType);
+
 		$orderStatus = $app->getUserStateFromRequest($this->context.'.filter.order_status', 'filter_order_status', '');
 		$this->setState('filter.order_status', $orderStatus);
 
@@ -95,6 +98,7 @@ class PhocaCartCpModelPhocacartReports extends ListModel
 		$id	.= ':'.$this->getState('filter.shop_type');
 		$id	.= ':'.$this->getState('filter.report_type');
 		$id	.= ':'.$this->getState('filter.order_status');
+		$id	.= ':'.$this->getState('filter.payment_type');
 
 		return parent::getStoreId($id);
 	}
@@ -104,10 +108,15 @@ class PhocaCartCpModelPhocacartReports extends ListModel
 		$db		= $this->getDbo();
 		$query	= $db->getQuery(true);
 
+
+		// STATUS DATE CHANGED TO PAYMENT DATE!
+
 		// STATUS DATE 1)
 		// reportType = 1 - info about status and status date - a) status needs to be selected, b) this type needs to be selected then status date will be displayed
 		// status date = first date when the status was changes. E.g. if system set the status to paid, print the date of paying.
 		$reportType = $this->getState('filter.report_type', 0);
+
+		$paymentType = $this->getState('filter.payment_type', 0);
 
 
 
@@ -116,7 +125,7 @@ class PhocaCartCpModelPhocacartReports extends ListModel
 			$query->select(
 				$this->getState(
 					'list.select',
-					'op.id, op.order_id, op.product_id, op.product_id_key, op.title, op.netto, op.tax, op.brutto, op.quantity'
+					'op.id, op.order_id, op.product_id, op.product_id_key, op.title, op.netto, op.tax, op.brutto, op.quantity, a.payment_date'
 				)
 			);
 			$query->from('`#__phocacart_order_products` AS op');
@@ -171,6 +180,12 @@ class PhocaCartCpModelPhocacartReports extends ListModel
 				$dateFrom = $db->Quote($dateFrom);
 				$dateTo   = $db->Quote($dateTo);
 				$query->where('DATE(a.date) >= ' . $dateFrom . ' AND DATE(a.date) <= ' . $dateTo);
+
+				if ($paymentType == 1) {
+					$query->where('DATE(a.payment_date) >= ' . $dateFrom . ' AND DATE(a.payment_date) <= ' . $dateTo);
+				} else if ($paymentType == 2) {
+					$query->where('a.payment_date IS NULL');
+				}
 			}
 
 			$currency = $this->getState('filter.currency', 0);
@@ -202,6 +217,77 @@ class PhocaCartCpModelPhocacartReports extends ListModel
 			$query->order($db->escape($orderCol . ' ' . $orderDirn));
 
 
+		} else if ($reportType == 3 || $reportType == 4) {
+			// SHIPPING  OR PAYMENT STAT
+			$query->select(
+				$this->getState(
+					'list.select',
+					'ot.id, ot.order_id, ot.type, ot.amount, a.payment_date, a.shipping_id, a.payment_id, s.title as stitle, p.title as ptitle'
+				)
+			);
+			$query->from('`#__phocacart_order_total` AS ot');
+
+			$query->join('LEFT', '#__phocacart_orders AS a ON ot.order_id = a.id');
+
+			$query->join('LEFT', '#__phocacart_shipping_methods AS s ON a.shipping_id = s.id');
+
+			$query->join('LEFT', '#__phocacart_payment_methods AS p ON a.payment_id = p.id');
+
+			if ($reportType == 3) {
+				$query->where('(ot.type = \'snetto\' OR ot.type = \'stax\' OR ot.type = \'sbrutto\')');
+			} else {
+				$query->where('(ot.type = \'pnetto\' OR ot.type = \'ptax\' OR ot.type = \'pbrutto\')');
+			}
+
+
+			// Test each method
+			//$query->where('a.shipping_id = 5');
+
+			// Filter by search in title
+			$dateFrom = $this->getState('filter.date_from', PhocacartDate::getCurrentDate(30));
+			$dateTo   = $this->getState('filter.date_to', PhocacartDate::getCurrentDate());
+
+			if ($dateTo != '' && $dateFrom != '') {
+				$dateFrom = $db->Quote($dateFrom);
+				$dateTo   = $db->Quote($dateTo);
+				$query->where('DATE(a.date) >= ' . $dateFrom . ' AND DATE(a.date) <= ' . $dateTo);
+
+				if ($paymentType == 1) {
+					$query->where('DATE(a.payment_date) >= ' . $dateFrom . ' AND DATE(a.payment_date) <= ' . $dateTo);
+				} else if ($paymentType == 2) {
+					$query->where('a.payment_date IS NULL');
+				}
+			}
+
+			$currency = $this->getState('filter.currency', 0);
+			if ($currency > 0) {
+				$query->where('a.currency_id = ' . (int)$currency);
+			}
+			$shopType = $this->getState('filter.shop_type', 0);
+			if ($shopType > 0) {
+				$query->where('a.type = ' . (int)$shopType);
+			}
+
+			/*$reportType = $this->getState('filter.report_type', 0);
+			if ($reportType > 0) {
+				//$query->where('a.type = '.(int)$reportType );
+			}*/
+
+			$orderStatus = $this->getState('filter.order_status', 0);
+			if ($orderStatus > 0) {
+				$query->where('a.status_id = ' . (int)$orderStatus);
+			}
+
+			//$query->group('a.id');
+
+
+			$orderCol  = $this->state->get('list.ordering', 'a.date');
+			$orderDirn = $this->state->get('list.direction', 'DESC');
+
+
+			$query->order($db->escape($orderCol . ' ' . $orderDirn));
+
+
 		} else {
 			// DEFAULT
 
@@ -211,7 +297,7 @@ class PhocaCartCpModelPhocacartReports extends ListModel
 					'list.select',
 					//- 'a.id, DATE(a.date) AS date_only, COUNT(DATE(a.date)) AS count_orders'
 					//'DATE(a.date) AS date_only, COUNT(DATE(a.date)) AS count_orders'
-					'a.id, a.date, a.order_number, a.currency_id, a.currency_code, a.currency_exchange_rate, a.type, a.payment_id'
+					'a.id, a.date, a.order_number, a.currency_id, a.currency_code, a.currency_exchange_rate, a.type, a.payment_id, a.payment_date'
 				)
 			);
 			$query->from('`#__phocacart_orders` AS a');
@@ -263,7 +349,16 @@ class PhocaCartCpModelPhocacartReports extends ListModel
 				$dateFrom = $db->Quote($dateFrom);
 				$dateTo   = $db->Quote($dateTo);
 				$query->where('DATE(a.date) >= ' . $dateFrom . ' AND DATE(a.date) <= ' . $dateTo);
+
+				if ($paymentType == 1) {
+					$query->where('DATE(a.payment_date) >= ' . $dateFrom . ' AND DATE(a.payment_date) <= ' . $dateTo);
+				} else if ($paymentType == 2) {
+					$query->where('a.payment_date IS NULL');
+				}
 			}
+
+
+
 
 			$currency = $this->getState('filter.currency', 0);
 			if ($currency > 0) {

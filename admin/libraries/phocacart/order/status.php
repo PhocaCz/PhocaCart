@@ -17,6 +17,7 @@ use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Filesystem\Path;
+use Joomla\Registry\Registry;
 use Phoca\PhocaCart\Container\Container;
 use Phoca\PhocaCart\Dispatcher\Dispatcher;
 use Phoca\PhocaCart\Exception\PhocaCartException;
@@ -193,6 +194,18 @@ class PhocacartOrderStatus
                 $db->execute();
             }
         }
+    }
+
+    private static function updatePaymentDate($orderId){
+
+        $db			= Factory::getDBO();
+        $date     = gmdate('Y-m-d H:i:s');
+        $query = 'UPDATE #__phocacart_orders SET'
+                .' payment_date = '. $db->quote($date)
+                .' WHERE id = '.(int)$orderId;
+        $db->setQuery($query);
+        $db->execute();
+
     }
 
     private static function updateDownload(int $orderId, $status): void
@@ -590,6 +603,7 @@ class PhocacartOrderStatus
 	 * $emailSend  0 ... no  1 ... order, 2 ... invoice, 3 ... delivery_note,  99 ... defined in order status settings
 	 * $emailSend  0 ... html  1 ... pdf, 2 ... both,  99 ... defined in order status settings
 	 * $stockMovements  = ... no  + ... plus - ... minus 99 ... defined in order status settings
+	 * Possible To Do:  $changePaymentDate = 0 ... no  1 ... yes 99 ... defined in order status settings
 	 */
 
 	public static function changeStatus($orderId, $statusId, $orderToken = '',
@@ -664,6 +678,21 @@ class PhocacartOrderStatus
         if ($changePointsReceived == '99') {
             $changePointsReceived = $status['change_points_received'];
         }
+
+        /* Payment date is automatically set by order status, this cannot be changed when editing status
+         * Payment date can be changed in edit of order
+        /*
+        if ($changePaymentDate == '99') {
+            $changePaymentDate = $status['change_payment_date'];
+        }*/
+        $registry = new Registry($status['params']);
+        $statusParams = $registry->toArray();
+
+        if (isset($statusParams['order_paid']) && $statusParams['order_paid'] == 1 && !$order->payment_date) {
+            //self::updatePaymentDate($order->id, $changePaymentDate);
+            self::updatePaymentDate($order->id);
+        }
+
 
         self::updateStock($order->id, $statusId, $stockMovements);
         self::updateUserGroup((int) $changeUserGroup, (int) $order->user_id);

@@ -13,6 +13,7 @@ use Joomla\CMS\Language\Text;
 
 $layout 	= new FileLayout('report', null, array('component' => 'com_phocacart'));
 $layoutP 	= new FileLayout('report_products', null, array('component' => 'com_phocacart'));
+$layoutSP 	= new FileLayout('report_shipping_payment', null, array('component' => 'com_phocacart'));
 if (!empty($this->items) && !empty($this->t['date_days'])) {
 	$d				= array();
 	$d['s']         = $this->s;
@@ -54,6 +55,10 @@ if (!empty($this->items) && !empty($this->t['date_days'])) {
 
 	if ($this->t['report_type'] == 2) {
 		echo $layoutP->render($d);
+	} else if ($this->t['report_type'] == 3) {
+		echo $layoutSP->render($d);
+	} else if ($this->t['report_type'] == 4) {
+		echo $layoutSP->render($d);
 	} else {
 		echo $layout->render($d);
 	}

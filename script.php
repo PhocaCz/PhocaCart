@@ -31,7 +31,13 @@ class com_phocacartInstallerScript
 		'plg_pcs_shipping_standard',
 		'plg_pcp_pos_cash',
 		'plg_system_phocacart',
+        'plg_webservices_phocacart'
 	];
+
+    /*
+     * 'plugins/pca',
+     * 'plugins/pct',
+     */
 
 	private $createFolders = [
 		'images/phocacartcategories',
@@ -40,11 +46,10 @@ class com_phocacartInstallerScript
 		'phocacartdownloadpublic',
 		'phocacartattachment',
 		'plugins/pcs',
-		'plugins/pcs',
-		'plugins/pcs',
-		'plugins/pcs',
-		'plugins/pcs',
-		'plugins/pcs',
+		'plugins/pcp',
+		'plugins/pcv',
+		'plugins/pcf',
+		'plugins/pcl'
 	];
 
 	function createFolders() {

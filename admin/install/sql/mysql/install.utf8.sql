@@ -1211,6 +1211,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_orders` (
 	`ordering` int(11) NOT NULL DEFAULT '0',
 	`date` datetime NOT NULL,
 	`modified` datetime NOT NULL,
+	`payment_date` datetime,
 	`params` text,
 	`params_shipping` text,
 	`params_payment` text,

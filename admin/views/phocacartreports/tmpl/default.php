@@ -141,6 +141,17 @@ echo '<div class="ph-inline-param">'. "\n"
 .'</div>'. "\n";
 
 
+$listPaymentType	= $this->escape($this->state->get('filter.payment_type'));
+$paymentTypes 		= PhocacartUtilsSettings::getPaymentTypesForm();
+array_unshift($paymentTypes, HTMLHelper::_('select.option', '', '' . Text::_('COM_PHOCACART_SELECT_PAYMENT_STATUS') . '', 'value', 'text', true));
+echo '<div class="ph-inline-param">'. "\n"
+.'<label for="sortTable" class="element-invisible">'.Text::_('COM_PHOCACART_SELECT_PAYMENT_STATUS').'</label>'. "\n"
+.'<select class="form-select" name="filter_payment_type" id="paymentTypeTable" class="input-medium">'. "\n"
+. HTMLHelper::_('select.options', $paymentTypes, 'value', 'text', $listPaymentType). "\n"
+.'</select>'. "\n"
+.'</div>'. "\n";
+
+
 $listReportType	= $this->escape($this->state->get('filter.report_type'));
 $reportTypes 		= PhocacartUtilsSettings::getReportTypesForm();
 if ($listReportType == '') {

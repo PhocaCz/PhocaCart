@@ -265,6 +265,8 @@ ALTER TABLE `#__phocacart_shipping_methods` ADD COLUMN `change_tax` tinyint(1) N
 
 INSERT IGNORE INTO `#__mail_templates` (`template_id`, `extension`, `language`, `subject`, `body`, `htmlbody`, `attachments`, `params`) VALUES
     ('com_phocacart.watchdog', 'com_phocacart', '', 'COM_PHOCACART_EMAIL_WATCHDOG_SUBJECT', 'COM_PHOCACART_EMAIL_WATCHDOG_BODY', 'COM_PHOCACART_EMAIL_WATCHDOG_HTMLBODY', '', '{"tags":["user_name","user_username","user_email","products","product_title","product_sku","product_link","product_url","site_name","site_link","site_url"]}');
+
+-- 5.0.0 Beta103
 INSERT IGNORE INTO `#__mail_templates` (`template_id`, `extension`, `language`, `subject`, `body`, `htmlbody`, `attachments`, `params`) VALUES
     ('com_phocacart.question', 'com_phocacart', '', 'COM_PHOCACART_EMAIL_QUESTION_SUBJECT', 'COM_PHOCACART_EMAIL_QUESTION_BODY', 'COM_PHOCACART_EMAIL_QUESTION_HTMLBODY', '', '{"tags":["name","email","phone","product_title","product_long_title","product_sku","product_link","product_url","category_title","category_long_title","category_link","category_url","site_name","site_link","site_url"]}');
 INSERT IGNORE INTO `#__mail_templates` (`template_id`, `extension`, `language`, `subject`, `body`, `htmlbody`, `attachments`, `params`) VALUES
@@ -273,3 +275,5 @@ INSERT INTO `#__mail_templates` (`template_id`, `extension`, `language`, `subjec
     ('com_phocacart.submit_item', 'com_phocacart', '', 'COM_PHOCACART_EMAIL_SUBMIT_ITEM_SUBJECT', 'COM_PHOCACART_EMAIL_SUBMITE_ITEM_BODY', 'COM_PHOCACART_EMAIL_SUBMIT_ITEM_HTMLBODY', '', '{"tags":["user_name","user_username","user_email","products","product_title","product_sku","product_url","site_name","site_url"]}');
 INSERT INTO `#__mail_templates` (`template_id`, `extension`, `language`, `subject`, `body`, `htmlbody`, `attachments`, `params`) VALUES
     ('com_phocacart.submit_item.admin', 'com_phocacart', '', 'COM_PHOCACART_EMAIL_SUBMIT_ITEM_ADMIN_SUBJECT', 'COM_PHOCACART_EMAIL_SUBMITE_ITEM_ADMIN_BODY', 'COM_PHOCACART_EMAIL_SUBMIT_ITEM_ADMIN_HTMLBODY', '', '{"tags":["user_name","user_username","user_email","products","product_title","product_sku","product_url","site_name","site_url"]}');
+
+ALTER TABLE `#__phocacart_orders` ADD COLUMN `payment_date` datetime;

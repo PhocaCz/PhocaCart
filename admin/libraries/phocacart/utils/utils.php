@@ -19,7 +19,7 @@ use Joomla\CMS\Table\Table;
 use Joomla\CMS\Version;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
-class PhocaCartUtils
+class PhocacartUtils
 {
 
 	private static $pluginId = [];

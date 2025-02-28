@@ -24,7 +24,7 @@ $p['report_header'] 			= $d['params']->get( 'report_header', '');
 $cRDoc 		= 'class="ph-report-doc"';
 $cRHead 	= 'class="ph-report-header"';
 $cRDate     = 'class="ph-report-date"';
-$cRProductTitle 	= 'class="ph-report-product-title"';
+$cRItemTitle 	= 'class="ph-report-product-title"';
 $cRT 		= 'class="ph-report-table"';
 $cRTRH 		= 'class="ph-report-table-row-header"';
 $cRTRHC 	= 'class="ph-report-table-row-header-col"';
@@ -58,7 +58,7 @@ switch($d['format']) {
 		$cRON		= 'style="text-align:center;border: 1px solid #f0f0f0;padding:5px;"';
 		$cRC		= 'style="text-align:left;border: 1px solid #f0f0f0;padding:5px;"';
 		$cRB		= 'style="font-weight:bold"';
-        $cRProductTitle = 'style="text-align:left;border: 1px solid #f0f0f0;padding:0;"';
+        $cRItemTitle = 'style="text-align:left;border: 1px solid #f0f0f0;padding:0;"';
 		$cRQty		= 'style="text-align:center;border: 1px solid #f0f0f0;padding:5px;"';
 		$cRNetto	= 'style="text-align:right;border: 1px solid #f0f0f0;padding:5px;"';
 		$cRTax		= 'style="text-align:right;border: 1px solid #f0f0f0;padding:5px;"';
@@ -84,7 +84,7 @@ switch($d['format']) {
 		$cRON		= 'style="text-align:center;border: 1pt solid #f0f0f0;"';
 		$cRC		= 'style="text-align:left;border: 1pt solid #f0f0f0;padding:5px;"';
 		$cRB		= 'style="font-weight:bold"';
-		$cRProductTitle		= 'style="text-align:left;border: 1pt solid #f0f0f0;"';
+		$cRItemTitle		= 'style="text-align:left;border: 1pt solid #f0f0f0;"';
         $cRQty		= 'style="text-align:center;border: 1pt solid #f0f0f0;"';
 		$cRNetto	= 'style="text-align:right;border: 1pt solid #f0f0f0;"';
 		$cRTax		= 'style="text-align:right;border: 1pt solid #f0f0f0;"';
@@ -126,9 +126,14 @@ if ($d['format'] == 'raw' || $d['format'] == 'pdf') {
 // HEADER
 echo '<table '.$cRT.'>';
 echo '<tr '.$cRTRH.'>';
-echo '<th '.$cRTRHC.'>'.Text::_('COM_PHOCACART_PRODUCT').'</th>';
+if ($d['report_type'] == 3) {
+    echo '<th '.$cRTRHC.'>'.Text::_('COM_PHOCACART_SHIPPING_METHOD').'</th>';
+} else {
+    echo '<th '.$cRTRHC.'>'.Text::_('COM_PHOCACART_PAYMENT_METHOD').'</th>';
+}
+
 //echo '<th '.$cRTRHC.'>'.Text::_('COM_PHOCACART_NUMBER_OF_PRODUCTS_SOLD').'</th>';
-echo '<th '.$cRTRHC.'>'.Text::_('COM_PHOCACART_QTY_SOLD').'</th>';
+echo '<th '.$cRTRHC.'>'.Text::_('COM_PHOCACART_QTY').'</th>';
 
 if ($p['report_display_tax'] == 1) {
 	//echo '<th '.$cRTRHC.'>'.Text::_('COM_PHOCACART_AMOUNT_EXCLUDING_TAX').'</th>'; // TRC
@@ -153,96 +158,109 @@ if ($p['report_display_tax'] == 1) {
 
 echo '</tr>';
 
+
+if ($d['report_type'] == 3) {
+    $netto = 'snetto';
+    $tax = 'stax';
+    $brutto = 'sbrutto';
+} else {
+    $netto = 'pnetto';
+    $tax = 'ptax';
+    $brutto = 'pbrutto';
+}
+
+
 // PREPARE ITEMS
-$products = [];
+$items = [];
+
+
+
+
 foreach($d['items'] as $k => $v) {
 
-    if (!isset($products[$v->product_id_key])){
+    if ($d['report_type'] == 3) {
+        $itemId = $v->shipping_id;
+    } else {
+        $itemId = $v->payment_id;
+    }
 
-        $products[$v->product_id_key]['title'] = $v->title;
+    if (!isset($items[$itemId])){
 
-        if (!empty($v->product_attributes)) {
 
-            $product_attributes = json_decode($v->product_attributes);
+        if ($d['report_type'] == 3) {
+            $items[$itemId]['title'] = $v->stitle;
+        } else {
+            $items[$itemId]['title'] = $v->ptitle;
+        }
 
-            if (!empty($product_attributes)) {
+        if ($v->type == $netto) {
+            $items[$itemId][$netto] = $v->amount;
 
-                $products[$v->product_id_key]['product_attributes_output'] = '';
-                if ($d['format'] == 'pdf') {
-                    $rowPrefix =  '<br><small '.$cRPA.'>';
-                    $rowSuffix =  '</small>';
-                } else {
-
-                    $rowPrefix =  '<div '.$cRPA.'>';
-                    $rowSuffix =  '</div>';
-                }
-                foreach($product_attributes as $k2 => $v2) {
-
-                    if (isset($v2->attribute_title )) {
-                        $products[$v->product_id_key]['product_attributes_output'] .= $rowPrefix . $v2->attribute_title;
-                    }
-                    if (isset($v2->option_title )) {
-                        $products[$v->product_id_key]['product_attributes_output'] .= ': '.$v2->option_title . $rowSuffix;
-                    }
-
-                }
+            // we have 3 rows for each order id, so count only in netto
+            if (!isset($items[$itemId]['quantity'] )) {
+                 $items[$itemId]['quantity'] =  1;
+            } else {
+                 $items[$itemId]['quantity'] =  $items[$itemId]['quantity'] + 1;
             }
         }
 
-        if (isset($v->odp_netto) && $v->odp_netto != ''){
-            $products[$v->product_id_key]['netto'] =  $v->odp_netto * $v->quantity ;
-        } else {
-            $products[$v->product_id_key]['netto'] =  $v->netto * $v->quantity;
+        if ($v->type == $tax) {
+            $items[$itemId][$tax] = $v->amount;
         }
 
-        if (isset($v->odp_tax) && $v->odp_tax != ''){
-            $products[$v->product_id_key]['tax'] =  $v->odp_tax * $v->quantity;
-        } else {
-            $products[$v->product_id_key]['tax'] =  $v->tax * $v->quantity;
+        if ($v->type == $brutto) {
+            $items[$itemId][$brutto] = $v->amount;
         }
-
-        if (isset($v->odp_brutto) && $v->odp_brutto != ''){
-            $products[$v->product_id_key]['brutto'] =  $v->odp_brutto * $v->quantity;
-        } else {
-            $products[$v->product_id_key]['brutto'] =  $v->brutto * $v->quantity;
-        }
-
-        $products[$v->product_id_key]['quantity'] =  $v->quantity;
 
     } else {
-        if (isset($v->odp_netto) && $v->odp_netto != ''){
-            $products[$v->product_id_key]['netto'] +=  ($v->odp_netto * $v->quantity);
-        } else {
-            $products[$v->product_id_key]['netto'] +=  ($v->netto * $v->quantity);
+
+        if ($v->type == $netto) {
+            if (isset($items[$itemId][$netto])) {
+                $items[$itemId][$netto] += $v->amount;
+            } else {
+                 $items[$itemId][$netto] = $v->amount;
+            }
+
+            if (!isset($items[$itemId]['quantity'] )) {
+                 $items[$itemId]['quantity'] =  1;
+            } else {
+                 $items[$itemId]['quantity'] =  $items[$itemId]['quantity'] + 1;
+            }
+
         }
 
-        if (isset($v->odp_tax) && $v->odp_tax != ''){
-            $products[$v->product_id_key]['tax'] +=  ($v->odp_tax * $v->quantity);
-        } else {
-            $products[$v->product_id_key]['tax'] +=  ($v->tax * $v->quantity);
+        if ($v->type == $tax) {
+            if (isset($items[$itemId][$tax])) {
+                $items[$itemId][$tax] += $v->amount;
+            } else {
+                 $items[$itemId][$tax] = $v->amount;
+            }
+
         }
 
-        if (isset($v->odp_brutto) && $v->odp_brutto != ''){
-            $products[$v->product_id_key]['brutto'] +=  ($v->odp_brutto * $v->quantity);
-        } else {
-            $products[$v->product_id_key]['brutto'] +=  ($v->brutto * $v->quantity);
+        if ($v->type == $brutto) {
+            if (isset($items[$itemId][$brutto])) {
+                $items[$itemId][$brutto] += $v->amount;
+            } else {
+                 $items[$itemId][$brutto] = $v->amount;
+            }
+
         }
 
-        $products[$v->product_id_key]['quantity'] +=  $v->quantity;
     }
 }
 
 // ITEMS
-foreach($products as $k => $v) {
+foreach($items as $k => $v) {
+
+    $vNetto = isset($v[$netto]) ? $v[$netto] : 0;
+    $vTax = isset($v[$tax]) ? $v[$tax] : 0;
+    $vBrutto = isset($v[$brutto]) ? $v[$brutto] : 0;
 
 	echo '<tr '.$cRTRI.'>';
 
 	// Product Title
-	echo '<td '.$cRProductTitle.'>'.$v['title'];
-
-    if (isset($v['product_attributes_output']) && $v['product_attributes_output'] != '') {
-        echo $v['product_attributes_output'];
-    }
+	echo '<td '.$cRItemTitle.'>'.$v['title'];
 
     echo '</td>';
 
@@ -254,19 +272,19 @@ foreach($products as $k => $v) {
 
         // Netto
         echo '<td '.$cRNetto.'>';
-        echo isset($v['netto']) ? $price->getPriceFormat($v['netto'], 0, 1): '';
+        echo isset($vNetto) ? $price->getPriceFormat($vNetto, 0, 1): '';
         echo '</td>';
 
         // Tax
         echo '<td '.$cRTax.'>';
-        echo isset($v['tax']) ? $price->getPriceFormat($v['tax'], 0, 1): '';
+        echo isset($vTax) ? $price->getPriceFormat($vTax, 0, 1): '';
         echo '</td>';
 
 	}
 
 	// Brutto
 	echo '<td '.$cRBrutto.'>';
-	echo isset($v['brutto']) ? $price->getPriceFormat($v['brutto'], 0, 1): '';
+	echo isset($vBrutto) ? $price->getPriceFormat($vBrutto, 0, 1): '';
 	echo '</td>';
 
 	echo '</tr>';
