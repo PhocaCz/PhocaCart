@@ -224,14 +224,14 @@ class PhocacartOrderStatus
      * @param   bool                $notifyUser
      * @param   bool                $notifyOthers
      * @param                       $emailSend
-     * @param                       $emailSendFormat
+     * @param   bool                $attachPDF // Attach PDF document to email?
      *
      * @return int  1 ... sent, 0 ... not sent, -1 ... not sent (error)
      *
      * @throws Exception
-     * @since 1.0.0
+     * @since 5.0.0
      */
-    private static function sendOrderEmail(object $order, PhocacartOrderView $orderView, array $status, array $addresses, string $orderToken, bool $notifyUser, bool $notifyOthers, $emailSend, $emailSendFormat): int
+    private static function sendOrderEmail(object $order, PhocacartOrderView $orderView, array $status, array $addresses, string $orderToken, bool $notifyUser, bool $notifyOthers, $emailSend, bool $attachPDF): int
     {
         $recipient       = ''; // Customer/Buyer
         $recipientOthers = ''; // others
@@ -282,40 +282,42 @@ class PhocacartOrderStatus
 
             $document = '';
             $orderRender = new PhocacartOrderRender();
-            if (in_array($emailSendFormat, [0, 2])) {
-                switch ($emailSend) {
-                    case 1: // Order
-                        $documentNumber = $orderNumber;
-                        $attachmentName = strip_tags(Text::_('COM_PHOCACART_ORDER') . '_' . $documentNumber) . '.pdf';
-                        $attachmentTitle = Text::_('COM_PHOCACART_ORDER_NR') . '_' . $documentNumber;
 
-                        break;
-                    case 2: // Invoice
-                        $documentNumber = PhocacartOrder::getInvoiceNumber($order->id, $order->date, $order->invoice_number);
-                        $attachmentName    = strip_tags(Text::_('COM_PHOCACART_INVOICE') . '_' . $documentNumber) . '.pdf';
-                        $attachmentTitle = Text::_('COM_PHOCACART_INVOICE_NR') . '_' . $documentNumber;
+            switch ($emailSend) {
+                case 1: // Order
+                    $documentNumber = $orderNumber;
+                    $attachmentName = strip_tags(Text::_('COM_PHOCACART_ORDER') . '_' . $documentNumber) . '.pdf';
+                    $attachmentTitle = Text::_('COM_PHOCACART_ORDER_NR') . '_' . $documentNumber;
 
-                        if (!$documentNumber) {
-                            PhocacartLog::add(3, 'Status changed - sending email: The invoice should have been attached to the email, but it does not exist yet. Check order status settings and billing settings.', $order->id, 'Order ID: ' . $order->id . ', Status ID: ' . $status['id']);
-                        }
+                    break;
+                case 2: // Invoice
+                    $documentNumber = PhocacartOrder::getInvoiceNumber($order->id, $order->date, $order->invoice_number);
+                    $attachmentName    = strip_tags(Text::_('COM_PHOCACART_INVOICE') . '_' . $documentNumber) . '.pdf';
+                    $attachmentTitle = Text::_('COM_PHOCACART_INVOICE_NR') . '_' . $documentNumber;
 
-                        break;
-                    case 3: // Delivery note
-                        $documentNumber = $orderNumber;
-                        $attachmentName = strip_tags(Text::_('COM_PHOCACART_DELIVERY_NOTE') . '_' . $documentNumber) . '.pdf';
-                        $attachmentTitle = Text::_('COM_PHOCACART_DELIVERY_NOTE_NR') . '_' . $documentNumber;
+                    if (!$documentNumber) {
+                        PhocacartLog::add(3, 'Status changed - sending email: The invoice should have been attached to the email, but it does not exist yet. Check order status settings and billing settings.', $order->id, 'Order ID: ' . $order->id . ', Status ID: ' . $status['id']);
+                    }
 
-                        break;
-                }
+                    break;
+                case 3: // Delivery note
+                    $documentNumber = $orderNumber;
+                    $attachmentName = strip_tags(Text::_('COM_PHOCACART_DELIVERY_NOTE') . '_' . $documentNumber) . '.pdf';
+                    $attachmentTitle = Text::_('COM_PHOCACART_DELIVERY_NOTE_NR') . '_' . $documentNumber;
 
-                if ($documentNumber) {
-                    $document   = $orderRender->render($order->id, $emailSend, 'mail', $orderToken);
-                    $mailData['html.document'] = MailHelper::renderOrderBody($order, 'html', $mailData);
-                    $mailData['text.document'] = MailHelper::renderOrderBody($order, 'text', $mailData);
-                }
+                    break;
+
+                default:
+                    throw new PhocaCartException('Invalid email send value: ' . $emailSend);
             }
 
-            if (Pdf::load() && in_array($emailSendFormat, [1, 2])) {
+            if ($documentNumber) {
+                $document   = $orderRender->render($order->id, $emailSend, 'mail', $orderToken);
+                $mailData['html.document'] = MailHelper::renderOrderBody($order, 'html', $mailData);
+                $mailData['text.document'] = MailHelper::renderOrderBody($order, 'text', $mailData);
+            }
+
+            if ($attachPDF && Pdf::load()) {
                 $attachmentContent = Pdf::renderPdf([
                     'title'    => $attachmentTitle,
                     'filename' => $attachmentName,
@@ -698,7 +700,7 @@ class PhocacartOrderStatus
         self::updateUserGroup((int) $changeUserGroup, (int) $order->user_id);
         self::updatePoints($order->id, $changePointsNeeded, $changePointsReceived);
         self::updateDownload($order->id, $status['download']);
-        $notificationResult = self::sendOrderEmail($order, $orderView, $status, $addresses, $orderToken, $notifyUser, $notifyOthers, $emailSend, $emailSendFormat);
+        $notificationResult = self::sendOrderEmail($order, $orderView, $status, $addresses, $orderToken, $notifyUser, $notifyOthers, $emailSend, !!$emailSendFormat);
         self::sendGiftEmail($order, $orderView, $status, $addresses, $orderToken);
 
         return $notificationResult;
