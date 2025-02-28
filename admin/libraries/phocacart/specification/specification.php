@@ -350,32 +350,34 @@ class PhocacartSpecification
 
 
 
-		$a	= array();
+		$a	= [];
 		if (!empty($specifications)) {
-			foreach($specifications as $k => $v) {
-				if (isset($v->title) && $v->title != '' && isset($v->id) && $v->id != '' && isset($v->alias) && $v->alias != '') {
-					$a[$v->alias]['title']				= $v->title;
-					$a[$v->alias]['id']					= $v->id;
-					$a[$v->alias]['alias']				= $v->alias;
-					if (isset($v->value) && $v->value != '' && isset($v->alias_value) && $v->alias_value != '') {
-						$a[$v->alias]['value'][$v->alias_value] = new stdClass();
-						$a[$v->alias]['value'][$v->alias_value]->title	= $v->value;
-						$a[$v->alias]['value'][$v->alias_value]->id		= $v->id;
-						$a[$v->alias]['value'][$v->alias_value]->alias	= $v->alias_value;
+			foreach($specifications as $v) {
+				if ($v->title && $v->id && $v->alias) {
+					if (!isset($a[$v->alias])) {
+						$a[$v->alias]['title'] = $v->title;
+						$a[$v->alias]['id'] = $v->id;
+						$a[$v->alias]['alias'] = $v->alias;
+						$a[$v->alias]['value'] = [];
+					}
 
-						$a[$v->alias]['value'][$v->alias_value]->image			= $v->image;
-						$a[$v->alias]['value'][$v->alias_value]->image_medium	= $v->image_medium;
-						$a[$v->alias]['value'][$v->alias_value]->image_small	= $v->image_small;
-						$a[$v->alias]['value'][$v->alias_value]->color			= $v->color;
-					} else {
-						$a[$v->alias]['value'] = array();
+					if ($v->value && $v->alias_value && !isset($a[$v->alias]['value'][$v->alias_value])) {
+						$a[$v->alias]['value'][$v->alias_value] = new stdClass();
+						$a[$v->alias]['value'][$v->alias_value]->title = $v->value;
+						$a[$v->alias]['value'][$v->alias_value]->id = $v->id;
+						$a[$v->alias]['value'][$v->alias_value]->alias = $v->alias_value;
+
+						$a[$v->alias]['value'][$v->alias_value]->image = $v->image;
+						$a[$v->alias]['value'][$v->alias_value]->image_medium = $v->image_medium;
+						$a[$v->alias]['value'][$v->alias_value]->image_small = $v->image_small;
+						$a[$v->alias]['value'][$v->alias_value]->color = $v->color;
 					}
 				}
 			}
 
 		}
+		
 		return $a;
-
 	}
 
     public static function getActiveSpecificationValues($items, $ordering) {

@@ -9,9 +9,9 @@
 defined( '_JEXEC' ) or die();
 
 use Joomla\CMS\Component\ComponentHelper;
-use Joomla\CMS\Date\Date;
 use Joomla\CMS\Log\Log;
-use Joomla\CMS\Mail\MailTemplate;
+use Phoca\PhocaCart\Mail\MailHelper;
+use Phoca\PhocaCart\Mail\MailTemplate;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Table\Table;
@@ -96,7 +96,6 @@ class PhocaCartCpModelPhocacartWishlist extends AdminModel
         } else {
             $defLang = ComponentHelper::getParams('com_languages')->get('site', 'en-GB');
         }
-        $language = $app->getLanguage();
 
         // First find users that signed to any of products, which is on stock again
         $query = $db->getQuery(true)
@@ -154,45 +153,11 @@ class PhocaCartCpModelPhocacartWishlist extends AdminModel
                 $lang = $defLang;
             }
 
-            $mailProducts = [];
-            foreach ($products as $product) {
-
-                  if (isset($product->count_categories) && (int)$product->count_categories > 1) {
-
-                        $catidA	        = explode(',', $product->catid);
-                        $cattitleA	    = explode(',', $product->cattitle);
-                        $cataliasA	    = explode(',', $product->catalias);
-                        if (isset($product->preferred_catid) && (int)$product->preferred_catid > 0) {
-                            $key  = array_search((int)$product->preferred_catid, $catidA);
-                        } else {
-                            $key = 0;
-                        }
-                        $product->catid	    = $catidA[$key];
-                        $product->cattitle 	= $cattitleA[$key];
-                        $product->catalias 	= $cataliasA[$key];
-                  }
-
-                // TODO Force useI18n from admin
-                $mailProducts[] = [
-                    'product_title' => $product->title_long ?: $product->title,
-                    'product_sku'  => $product->sku,
-                    'product_url'  => Route::link('site', PhocacartRoute::getProductCanonicalLink($product->id, $product->catid, $product->alias, $product->catalias, (int)$product->preferred_catid, $lang), false, Route::TLS_IGNORE, true),
-                ];
-            }
-
-            $mailData = [
-                'user_name' => $user->name,
-                'user_username' => $user->username,
-                'user_email' => $user->email,
-                'products' => $mailProducts,
-                'site_name' => $app->get('sitename'),
-                'site_url' => Uri::root(),
-            ];
-
-            /* TODO bypass Joomla Issue https://github.com/joomla/joomla-cms/issues/39228 */
-            $language->load('com_phocacart', JPATH_ADMINISTRATOR, $lang, true);
-            $language->load('com_phocacart', JPATH_SITE, $lang, true);
+            $mailData = MailHelper::prepareWatchdogMailData($user, $products, $lang);
             $mailer = new MailTemplate('com_phocacart.watchdog', $lang);
+            $mailData['html.document'] = MailHelper::renderBody('watchdog', 'html', [], $mailData);
+            $mailData['text.document'] = MailHelper::renderBody('watchdog', 'text', [], $mailData);
+
             $mailer->addTemplateData($mailData);
             $mailer->addRecipient($user->email, $user->name);
             try {

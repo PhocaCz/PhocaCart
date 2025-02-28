@@ -80,7 +80,7 @@ class PhocacartOrderView
 		//$item 	= JArrayHelper::toObject($properties, 'stdClass');
 		$item		= new stdClass();
 
-		if(!empty($properties['b']) && is_object($item)) {
+		if(isset($properties['b'])) {
 			foreach($properties['b'] as $k => $v) {
 				$newName = $k . '_phb';
 				$item->$newName = $v;
@@ -88,7 +88,7 @@ class PhocacartOrderView
 		}
 
 		//Add shipping data to billing and do both data package
-		if(!empty($properties['s']) && is_object($item)) {
+		if(isset($properties['s'])) {
 			foreach($properties['s'] as $k => $v) {
 				$newName = $k . '_phs';
 				$item->$newName = $v;

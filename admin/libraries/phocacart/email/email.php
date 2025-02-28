@@ -221,8 +221,8 @@ class PhocacartEmail
 		return false;
 	}
 
-	public static function sendSubmitItemMail ($dataItem, $dataContact, $dataParameter, $url, $tmpl) {
-
+	public static function sendSubmitItemMail ($dataItem, $dataContact, $dataParameter, $url, $tmpl)
+	{
 		$app							= Factory::getApplication();
 		$db 							= Factory::getDBO();
 		$sitename 						= $app->get( 'sitename' );
@@ -231,17 +231,11 @@ class PhocacartEmail
 		$send_email_submit_item			= $paramsC->get( 'send_email_submit_item', 0 );
 		$send_email_submit_item_others	= $paramsC->get( 'send_email_submit_item_others', '' );
 
-
 		//get all selected users
-		$query = 'SELECT name, email, sendEmail' .
-		' FROM #__users' .
-		' WHERE id = '.(int)$send_email_submit_item;
-		$db->setQuery( $query );
+		$query = 'SELECT name, email, sendEmail FROM #__users WHERE id = '.(int)$send_email_submit_item;
+		$db->setQuery($query);
 		$rows = $db->loadObjectList();
-
 		$subject = $sitename .' - '.Text::_( 'COM_PHOCACART_NEW_ITEM_SUBMITTED' );
-
-
 
 		if (isset($dataContact['name']) && $dataContact['name'] != '') {
 			$fromname = $dataContact['name'];
@@ -255,18 +249,6 @@ class PhocacartEmail
 			$mailfrom = isset($rows[0]->email) ? $rows[0]->email : '';
 		}
 
-		/*if (isset($dataItem['title']) && $dataItem['title'] != '') {
-			$message[] = $dataItem['title'];
-		} else {
-			$message[] = '';
-		}*/
-
-		/*if (isset($dataContact['title']) && $dataContact['title'] != '') {
-			$message .= $dataContact['title'];
-		} else {
-			$message .= '';
-		}*/
-
 		if (isset($dataContact['message']) && $dataContact['message'] != '') {
 			$message = $dataContact['message'];
 		} else {
@@ -279,13 +261,9 @@ class PhocacartEmail
 			$email = $rows[0]->email;
 		}
 
-
-
 		$message = str_replace("</p>", "\r\n", $message );
 		$message = str_replace("<br>", "\r\n", $message );
 		$message = strip_tags($message);
-
-
 
 		$layoutE 			= new FileLayout('email_submit_item', null, array('component' => 'com_phocacart'));
 		$d					= array();
@@ -332,7 +310,8 @@ class PhocacartEmail
 		if ($notify || $notifyOthers) {
 			return true;
 		}
+
 		return false;
 	}
 }
-?>
+

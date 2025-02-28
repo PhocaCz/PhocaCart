@@ -7,20 +7,15 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+
 use Joomla\CMS\MVC\View\HtmlView;
-jimport( 'joomla.application.component.view' );
-/*
-phocacart import('phocacart.cart.cart');
-phocacart import('phocacart.cart.cartdb');
-phocacart import('phocacart.cart.rendercart');
-phocacart import('phocacart.currency.currency');
-*/
 
 class PhocaCartCpViewPhocacartCart extends HtmlView
 {
 	protected $t;
 	protected $r;
 	protected $item;
+
 	function display($tpl = null) {
 
 		$this->t		= PhocacartUtils::setVars('cart');
@@ -28,9 +23,8 @@ class PhocaCartCpViewPhocacartCart extends HtmlView
 		$this->item		= $this->get('Data');
 
 
-		$media = new PhocacartRenderAdminmedia();
+		new PhocacartRenderAdminmedia();
 
 		parent::display($tpl);
 	}
 }
-?>

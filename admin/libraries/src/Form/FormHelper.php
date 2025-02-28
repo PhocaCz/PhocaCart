@@ -52,20 +52,22 @@ abstract class FormHelper
 
             $dotPos = strpos($showOnPartBlocks[0], '.');
 
+            $thisFormPath = $formPath;
+
             if (strpos($showOnPartBlocks[0], '#') === 0) {
-                $formPath = 'jform';
+                $thisFormPath = 'jform';
                 $showOnPartBlocks[0] = substr($showOnPartBlocks[0], 1);
             }
 
             while (strpos($showOnPartBlocks[0], '%') === 0) {
-                $formPath = explode('][', $formPath);
-                array_pop($formPath);
-                $formPath = implode('][', $formPath) . ']';
+                $thisFormPath = explode('][', $thisFormPath);
+                array_pop($thisFormPath);
+                $thisFormPath = implode('][', $thisFormPath) . ']';
                 $showOnPartBlocks[0] = substr($showOnPartBlocks[0], 1);
             }
 
             if ($dotPos === false) {
-                $field = $formPath ? $formPath . '[' . $showOnPartBlocks[0] . ']' : $showOnPartBlocks[0];
+                $field = $thisFormPath ? $thisFormPath . '[' . $showOnPartBlocks[0] . ']' : $showOnPartBlocks[0];
             } else {
                 if ($dotPos === 0) {
                     $fieldName = substr($showOnPartBlocks[0], 1);

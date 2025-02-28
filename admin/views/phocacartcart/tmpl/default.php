@@ -14,22 +14,21 @@ use Joomla\CMS\HTML\HTMLHelper;
 
 // All is solved in the rendercart and cart (include the asked userid)
 if (isset($this->item->user_id) && (int)$this->item->user_id > 0) {
-
 	$link	= Route::_( 'index.php?option='.$this->t['o'].'&view=phocacartcart&tmpl=component&&id='.(int)$this->item->user_id);
 	$cart	= new PhocacartCartRendercart();
 
-	$cart->setType(array());// all types
+	$cart->setType([]);// all types
 	$cart->setFullItems();
 
 	$this->t['shippingid'] 	= $cart->getShippingId();
 
 
-	if (isset($this->t['shippingid']) && (int)$this->t['shippingid'] > 0 && $this->t['shippingedit'] == 0) {
+	if (isset($this->t['shippingid']) && (int)$this->t['shippingid'] > 0) {
 		$cart->addShippingCosts($this->t['shippingid']);
 		$this->t['shippingmethodexists'] = true;
 	}
 	$this->t['paymentid'] 	= $cart->getPaymentId();
-	if (isset($this->t['paymentid']) && (int)$this->t['paymentid'] > 0 && $this->t['paymentedit'] == 0) {
+	if (isset($this->t['paymentid']) && (int)$this->t['paymentid'] > 0) {
 		$cart->addPaymentCosts($this->t['paymentid']);// validity of payment will be checked
 		$this->t['paymentmethodexists'] = true;
 	}

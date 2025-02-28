@@ -6,6 +6,12 @@
  * @copyright Copyright (C) Jan Pavelka www.phoca.cz
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
+
+/***********************************************************************************************************************
+ *  THIS LAYOUT IS DEPRECATED.
+ *  Use Joomla email templates instead.
+ **********************************************************************************************************************/
+
 defined('_JEXEC') or die();
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -23,21 +29,21 @@ $displayData 	= null;
 		<td style="border:0"><?php echo $d['name'] ?></td>
 	</tr>
 	<?php } ?>
-	
+
 	<?php if (isset($d['email']) && $d['email'] != '') { ?>
 	<tr style="border:0">
 		<td style="border:0"><?php echo Text::_( 'COM_PHOCACART_EMAIL' ) ?>:</td>
 		<td style="border:0"><?php echo $d['email'] ?></td>
 	</tr>
 	<?php } ?>
-	
+
 	<?php if (isset($d['phone']) && $d['phone'] != '') { ?>
 	<tr style="border:0">
 		<td style="border:0"><?php echo Text::_( 'COM_PHOCACART_PHONE' ) ?>:</td>
 		<td style="border:0"><?php echo $d['phone'] ?></td>
 	</tr>
 	<?php } ?>
-	
+
 	<tr style="border:0">
 		<td style="border:0"><?php echo Text::_( 'COM_PHOCACART_DATE' ) ?>:</td>
 		<td style="border:0"><?php echo HTMLHelper::_('date',  gmdate('Y-m-d H:i:s'), Text::_( 'DATE_FORMAT_LC2' )) ?></td>

@@ -62,10 +62,7 @@ class PhocacartCartRendercart extends PhocacartCart
 		$d		= array();
 		$d['s'] = $s;
 		if($app->isClient('administrator')) {
-			// client = 0, ask phoca cart frontend layouts
-			$d['client'] = 1;//admin
-			$layout 				= new FileLayout('cart_cart', null, array('component' => 'com_phocacart', 'client' => 0));
-
+			$layout 				= new FileLayout('phocacart.cart.cart');
 		} else {
 			$d['client'] = 0;//frontend
 			$layout 				= new FileLayout('cart_cart', null, array('component' => 'com_phocacart'));
