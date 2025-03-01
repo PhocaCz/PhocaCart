@@ -335,8 +335,6 @@ abstract class MailHelper
         $tags = [
             'html.document', 'text.document', 'document',
             'ordernumber', 'status_title', 'sitename',
-            'html.header', 'html.info', 'html.billing', 'html.shipping', 'html.products', 'html.totals', 'html.link',  'html.downloads',
-            'text.header', 'text.info', 'text.billing', 'text.shipping', 'text.products', 'text.totals', 'text.link',  'text.downloads',
         ];
 
         if ($status->email_customer) {
@@ -350,8 +348,6 @@ abstract class MailHelper
         $tags = [
             'html.document', 'text.document', 'document',
             'sitename',
-            'html.voucher',
-            'text.voucher',
         ];
         if ($status->email_gift) {
             MailTemplate::checkTemplate('com_phocacart.order_status.gift.' . $status->id, 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_SUBJECT', 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_BODY', $tags, 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_HTMLBODY');
