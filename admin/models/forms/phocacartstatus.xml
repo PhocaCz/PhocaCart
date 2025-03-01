@@ -10,7 +10,7 @@
         <field name="alias" type="text" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC" />
     </fieldset>
 
-    <fieldset name="general" label="COM_PHOCACART_GENERAL_OPTIONS">
+    <fieldset name="general" label="COM_PHOCACART_GENERAL_OPTIONS" addfieldprefix="Phoca\PhocaCart\Form\Field">
         <field name="stock_movements" type="list" default="=" label="COM_PHOCACART_FIELD_STOCK_MOVEMENTS_LABEL" description="COM_PHOCACART_FIELD_STOCK_MOVEMENTS_DESC">
             <option value="=">COM_PHOCACART_ITEMS_UNCHANGED</option>
             <option value="+">COM_PHOCACART_ITEMS_ADDED</option>
@@ -54,6 +54,8 @@
             <option value="2">COM_PHOCACART_YES_EXCLUDING_POS</option>
             <option value="0">COM_PHOCACART_NO</option>
         </field>
+
+        <field name="__html_format_warning" type="HtmlEmailWarning" />
 
         <field name="email_subject" type="text" label="COM_PHOCACART_FIELD_EMAIL_SUBJECT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SUBJECT_DESC" />
 
