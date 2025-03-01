@@ -18,6 +18,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Filesystem\Path;
 use Joomla\Registry\Registry;
+use Phoca\PhocaCart\Constants\EmailDocumentType;
 use Phoca\PhocaCart\Container\Container;
 use Phoca\PhocaCart\Dispatcher\Dispatcher;
 use Phoca\PhocaCart\Exception\PhocaCartException;
@@ -223,7 +224,7 @@ class PhocacartOrderStatus
      * @param   string              $orderToken
      * @param   bool                $notifyUser
      * @param   bool                $notifyOthers
-     * @param                       $emailSend
+     * @param                       $documentType
      * @param   bool                $attachPDF // Attach PDF document to email?
      *
      * @return int  1 ... sent, 0 ... not sent, -1 ... not sent (error)
@@ -231,7 +232,7 @@ class PhocacartOrderStatus
      * @throws Exception
      * @since 5.0.0
      */
-    private static function sendOrderEmail(object $order, PhocacartOrderView $orderView, array $status, array $addresses, string $orderToken, bool $notifyUser, bool $notifyOthers, $emailSend, bool $attachPDF): int
+    private static function sendOrderEmail(object $order, PhocacartOrderView $orderView, array $status, array $addresses, string $orderToken, bool $notifyUser, bool $notifyOthers, int $documentType, bool $attachPDF): int
     {
         $recipient       = ''; // Customer/Buyer
         $recipientOthers = ''; // others
@@ -283,14 +284,15 @@ class PhocacartOrderStatus
             $document = '';
             $orderRender = new PhocacartOrderRender();
 
-            switch ($emailSend) {
-                case 1: // Order
+            switch ($documentType) {
+                case EmailDocumentType::Order->value:
+                default: // Render order as default. If user doesn't want to have odred in email, he can remove it from mail template
                     $documentNumber = $orderNumber;
                     $attachmentName = strip_tags(Text::_('COM_PHOCACART_ORDER') . '_' . $documentNumber) . '.pdf';
                     $attachmentTitle = Text::_('COM_PHOCACART_ORDER_NR') . '_' . $documentNumber;
 
                     break;
-                case 2: // Invoice
+                case EmailDocumentType::Invoice->value:
                     $documentNumber = PhocacartOrder::getInvoiceNumber($order->id, $order->date, $order->invoice_number);
                     $attachmentName    = strip_tags(Text::_('COM_PHOCACART_INVOICE') . '_' . $documentNumber) . '.pdf';
                     $attachmentTitle = Text::_('COM_PHOCACART_INVOICE_NR') . '_' . $documentNumber;
@@ -300,28 +302,28 @@ class PhocacartOrderStatus
                     }
 
                     break;
-                case 3: // Delivery note
+                case EmailDocumentType::DeliveryNote->value:
                     $documentNumber = $orderNumber;
                     $attachmentName = strip_tags(Text::_('COM_PHOCACART_DELIVERY_NOTE') . '_' . $documentNumber) . '.pdf';
                     $attachmentTitle = Text::_('COM_PHOCACART_DELIVERY_NOTE_NR') . '_' . $documentNumber;
 
                     break;
-
-                default:
-                    throw new PhocaCartException('Invalid email send value: ' . $emailSend);
             }
 
             if ($documentNumber) {
-                $document   = $orderRender->render($order->id, $emailSend, 'mail', $orderToken);
+                $document   = $orderRender->render($order->id, $documentType, 'mail', $orderToken);
                 $mailData['html.document'] = MailHelper::renderOrderBody($order, 'html', $mailData);
                 $mailData['text.document'] = MailHelper::renderOrderBody($order, 'text', $mailData);
+            } else {
+                $mailData['html.document'] = '';
+                $mailData['text.document'] = '';
             }
 
             if ($attachPDF && Pdf::load()) {
                 $attachmentContent = Pdf::renderPdf([
                     'title'    => $attachmentTitle,
                     'filename' => $attachmentName,
-                    'output'   => $orderRender->render($order->id, $emailSend, 'pdf', $orderToken),
+                    'output'   => $orderRender->render($order->id, $documentType, 'pdf', $orderToken),
                 ]);
             }
         } finally {
@@ -700,7 +702,7 @@ class PhocacartOrderStatus
         self::updateUserGroup((int) $changeUserGroup, (int) $order->user_id);
         self::updatePoints($order->id, $changePointsNeeded, $changePointsReceived);
         self::updateDownload($order->id, $status['download']);
-        $notificationResult = self::sendOrderEmail($order, $orderView, $status, $addresses, $orderToken, $notifyUser, $notifyOthers, $emailSend, !!$emailSendFormat);
+        $notificationResult = self::sendOrderEmail($order, $orderView, $status, $addresses, $orderToken, $notifyUser, $notifyOthers, (int)$emailSend, !!$emailSendFormat);
         self::sendGiftEmail($order, $orderView, $status, $addresses, $orderToken);
 
         return $notificationResult;

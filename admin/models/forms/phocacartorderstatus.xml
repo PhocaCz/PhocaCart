@@ -38,17 +38,15 @@
 
         <field name="email_send" type="list" filter="options" showon="_advanced:1" label="COM_PHOCACART_FIELD_EMAIL_SEND_ATTACHMENT_LABEL">
             <option value="">COM_PHOCACART_USE_STATUS_DEFAULT</option>
-            <option value="0">COM_PHOCACART_NOTHING</option>
             <option value="1">COM_PHOCACART_ORDER</option>
             <option value="2">COM_PHOCACART_INVOICE</option>
             <option value="3">COM_PHOCACART_DELIVERY_NOTE</option>
         </field>
 
-        <field name="email_send_format" type="list" filter="options" showon="_advanced:1" label="COM_PHOCACART_FIELD_EMAIL_SEND_FORMAT_LABEL">
+        <field name="email_send_format" type="list" filter="options" showon="_advanced:1" label="COM_PHOCACART_FIELD_EMAIL_ATTACH_PDF_LABEL">
             <option value="">COM_PHOCACART_USE_STATUS_DEFAULT</option>
-            <option value="0">COM_PHOCACART_HTML</option>
-            <option value="1">COM_PHOCACART_PDF</option>
-            <option value="2">COM_PHOCACART_BOTH</option>
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
         </field>
 
 

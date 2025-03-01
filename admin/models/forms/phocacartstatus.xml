@@ -57,17 +57,15 @@
 
         <field name="email_subject" type="text" label="COM_PHOCACART_FIELD_EMAIL_SUBJECT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SUBJECT_DESC" />
 
-        <field name="email_send" type="list" default="0" label="COM_PHOCACART_FIELD_EMAIL_SEND_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SEND_DESC">
-            <option value="0">COM_PHOCACART_NOTHING</option>
+        <field name="email_send" type="list" default="1" label="COM_PHOCACART_FIELD_EMAIL_SEND_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SEND_DESC">
             <option value="1">COM_PHOCACART_ORDER</option>
             <option value="2">COM_PHOCACART_INVOICE</option>
             <option value="3">COM_PHOCACART_DELIVERY_NOTE</option>
         </field>
 
-        <field name="email_send_format" type="list" default="0" label="COM_PHOCACART_FIELD_EMAIL_SEND_FORMAT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SEND_FORMAT_DESC">
-            <option value="0">COM_PHOCACART_HTML</option>
-            <option value="1">COM_PHOCACART_PDF</option>
-            <option value="2">COM_PHOCACART_BOTH</option>
+        <field name="email_send_format" type="radio" default="0" filter="options" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_EMAIL_ATTACH_PDF_LABEL" description="COM_PHOCACART_FIELD_EMAIL_ATTACH_PDF_DESC">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
         </field>
 
         <field name="email_text" type="editor" buttons="true" hide="pagebreak,readmore" filter="\Joomla\CMS\Component\ComponentHelper::filterText" label="COM_PHOCACART_FIELD_EMAIL_TEXT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_TEXT_DESC"/>
