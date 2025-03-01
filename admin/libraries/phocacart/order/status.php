@@ -16,7 +16,6 @@ use Joomla\CMS\Mail\MailHelper as JoomlaMailHelper;
 use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Plugin\PluginHelper;
-use Joomla\Filesystem\Path;
 use Joomla\Registry\Registry;
 use Phoca\PhocaCart\Constants\EmailDocumentType;
 use Phoca\PhocaCart\Container\Container;
@@ -234,6 +233,12 @@ class PhocacartOrderStatus
      */
     private static function sendOrderEmail(object $order, PhocacartOrderView $orderView, array $status, array $addresses, string $orderToken, bool $notifyUser, bool $notifyOthers, int $documentType, bool $attachPDF): int
     {
+        // Backward compatibility
+        $documentType = EmailDocumentType::tryFrom($documentType);
+        if (!$documentType) {
+            $documentType = EmailDocumentType::Order;
+        }
+
         $recipient       = ''; // Customer/Buyer
         $recipientOthers = ''; // others
         $bcc             = '';
@@ -266,7 +271,6 @@ class PhocacartOrderStatus
 
         // PDF Feature
         $attachmentContent = '';
-        $attachmentName    = '';
 
         // Set language of order for the customer
         $pLang = new PhocacartLanguage();
@@ -285,14 +289,14 @@ class PhocacartOrderStatus
             $orderRender = new PhocacartOrderRender();
 
             switch ($documentType) {
-                case EmailDocumentType::Order->value:
+                case EmailDocumentType::Order:
                 default: // Render order as default. If user doesn't want to have odred in email, he can remove it from mail template
                     $documentNumber = $orderNumber;
                     $attachmentName = strip_tags(Text::_('COM_PHOCACART_ORDER') . '_' . $documentNumber) . '.pdf';
                     $attachmentTitle = Text::_('COM_PHOCACART_ORDER_NR') . '_' . $documentNumber;
 
                     break;
-                case EmailDocumentType::Invoice->value:
+                case EmailDocumentType::Invoice:
                     $documentNumber = PhocacartOrder::getInvoiceNumber($order->id, $order->date, $order->invoice_number);
                     $attachmentName    = strip_tags(Text::_('COM_PHOCACART_INVOICE') . '_' . $documentNumber) . '.pdf';
                     $attachmentTitle = Text::_('COM_PHOCACART_INVOICE_NR') . '_' . $documentNumber;
@@ -302,7 +306,7 @@ class PhocacartOrderStatus
                     }
 
                     break;
-                case EmailDocumentType::DeliveryNote->value:
+                case EmailDocumentType::DeliveryNote:
                     $documentNumber = $orderNumber;
                     $attachmentName = strip_tags(Text::_('COM_PHOCACART_DELIVERY_NOTE') . '_' . $documentNumber) . '.pdf';
                     $attachmentTitle = Text::_('COM_PHOCACART_DELIVERY_NOTE_NR') . '_' . $documentNumber;
@@ -311,9 +315,9 @@ class PhocacartOrderStatus
             }
 
             if ($documentNumber) {
-                $document   = $orderRender->render($order->id, $documentType, 'mail', $orderToken);
-                $mailData['html.document'] = MailHelper::renderOrderBody($order, 'html', $mailData);
-                $mailData['text.document'] = MailHelper::renderOrderBody($order, 'text', $mailData);
+                $document   = $orderRender->render($order->id, $documentType->value, 'mail', $orderToken);
+                $mailData['html.document'] = MailHelper::renderOrderBody($order, 'html', $documentType, $mailData);
+                $mailData['text.document'] = MailHelper::renderOrderBody($order, 'text', $documentType, $mailData);
             } else {
                 $mailData['html.document'] = '';
                 $mailData['text.document'] = '';
@@ -323,7 +327,7 @@ class PhocacartOrderStatus
                 $attachmentContent = Pdf::renderPdf([
                     'title'    => $attachmentTitle,
                     'filename' => $attachmentName,
-                    'output'   => $orderRender->render($order->id, $documentType, 'pdf', $orderToken),
+                    'output'   => $orderRender->render($order->id, $documentType->value, 'pdf', $orderToken),
                 ]);
             }
         } finally {

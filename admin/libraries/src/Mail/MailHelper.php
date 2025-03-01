@@ -21,6 +21,7 @@ use Joomla\Database\ParameterType;
 use Joomla\Filesystem\File;
 use Joomla\Utilities\IpHelper;
 use Joomla\CMS\Mail\MailHelper as JoomlaMailHelper;
+use Phoca\PhocaCart\Constants\EmailDocumentType;
 use Phoca\PhocaCart\Container\Container;
 use Phoca\PhocaCart\Helper\PhocaCartHelper;
 use Phoca\PhocaCart\Utils\TextUtils;
@@ -387,12 +388,13 @@ abstract class MailHelper
         return $result;
     }
 
-    public static function renderOrderBody(object $order, string $format, array &$mailData): string
+    public static function renderOrderBody(object $order, string $format, EmailDocumentType $documentType, array &$mailData): string
     {
         $orderView = new \PhocacartOrderView();
 
         $displayData = [];
         $displayData['params'] = \PhocacartUtils::getComponentParameters();
+        $displayData['documentType'] = $documentType;
         $displayData['order'] = $orderView->getItemCommon($order->id);
         $displayData['price'] = new \PhocacartPrice();
         $displayData['price']->setCurrency($displayData['order']->currency_id);
@@ -435,7 +437,7 @@ abstract class MailHelper
         return self::renderBody('gift', $format, $displayData, $mailData);
     }
 
-    public static function renderArticle(int|string $articleId, array $replaceData, array $billingAddress, array $shippingAddress, bool $allowHtml = true): ?string
+    public static function renderArticle(int|string|null $articleId, array $replaceData, array $billingAddress, array $shippingAddress, bool $allowHtml = true): ?string
     {
         if (!$articleId) {
             return null;

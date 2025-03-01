@@ -9,12 +9,14 @@
 defined('_JEXEC') or die();
 
 use Joomla\CMS\Language\Text;
+use Phoca\PhocaCart\Constants\EmailDocumentType;
 
 /** @var array $displayData */
 /** @var Joomla\Registry\Registry $params */
 /** @var object $order */
-/** @var array $products */
+/** @var EmailDocumentType $documentType */
 $params = $displayData['params'];
+$documentType = $displayData['documentType'];
 $order = $displayData['order'];
 $products = $displayData['products'];
 
@@ -29,7 +31,9 @@ if ($products) {
     echo '<tr style="vertical-align: bottom">';
     echo '<th style="text-align: right; width: 5%;" align="right" valign="bottom">'.Text::_('COM_PHOCACART_QTY').'</th>';
     echo '<th style="text-align: left" align="left" valign="bottom">'.Text::_('COM_PHOCACART_ITEM').'</th>';
-    echo '<th style="text-align: right; width: 10%" align="right" valign="bottom" width="100">'.Text::_('COM_PHOCACART_PRICE').'</th>';
+    if ($documentType != EmailDocumentType::DeliveryNote) {
+        echo '<th style="text-align: right; width: 10%" align="right" valign="bottom" width="100">' . Text::_('COM_PHOCACART_PRICE') . '</th>';
+    }
     echo '</tr></thead><tbody>';
 
 	foreach($displayData['products'] as $product) {
@@ -83,7 +87,9 @@ if ($products) {
         }
 
         echo '</td>';
-        echo '<td style="text-align: right; width: 100px" align="right" valign="top" width="100">'.$displayData['price']->getPriceFormat((int)$product->quantity * $product->brutto).'</td>';
+        if ($documentType != EmailDocumentType::DeliveryNote) {
+            echo '<td style="text-align: right; width: 100px" align="right" valign="top" width="100">' . $displayData['price']->getPriceFormat((int) $product->quantity * $product->brutto) . '</td>';
+        }
         echo '</tr>';
 	}
     echo '</tbody></table>';

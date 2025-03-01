@@ -6,16 +6,20 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 
+use Phoca\PhocaCart\Constants\EmailDocumentType;
+
 defined('_JEXEC') or die();
 
 /** @var array $displayData */
 /** @var Joomla\Registry\Registry $params */
+/** @var EmailDocumentType $documentType */
 $params = $displayData['params'];
+$documentType = $displayData['documentType'];
 
 // Corect subtotal in case the sales are deducted from prices with VAT (subtotal is without VAT so such needs to be added)
 $recalcNetto = $params->get( 'tax_calculation_sales', 1) == 2 && $params->get( 'tax_calculation_sales_change_subtotal', 0) == 1;
 
-if (!empty($displayData['total'])) {
+if (!empty($displayData['total']) && $documentType != EmailDocumentType::DeliveryNote) {
     $netto = 0;
     if ($recalcNetto) {
         foreach($displayData['total'] as $total) {
