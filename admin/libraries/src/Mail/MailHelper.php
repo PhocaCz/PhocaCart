@@ -17,9 +17,11 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\User\UserFactoryInterface;
+use Joomla\Database\ParameterType;
 use Joomla\Filesystem\File;
 use Joomla\Utilities\IpHelper;
 use Joomla\CMS\Mail\MailHelper as JoomlaMailHelper;
+use Phoca\PhocaCart\Container\Container;
 use Phoca\PhocaCart\Helper\PhocaCartHelper;
 use Phoca\PhocaCart\Utils\TextUtils;
 
@@ -185,6 +187,14 @@ abstract class MailHelper
         return $mailData;
     }
 
+    public static function prepareSubmitItemMailData(Table $question): array
+    {
+        $mailData = MailHelper::prepareMailData([
+        ]);
+
+        return $mailData;
+    }
+
     public static function questionMailRecipients(MailTemplate $mailer): bool
     {
         $hasRecipient = false;
@@ -199,6 +209,35 @@ abstract class MailHelper
         }
 
         if ($emails = MailHelper::parseRceipients(PhocaCartHelper::param('send_email_question_others'))) {
+            if (!$hasRecipient) {
+                $email = array_shift($emails);
+                $mailer->addRecipient($email);
+            }
+
+            foreach ($emails as $email) {
+                $mailer->addRecipient($email, null, 'bcc');
+            }
+
+            $hasRecipient = true;
+        }
+
+        return $hasRecipient;
+    }
+
+    public static function submitItemMailRecipients(MailTemplate $mailer): bool
+    {
+        $hasRecipient = false;
+
+        if ($userId = PhocaCartHelper::param('send_email_submit_item')) {
+            /** @var \Joomla\CMS\User\User $user */
+            $user = Factory::getContainer()->get(UserFactoryInterface::class)->loadUserById($userId);
+            if ($user->id) {
+                $mailer->addRecipient($user->email, $user->name);
+                $hasRecipient = true;
+            }
+        }
+
+        if ($emails = MailHelper::parseRceipients(PhocaCartHelper::param('send_email_submit_item_others'))) {
             if (!$hasRecipient) {
                 $email = array_shift($emails);
                 $mailer->addRecipient($email);
@@ -271,6 +310,26 @@ abstract class MailHelper
         }
     }
 
+    public static function getOrderStatusMailTemplates(int $statusId): array
+    {
+        $db = Container::getDbo();
+        $query = $db->getQuery(true)
+            ->select('template_id')
+            ->from('#__mail_templates')
+            ->whereIn($db->quoteName('template_id'), [
+                'com_phocacart.order_status.' . $statusId,
+                'com_phocacart.order_status.notification.' . $statusId,
+                'com_phocacart.order_status.gift.' . $statusId,
+                'com_phocacart.order_status.gift_notification.' . $statusId,
+            ], ParameterType::STRING)
+            ->where($db->quoteName('language') . ' = ' . $db->quote(''));
+
+        $db->setQuery($query);
+
+        return $db->loadColumn();
+    }
+
+
     public static function checkOrderStatusMailTemplates(object $status): void
     {
         $tags = [
@@ -289,10 +348,10 @@ abstract class MailHelper
         }
 
         $tags = [
-            'html_document', 'text_document', 'legacy_document', 'document',
-            'ordernumber', 'status_title', 'sitename',
-            'html_header', 'html_info', 'html_billing', 'html_shipping', 'html_products', 'html_totals', 'html_link',  'html_downloads',
-            'text_header', 'text_info', 'text_billing', 'text_shipping', 'text_products', 'text_totals', 'text_link',  'text_downloads',
+            'html.document', 'text.document', 'document',
+            'sitename',
+            'html.voucher',
+            'text.voucher',
         ];
         if ($status->email_gift) {
             MailTemplate::checkTemplate('com_phocacart.order_status.gift.' . $status->id, 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_SUBJECT', 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_BODY', $tags, 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_HTMLBODY');
