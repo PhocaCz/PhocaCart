@@ -57,6 +57,8 @@
 
         <field name="__html_format_warning" type="HtmlEmailWarning" />
 
+        <field name="__buttons_edit_mail" type="EmailEditButtons" />
+
         <field name="email_subject" type="text" label="COM_PHOCACART_FIELD_EMAIL_SUBJECT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SUBJECT_DESC" />
 
         <field name="email_send" type="list" default="1" label="COM_PHOCACART_FIELD_EMAIL_SEND_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SEND_DESC">

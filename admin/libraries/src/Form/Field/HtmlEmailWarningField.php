@@ -41,12 +41,10 @@ class HtmlEmailWarningField extends NoteField
         }
 
         if (!$element['class'] ?? '') {
-            $element['class'] = 'alert alert-warning w-100';
+            $element['class'] = 'alert alert-warning w-100 m-0';
         }
 
-        $result = parent::setup($element, $value, $group);
-
-        return $result;
+        return parent::setup($element, $value, $group);
     }
 
     protected function getLabel()
