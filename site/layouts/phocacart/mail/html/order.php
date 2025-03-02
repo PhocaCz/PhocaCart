@@ -33,25 +33,38 @@ $displayData['blocks'] = [
     'totals' => '',
     'link' => '',
     'downloads' => '',
+    'rewardpoints' => '',
 ];
 
-if (!$displayData['order']->order_number) {
-    switch ($documentType) {
-        case EmailDocumentType::Order:
+
+switch ($documentType) {
+    case EmailDocumentType::Order:
+        if (!$displayData['order']->order_number) {
             echo '<div><strong>' . Text::_('COM_PHOCACART_ORDER_DOES_NOT_EXIST') . '</strong></div>';
-            break;
-        case EmailDocumentType::Invoice:
+            return;
+        }
+        break;
+    case EmailDocumentType::Invoice:
+        if (!$displayData['order']->invoice_number) {
             echo '<div><strong>' . Text::_('COM_PHOCACART_INVOICE_NOT_YET_ISSUED') . '</strong></div>';
-            break;
-        case EmailDocumentType::DeliveryNote:
+            return;
+        }
+        break;
+    case EmailDocumentType::DeliveryNote:
+        if (!$displayData['order']->order_number) {
             echo '<div><strong>' . Text::_('COM_PHOCACART_DELIVERY_NOTE_NOT_YET_ISSUED') . '</strong></div>';
-            break;
-        case EmailDocumentType::POSReceipt:
-            echo '<div><strong>' . Text::_('COM_PHOCACART_RECEIPT_NOT_YET_ISSUED') . '</strong></div>';
-            break;
-    }
-    return;
+            return;
+        }
+        break;
+    case EmailDocumentType::POSReceipt:
+        if (!$displayData['order']->receipt_number) {
+          echo '<div><strong>' . Text::_('COM_PHOCACART_RECEIPT_NOT_YET_ISSUED') . '</strong></div>';
+          return;
+        }
+        break;
 }
+
+
 
 /* Blocks to use in MailTemplate */
 $displayData['blocks'] = [
@@ -64,6 +77,7 @@ $displayData['blocks'] = [
   'totals' => $this->sublayout('totals', $displayData),
   'link' => $this->sublayout('link', $displayData),
   'downloads' => $this->sublayout('downloads', $displayData),
+  'rewardpoints' => $this->sublayout('rewardpoints', $displayData),
 ];
 
 $topArticle = null;
@@ -144,6 +158,8 @@ switch ($documentType) {
   <?= MailHelper::renderArticle($middleArticle, $displayData['preparereplace'], $displayData['bas']['b'], $displayData['bas']['s']); ?>
 
   <?= $displayData['blocks']['downloads']; ?>
+
+  <?= $displayData['blocks']['rewardpoints']; ?>
 
   <?= MailHelper::renderArticle($bottomArticle, $displayData['preparereplace'], $displayData['bas']['b'], $displayData['bas']['s']); ?>
 </div>
