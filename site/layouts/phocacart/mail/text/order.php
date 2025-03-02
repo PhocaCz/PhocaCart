@@ -29,6 +29,7 @@ $displayData['blocks'] = [
     'totals' => '',
     'link' => '',
     'downloads' => '',
+    'taxes' => '',
     'rewardpoints' => '',
 ];
 
@@ -71,6 +72,7 @@ $displayData['blocks'] = [
   'totals' => $this->sublayout('totals', $displayData),
   'link' => $this->sublayout('link', $displayData),
   'downloads' => $this->sublayout('downloads', $displayData),
+  'taxes' => $this->sublayout('taxes', $displayData),
   'rewardpoints' => $this->sublayout('rewardpoints', $displayData),
 ];
 
@@ -130,6 +132,8 @@ switch ($documentType) {
 <?= MailHelper::renderArticle($middleArticle, $displayData['preparereplace'], $displayData['bas']['b'], $displayData['bas']['s'], false); ?>
 
 <?= $displayData['blocks']['downloads']; ?>
+
+<?= $displayData['blocks']['taxes']; ?>
 
 <?= $displayData['blocks']['rewardpoints']; ?>
 
