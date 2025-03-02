@@ -1075,7 +1075,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
 			$newId = $table->get('id');
 
-
+            $this->copyI18nData($pk, $newId);
 
 			// Add the new ID to the array
 			$newIds[$pk]	= $newId;
