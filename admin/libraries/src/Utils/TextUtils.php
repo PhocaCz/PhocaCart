@@ -26,8 +26,12 @@ class TextUtils
         return '';
     }
 
-    public static function htmlToPlainText(string $html): string
+    public static function htmlToPlainText(?string $html): ?string
     {
+        if ($html === null) {
+            return null;
+        }
+
         $text = $html;
 
         /* TODO some better parser */

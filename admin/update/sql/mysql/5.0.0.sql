@@ -278,5 +278,3 @@ INSERT INTO `#__mail_templates` (`template_id`, `extension`, `language`, `subjec
 
 ALTER TABLE `#__phocacart_orders` ADD COLUMN `payment_date` datetime;
 
--- 5.0.0 Beta104
-UPDATE `#__phocacart_order_statuses` SET `email_send_format` = 1 WHERE `email_send_format` = 2;

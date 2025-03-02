@@ -11,6 +11,9 @@
     </fieldset>
 
     <fieldset name="general" label="COM_PHOCACART_GENERAL_OPTIONS" addfieldprefix="Phoca\PhocaCart\Form\Field">
+        <!-- Only to hide Legacy fields, will be removed in future version -->
+        <field name="__legacy" type="hidden" filter="unset" default="0" />
+
         <field name="stock_movements" type="list" default="=" label="COM_PHOCACART_FIELD_STOCK_MOVEMENTS_LABEL" description="COM_PHOCACART_FIELD_STOCK_MOVEMENTS_DESC">
             <option value="=">COM_PHOCACART_ITEMS_UNCHANGED</option>
             <option value="+">COM_PHOCACART_ITEMS_ADDED</option>
@@ -59,7 +62,7 @@
 
         <field name="__buttons_edit_mail" type="EmailEditButtons" />
 
-        <field name="email_subject" type="text" label="COM_PHOCACART_FIELD_EMAIL_SUBJECT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SUBJECT_DESC" />
+        <field name="email_subject" showon="__legacy:1" type="text" label="COM_PHOCACART_FIELD_EMAIL_SUBJECT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SUBJECT_DESC" />
 
         <field name="email_send" type="list" default="1" label="COM_PHOCACART_FIELD_EMAIL_SEND_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SEND_DESC">
             <option value="1">COM_PHOCACART_ORDER</option>
@@ -72,17 +75,17 @@
             <option value="1">JYES</option>
         </field>
 
-        <field name="email_text" type="editor" buttons="true" hide="pagebreak,readmore" filter="\Joomla\CMS\Component\ComponentHelper::filterText" label="COM_PHOCACART_FIELD_EMAIL_TEXT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_TEXT_DESC"/>
+        <field name="email_text" showon="__legacy:1" type="editor" buttons="true" hide="pagebreak,readmore" filter="\Joomla\CMS\Component\ComponentHelper::filterText" label="COM_PHOCACART_FIELD_EMAIL_TEXT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_TEXT_DESC"/>
 
-        <field name="email_footer" type="editor" buttons="true" hide="pagebreak,readmore" filter="\Joomla\CMS\Component\ComponentHelper::filterText" label="COM_PHOCACART_FIELD_EMAIL_FOOTER_LABEL" description="COM_PHOCACART_FIELD_EMAIL_FOOTER_DESC"/>
+        <field name="email_footer" showon="__legacy:1" type="editor" buttons="true" hide="pagebreak,readmore" filter="\Joomla\CMS\Component\ComponentHelper::filterText" label="COM_PHOCACART_FIELD_EMAIL_FOOTER_LABEL" description="COM_PHOCACART_FIELD_EMAIL_FOOTER_DESC"/>
 
         <field name="email_others" type="textarea" filter="\Joomla\CMS\Component\ComponentHelper::filterText" label="COM_PHOCACART_FIELD_EMAIL_OTHERS_LABEL" description="COM_PHOCACART_FIELD_EMAIL_OTHERS_DESC" />
 
-        <field name="email_subject_others" type="text" label="COM_PHOCACART_FIELD_EMAIL_SUBJECT_OTHERS_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SUBJECT_OTHERS_DESC" />
+        <field name="email_subject_others" showon="__legacy:1" type="text" label="COM_PHOCACART_FIELD_EMAIL_SUBJECT_OTHERS_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SUBJECT_OTHERS_DESC" />
 
-        <field name="email_text_others" type="editor" buttons="true" hide="pagebreak,readmore" filter="\Joomla\CMS\Component\ComponentHelper::filterText" label="COM_PHOCACART_FIELD_EMAIL_TEXT_OTHERS_LABEL" description="COM_PHOCACART_FIELD_EMAIL_TEXT_OTHERS_DESC"/>
+        <field name="email_text_others" showon="__legacy:1" type="editor" buttons="true" hide="pagebreak,readmore" filter="\Joomla\CMS\Component\ComponentHelper::filterText" label="COM_PHOCACART_FIELD_EMAIL_TEXT_OTHERS_LABEL" description="COM_PHOCACART_FIELD_EMAIL_TEXT_OTHERS_DESC"/>
 
-        <field name="email_downloadlink_description" type="editor" buttons="true" hide="pagebreak,readmore" filter="\Joomla\CMS\Component\ComponentHelper::filterText" label="COM_PHOCACART_FIELD_EMAIL_DOWNLOAD_LINK_DESCRIPTION_LABEL" description="COM_PHOCACART_FIELD_EMAIL_DOWNLOAD_LINK_DESCRIPTION_DESC"/>
+        <field name="email_downloadlink_description" showon="__legacy:1" type="editor" buttons="true" hide="pagebreak,readmore" filter="\Joomla\CMS\Component\ComponentHelper::filterText" label="COM_PHOCACART_FIELD_EMAIL_DOWNLOAD_LINK_DESCRIPTION_LABEL" description="COM_PHOCACART_FIELD_EMAIL_DOWNLOAD_LINK_DESCRIPTION_DESC"/>
 
         <field name="email_attachments" type="subform" multiple="true" max="3" layout="joomla.form.field.subform.repeatable" formsource="administrator/components/com_phocacart/models/forms/subform_email_attachments.xml" label="COM_PHOCACART_FIELD_EMAIL_ATTACHMENTS_LABEL" description="COM_PHOCACART_FIELD_EMAIL_ATTACHMENTS_DESC" />
     </fieldset>
@@ -100,19 +103,18 @@
             <option value="0">COM_PHOCACART_NO_ONE</option>
         </field>
 
-        <field name="email_gift_format" type="list" default="0" label="COM_PHOCACART_FIELD_EMAIL_SEND_FORMAT_GIFT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SEND_FORMAT_GIFT_DESC">
-            <option value="0">COM_PHOCACART_HTML</option>
-            <option value="1">COM_PHOCACART_PDF</option>
-            <option value="2">COM_PHOCACART_BOTH</option>
+        <field name="email_gift_format" type="radio" default="0" filter="options" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_EMAIL_GIFT_ATTACH_PDF_LABEL" description="COM_PHOCACART_FIELD_EMAIL_GIFT_ATTACH_PDF_DESC">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
         </field>
 
-        <field name="email_subject_gift_sender" type="text" label="COM_PHOCACART_FIELD_EMAIL_SUBJECT_BUYER_GIFT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SUBJECT_BUYER_GIFT_DESC" />
+        <field name="email_subject_gift_sender" showon="__legacy:1" type="text" label="COM_PHOCACART_FIELD_EMAIL_SUBJECT_BUYER_GIFT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SUBJECT_BUYER_GIFT_DESC" />
 
-        <field name="email_text_gift_sender" type="editor" buttons="true" hide="pagebreak,readmore" filter="\Joomla\CMS\Component\ComponentHelper::filterText" label="COM_PHOCACART_FIELD_EMAIL_TEXT_BUYER_GIFT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_TEXT_BUYER_GIFT_DESC"/>
+        <field name="email_text_gift_sender" showon="__legacy:1" type="editor" buttons="true" hide="pagebreak,readmore" filter="\Joomla\CMS\Component\ComponentHelper::filterText" label="COM_PHOCACART_FIELD_EMAIL_TEXT_BUYER_GIFT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_TEXT_BUYER_GIFT_DESC"/>
 
-        <field name="email_subject_gift_recipient" type="text" label="COM_PHOCACART_FIELD_EMAIL_SUBJECT_RECIPIENT_GIFT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SUBJECT_RECIPIENT_GIFT_DESC" />
+        <field name="email_subject_gift_recipient" showon="__legacy:1" type="text" label="COM_PHOCACART_FIELD_EMAIL_SUBJECT_RECIPIENT_GIFT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SUBJECT_RECIPIENT_GIFT_DESC" />
 
-        <field name="email_text_gift_recipient" type="editor" buttons="true" hide="pagebreak,readmore" filter="\Joomla\CMS\Component\ComponentHelper::filterText" label="COM_PHOCACART_FIELD_EMAIL_TEXT_RECIPIENT_GIFT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_TEXT_RECIPIENT_GIFT_DESC"/>
+        <field name="email_text_gift_recipient" showon="__legacy:1" type="editor" buttons="true" hide="pagebreak,readmore" filter="\Joomla\CMS\Component\ComponentHelper::filterText" label="COM_PHOCACART_FIELD_EMAIL_TEXT_RECIPIENT_GIFT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_TEXT_RECIPIENT_GIFT_DESC"/>
     </fieldset>
 
     <fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS">

@@ -7,6 +7,8 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+
+use Joomla\CMS\Log\Log;
 use Joomla\CMS\MVC\Model\FormModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -15,7 +17,8 @@ use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Filesystem\Path;
 use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Form\Form;
-
+use Phoca\PhocaCart\Mail\MailHelper;
+use Phoca\PhocaCart\Mail\MailTemplate;
 
 
 jimport('joomla.application.component.model');
@@ -245,6 +248,39 @@ class PhocaCartModelSubmit extends FormModel
 
 		// Everything OK - send email
 		if ($params->get('send_email_submit_item', 0) > 0 || $params->get('send_email_submit_item_others', '') != '') {
+			// TODO MAIL template
+			/*$mailData = MailHelper::prepareSubmitItemMailData($row);
+			$mailData['html.document'] = MailHelper::renderBody('submit_item', 'html', [], $mailData);
+			$mailData['text.document'] = MailHelper::renderBody('submit_item', 'text', [], $mailData);
+
+			$mailer = new MailTemplate('com_phocacart.sumbmit_item.admin');
+			$mailer->addTemplateData($mailData);
+
+			if (MailHelper::submitItemMailRecipients($mailer)) {
+				//$mailer->setReplyTo($data['email'], $data['name']);
+
+				try {
+					$mailer->send();
+
+					// Send email confrmation to user
+					$mailer = new MailTemplate('com_phocacart.question');
+					$mailer->addTemplateData($mailData);
+					$mailer->addRecipient($row->email, $row->name);
+					$mailer->send();
+
+				} catch (\Exception $exception) {
+					try {
+						$this->setError(Text::_('COM_PHOCACART_ERROR_QUESTION_EMAIL_ERROR'));
+						Log::add(Text::_($exception->getMessage()), Log::WARNING, 'jerror');
+
+						$user = PhocacartUser::getUser();
+						PhocacartLog::add(2, 'Submit item - ERROR - Problems with sending email', 0, 'IP: ' . $data['ip'] . ', User ID: ' . $user->id);
+					} catch (\RuntimeException $exception) {
+						Factory::getApplication()->enqueueMessage(Text::_($exception->errorMessage()), 'warning');
+					}
+				}
+			}*/
+
 			$send = PhocacartEmail::sendSubmitItemMail($dataItem, $dataContact, $dataParameter, Uri::getInstance()->toString(), $params);
 
 			if (!$send) {

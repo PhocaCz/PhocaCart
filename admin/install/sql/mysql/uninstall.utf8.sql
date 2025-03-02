@@ -113,4 +113,4 @@ DROP TABLE IF EXISTS `#__phocacart_product_discount_access`;
 DROP TABLE IF EXISTS `#__phocacart_shipping_method_access`;
 
 -- Templates
-DELETE FROM `#__mail_templates` WHERE template_id = 'com_phocacart.watchdog';
+DELETE FROM `#__mail_templates` WHERE `extension` = 'com_phocacart';

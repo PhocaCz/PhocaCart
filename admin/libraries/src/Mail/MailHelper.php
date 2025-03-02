@@ -11,6 +11,7 @@ namespace Phoca\PhocaCart\Mail;
 
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\LanguageHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
@@ -350,9 +351,173 @@ abstract class MailHelper
             'html.document', 'text.document', 'document',
             'sitename',
         ];
-        if ($status->email_gift) {
-            MailTemplate::checkTemplate('com_phocacart.order_status.gift.' . $status->id, 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_SUBJECT', 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_BODY', $tags, 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_HTMLBODY');
+
+        if (in_array($status->email_gift, [1, 3])) {
             MailTemplate::checkTemplate('com_phocacart.order_status.gift_notification.' . $status->id, 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_NOTIFICATION_SUBJECT', 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_NOTIFICATION_BODY', $tags, 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_NOTIFICATION_HTMLBODY');
+        }
+
+        if (in_array($status->email_gift, [2, 3])) {
+            MailTemplate::checkTemplate('com_phocacart.order_status.gift.' . $status->id, 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_SUBJECT', 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_BODY', $tags, 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_HTMLBODY');
+        }
+    }
+
+    public static function checkOrderStatusLegacyMailTemplates(object $status): void
+    {
+        $languages = LanguageHelper::getContentLanguages([0, 1]);
+        $pLang = new \PhocacartLanguage();
+
+        $tags = [
+            'html.document', 'text.document', 'document',
+            'ordernumber', 'status_title', 'sitename',
+        ];
+        if ($status->email_customer) {
+            $template = MailTemplate::getTemplate('com_phocacart.order_status.' . $status->id, '');
+            if (!$template) {
+                MailTemplate::createTemplate('com_phocacart.order_status.' . $status->id, 'COM_PHOCACART_EMAIL_ORDER_STATUS_SUBJECT', 'COM_PHOCACART_EMAIL_ORDER_STATUS_BODY', $tags, 'COM_PHOCACART_EMAIL_ORDER_STATUS_HTMLBODY');
+
+                foreach ($languages as $language) {
+                    $pLang->setLanguage($language->lang_code);
+                    try {
+                        $legacySubject = $status->email_subject;
+                        if (!$legacySubject) {
+                            $legacySubject = '{SITENAME} - {STATUS_TITLE} ' . Text::_('COM_PHOCACART_ORDER_NR') . ': {ORDERNUMBER}';
+                        }
+                        if ($status->email_text) {
+                            $legacyTextContent = "\n\n" . TextUtils::htmlToPlainText($status->email_text) . "\n\n";
+                            $legacyHtmlContent = $status->email_text;
+                        } else {
+                            $legacyTextContent = Text::_('COM_PHOCACART_ORDER_NR') . ': {ORDERNUMBER} - ' . Text::_('COM_PHOCACART_ORDER_STATUS_CHANGED_TO') . ': {STATUS_TITLE}' . "\n\n";
+                            $legacyHtmlContent = Text::_('COM_PHOCACART_ORDER_NR') . ': {ORDERNUMBER} - ' . Text::_('COM_PHOCACART_ORDER_STATUS_CHANGED_TO') . ': {STATUS_TITLE}' . '<br>';
+                        }
+
+                        if ($status->email_send > 0 && in_array($status->email_send_format, [0, 2])) {
+                            $legacyTextContent .= "\n\n{TEXT.DOCUMENT}";
+                            $legacyHtmlContent .= "<div>{HTML.DOCUMENT}</div>";
+                        }
+
+                        if ($status->email_downloadlink_description) {
+                            $legacyTextContent .= "{IF HAS_DOWNLOADS}\n\n" . TextUtils::htmlToPlainText($status->email_downloadlink_description) . "\n\n{TEXT.DOWNLOADS}{/IF HAS_DOWNLOADS}";
+                            $legacyHtmlContent .= "{IF HAS_DOWNLOADS}" . $status->email_downloadlink_description . "<div>{HTML.DOWNLOADS}</div>{/IF HAS_DOWNLOADS}";
+                        }
+
+                        if ($status->email_footer) {
+                            $legacyTextContent .= "\n\n" . TextUtils::htmlToPlainText($status->email_footer);
+                            $legacyHtmlContent .= $status->email_footer;
+                        }
+                    } finally {
+                        $pLang->setLanguageBack();
+                    }
+
+                    MailTemplate::createLanguageTemplate('com_phocacart.order_status.' . $status->id, $language->lang_code, $legacySubject, $legacyTextContent, $tags, $legacyHtmlContent);
+                }
+            }
+        }
+
+        if ($status->email_others) {
+            $template = MailTemplate::getTemplate('com_phocacart.order_status.notification.' . $status->id, '');
+            if (!$template) {
+                MailTemplate::createTemplate('com_phocacart.order_status.notification.' . $status->id, 'COM_PHOCACART_EMAIL_ORDER_STATUS_NOTIFICATION_SUBJECT', 'COM_PHOCACART_EMAIL_ORDER_STATUS_NOTIFICATION_BODY', $tags, 'COM_PHOCACART_EMAIL_ORDER_STATUS_NOTIFICATION_HTMLBODY');
+
+                foreach ($languages as $language) {
+                    $pLang->setLanguage($language->lang_code);
+                    try {
+                        $legacySubject = $status->email_subject_others;
+                        if (!$legacySubject) {
+                            $legacySubject = '{SITENAME} - {STATUS_TITLE} ' . Text::_('COM_PHOCACART_ORDER_NR') . ': {ORDERNUMBER}';
+                        }
+
+                        if ($status->email_text_others) {
+                            $legacyTextContent = "\n\n" . TextUtils::htmlToPlainText($status->email_text_others) . "\n\n";
+                            $legacyHtmlContent = $status->email_text_others;
+                        } else {
+                            $legacyTextContent = Text::_('COM_PHOCACART_ORDER_NR') . ': {ORDERNUMBER} - ' . Text::_('COM_PHOCACART_ORDER_STATUS_CHANGED_TO') . ': {STATUS_TITLE}' . "\n\n";
+                            $legacyHtmlContent = Text::_('COM_PHOCACART_ORDER_NR') . ': {ORDERNUMBER} - ' . Text::_('COM_PHOCACART_ORDER_STATUS_CHANGED_TO') . ': {STATUS_TITLE}' . '<br>';
+                        }
+
+                        if ($status->email_send > 0 && in_array($status->email_send_format, [0, 2])) {
+                            $legacyTextContent .= "\n\n{TEXT.DOCUMENT}";
+                            $legacyHtmlContent .= "<div>{HTML.DOCUMENT}</div>";
+                        }
+                    } finally {
+                        $pLang->setLanguageBack();
+                    }
+
+                    MailTemplate::createLanguageTemplate('com_phocacart.order_status.notification.' . $status->id, $language->lang_code, $legacySubject, $legacyTextContent, $tags, $legacyHtmlContent);
+                }
+            }
+        }
+
+        $tags = [
+            'html.document', 'text.document', 'document',
+            'sitename',
+        ];
+
+        if (in_array($status->email_gift, [1, 3])) {
+            $template = MailTemplate::getTemplate('com_phocacart.order_status.gift_notification.' . $status->id, '');
+            if (!$template) {
+                MailTemplate::createTemplate('com_phocacart.order_status.gift_notification.' . $status->id, 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_NOTIFICATION_SUBJECT', 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_NOTIFICATION_BODY', $tags, 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_NOTIFICATION_HTMLBODY');
+
+                foreach ($languages as $language) {
+                    $pLang->setLanguage($language->lang_code);
+                    try {
+                        $legacySubject = $status->email_subject_gift_sender;
+                        if (!$legacySubject) {
+                            $legacySubject = '{SITENAME} - {STATUS_TITLE} ' . Text::_('COM_PHOCACART_ORDER_NR') . ': {ORDERNUMBER} - ' . Text::_('COM_PHOCACART_GIFT_VOUCHER');
+                        }
+
+                        if ($status->email_text_gift_sender) {
+                            $legacyTextContent = "\n\n" . TextUtils::htmlToPlainText($status->email_text_gift_sender) . "\n\n";
+                            $legacyHtmlContent = $status->email_text_gift_sender;
+                        } else {
+                            $legacyTextContent = Text::_('COM_PHOCACART_ORDER_NR') . ': {ORDERNUMBER} - ' . Text::_('COM_PHOCACART_GIFT_VOUCHER') . "\n\n";
+                            $legacyHtmlContent = Text::_('COM_PHOCACART_ORDER_NR') . ': {ORDERNUMBER} - ' . Text::_('COM_PHOCACART_GIFT_VOUCHER') . '<br>';
+                        }
+
+                        if (in_array($status->email_gift_format, [0, 2])) {
+                            $legacyTextContent .= "\n\n{TEXT.DOCUMENT}";
+                            $legacyHtmlContent .= "<div>{HTML.DOCUMENT}</div>";
+                        }
+                    } finally {
+                        $pLang->setLanguageBack();
+                    }
+
+                    MailTemplate::createLanguageTemplate('com_phocacart.order_status.gift_notification.' . $status->id, $language->lang_code, $legacySubject, $legacyTextContent, $tags, $legacyHtmlContent);
+                }
+            }
+        }
+
+        if (in_array($status->email_gift, [2, 3])) {
+            $template = MailTemplate::getTemplate('com_phocacart.order_status.gift.' . $status->id, '');
+            if (!$template) {
+                MailTemplate::createTemplate('com_phocacart.order_status.gift.' . $status->id, 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_SUBJECT', 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_BODY', $tags, 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_HTMLBODY');
+
+                foreach ($languages as $language) {
+                    $pLang->setLanguage($language->lang_code);
+                    try {
+                        $legacySubject = $status->email_subject_gift_recipient;
+                        if (!$legacySubject) {
+                            $legacySubject = '{SITENAME} - {STATUS_TITLE} ' . Text::_('COM_PHOCACART_ORDER_NR') . ': {ORDERNUMBER} - ' . Text::_('COM_PHOCACART_GIFT_VOUCHER');
+                        }
+
+                        if ($status->email_text_gift_recipient) {
+                            $legacyTextContent = "\n\n" . TextUtils::htmlToPlainText($status->email_text_gift_recipient) . "\n\n";
+                            $legacyHtmlContent = $status->email_text_gift_recipient;
+                        } else {
+                            $legacyTextContent = Text::_('COM_PHOCACART_ORDER_NR') . ': {ORDERNUMBER} - ' . Text::_('COM_PHOCACART_GIFT_VOUCHER') . "\n\n";
+                            $legacyHtmlContent = Text::_('COM_PHOCACART_ORDER_NR') . ': {ORDERNUMBER} - ' . Text::_('COM_PHOCACART_GIFT_VOUCHER') . '<br>';
+                        }
+
+                        if (in_array($status->email_gift_format, [0, 2])) {
+                            $legacyTextContent .= "\n\n{TEXT.DOCUMENT}";
+                            $legacyHtmlContent .= "<div>{HTML.DOCUMENT}</div>";
+                        }
+                    } finally {
+                        $pLang->setLanguageBack();
+                    }
+
+                    MailTemplate::createLanguageTemplate('com_phocacart.order_status.gift.' . $status->id, $language->lang_code, $legacySubject, $legacyTextContent, $tags, $legacyHtmlContent);
+                }
+            }
         }
     }
 
@@ -411,6 +576,8 @@ abstract class MailHelper
         $displayData['taxrecapitulation'] = $orderView->getItemTaxRecapitulation($order->id);
         $displayData['preparereplace'] = \PhocacartText::prepareReplaceText($orderView, $order->id, $displayData['order'], $displayData['bas']);
         $displayData['qrcode'] = \PhocacartText::completeText($displayData['params']->get( 'pdf_invoice_qr_code', '' ), $displayData['preparereplace'], 1);
+
+        $mailData['HAS_DOWNLOADS'] = false;
 
         return self::renderBody('order', $format, $displayData, $mailData);
     }
