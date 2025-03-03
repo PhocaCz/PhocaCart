@@ -43,6 +43,8 @@ class PhocaCartCpViewPhocacartReports extends HtmlView
 		$this->t['date_days'] 	= PhocacartDate::getDateDays($this->t['date_from'], $this->t['date_to']);
 		$this->t['report_type'] = $this->state->get('filter.report_type', 0);
 		$this->t['order_status'] = $this->state->get('filter.order_status', 0);
+		$this->t['flow_type'] = $this->state->get('filter.flow_type', 1);
+		$this->t['payment_type'] = $this->state->get('filter.payment_type', 0);
 
 		$this->params			= PhocacartUtils::getComponentParameters();
 		$app				= Factory::getApplication();
@@ -61,6 +63,12 @@ class PhocaCartCpViewPhocacartReports extends HtmlView
 			$this->state->set('filter.date_from', '');
 			$this->t['data_error'] = 1;
 			$this->t['data_error_message'] = Text::_('COM_PHOCACART_SELECT_INTERVAL_THAT_HAS_FEWER_DAYS_THAN_LIMIT'). ' '. Text::_('COM_PHOCACART_LIMIT_IS'). ': '.$this->t['data_possible_days'];
+		}
+
+		// We can report cash flow (flow type = 2) only for paid orders (
+		if ($this->t['flow_type'] == 2 && $this->t['payment_type'] != 1) {
+			$this->t['data_error'] = 1;
+			$this->t['data_error_message'] = Text::_('COM_PHOCACART_CASH_FLOW_CAN_ONLY_BE_DISPLAYED_FOR_PAID_ORDERS');
 		}
 
 		if ($this->t['data_error'] == 0) {

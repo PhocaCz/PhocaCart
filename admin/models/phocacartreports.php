@@ -63,6 +63,9 @@ class PhocaCartCpModelPhocacartReports extends ListModel
 		$paymentType = $app->getUserStateFromRequest($this->context.'.filter.payment_type', 'filter_payment_type', '');
 		$this->setState('filter.payment_type', $paymentType);
 
+		$flowType = $app->getUserStateFromRequest($this->context.'.filter.flow', 'filter_flow_type', '');
+		$this->setState('filter.flow_type', $flowType);
+
 		$orderStatus = $app->getUserStateFromRequest($this->context.'.filter.order_status', 'filter_order_status', '');
 		$this->setState('filter.order_status', $orderStatus);
 
@@ -99,6 +102,7 @@ class PhocaCartCpModelPhocacartReports extends ListModel
 		$id	.= ':'.$this->getState('filter.report_type');
 		$id	.= ':'.$this->getState('filter.order_status');
 		$id	.= ':'.$this->getState('filter.payment_type');
+		$id	.= ':'.$this->getState('filter.flow_type');
 
 		return parent::getStoreId($id);
 	}
@@ -117,6 +121,7 @@ class PhocaCartCpModelPhocacartReports extends ListModel
 		$reportType = $this->getState('filter.report_type', 0);
 
 		$paymentType = $this->getState('filter.payment_type', 0);
+		$flowType = $this->getState('filter.flow_type', 1);
 
 
 
@@ -179,8 +184,10 @@ class PhocaCartCpModelPhocacartReports extends ListModel
 			if ($dateTo != '' && $dateFrom != '') {
 				$dateFrom = $db->Quote($dateFrom);
 				$dateTo   = $db->Quote($dateTo);
-				$query->where('DATE(a.date) >= ' . $dateFrom . ' AND DATE(a.date) <= ' . $dateTo);
 
+				if ($flowType == 1) {
+					$query->where('DATE(a.date) >= ' . $dateFrom . ' AND DATE(a.date) <= ' . $dateTo);
+				}
 				if ($paymentType == 1) {
 					$query->where('DATE(a.payment_date) >= ' . $dateFrom . ' AND DATE(a.payment_date) <= ' . $dateTo);
 				} else if ($paymentType == 2) {
@@ -250,7 +257,9 @@ class PhocaCartCpModelPhocacartReports extends ListModel
 			if ($dateTo != '' && $dateFrom != '') {
 				$dateFrom = $db->Quote($dateFrom);
 				$dateTo   = $db->Quote($dateTo);
-				$query->where('DATE(a.date) >= ' . $dateFrom . ' AND DATE(a.date) <= ' . $dateTo);
+				if ($flowType == 1) {
+					$query->where('DATE(a.date) >= ' . $dateFrom . ' AND DATE(a.date) <= ' . $dateTo);
+				}
 
 				if ($paymentType == 1) {
 					$query->where('DATE(a.payment_date) >= ' . $dateFrom . ' AND DATE(a.payment_date) <= ' . $dateTo);
@@ -348,7 +357,9 @@ class PhocaCartCpModelPhocacartReports extends ListModel
 			if ($dateTo != '' && $dateFrom != '') {
 				$dateFrom = $db->Quote($dateFrom);
 				$dateTo   = $db->Quote($dateTo);
-				$query->where('DATE(a.date) >= ' . $dateFrom . ' AND DATE(a.date) <= ' . $dateTo);
+				if ($flowType == 1) {
+					$query->where('DATE(a.date) >= ' . $dateFrom . ' AND DATE(a.date) <= ' . $dateTo);
+				}
 
 				if ($paymentType == 1) {
 					$query->where('DATE(a.payment_date) >= ' . $dateFrom . ' AND DATE(a.payment_date) <= ' . $dateTo);

@@ -387,6 +387,21 @@ class PhocacartUtilsSettings
         return $a;
     }
 
+    public static function getFlowTypesForm() {
+
+        $a = [];
+        $types = array(
+            1 => Text::_('COM_PHOCACART_REPORT_SALES'),
+            2 => Text::_('COM_PHOCACART_REPORT_CASH_FLOW')
+        );
+        foreach($types as $k => $v) {
+            $a[] = HTMLHelper::_('select.option', $k, $v, 'value', 'text');
+        }
+
+        return $a;
+
+    }
+
 	public static function getLangQuery($column, $lang) {
 
 		$db 				= Factory::getDbo();

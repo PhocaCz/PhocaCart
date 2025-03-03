@@ -151,6 +151,20 @@ echo '<div class="ph-inline-param">'. "\n"
 .'</select>'. "\n"
 .'</div>'. "\n";
 
+$listFlowType	= $this->escape($this->state->get('filter.flow_type'));
+$flowTypes 		= PhocacartUtilsSettings::getFlowTypesForm();
+if ($listFlowType == '') {
+    // '' is not the default value, it should be disabled
+    $listFlowType = 1;
+}
+array_unshift($flowTypes, HTMLHelper::_('select.option', '', '' . Text::_('COM_PHOCACART_SELECT_FLOW_TYPE') . '', 'value', 'text', true));
+echo '<div class="ph-inline-param">'. "\n"
+.'<label for="sortTable" class="element-invisible">'.Text::_('COM_PHOCACART_SELECT_FLOW_TYPE').'</label>'. "\n"
+.'<select class="form-select" name="filter_flow_type" id="flowTypeTable" class="input-medium">'. "\n"
+. HTMLHelper::_('select.options', $flowTypes, 'value', 'text', $listFlowType). "\n"
+.'</select>'. "\n"
+.'</div>'. "\n";
+
 
 $listReportType	= $this->escape($this->state->get('filter.report_type'));
 $reportTypes 		= PhocacartUtilsSettings::getReportTypesForm();
