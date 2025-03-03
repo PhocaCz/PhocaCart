@@ -277,3 +277,4 @@ INSERT INTO `#__mail_templates` (`template_id`, `extension`, `language`, `subjec
     ('com_phocacart.submit_item.admin', 'com_phocacart', '', 'COM_PHOCACART_EMAIL_SUBMIT_ITEM_ADMIN_SUBJECT', 'COM_PHOCACART_EMAIL_SUBMITE_ITEM_ADMIN_BODY', 'COM_PHOCACART_EMAIL_SUBMIT_ITEM_ADMIN_HTMLBODY', '', '{"tags":["user_name","user_username","user_email","products","product_title","product_sku","product_url","site_name","site_url"]}');
 
 ALTER TABLE `#__phocacart_orders` ADD COLUMN `payment_date` datetime;
+

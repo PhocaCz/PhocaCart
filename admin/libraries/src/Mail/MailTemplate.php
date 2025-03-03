@@ -114,4 +114,37 @@ class MailTemplate extends JoomlaMailTemplate
         else
             return self::createTemplate($key, $subject, $body, $tags, $htmlbody);
     }
+
+    /**
+     * Insert a new mail template for specific language into the system
+     *
+     * @param   string  $key       Mail template key
+     * @param   string  $language  Language code
+     * @param   string  $subject   A default subject (normally a translatable string)
+     * @param   string  $body      A default body (normally a translatable string)
+     * @param   array   $tags      Associative array of tags to replace
+     * @param   string  $htmlbody  A default htmlbody (normally a translatable string)
+     *
+     * @return  boolean  True on success, false on failure
+     *
+     * @since   5.0.0
+     */
+    public static function createLanguageTemplate(string $key, string $language, string $subject, string $body, array $tags, string $htmlbody = ''): bool
+    {
+        $db = Factory::getDbo();
+
+        $template              = new \stdClass();
+        $template->template_id = $key;
+        $template->language    = $language;
+        $template->subject     = $subject;
+        $template->body        = $body;
+        $template->htmlbody    = $htmlbody;
+        $template->extension   = explode('.', $key, 2)[0] ?? '';
+        $template->attachments = '';
+        $params                = new \stdClass();
+        $params->tags          = $tags;
+        $template->params      = json_encode($params);
+
+        return $db->insertObject('#__mail_templates', $template);
+    }
 }

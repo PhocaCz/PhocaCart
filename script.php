@@ -13,6 +13,8 @@ use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Phoca\PhocaCart\Mail\MailHelper;
+
 jimport( 'joomla.filesystem.folder' );
 
 class com_phocacartInstallerScript
@@ -131,22 +133,46 @@ class com_phocacartInstallerScript
 		return true;
 	}
 
+    private function checkMailTemplates() {
+        require_once(JPATH_ADMINISTRATOR . '/components/com_phocacart/libraries/bootstrap.php');
+
+        $db = Factory::getDbo();
+        $query = $db->getQuery(true)
+            ->select('*')
+            ->from('#__phocacart_order_statuses');
+        $db->setQuery($query);
+        $statuses = $db->loadObjectList();
+
+        foreach ($statuses as $status) {
+            MailHelper::checkOrderStatusLegacyMailTemplates($status);
+        }
+
+        $db->setQuery('UPDATE `#__phocacart_order_statuses` SET `email_send_format` = 1 WHERE `email_send_format` = 2');
+        $db->execute();
+
+        $db->setQuery('UPDATE `#__phocacart_order_statuses` SET `email_gift_format` = 1 WHERE `email_gift_format` = 2');
+        $db->execute();
+    }
+
 	function update($parent) {
 		$msg = $this->createFolders();
 		Factory::getApplication()->enqueueMessage($msg, 'message');
+        $this->checkMailTemplates();
 		return true;
 	}
 
 	public function loadLanguage($parent) {
-		$extension = $this->extension;
-		$lang = Factory::getLanguage();
+		$lang = Factory::getApplication()->getLanguage();
+
 		$path = $parent->getParent()->getPath('source');
 		$lang->load($this->extension, $path, 'en-GB', true);
 		$lang->load($this->extension, $path, $lang->getDefault(), true);
 		$lang->load($this->extension, $path, null, true);
+
 		$lang->load($this->extension . '.sys', $path, 'en-GB', true);
 		$lang->load($this->extension . '.sys', $path, $lang->getDefault(), true);
 		$lang->load($this->extension . '.sys', $path, null, true);
+
 		return true;
 	}
 

@@ -15,9 +15,11 @@ defined('_JEXEC') or die();
 /** @var Joomla\Registry\Registry $params */
 /** @var object $order */
 /** @var array $products */
+/** @var array $mailData */
 $params = $displayData['params'];
 $order = $displayData['order'];
 $products = $displayData['products'];
+$mailData = &$displayData['mailData'];
 
 if (!$order->user_id) {
     $canDownload = !!$order->order_token && $params->get('download_guest_access', 0);
@@ -56,6 +58,7 @@ foreach ($products as $product) {
 }
 
 if ($downloads) {
+    $mailData['HAS_DOWNLOADS'] = true;
 ?>
 <?= TextUtils::underline(Text::_('COM_PHOCACART_DOWNLOAD_LINKS')) . "\n\n"  ?>
 <?php foreach ($downloads as $productDownloads) { ?>
