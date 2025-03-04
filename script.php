@@ -429,6 +429,10 @@ $o .= '</div>';
 	display: none;
 }
 
+.g5-icon.icon-chevron-right {
+	margin-left: 1em;
+}
+
 .upBox {
     display: flex;
     flex-wrap: wrap;
