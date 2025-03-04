@@ -60,7 +60,7 @@
 
         <field name="__html_format_warning" type="HtmlEmailWarning" />
 
-        <field name="__buttons_edit_mail" type="EmailEditButtons" />
+        <field name="__buttons_edit_mail" type="EmailEditButtons" templates="status,notification" />
 
         <field name="email_subject" showon="__legacy:1" type="text" label="COM_PHOCACART_FIELD_EMAIL_SUBJECT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SUBJECT_DESC" />
 
@@ -102,6 +102,8 @@
             <option value="3">COM_PHOCACART_YES_BUYER_AND_RECIPIENT</option>
             <option value="0">COM_PHOCACART_NO_ONE</option>
         </field>
+
+        <field name="__buttons_edit_gift_mail" type="EmailEditButtons" templates="gift,gift_notification" />
 
         <field name="email_gift_format" type="radio" default="0" filter="options" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_EMAIL_GIFT_ATTACH_PDF_LABEL" description="COM_PHOCACART_FIELD_EMAIL_GIFT_ATTACH_PDF_DESC">
             <option value="0">JNO</option>

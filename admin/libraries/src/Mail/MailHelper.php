@@ -331,33 +331,56 @@ abstract class MailHelper
         return $db->loadColumn();
     }
 
+    public static function checkOrderStatusMailTemplate(int $statusId, string $mailTemplate): void
+    {
+        switch ($mailTemplate) {
+            case 'status':
+            case 'notification':
+                $tags = [
+                    'html.document', 'text.document', 'document',
+                    'ordernumber', 'status_title', 'sitename',
+                ];
+
+                if ($mailTemplate == 'status') {
+                    MailTemplate::checkTemplate('com_phocacart.order_status.' . $statusId, 'COM_PHOCACART_EMAIL_ORDER_STATUS_SUBJECT', 'COM_PHOCACART_EMAIL_ORDER_STATUS_BODY', $tags, 'COM_PHOCACART_EMAIL_ORDER_STATUS_HTMLBODY');
+                } else {
+                    MailTemplate::checkTemplate('com_phocacart.order_status.notification.' . $statusId, 'COM_PHOCACART_EMAIL_ORDER_STATUS_NOTIFICATION_SUBJECT', 'COM_PHOCACART_EMAIL_ORDER_STATUS_NOTIFICATION_BODY', $tags, 'COM_PHOCACART_EMAIL_ORDER_STATUS_NOTIFICATION_HTMLBODY');
+                }
+            break;
+
+            case 'gift':
+            case 'gift_notification':
+                $tags = [
+                    'html.document', 'text.document', 'document',
+                    'sitename',
+                ];
+
+                if ($mailTemplate == 'gift') {
+                    MailTemplate::checkTemplate('com_phocacart.order_status.gift.' . $statusId, 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_SUBJECT', 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_BODY', $tags, 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_HTMLBODY');
+                } else {
+                    MailTemplate::checkTemplate('com_phocacart.order_status.gift_notification.' . $statusId, 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_NOTIFICATION_SUBJECT', 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_NOTIFICATION_BODY', $tags, 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_NOTIFICATION_HTMLBODY');
+                }
+            break;
+        }
+    }
+
 
     public static function checkOrderStatusMailTemplates(object $status): void
     {
-        $tags = [
-            'html.document', 'text.document', 'document',
-            'ordernumber', 'status_title', 'sitename',
-        ];
-
         if ($status->email_customer) {
-            MailTemplate::checkTemplate('com_phocacart.order_status.' . $status->id, 'COM_PHOCACART_EMAIL_ORDER_STATUS_SUBJECT', 'COM_PHOCACART_EMAIL_ORDER_STATUS_BODY', $tags, 'COM_PHOCACART_EMAIL_ORDER_STATUS_HTMLBODY');
+            self::checkOrderStatusMailTemplate($status->id, 'status');
         }
 
         if ($status->email_others) {
-            MailTemplate::checkTemplate('com_phocacart.order_status.notification.' . $status->id, 'COM_PHOCACART_EMAIL_ORDER_STATUS_NOTIFICATION_SUBJECT', 'COM_PHOCACART_EMAIL_ORDER_STATUS_NOTIFICATION_BODY', $tags, 'COM_PHOCACART_EMAIL_ORDER_STATUS_NOTIFICATION_HTMLBODY');
+            self::checkOrderStatusMailTemplate($status->id, 'notification');
         }
 
-        $tags = [
-            'html.document', 'text.document', 'document',
-            'sitename',
-        ];
-
         if (in_array($status->email_gift, [1, 3])) {
-            MailTemplate::checkTemplate('com_phocacart.order_status.gift_notification.' . $status->id, 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_NOTIFICATION_SUBJECT', 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_NOTIFICATION_BODY', $tags, 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_NOTIFICATION_HTMLBODY');
+            self::checkOrderStatusMailTemplate($status->id, 'gift_notification');
         }
 
         if (in_array($status->email_gift, [2, 3])) {
-            MailTemplate::checkTemplate('com_phocacart.order_status.gift.' . $status->id, 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_SUBJECT', 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_BODY', $tags, 'COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_HTMLBODY');
+            self::checkOrderStatusMailTemplate($status->id, 'gift');
         }
     }
 

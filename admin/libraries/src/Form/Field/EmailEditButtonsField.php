@@ -13,6 +13,7 @@ use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\HTML\HTMLHelper;use Joomla\CMS\Language\LanguageHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
 use Phoca\PhocaCart\Mail\MailHelper;
 
 /**
@@ -28,11 +29,10 @@ class EmailEditButtonsField extends FormField
      */
     protected $type = 'EmailEditButtons';
 
-    private array $templatesEnabled = [];
     private array $languagesEnabled = [];
 
     private ?int $statusId = null;
-    private bool $isNew = false;
+    private array $templates = ['status', 'notification'];
 
     /**
      * @since 5.0.0
@@ -51,11 +51,14 @@ class EmailEditButtonsField extends FormField
         $result = parent::setup($element, $value, $group);
 
         $this->statusId = $this->form->getValue('id');
-        if ($this->statusId) {
-            $this->templatesEnabled = MailHelper::getOrderStatusMailTemplates($this->statusId);
-        }
 
         $this->languagesEnabled = LanguageHelper::getContentLanguages([0, 1]);
+
+        if ($element['templates'] ?? '') {
+            $this->templates = explode(',', $element['templates']);
+        }
+
+        $this->default = isset($element['value']) ? (string) $element['value'] : $this->default;
 
         return $result;
     }
@@ -64,10 +67,6 @@ class EmailEditButtonsField extends FormField
     {
         if (!$this->statusId) {
             return '<div class="alert alert-info w-100 m-0">' . Text::_('COM_PHOCACART_SAVE_STATUS_FIRST') . '</div>';
-        }
-
-        if (!$this->templatesEnabled) {
-            return '<div class="alert alert-info w-100 m-0">' . Text::_('COM_PHOCACART_NO_STATUS_EMAILS') . '</div>';
         }
 
         if (!$this->languagesEnabled) {
@@ -88,24 +87,24 @@ class EmailEditButtonsField extends FormField
                 $html[] = '</span>';
             }
 
-            if (false !== array_search('com_phocacart.order_status.' . $this->statusId, $this->templatesEnabled)) {
-                $link = 'index.php?option=com_mails&view=template&layout=edit&template_id=com_phocacart.order_status.' . $this->statusId . '&language=' . $language->lang_code;
-                $html[] = '<a href="' . $link . '" target="_blank" class="btn btn-outline-primary">' . Text::_('COM_PHOCACART_EMAIL_ORDER_STATUS_CUSTOMER') . '</a>';
+            if (false !== array_search('status', $this->templates)) {
+                $link = 'index.php?option=com_phocacart&task=phocacartstatus.mailtemplate&template_id=status&id=' . $this->statusId . '&language=' . $language->lang_code;
+                $html[] = '<a href="' . Route::_($link) . '" target="_blank" class="btn btn-outline-primary">' . Text::_('COM_PHOCACART_EMAIL_ORDER_STATUS_CUSTOMER') . '</a>';
             }
 
-            if (false !== array_search('com_phocacart.order_status.notification.' . $this->statusId, $this->templatesEnabled)) {
-                $link = 'index.php?option=com_mails&view=template&layout=edit&template_id=com_phocacart.order_status.' . $this->statusId . '&language=' . $language->lang_code;
-                $html[] = '<a href="' . $link . '" target="_blank" class="btn btn-outline-primary">' . Text::_('COM_PHOCACART_EMAIL_ORDER_STATUS_NOTIFICATION') . '</a>';
+            if (false !== array_search('notification', $this->templates)) {
+                $link = 'index.php?option=com_phocacart&task=phocacartstatus.mailtemplate&template_id=notification&id=' . $this->statusId . '&language=' . $language->lang_code;
+                $html[] = '<a href="' . Route::_($link) . '" target="_blank" class="btn btn-outline-primary">' . Text::_('COM_PHOCACART_EMAIL_ORDER_STATUS_NOTIFICATION') . '</a>';
             }
 
-            if (false !== array_search('com_phocacart.order_status.gift.' . $this->statusId, $this->templatesEnabled)) {
-                $link = 'index.php?option=com_mails&view=template&layout=edit&template_id=com_phocacart.order_status.' . $this->statusId . '&language=' . $language->lang_code;
-                $html[] = '<a href="' . $link . '" target="_blank" class="btn btn-outline-primary">' . Text::_('COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT') . '</a>';
+            if (false !== array_search('gift', $this->templates)) {
+                $link = 'index.php?option=com_phocacart&task=phocacartstatus.mailtemplate&template_id=gift&id=' . $this->statusId . '&language=' . $language->lang_code;
+                $html[] = '<a href="' . Route::_($link) . '" target="_blank" class="btn btn-outline-primary">' . Text::_('COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT') . '</a>';
             }
 
-            if (false !== array_search('com_phocacart.order_status.gift_notification.' . $this->statusId, $this->templatesEnabled)) {
-                $link = 'index.php?option=com_mails&view=template&layout=edit&template_id=com_phocacart.order_status.' . $this->statusId . '&language=' . $language->lang_code;
-                $html[] = '<a href="' . $link . '" target="_blank" class="btn btn-outline-primary">' . Text::_('COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_NOTIFICATION') . '</a>';
+            if (false !== array_search('gift_notification', $this->templates)) {
+                $link = 'index.php?option=com_phocacart&task=phocacartstatus.mailtemplate&template_id=gift_notification&id=' . $this->statusId . '&language=' . $language->lang_code;
+                $html[] = '<a href="' . Route::_($link) . '" target="_blank" class="btn btn-outline-primary">' . Text::_('COM_PHOCACART_EMAIL_ORDER_STATUS_GIFT_NOTIFICATION') . '</a>';
             }
 
             $html[] = '</div><br>';
