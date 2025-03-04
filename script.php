@@ -368,7 +368,7 @@ $o .= '</div>';
 	font-size: 1rem;
 	color: white !important;
 	border: 2px solid rgba(255, 255, 255, 0.8);
-	border-radius: 3px;
+	border-radius: 2em;
 	padding: 0.5rem 1rem;
 	background: rgba(82, 195, 255, 0.1);
 	vertical-align: middle;
@@ -421,6 +421,13 @@ $o .= '</div>';
 	border-radius: 6px;
 }
 
+.alert.alert-info .g5i a.g5-button {
+	color: white;
+}
+
+.g5i .g5-phoca a:before {
+	display: none;
+}
 
 .upBox {
     display: flex;
