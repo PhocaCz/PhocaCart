@@ -106,7 +106,7 @@ class PhocaCartViewPos extends HtmlView
 		$this->t['can_display_price']		= true;
 		$this->t['hide_add_to_cart_stock']	= $this->p->get( 'hide_add_to_cart_stock', 0 );
 		$this->t['display_star_rating']		= $this->p->get( 'display_star_rating', 0 );
-		$this->t['add_cart_method']			= $this->p->get( 'add_cart_method', 0 );
+		$this->t['add_cart_method']			= $this->p->get( 'add_cart_method', 2 );
 		$this->t['pos_hide_attributes']		= $this->p->get( 'pos_hide_attributes', 1 );
 		$this->t['pos_display_stock_status']= $this->p->get( 'pos_display_stock_status', 0 );
 		$this->t['pos_payment_force']		= $this->p->get( 'pos_payment_force', 0 );

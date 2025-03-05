@@ -77,8 +77,8 @@ class PhocaCartViewItem extends HtmlView
 		$this->t['image_popup_method']	    	= $this->p->get( 'image_popup_method', 1 );
 		$this->t['display_compare']			    = $this->p->get( 'display_compare', 0 );
 		$this->t['display_wishlist']		    = $this->p->get( 'display_wishlist', 0 );
-		$this->t['add_compare_method']		    = $this->p->get( 'add_compare_method', 0 );
-		$this->t['add_wishlist_method']		    = $this->p->get( 'add_wishlist_method', 0 );
+		$this->t['add_compare_method']		    = $this->p->get( 'add_compare_method', 2 );
+		$this->t['add_wishlist_method']		    = $this->p->get( 'add_wishlist_method', 2 );
 
 		$this->t['hide_addtocart']			    = $this->p->get( 'hide_addtocart', 0 );
 		$this->t['hide_attributes_item']	    = $this->p->get( 'hide_attributes_item', 0 );

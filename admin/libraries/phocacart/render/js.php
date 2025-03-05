@@ -21,7 +21,7 @@ final class PhocacartRenderJs
     public static function renderAjaxAddToCart() {
 
         $paramsC 			= PhocacartUtils::getComponentParameters();
-        $add_cart_method 	= $paramsC->get('add_cart_method', 0);
+        $add_cart_method 	= $paramsC->get('add_cart_method', 2);
 
         // We need to refresh checkout site when AJAX used for removing or adding products to cart
         $task = 'checkout.add';
@@ -168,7 +168,7 @@ final class PhocacartRenderJs
     public static function renderAjaxUpdateCart() {
 
         $paramsC 			= PhocacartUtils::getComponentParameters();
-        $add_cart_method 	= $paramsC->get('add_cart_method', 0);
+        $add_cart_method 	= $paramsC->get('add_cart_method', 2);
 
         // We need to refresh checkout site when AJAX used for removing or adding products to cart
         $task = 'checkout.update';
@@ -273,7 +273,7 @@ final class PhocacartRenderJs
     public static function renderAjaxAddToCompare() {
 
         $paramsC 			= PhocacartUtils::getComponentParameters();
-        $add_compare_method = $paramsC->get('add_compare_method', 0);
+        $add_compare_method = $paramsC->get('add_compare_method', 2);
 
         // We need to refresh comparison site when AJAX used for removing or adding products to comparison list
         $app 	= Factory::getApplication();
@@ -343,7 +343,7 @@ final class PhocacartRenderJs
     public static function renderAjaxRemoveFromCompare() {
 
         $paramsC 			= PhocacartUtils::getComponentParameters();
-        $add_compare_method = $paramsC->get('add_compare_method', 0);
+        $add_compare_method = $paramsC->get('add_compare_method', 2);
 
         // We need to refresh comparison site when AJAX used for removing or adding products to comparison list
         $app 	= Factory::getApplication();
@@ -413,7 +413,7 @@ final class PhocacartRenderJs
     public static function renderAjaxAddToWishList() {
 
         $paramsC 				= PhocacartUtils::getComponentParameters();
-        $add_wishlist_method 	= $paramsC->get('add_wishlist_method', 0);
+        $add_wishlist_method 	= $paramsC->get('add_wishlist_method', 2);
 
         // We need to refresh wishlist site when AJAX used for removing or adding products to wishlist list
         $app 	= Factory::getApplication();
@@ -482,7 +482,7 @@ final class PhocacartRenderJs
     public static function renderAjaxRemoveFromWishList() {
 
         $paramsC = PhocacartUtils::getComponentParameters();
-        $add_wishlist_method = $paramsC->get('add_wishlist_method', 0);
+        $add_wishlist_method = $paramsC->get('add_wishlist_method', 2);
 
         // We need to refresh wishlist site when AJAX used for removing or adding products to wishlist list
         $app = Factory::getApplication();

@@ -84,11 +84,11 @@ class PhocaCartViewCategory extends HtmlView
 		$this->t['dynamic_change_stock']	= $this->p->get( 'dynamic_change_stock', 0 );
 		$this->t['dynamic_change_id']           = $this->p->get('dynamic_change_id', 0);
 		$this->t['remove_select_option_attribute']= $this->p->get( 'remove_select_option_attribute', 1 );
-		$this->t['add_compare_method']		= $this->p->get( 'add_compare_method', 0 );
+		$this->t['add_compare_method']		= $this->p->get( 'add_compare_method', 2 );
         $this->t['display_addtocart']			= $this->p->get( 'display_addtocart', 1 );
-		$this->t['add_wishlist_method']		= $this->p->get( 'add_wishlist_method', 0 );
+		$this->t['add_wishlist_method']		= $this->p->get( 'add_wishlist_method', 2 );
 		$this->t['display_star_rating']		= $this->p->get( 'display_star_rating', 0 );
-		$this->t['add_cart_method']			= $this->p->get( 'add_cart_method', 0 );
+		$this->t['add_cart_method']			= $this->p->get( 'add_cart_method', 2 );
 		$this->t['hide_attributes_category']= $this->p->get( 'hide_attributes_category', 1 );
 		$this->t['hide_attributes']			= $this->p->get( 'hide_attributes', 0 );
 		$this->t['display_stock_status']	= $this->p->get( 'display_stock_status', 1 );

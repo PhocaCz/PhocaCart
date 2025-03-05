@@ -232,7 +232,7 @@ class PhocacartCompare
 		$app				= Factory::getApplication();
 		$s                  = PhocacartRenderStyle::getStyles();
 		$paramsC 			= PhocacartUtils::getComponentParameters();
-		$add_compare_method	= $paramsC->get( 'add_compare_method', 0 );
+		$add_compare_method	= $paramsC->get( 'add_compare_method', 2 );
 
 		if (empty($this->itemsDb)) {
 			// we asked them in construct, don't ask again

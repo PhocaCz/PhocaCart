@@ -337,7 +337,7 @@ class PhocacartWishlist
 		$action			        = $uri->toString();
 		$s                      = PhocacartRenderStyle::getStyles();
 		$paramsC 		        = PhocacartUtils::getComponentParameters();
-		$add_wishlist_method	= $paramsC->get( 'add_wishlist_method', 0 );
+		$add_wishlist_method	= $paramsC->get( 'add_wishlist_method', 2 );
 
 
 		if (empty($this->itemsDb)) {

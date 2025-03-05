@@ -878,19 +878,19 @@
       <field name="phocahead8" type="phocahead" default="COM_PHOCACART_AJAX_OPTIONS_LABEL" label="" description=""/>
 
 
-      <field name="add_cart_method" type="list" default="0" label="COM_PHOCACART_FIELD_ADD_TO_CART_METHOD_LABEL" description="COM_PHOCACART_FIELD_ADD_TO_CART_METHOD_DESC">
+      <field name="add_cart_method" type="list" default="2" label="COM_PHOCACART_FIELD_ADD_TO_CART_METHOD_LABEL" description="COM_PHOCACART_FIELD_ADD_TO_CART_METHOD_DESC">
         <option value="0">COM_PHOCACART_STANDARD</option>
         <option value="1">COM_PHOCACART_AJAX</option>
         <option value="2">COM_PHOCACART_AJAX_WITH_POPUP_WINDOW</option>
       </field>
 
-      <field name="add_compare_method" type="list" default="0" label="COM_PHOCACART_FIELD_ADD_TO_COMPARISON_METHOD_LABEL" description="COM_PHOCACART_FIELD_ADD_TO_COMPARISON_METHOD_DESC">
+      <field name="add_compare_method" type="list" default="2" label="COM_PHOCACART_FIELD_ADD_TO_COMPARISON_METHOD_LABEL" description="COM_PHOCACART_FIELD_ADD_TO_COMPARISON_METHOD_DESC">
         <option value="0">COM_PHOCACART_STANDARD</option>
         <option value="1">COM_PHOCACART_AJAX</option>
         <option value="2">COM_PHOCACART_AJAX_WITH_POPUP_WINDOW</option>
       </field>
 
-      <field name="add_wishlist_method" type="list" default="0" label="COM_PHOCACART_FIELD_ADD_TO_WISH_LIST_METHOD_LABEL" description="COM_PHOCACART_FIELD_ADD_TO_WISH_LIST_METHOD_DESC">
+      <field name="add_wishlist_method" type="list" default="2" label="COM_PHOCACART_FIELD_ADD_TO_WISH_LIST_METHOD_LABEL" description="COM_PHOCACART_FIELD_ADD_TO_WISH_LIST_METHOD_DESC">
         <option value="0">COM_PHOCACART_STANDARD</option>
         <option value="1">COM_PHOCACART_AJAX</option>
         <option value="2">COM_PHOCACART_AJAX_WITH_POPUP_WINDOW</option>
