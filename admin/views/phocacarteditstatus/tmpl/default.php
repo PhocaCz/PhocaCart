@@ -13,6 +13,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 
 $link	= Route::_( 'index.php?option='.$this->t['o'].'&view=phocacarteditstatus&tmpl=component&id='.(int)$this->id);
+PhocacartRenderAdminjs::renderOverlayOnSubmit('phEditStatus');
 
 if (!empty($this->itemhistory)) {
 ?>
@@ -53,7 +54,7 @@ if (!empty($this->itemhistory)) {
 <?php
 }
 ?>
-<form action="<?php echo $link; ?>" method="post">
+<form action="<?php echo $link; ?>" method="post" id="phEditStatus">
   <div class="row mt-4">
     <div class="col-md-6">
         <?php echo $this->form->renderFieldset('status'); ?>
