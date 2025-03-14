@@ -202,6 +202,19 @@
             <field name="points_received" type="number" showon="_rewards_options:1" label="COM_PHOCACART_FIELD_POINTS_RECEIVED_LABEL" />
         </fieldset>
 
+        <fields name="parameters">
+            <fieldset name="basic">
+                <field name="_parameters" type="list" class="form-select-color-state" filter="unset" label="COM_PHOCACART_BATCH_PARAMETERS">
+                    <option value="">COM_PHOCACART_BATCH_NOCHANGE</option>
+                    <option value="1">COM_PHOCACART_BATCH_CHANGE</option>
+                </field>
+            </fieldset>
+
+            <fieldset name="params" addfieldpath="/administrator/components/com_phocacart/models/fields">
+                <field name="_parameters_heading" type="note" showon="_parameters:1" class="bg-primary text-white p-2 fw-bold w-100" description="COM_PHOCACART_BATCH_PARAMETERS_HEADING" />
+            </fieldset>
+        </fields>
+
         <fields name="com_fields">
             <fieldset name="basic">
                 <field name="_custom_fields" type="list" class="form-select-color-state" filter="unset" label="COM_PHOCACART_BATCH_CUSTOM_FIELDS">

@@ -82,6 +82,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
         'taglabels_remove'          => 'batchLabelsRemove',
         'pcf'                       => 'batchFeedOptions',
         'com_fields'                => 'batchCustomFields',
+        'parameters'                => 'batchParameters',
     ];
 
     public function __construct($config = [], MVCFactoryInterface $factory = null, FormFactoryInterface $formFactory = null)
@@ -2288,8 +2289,58 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
                 }
 
                 foreach ($newValues as $name => $value) {
+                    if ($name == '_custom_fields') {
+                        continue;
+                    }
                     if ($value !== null && $value !== '') {
                         PhocacartFields::saveFieldValue('com_phocacart.phocacartitem', (int)$pk, $name, $value);
+                    }
+                }
+            } else {
+                $this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+
+                return false;
+            }
+        }
+
+        // Clean the cache
+        $this->cleanCache();
+
+        return true;
+    }
+
+    protected function batchParameters($newValues, $pks, $contexts): bool
+    {
+        $this->initBatch();
+
+        foreach ($pks as $pk) {
+            if ($this->user->authorise('core.edit', $contexts[$pk])) {
+                $this->table->reset();
+                $this->table->load($pk);
+
+                $event = new BeforeBatchEvent(
+                    $this->event_before_batch,
+                    ['src' => $this->table, 'type' => 'parameters']
+                );
+                $this->dispatchEvent($event);
+
+                // Check the row.
+                if (!$this->table->check()) {
+                    $this->setError($this->table->getError());
+
+                    return false;
+                }
+
+                foreach ($newValues as $name => $value) {
+                    if ($name == '_parameters') {
+                        continue;
+                    }
+
+                    list($operation, $parameterId) = explode('_', $name);
+                    if ($operation == 'add') {
+                        PhocacartParameter::addParameterValues($value, $pk, $parameterId);
+                    } else {
+                        PhocacartParameter::removeParameterValues($value, $pk);
                     }
                 }
             } else {
