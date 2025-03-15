@@ -2391,6 +2391,7 @@ class PhocacartOrder
         $query = ' SELECT a.title FROM #__phocacart_order_statuses WHERE id = ' . (int)$statusId . ' ORDER BY a.title';
         $db->setQuery($query);
         $status = $db->loadAssoc();
+        return $status;
     }
 
     public static function getOrderDate($orderId) {
