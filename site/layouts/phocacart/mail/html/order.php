@@ -141,11 +141,11 @@ switch ($documentType) {
   <table style="<?= $styles['w100'] ?>">
     <tbody>
       <tr>
-        <td style="width: 50%;">
+        <td style="width: 50%; vertical-align: top" valign="top">
             <?= $displayData['blocks']['billing']; ?>
         </td>
         <td style="width: 20px;"></td>
-        <td style="width: 50%;">
+        <td style="width: 50%; vertical-align: top" valign="top">
             <?= $displayData['blocks']['shipping']; ?>
         </td>
       </tr>

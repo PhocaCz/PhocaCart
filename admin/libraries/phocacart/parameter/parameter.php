@@ -10,9 +10,11 @@
  */
 defined('_JEXEC') or die();
 use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Router\Route;
+use Phoca\PhocaCart\Container\Container;
 use Phoca\PhocaCart\I18n\I18nHelper;
 
 class PhocacartParameter
@@ -495,6 +497,84 @@ class PhocacartParameter
         return $paramsA;
 	}
 
+	public static function prepareBatchForm(Form $form)
+	{
+		$parameters = self::getAllParameters();
 
+		if (!$parameters) {
+			return true;
+		}
+
+		// Creating the dom
+		$xml        = new \DOMDocument('1.0', 'UTF-8');
+		$fieldsNode = $xml->appendChild(new \DOMElement('form'))->appendChild(new \DOMElement('fields'));
+		$fieldsNode->setAttribute('name', 'batch');
+		$fieldsNode = $fieldsNode->appendChild(new \DOMElement('fields'));
+		$fieldsNode->setAttribute('name', 'parameters');
+		$fieldset = $fieldsNode->appendChild(new \DOMElement('fieldset'));
+		$fieldset->setAttribute('name', 'params');
+
+		foreach ($parameters as $parameter) {
+			try {
+				$node = $fieldset->appendChild(new \DOMElement('field'));
+				$node->setAttribute('name', 'add_' . $parameter->id);
+				$node->setAttribute('type', 'PhocaCartParameterValues');
+				$node->setAttribute('parameterid', $parameter->id);
+				$node->setAttribute('label', Text::sprintf('COM_PHOCACART_BATCH_PARAMETERS_ADD', $parameter->title));
+				$node->setAttribute('showon', '_parameters:1');
+				$node->setAttribute('multiple', 'true');
+				$node->setAttribute('layout', 'joomla.form.field.list-fancy-select');
+
+				$node = $fieldset->appendChild(new \DOMElement('field'));
+				$node->setAttribute('name', 'remove_' . $parameter->id);
+				$node->setAttribute('type', 'PhocaCartParameterValues');
+				$node->setAttribute('parameterid', $parameter->id);
+				$node->setAttribute('label', Text::sprintf('COM_PHOCACART_BATCH_PARAMETERS_REMOVE', $parameter->title));
+				$node->setAttribute('showon', '_parameters:1');
+				$node->setAttribute('multiple', 'true');
+				$node->setAttribute('layout', 'joomla.form.field.list-fancy-select');
+			}
+			catch (\Exception $e) {
+				Factory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+			}
+		}
+
+		$form->load($xml->saveXML());
+
+		return true;
+	}
+
+	public static function addParameterValues(array $parameterValues, int $itemId, int $parameterId): void
+	{
+		if (!$parameterValues) {
+			return;
+		}
+
+		$db     = Container::getDbo();
+		$values = [];
+		foreach ($parameterValues as $valueId) {
+			$values[] = ' (' . $itemId . ', ' . (int) $valueId . ', ' . $parameterId . ')';
+		}
+
+		$query = 'INSERT IGNORE INTO #__phocacart_parameter_values_related (item_id, parameter_value_id, parameter_id)'
+			. ' VALUES ' . implode(',', $values);
+
+		$db->setQuery($query);
+		$db->execute();
+	}
+
+	public static function removeParameterValues(array $parameterValues, int $itemId): void
+	{
+		if (!$parameterValues) {
+			return;
+		}
+
+		$db     = Container::getDbo();
+
+		$query = 'DELETE FROM #__phocacart_parameter_values_related WHERE item_id = ' . $itemId . ' AND parameter_value_id IN (' . implode(',',$parameterValues) . ')';
+
+		$db->setQuery($query);
+		$db->execute();
+	}
 }
-?>
+

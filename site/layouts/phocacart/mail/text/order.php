@@ -20,7 +20,6 @@ $params = $displayData['params'];
 $documentType = $displayData['documentType'];
 
 $displayData['blocks'] = [
-    'styles' => '',
     'header' => '',
     'info' => '',
     'billing' => '',
