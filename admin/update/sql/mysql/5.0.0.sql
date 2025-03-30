@@ -217,7 +217,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_content_types` (
     `title` varchar(255) NOT NULL,
     `context` varchar(255) NOT NULL,
     `published` tinyint(1) NOT NULL DEFAULT 0,
-    `checked_out` int(11),
+    `checked_out` int unsigned,
     `checked_out_time` datetime,
     `ordering` int(11) NOT NULL DEFAULT 0,
     `params` text,

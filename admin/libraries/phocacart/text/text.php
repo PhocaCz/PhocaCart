@@ -27,7 +27,9 @@ class PhocacartText {
 	public static function completeText($body, $replace, $type = 1) {
         $body = (string)$body;
         foreach ($replace as $key => $value) {
-            $body = str_replace('{' . $key .'}', $value, $body);
+            if ($value) {
+                $body = str_replace('{' . $key .'}', $value, $body);
+            }
         }
 
         return $body;

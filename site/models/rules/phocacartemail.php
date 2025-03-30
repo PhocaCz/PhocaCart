@@ -17,7 +17,7 @@ use Joomla\CMS\Language\Text;
 
 use Joomla\String\StringHelper;
 
-JFormHelper::loadRuleClass('email');
+FormHelper::loadRuleClass('email');
 
 class JFormRulePhocaCartEmail extends EmailRule
 {

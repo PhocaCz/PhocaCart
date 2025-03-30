@@ -961,12 +961,13 @@ class PhocacartShipping
 		if ((int)$id > 0) {
 			$db =Factory::getDBO();
 
-			$query = 'SELECT a.description_info'
+			$query = 'SELECT '.I18nHelper::sqlCoalesce(['description_info'])
 					.' FROM #__phocacart_shipping_methods AS a'
+					. I18nHelper::sqlJoin('#__phocacart_shipping_methods_i18n')
 					.' WHERE a.published = 1'
 					.' AND a.type IN (0,2)'// IT IS A POS (0 common, 2 POS)
 					.' AND a.id = '.(int)$id
-					.' ORDER BY id LIMIT 1';
+					.' ORDER BY a.id LIMIT 1';
 			$db->setQuery($query);
 			return $db->loadResult();
 		}
