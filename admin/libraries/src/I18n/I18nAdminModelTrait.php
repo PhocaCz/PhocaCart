@@ -116,4 +116,9 @@ trait I18nAdminModelTrait
 
         return $form;
     }
+
+    private function copyI18nData(int $oldId, int $newId): void
+    {
+        I18nHelper::copyI18nData($oldId, $newId, $this->i18nTable);
+    }
 }

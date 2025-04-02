@@ -16,10 +16,11 @@ defined('_JEXEC') or die();
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Mail\MailHelper;
 use Joomla\Registry\Registry;
 use Joomla\CMS\HTML\HTMLHelper;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
 
 Table::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_phocacart/tables');
 
@@ -59,6 +60,8 @@ class PhocacartOrder
         $order_language       = $pC->get('order_language', 0);
         $skip_shipping_method = $pC->get('skip_shipping_method', 0);
         $skip_payment_method  = $pC->get('skip_payment_method', 0);
+        $tax_calculation_sales  = $pC->get('tax_calculation_sales', 1);
+
 
 
 
@@ -97,11 +100,7 @@ class PhocacartOrder
         // 1. Check the VAT by external service if it is enabled in plugin
         if (!empty($address[0])) {
             // Event user e.g. check valid VAT and store information about it
-            $pluginLayout = PluginHelper::importPlugin('pct');
-            if ($pluginLayout) {
-                $eventData = [];
-                Factory::getApplication()->triggerEvent('onPCTonUserAddressBeforeSaveOrder', array('com_phocacart.order', &$address[0], $eventData));
-            }
+            Dispatcher::dispatch(new Event\Tax\UserAddressBeforeSaveOrder('com_phocacart.order', $address[0]));
         }
         // 2. Use stored information and change the VAT (before calculation)
 
@@ -110,7 +109,6 @@ class PhocacartOrder
         if (isset($address[0]->params_user)) {
             $d['params_user'] = $address[0]->params_user;
         }
-
 
         $cart  = new PhocacartCartRendercheckout();
         $cart->setInstance(3);//order
@@ -325,23 +323,15 @@ class PhocacartOrder
 
         }
 
-
-        //$dispatcher = J EventDispatcher::getInstance();
         if (isset($payment['method'])) {
-            $plugin = PluginHelper::importPlugin('pcp', htmlspecialchars(strip_tags($payment['method'])));
-            if ($plugin) {
-                $eventData               = array();
-                $eventData['pluginname'] = htmlspecialchars(strip_tags($payment['method']));
-                Factory::getApplication()->triggerEvent('onPCPbeforeSaveOrder', array(&$statusId, (int)$payment['id'], $eventData));
-                $d['status_id'] = (int)$statusId;// e.g. by POS Cash we get automatically the status as completed
-            } else {
+            Dispatcher::dispatch(new Event\Payment\BeforeSaveOrder($statusId, (int)$payment['id'], [
+              'pluginname' => $payment['method']
+            ]));
 
-                $d['status_id'] = $statusId;// no plugin or no event found
-            }
+            $d['status_id'] = (int)$statusId; // e.g. by POS Cash we get automatically the status as completed
         } else {
             $d['status_id'] = $statusId;// no plugin or no event found
         }
-
 
         $d['type'] = PhocacartType::getTypeByTypeArray($this->type);
 
@@ -455,8 +445,7 @@ class PhocacartOrder
             //    - check if this method even exists
             //	  - and check if the selected method meets every criteria and rules to be selected
             //$shippingMethods	= $shippingClass->checkAndGetShippingMethod($shippingId); CANNOT BE USED BECAUSE OF DIFFERENT VARIABLES IN ORDER
-            $shippingMethods = $shippingClass->getPossibleShippingMethods($total[0]['netto'], $total[0]['brutto'], $total[0]['quantity'], $country, $region, $zip, $total[0]['weight'], $total[0]['length'], $total[0]['width'], $total[0]['height'], $shippingId, 0);
-
+            $shippingMethods = $shippingClass->getPossibleShippingMethods($total[0]['subtotalnetto'], $total[0]['subtotalbrutto'], $total[0]['quantity'], $country, $region, $zip, $total[0]['weight'], $total[0]['length'], $total[0]['width'], $total[0]['height'], $shippingId, 0);
 
         } else {
             // 2) No shipping method selected
@@ -476,7 +465,9 @@ class PhocacartOrder
             // Cooperates with components/com_phocacart/views/checkout/view.html.php 230
 
             // Find all possible shipping methods (without shipping method selected) to see if there is really no rule to display any method
-            $shippingtMethodsAllPossible = $shippingClass->getPossibleShippingMethods($total[0]['netto'], $total[0]['brutto'], $total[0]['quantity'], $country, $region, $zip, $total[0]['weight'], $total[0]['length'], $total[0]['width'], $total[0]['height'], 0, 0);
+            $shippingtMethodsAllPossible = $shippingClass->getPossibleShippingMethods($total[0]['subtotalnetto'], $total[0]['subtotalbrutto'], $total[0]['quantity'], $country, $region, $zip, $total[0]['weight'], $total[0]['length'], $total[0]['width'], $total[0]['height'], 0, 0);
+
+
             if (empty($shippingtMethodsAllPossible)) {
                 $shippingNotFoundAllowProceed = true;
             }
@@ -515,7 +506,7 @@ class PhocacartOrder
             //    - check if this method even exists
             //	  - and check if the selected method meets every criteria and rules to be selected
             //$paymentMethods	= $paymentClass->checkAndGetPaymentMethod($payment['id']); CANNOT BE USED BECAUSE OF DIFFERENT VARIABLES IN ORDER
-            $paymentMethods = $paymentClass->getPossiblePaymentMethods($total[0]['netto'], $total[0]['brutto'], $country, $region, $shippingId, $payment['id'], 0, $d['currency_id']);
+            $paymentMethods = $paymentClass->getPossiblePaymentMethods($total[0]['subtotalnetto'], $total[0]['subtotalbrutto'], $country, $region, $shippingId, $payment['id'], 0, $d['currency_id']);
 
 
         } else {
@@ -535,7 +526,7 @@ class PhocacartOrder
             // Cooperates with components/com_phocacart/views/checkout/view.html.php 270
 
             // Find all possible payments methods (without payment method selected) to see if there is really no rule to display any method
-            $paymentMethodsAllPossible = $paymentClass->getPossiblePaymentMethods($total[0]['netto'], $total[0]['brutto'], $country, $region, $shippingId, 0, 0, $d['currency_id']);
+            $paymentMethodsAllPossible = $paymentClass->getPossiblePaymentMethods($total[0]['subtotalnetto'], $total[0]['subtotalbrutto'], $country, $region, $shippingId, 0, 0, $d['currency_id']);
             if (empty($paymentMethodsAllPossible)) {
                 $paymentNotFoundAllowProceed = true;
             }
@@ -705,6 +696,7 @@ class PhocacartOrder
 
             // DISCOUNTS
             $this->cleanTable('phocacart_order_discounts', $row->id);
+            // Possible TO DO - dbrutto
             if ($total[2]['dnetto'] > 0) {
                 $this->saveOrderDiscounts(Text::_('COM_PHOCACART_PRODUCT_DISCOUNT'), $total[2], $row->id);
             }
@@ -752,7 +744,6 @@ class PhocacartOrder
             // BE AWARE***********
             // $d is newly defined so use d2
             // *******************
-
 
             // TOTAL
             if (!empty($total[0])) {
@@ -817,7 +808,7 @@ class PhocacartOrder
                     $d2['type']               = 'dnetto';
                     $d2['amount']             = '-' . $total[2]['dnetto'];
                     $d2['ordering']           = $ordering;
-                    $d2['published']          = 1;
+                    $d2['published']          = $tax_calculation_sales == 2 ? 0: 1;// publish based on tax_calculation_sales parameter
                     $d2['item_id']            = $d2['item_id_c'] = $d2['item_id_r'] = $d2['item_id_p'] = 0;
                     $this->saveOrderTotal($d2);
                     $ordering++;
@@ -830,7 +821,7 @@ class PhocacartOrder
                     $d2['type']               = 'dbrutto';
                     $d2['amount']             = '-' . $total[2]['dbrutto'];
                     $d2['ordering']           = $ordering;
-                    $d2['published']          = 0;
+                    $d2['published']          = $tax_calculation_sales == 2 ? 1: 0;// publish based on tax_calculation_sales parameter
                     $d2['item_id']            = $d2['item_id_c'] = $d2['item_id_r'] = $d2['item_id_p'] = 0;
                     $this->saveOrderTotal($d2);
                     $ordering++;
@@ -858,7 +849,7 @@ class PhocacartOrder
                     $d2['type']               = 'dnetto';
                     $d2['amount']             = '-' . $total[3]['dnetto'];
                     $d2['ordering']           = $ordering;
-                    $d2['published']          = 1;
+                    $d2['published']          = $tax_calculation_sales == 2 ? 0: 1;// publish based on tax_calculation_sales parameter
                     $d2['item_id']            = $d2['item_id_c'] = $d2['item_id_r'] = $d2['item_id_p'] = 0;
                     $this->saveOrderTotal($d2);
                     $ordering++;
@@ -871,7 +862,7 @@ class PhocacartOrder
                     $d2['type']               = 'dbrutto';
                     $d2['amount']             = '-' . $total[3]['dbrutto'];
                     $d2['ordering']           = $ordering;
-                    $d2['published']          = 0;
+                    $d2['published']          = $tax_calculation_sales == 2 ? 1: 0;// publish based on tax_calculation_sales parameter
                     $d2['item_id']            = $d2['item_id_c'] = $d2['item_id_r'] = $d2['item_id_p'] = 0;
                     $this->saveOrderTotal($d2);
                     $ordering++;
@@ -905,7 +896,7 @@ class PhocacartOrder
                     $d2['type']      = 'dnetto';
                     $d2['amount']    = '-' . $total[4]['dnetto'];
                     $d2['ordering']  = $ordering;
-                    $d2['published'] = 1;
+                    $d2['published'] = $tax_calculation_sales == 2 ? 0: 1;// publish based on tax_calculation_sales parameter
                     $d2['item_id']   = $d2['item_id_c'] = $d2['item_id_r'] = $d2['item_id_p'] = 0;
                     $this->saveOrderTotal($d2);
                     $ordering++;
@@ -923,7 +914,7 @@ class PhocacartOrder
                     $d2['type']      = 'dbrutto';
                     $d2['amount']    = '-' . $total[4]['dbrutto'];
                     $d2['ordering']  = $ordering;
-                    $d2['published'] = 0;
+                    $d2['published'] = $tax_calculation_sales == 2 ? 1: 0;// publish based on tax_calculation_sales parameter
                     $d2['item_id']   = $d2['item_id_c'] = $d2['item_id_r'] = $d2['item_id_p'] = 0;
                     $this->saveOrderTotal($d2);
                     $ordering++;
@@ -1228,12 +1219,10 @@ class PhocacartOrder
 
             // EVENT Shipping
             if ((int)$shippingId > 0 && isset($shippingC['method']) && $shippingC['method'] != '') {
-
-                PluginHelper::importPlugin('pcs', htmlspecialchars(strip_tags($shippingC['method'])));
-                $eventData 					= array();
-                $eventData['pluginname'] 	= htmlspecialchars(strip_tags($shippingC['method']));
-                $eventData['id'] 			= (int)$row->id;
-                Factory::getApplication()->triggerEvent('onPCSafterSaveOrder', array('com_phocacart.library.order', $eventData));
+              Dispatcher::dispatch(new Event\Shipping\AfterSaveOrder('com_phocacart.library.order', [
+                  'pluginname' => $shippingC['method'],
+                  'id' => (int)$row->id,
+              ]));
             }
 
 
@@ -1304,7 +1293,7 @@ class PhocacartOrder
             }
 
             // UPDATE NEWSLETTER INFO
-            if ((int)$d['newsletter'] > 0 && (int)$user->id > 0) {
+            if ((int)$d['newsletter'] > 0 ) {
 
                 $name    = '';
                 $email   = '';
@@ -1344,7 +1333,10 @@ class PhocacartOrder
                 }
 
 
-                PhocacartNewsletter::updateNewsletterInfoByUser((int)$user->id, 1);// Internal Phoca Cart Table
+               if  ((int)$user->id > 0) {
+                    PhocacartNewsletter::updateNewsletterInfoByUser((int)$user->id, 1);// Internal Phoca Cart Table
+               }
+
                 if ($name != '' && $email != '') {
                     PhocacartNewsletter::storeSubscriber($name, $email, $privacy);// External Phoca Email Table
                 }
@@ -1384,8 +1376,17 @@ class PhocacartOrder
         $userGroups           = PhocacartGroup::getGroupsById((int)$d['user_id'], 1, 1);
         $d['user_groups']     = serialize($userGroups);
 
-
+/*
+        if (!isset($d['country'])) {
+            $d['country'] = 0;
+        }
+        if (!isset($d['region'])) {
+            $d['region'] = 0;
+        }
+*/
         unset($d['id']);// we do new autoincrement
+
+
         $row = Table::getInstance('PhocacartOrderUsers', 'Table', array());
 
 
@@ -1395,6 +1396,7 @@ class PhocacartOrder
             $app->enqueueMessage($msg, 'error');
             return false;
         }
+
 
 
         if (!$row->check()) {
@@ -1444,6 +1446,8 @@ class PhocacartOrder
         $itemP = PhocacartProduct::getProduct((int)$d['id'], $d['catid']);
         $d['attributes'] = !empty($d['attributes']) ? $d['attributes'] : array();
         if (!empty($itemP)) {
+            if ($itemP->owner_id)
+                $d['owner_id'] = $itemP->owner_id;
             $price  = new PhocacartPrice();
             $priceP = $price->getPriceItems($itemP->price, $itemP->taxid, $itemP->taxrate, $itemP->taxcalculationtype, $itemP->taxtitle, 0, '', 1, 1, $itemP->group_price, $itemP->taxhide);
 
@@ -1511,7 +1515,8 @@ class PhocacartOrder
         $d['stock_calculation'] = $d['stockcalculation'];
         unset($d['id']);// we do new autoincrement
 
-        $d['tax'] = $d['tax'] / $d['quantity'];// in database we store the items per item
+
+        //$d['tax'] = $d['tax'] / $d['quantity'];// in database we store the items per item
         //$d['dtax'] = $d['dtax']/$d['quantity'];// in database we store the items per item
 
 
@@ -1599,7 +1604,7 @@ class PhocacartOrder
 
                         if (!$row2->store()) {
                             //throw new Exception($row2->getError());
-                            $msg = Text::_($row2->getErrorMsg());
+                            $msg = Text::_($row2->getError());
                             $app->enqueueMessage($msg, 'error');
                             return false;
                         }
@@ -1649,7 +1654,7 @@ class PhocacartOrder
 
         if (!$row->check()) {
             //throw new Exception($row->getError());
-            $msg = Text::_($row->getErrorMsg());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -1657,7 +1662,7 @@ class PhocacartOrder
 
         if (!$row->store()) {
             //throw new Exception($row->getError());
-            $msg = Text::_($row->getErrorMsg());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -1688,7 +1693,7 @@ class PhocacartOrder
 
         if (!$row->check()) {
             //throw new Exception($row->getError());
-            $msg = Text::_($row->getErrorMsg());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -1696,7 +1701,7 @@ class PhocacartOrder
 
         if (!$row->store()) {
             //throw new Exception($row->getError());
-            $msg = Text::_($row->getErrorMsg());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -1753,7 +1758,7 @@ class PhocacartOrder
 
         if (!$row->check()) {
             //throw new Exception($row->getError());
-            $msg = Text::_($row->getErrorMsg());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -1761,7 +1766,7 @@ class PhocacartOrder
 
         if (!$row->store()) {
             //throw new Exception($row->getError());
-            $msg = Text::_($row->getErrorMsg());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -1793,7 +1798,7 @@ class PhocacartOrder
 
         if (!$row->check()) {
             //throw new Exception($row->getError());
-            $msg = Text::_($row->getErrorMsg());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -1801,7 +1806,7 @@ class PhocacartOrder
 
         if (!$row->store()) {
             //throw new Exception($row->getError());
-            $msg = Text::_($row->getErrorMsg());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -1892,14 +1897,14 @@ class PhocacartOrder
 
             if (!$row->check()) {
                 //throw new Exception($row->getError());
-                $msg = Text::_($row->getErrorMsg());
+                $msg = Text::_($row->getError());
                 $app->enqueueMessage($msg, 'error');
                 return false;
             }
 
             if (!$row->store()) {
                 //throw new Exception($row->getError());
-                $msg = Text::_($row->getErrorMsg());
+                $msg = Text::_($row->getError());
                 $app->enqueueMessage($msg, 'error');
                 return false;
             }
@@ -1943,14 +1948,14 @@ class PhocacartOrder
 
                     if (!$row->check()) {
                         //throw new Exception($row->getError());
-                        $msg = Text::_($row->getErrorMsg());
+                        $msg = Text::_($row->getError());
                         $app->enqueueMessage($msg, 'error');
                         return false;
                     }
 
                     if (!$row->store()) {
                         //throw new Exception($row->getError());
-                        $msg = Text::_($row->getErrorMsg());
+                        $msg = Text::_($row->getError());
                         $app->enqueueMessage($msg, 'error');
                         return false;
                     }
@@ -1994,14 +1999,14 @@ class PhocacartOrder
 
                     if (!$row->check()) {
                         //throw new Exception($row->getError());
-                        $msg = Text::_($row->getErrorMsg());
+                        $msg = Text::_($row->getError());
                         $app->enqueueMessage($msg, 'error');
                         return false;
                     }
 
                     if (!$row->store()) {
                         //throw new Exception($row->getError());
-                        $msg = Text::_($row->getErrorMsg());
+                        $msg = Text::_($row->getError());
                         $app->enqueueMessage($msg, 'error');
                         return false;
                     }
@@ -2061,6 +2066,8 @@ class PhocacartOrder
         $d['title']                 = Text::_('COM_PHOCACART_GIFT_VOUCHER');
         $d['alias']                 = PhocacartUtils::getAliasName($d['title']);
         $d['code']                  = PhocacartCoupon::generateCouponCode();
+
+        $d['valid_from']            = gmdate('Y-m-d H:i:s');
 
         $product = PhocacartProduct::getProduct((int)$v['id'], (int)$v['catid'], $this->type);
 
@@ -2165,14 +2172,14 @@ class PhocacartOrder
 
         if (!$row->check()) {
             //throw new Exception($row->getError());
-            $msg = Text::_($row->getErrorMsg());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
 
         if (!$row->store()) {
             //throw new Exception($row->getError());
-            $msg = Text::_($row->getErrorMsg());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -2300,7 +2307,7 @@ class PhocacartOrder
 
         if (!$row->check()) {
             //throw new Exception($row->getError());
-            $msg = Text::_($row->getErrorMsg());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -2308,7 +2315,7 @@ class PhocacartOrder
 
         if (!$row->store()) {
             //throw new Exception($row->getError());
-            $msg = Text::_($row->getErrorMsg());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -2384,6 +2391,7 @@ class PhocacartOrder
         $query = ' SELECT a.title FROM #__phocacart_order_statuses WHERE id = ' . (int)$statusId . ' ORDER BY a.title';
         $db->setQuery($query);
         $status = $db->loadAssoc();
+        return $status;
     }
 
     public static function getOrderDate($orderId) {
@@ -2932,6 +2940,7 @@ class PhocacartOrder
             return false;
         }
 
+
         $orderNumberId   = 0;
         $receiptNumberId = 0;
         $invoiceNumberId = 0;
@@ -2984,11 +2993,24 @@ class PhocacartOrder
             }
 
 
-            if ((!isset($orderData['invoice_number_id']) || (isset($orderData['invoice_number_id']) && (int)$orderData['invoice_number_id'] == 0))
-                && (!isset($orderData['invoice_number']) || (isset($orderData['invoice_number']) && $orderData['invoice_number'] == ''))) {
+            if (!isset($orderData['invoice_number_id']) || (isset($orderData['invoice_number_id']) && (int)$orderData['invoice_number_id'] == 0)) {
                 $d['invoice_number_id'] = PhocaCartOrder::getNumberId('invoice', $id, $dateNow);
                 $invoiceNumberId        = $d['invoice_number_id'];
-                $d['invoice_number']    = PhocacartOrder::getInvoiceNumber($id, $dateNow, false, $d['invoice_number_id']);
+            } else {
+                $d['invoice_number_id'] = (int)$orderData['invoice_number_id'];
+                $invoiceNumberId        = $d['invoice_number_id'];
+            }
+
+            if (!isset($orderData['invoice_number']) || (isset($orderData['invoice_number']) && $orderData['invoice_number'] == '')) {
+
+                if (isset($d['invoice_number_id']) && (int)$d['invoice_number_id'] > 0){
+
+                    // Be aware - order made in last year, order status change in new year
+                    // Be 100% - invoice numbers are not in conflict with invoice number from other year
+                    $dateOrder = PhocacartOrder::getOrderDate($id);
+
+                    $d['invoice_number'] = PhocacartOrder::getInvoiceNumber($id, $dateOrder, false, $d['invoice_number_id']);
+                }
 
             }
 
@@ -3049,14 +3071,14 @@ class PhocacartOrder
 
         if (!$row->check()) {
             //throw new Exception($row->getError());
-            $msg = Text::_($row->getErrorMsg());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }
 
         if (!$row->store()) {
             //throw new Exception($row->getError());
-            $msg = Text::_($row->getErrorMsg());
+            $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;
         }

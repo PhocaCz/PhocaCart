@@ -12,6 +12,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Router\Route;
 
 $layoutI	= new FileLayout('image', null, array('component' => 'com_phocacart'));
 $layoutAl 	= new FileLayout('alert', null, array('component' => 'com_phocacart'));
@@ -32,6 +33,9 @@ $p['zero_payment_price_calculation']	= $d['params']->get( 'zero_payment_price_ca
 $p['display_reward_points_receive_info']= $d['params']->get( 'display_reward_points_receive_info', 0 );
 $p['display_webp_images']				= $d['params']->get( 'display_webp_images', 0 );
 $p['display_zero_total']			    = $d['params']->get( 'display_zero_total', 0 );
+$p['checkout_separate_by_owner']		= $d['params']->get( 'checkout_separate_by_owner', 0 );
+$p['tax_calculation_sales']	 			= $d['params']->get( 'tax_calculation_sales', 1);
+$p['tax_calculation_sales_change_subtotal']= $d['params']->get( 'tax_calculation_sales_change_subtotal', 0);
 
 
 //$p['min_quantity_calculation']	= $d['params']->get( 'min_quantity_calculation', 0 ); set in product xml - product options, not in global
@@ -115,20 +119,20 @@ if (!empty($d['fullitems'][1])) {
 
 	// HEADER
 	echo '<div class="'.$r.' ph-checkout-cart-row-header">';
-	echo '<div class="'.$cI.' ph-checkout-cart-image">'.Text::_('COM_PHOCACART_IMAGE').'</div>';
-	echo '<div class="'.$cP.' ph-checkout-cart-product">'.Text::_('COM_PHOCACART_PRODUCT').'</div>';
+	echo '<div class="'.$cI.' ph-checkout-cart-image" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_IMAGE')).'">'.Text::_('COM_PHOCACART_IMAGE').'</div>';
+	echo '<div class="'.$cP.' ph-checkout-cart-product" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_PRODUCT')).'">'.Text::_('COM_PHOCACART_PRODUCT').'</div>';
 
 	if ((int)$p['tax_calculation'] > 0 && $displayTax) {
-		echo '<div class="'.$cN.' ph-checkout-cart-netto">'.Text::_('COM_PHOCACART_PRICE_EXCL_TAX').'</div>';
+		echo '<div class="'.$cN.' ph-checkout-cart-netto" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_PRICE_EXCL_TAX')).'">'.Text::_('COM_PHOCACART_PRICE_EXCL_TAX').'</div>';
 	}
 
-	echo '<div class="'.$cQ.' ph-checkout-cart-quantity">'.Text::_('COM_PHOCACART_QUANTITY').'</div>';
+	echo '<div class="'.$cQ.' ph-checkout-cart-quantity" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_QUANTITY')).'">'.Text::_('COM_PHOCACART_QUANTITY').'</div>';
 
 	if ((int)$p['tax_calculation'] > 0 && $displayTax) {
-		echo '<div class="'.$cT.' ph-checkout-cart-tax">'.Text::_('COM_PHOCACART_TAX').'</div>';
+		echo '<div class="'.$cT.' ph-checkout-cart-tax" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_TAX')).'">'.Text::_('COM_PHOCACART_TAX').'</div>';
 	}
 
-	echo '<div class="'.$cB.' ph-checkout-cart-brutto">'.Text::_('COM_PHOCACART_PRICE').'</div>';
+	echo '<div class="'.$cB.' ph-checkout-cart-brutto" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_PRICE')).'">'.Text::_('COM_PHOCACART_PRICE').'</div>';
 	echo '</div>'. "\n"; // end row
 
 
@@ -137,7 +141,15 @@ if (!empty($d['fullitems'][1])) {
 	echo '<div class="'.$cA.'"><div class="ph-hr"></div></div>';
 	echo '</div>'. "\n"; // end row
 
+	$lastOwner = null;
 	foreach($d['fullitems'][1] as $k => $v) {
+		if ($p['checkout_separate_by_owner'] && ($lastOwner !== $v['owner_id'])) {
+			echo '<div class="'.$r.' ph-cart-cart-row-vendor">';
+			echo '<div class="'.$cA.'"><h5>' . ($v['owner_name'] ? Text::sprintf('COM_PHOCACART_CART_VENDOR', $v['owner_name']) : Text::_('COM_PHOCACART_CART_UNKNOWN_VENDOR')) . '</h5></div>';
+			echo '</div>';
+			$lastOwner = $v['owner_id'];
+		}
+
 
 		$link 				= PhocacartRoute::getItemRoute((int)$v['id'], (int)$v['catid'], $v['alias']);
 
@@ -170,7 +182,7 @@ if (!empty($d['fullitems'][1])) {
 
 		echo '<div class="'.$r.$cV.' ph-checkout-cart-row-item">';
 		echo '<div class="'.$cI.$cVRow.' ph-checkout-cart-image ph-row-image" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_IMAGE')).'">'.$imageOutput.'</div>';
-		echo '<div class="'.$cP.$cVRow.' ph-checkout-cart-title" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_PRODUCT')).'"><a href="'.$link.'">'.$v['title'].'</a>';
+		echo '<div class="'.$cP.$cVRow.' ph-checkout-cart-title" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_PRODUCT')).'"><a href="'.Route::_($link).'">'.$v['title'].'</a>';
 		echo '</div>';
 
 
@@ -264,15 +276,15 @@ if (!empty($d['fullitems'][1])) {
 
 				echo '<div class="'.$r.$cV.' ph-checkout-discount-row ph-checkout-cart-row-discount-reward">';
 				echo '<div class="'.$cI.$cVRow.'"></div>';
-				echo '<div class="'.$cP.$cVRow.' ph-checkout-cart-title">'.$discountTitle.' '.$d['fullitems'][5][$k]['rewardproducttxtsuffix'].'</div>';
+				echo '<div class="'.$cP.$cVRow.' ph-checkout-cart-title" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_TITLE')).'">'.$discountTitle.' '.$d['fullitems'][5][$k]['rewardproducttxtsuffix'].'</div>';
 				if ((int)$p['tax_calculation'] > 0 && $displayTax) {
-					echo '<div class="'.$cN.$cVRow.' ph-checkout-cart-netto">'.$rewardNetto.'</div>';
+					echo '<div class="'.$cN.$cVRow.' ph-checkout-cart-netto" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_PRICE_EXCL_TAX')).'">'.$rewardNetto.'</div>';
 				}
 				echo '<div class="'.$cQ.$cVRow.' ph-checkout-cart-quantity"></div>';
 				if ((int)$p['tax_calculation'] > 0 && $displayTax) {
-					echo '<div class="'.$cT.$cVRow.' ph-checkout-cart-tax">'.$rewardTax.'</div>';
+					echo '<div class="'.$cT.$cVRow.' ph-checkout-cart-tax" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_TAX')).'">'.$rewardTax.'</div>';
 				}
-				echo '<div class="'.$cB.$cVRow.' ph-checkout-cart-brutto">'.$rewardFinal.'</div>';
+				echo '<div class="'.$cB.$cVRow.' ph-checkout-cart-brutto" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_PRICE_INCL_TAX')).'">'.$rewardFinal.'</div>';
 				echo '</div>'. "\n"; // end row
 			}
 
@@ -298,15 +310,15 @@ if (!empty($d['fullitems'][1])) {
 
 				echo '<div class="'.$r.$cV.' ph-checkout-discount-row ph-checkout-cart-row-discount-product">';
 				echo '<div class="'.$cI.$cVRow.'"></div>';
-				echo '<div class="'.$cP.$cVRow.' ph-checkout-cart-title">'.$discountTitle.'</div>';
+				echo '<div class="'.$cP.$cVRow.' ph-checkout-cart-title" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_TITLE')).'">'.$discountTitle.'</div>';
 				if ((int)$p['tax_calculation'] > 0 && $displayTax) {
-					echo '<div class="'.$cN.$cVRow.' ph-checkout-cart-netto">'.$productNetto.'</div>';
+					echo '<div class="'.$cN.$cVRow.' ph-checkout-cart-netto" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_PRICE_EXCL_TAX')).'">'.$productNetto.'</div>';
 				}
 				echo '<div class="'.$cQ.$cVRow.' ph-checkout-cart-quantity"></div>';
 				if ((int)$p['tax_calculation'] > 0 && $displayTax) {
-					echo '<div class="'.$cT.$cVRow.' ph-checkout-cart-tax">'.$productTax.'</div>';
+					echo '<div class="'.$cT.$cVRow.' ph-checkout-cart-tax" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_TAX')).'">'.$productTax.'</div>';
 				}
-				echo '<div class="'.$cB.$cVRow.' ph-checkout-cart-brutto">'.$productFinal.'</div>';
+				echo '<div class="'.$cB.$cVRow.' ph-checkout-cart-brutto" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_PRICE_INCL_TAX')).'">'.$productFinal.'</div>';
 				echo '</div>'. "\n"; // end row
 			}
 
@@ -331,15 +343,15 @@ if (!empty($d['fullitems'][1])) {
 
 				echo '<div class="'.$r.$cV.' ph-checkout-discount-row ph-checkout-cart-row-discount-cart">';
 				echo '<div class="'.$cI.$cVRow.'"></div>';
-				echo '<div class="'.$cP.$cVRow.' ph-checkout-cart-title">'.$discountTitle.'</div>';
+				echo '<div class="'.$cP.$cVRow.' ph-checkout-cart-title" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_TITLE')).'">'.$discountTitle.'</div>';
 				if ((int)$p['tax_calculation'] > 0 && $displayTax) {
-					echo '<div class="'.$cN.$cVRow.' ph-checkout-cart-netto">'.$cartNetto.'</div>';
+					echo '<div class="'.$cN.$cVRow.' ph-checkout-cart-netto" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_PRICE_EXCL_TAX')).'">'.$cartNetto.'</div>';
 				}
 				echo '<div class="'.$cQ.$cVRow.' ph-checkout-cart-quantity"></div>';
 				if ((int)$p['tax_calculation'] > 0 && $displayTax) {
-					echo '<div class="'.$cT.$cVRow.' ph-checkout-cart-tax">'.$cartTax.'</div>';
+					echo '<div class="'.$cT.$cVRow.' ph-checkout-cart-tax" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_TAX')).'">'.$cartTax.'</div>';
 				}
-				echo '<div class="'.$cB.$cVRow.' ph-checkout-cart-brutto">'.$cartFinal.'</div>';
+				echo '<div class="'.$cB.$cVRow.' ph-checkout-cart-brutto" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_PRICE_INCL_TAX')).'">'.$cartFinal.'</div>';
 				echo '</div>'. "\n"; // end row
 			}
 
@@ -363,15 +375,15 @@ if (!empty($d['fullitems'][1])) {
 
 				echo '<div class="'.$r.$cV.' ph-checkout-discount-row ph-checkout-cart-row-discount-coupon">';
 				echo '<div class="'.$cI.$cVRow.'"></div>';
-				echo '<div class="'.$cP.$cVRow.' ph-checkout-cart-title">'.$couponTitle.'</div>';
+				echo '<div class="'.$cP.$cVRow.' ph-checkout-cart-title" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_TITLE')).'">'.$couponTitle.'</div>';
 				if ((int)$p['tax_calculation'] > 0 && $displayTax) {
-					echo '<div class="'.$cN.$cVRow.' ph-checkout-cart-netto">'.$couponNetto.'</div>';
+					echo '<div class="'.$cN.$cVRow.' ph-checkout-cart-netto" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_PRICE_EXCL_TAX')).'">'.$couponNetto.'</div>';
 				}
 				echo '<div class="'.$cQ.$cVRow.' ph-checkout-cart-quantity"></div>';
 				if ((int)$p['tax_calculation'] > 0 && $displayTax) {
-					echo '<div class="'.$cT.$cVRow.' ph-checkout-cart-tax">'.$couponTax.'</div>';
+					echo '<div class="'.$cT.$cVRow.' ph-checkout-cart-tax" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_TAX')).'">'.$couponTax.'</div>';
 				}
-				echo '<div class="'.$cB.$cVRow.' ph-checkout-cart-brutto">'.$couponFinal.'</div>';
+				echo '<div class="'.$cB.$cVRow.' ph-checkout-cart-brutto" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_PRICE_INCL_TAX')).'">'.$couponFinal.'</div>';
 				echo '</div>'. "\n"; // end row
 			}
 		}
@@ -419,16 +431,28 @@ if (!empty($d['fullitems'][1])) {
 	// SUBTOTAL NETTO
 	if ($d['total'][1]['netto'] !== 0) {
 
-		echo '<div class="'.$r.' ph-cart-subtotal-box ph-checkout-cart-row-subtotal-box">';
+		echo '<div class="'.$r.' ph-cart-subtotal-box ph-checkout-cart-row-subtotal-box ph-checkout-cart-row-subtotal">';
 		echo '<div class="'.$cTotE.'"></div>';
 		echo '<div class="'.$cTotT.' ph-cart-subtotal-netto-txt">'.Text::_('COM_PHOCACART_SUBTOTAL').'</div>';
-		echo '<div class="'.$cTotB.' ph-right ph-cart-subtotal-netto">'.$price->getPriceFormat($d['total'][1]['netto']).'</div>';
+
+		if ($p['tax_calculation_sales'] == 2 && $p['tax_calculation_sales_change_subtotal'] == 1) {
+
+			// $d['total'][4]['rounding'] is not the final rounding but rounding after discounts
+			//$subTotalFromBrutto = $d['total'][0]['subtotalbrutto'] - $d['total'][0]['taxsum'] - $d['total'][4]['rounding'];
+			// This method is used, because tax calculation can change the subtotal/total calculation
+			$dBrutto = $d['total'][2]['dbrutto'] + $d['total'][3]['dbrutto'] + $d['total'][4]['dbrutto'] + $d['total'][5]['dbrutto'];
+			$subTotalFromBrutto = $d['total'][0]['brutto'] + $dBrutto - $d['total'][0]['taxsum'] - $d['total'][0]['rounding'];
+ 			echo '<div class="'.$cTotB.' ph-right ph-cart-subtotal-netto">'.$price->getPriceFormat($subTotalFromBrutto).'</div>';
+
+		} else {
+			echo '<div class="' . $cTotB . ' ph-right ph-cart-subtotal-netto">' . $price->getPriceFormat($d['total'][1]['netto']) . '</div>';
+		}
 		echo '</div>';// end row
 	}
 
 	// REWARD DISCOUNT
 	if ($d['total'][5]['dnetto']) {
-		echo '<div class="'.$r.' ph-cart-reward-discount-box ph-checkout-cart-row-discount-reward-box">';
+		echo '<div class="'.$r.' ph-cart-reward-discount-box ph-checkout-cart-row-discount-reward-box ph-checkout-cart-row-subtotal">';
 		echo '<div class="'.$cTotE.'"></div>';
 		echo '<div class="'.$cTotT.' ph-cart-reward-discount-txt">'.Text::_('COM_PHOCACART_REWARD_POINTS').$d['total'][5]['rewardproducttxtsuffix'].'</div>';
 		echo '<div class="'.$cTotB.' ph-right ph-cart-reward-discount">'.$price->getPriceFormat($d['total'][5]['dnetto'], 1).'</div>';
@@ -437,35 +461,48 @@ if (!empty($d['fullitems'][1])) {
 
 	// PRODUCT DISCOUNT
 
-	if ($d['total'][2]['dnetto']) {
-		echo '<div class="'.$r.' ph-cart-product-discount-box ph-checkout-cart-row-discount-product-box">';
+	if ($d['total'][2]['dnetto'] || $d['total'][2]['dbrutto']) {
+		echo '<div class="'.$r.' ph-cart-product-discount-box ph-checkout-cart-row-discount-product-box ph-checkout-cart-row-subtotal">';
 		echo '<div class="'.$cTotE.'"></div>';
 		echo '<div class="'.$cTotT.' ph-cart-product-discount-txt">'.Text::_('COM_PHOCACART_PRODUCT_DISCOUNT').'</div>';
-		echo '<div class="'.$cTotB.' ph-right ph-cart-product-discount">'.$price->getPriceFormat($d['total'][2]['dnetto'], 1).'</div>';
+		if ($p['tax_calculation_sales'] == 2) {
+			echo '<div class="' . $cTotB . ' ph-right ph-cart-product-discount">' . $price->getPriceFormat($d['total'][2]['dbrutto'], 1) . '</div>';
+		} else {
+			echo '<div class="' . $cTotB . ' ph-right ph-cart-product-discount">' . $price->getPriceFormat($d['total'][2]['dnetto'], 1) . '</div>';
+		}
 		echo '</div>';// end row
 	}
 
 	// CART DISCOUNT
 
-	if ($d['total'][3]['dnetto']) {
-	    echo '<div class="'.$r.' ph-cart-discount-box ph-checkout-cart-row-discount-cart-box">';
+	if ($d['total'][3]['dnetto'] || $d['total'][3]['dbrutto']) {
+	    echo '<div class="'.$r.' ph-cart-discount-box ph-checkout-cart-row-discount-cart-box ph-checkout-cart-row-subtotal">';
 		echo '<div class="'.$cTotE.'"></div>';
 		echo '<div class="'.$cTotT.' ph-cart-cart-discount-txt">'.Text::_('COM_PHOCACART_CART_DISCOUNT').$d['total'][3]['discountcarttxtsuffix'].'</div>';
-		echo '<div class="'.$cTotB.' ph-right ph-cart-cart-discount">'.$price->getPriceFormat($d['total'][3]['dnetto'], 1).'</div>';
+		if ($p['tax_calculation_sales'] == 2) {
+			echo '<div class="'.$cTotB.' ph-right ph-cart-cart-discount">'.$price->getPriceFormat($d['total'][3]['dbrutto'], 1).'</div>';
+		} else {
+			echo '<div class="'.$cTotB.' ph-right ph-cart-cart-discount">'.$price->getPriceFormat($d['total'][3]['dnetto'], 1).'</div>';
+		}
+
 		echo '</div>';// end row
 	}
 
 	// COUPON
 
-	if ($d['total'][4]['dnetto'] && $d['couponvalid']) {
+	if (($d['total'][4]['dnetto'] || $d['total'][4]['dbrutto']) && $d['couponvalid']) {
 		$couponTitle = Text::_('COM_PHOCACART_COUPON');
 		if (isset($d['coupontitle']) && $d['coupontitle'] != '') {
 			$couponTitle = $d['coupontitle'];
 		}
-		echo '<div class="'.$r.' ph-cart-coupon-box ph-checkout-cart-row-discount-coupon-box">';
+		echo '<div class="'.$r.' ph-cart-coupon-box ph-checkout-cart-row-discount-coupon-box ph-checkout-cart-row-subtotal">';
 		echo '<div class="'.$cTotE.'"></div>';
 		echo '<div class="'.$cTotT.' ph-cart-coupon-txt">'.$couponTitle.$d['total'][4]['couponcarttxtsuffix'].'</div>';
-		echo '<div class="'.$cTotB.' ph-checkout-total-coupon ph-right ph-cart-coupon">'.$price->getPriceFormat($d['total'][4]['dnetto'], 1).'</div>';
+		if ($p['tax_calculation_sales'] == 2) {
+			echo '<div class="' . $cTotB . ' ph-checkout-total-coupon ph-right ph-cart-coupon">' . $price->getPriceFormat($d['total'][4]['dbrutto'], 1) . '</div>';
+		} else {
+			echo '<div class="' . $cTotB . ' ph-checkout-total-coupon ph-right ph-cart-coupon">' . $price->getPriceFormat($d['total'][4]['dnetto'], 1) . '</div>';
+		}
 		echo '</div>';// end row
 	}
 
@@ -489,7 +526,7 @@ if (!empty($d['fullitems'][1])) {
 			$v3['taxcalc'] = (int)$p['tax_calculation'];
 			$displayPriceItems = PhocaCartPrice::displayPriceItems($v3, 'checkout');
 				if ($displayPriceItems['tax'] == 1) {
-				echo '<div class="' . $r . ' ph-cart-tax-box ph-checkout-cart-row-tax">';
+				echo '<div class="' . $r . ' ph-cart-tax-box ph-checkout-cart-row-tax ph-checkout-cart-row-subtotal">';
 				echo '<div class="' . $cTotE . '"></div>';
 				echo '<div class="' . $cTotT . ' ph-cart-tax-txt">' . $v3['title'] . '</div>';
 				echo '<div class="' . $cTotB . ' ph-checkout-total-amount ph-right ph-cart-tax">' . $price->getPriceFormat($v3['tax']) . '</div>';
@@ -528,7 +565,7 @@ if (!empty($d['fullitems'][1])) {
 			$displayPriceItems = PhocaCartPrice::displayPriceItems($sC, 'checkoutshipping');
 			if (isset($sC['nettoformat']) && $sC['nettoformat'] != '' && isset($sC['nettotxt'])/* && $sC['nettotxt'] != '' can be empty */) {
 				if ($displayPriceItems['netto'] == 1) {
-					echo '<div class="' . $r . ' ph-cart-shipping-box ph-checkout-cart-row-shipping-box-netto">';
+					echo '<div class="' . $r . ' ph-cart-shipping-box ph-checkout-cart-row-shipping-box-netto ph-checkout-cart-row-subtotal">';
 					echo '<div class="' . $cTotE . '"></div>';
 					echo '<div class="' . $cTotT . ' ph-cart-shipping-netto-txt">' . $sC['title'] . PhocacartUtils::addSeparator($sC['nettotxt']) . '</div>';
 					echo '<div class="' . $cTotB . ' ph-checkout-total-amount ph-right ph-cart-shipping-netto">' . $sC['nettoformat'] . '</div>';
@@ -538,7 +575,7 @@ if (!empty($d['fullitems'][1])) {
 
 			if (isset($sC['taxformat']) && $sC['taxformat'] != '' && isset($sC['taxtxt'])/* && $sC['taxtxt'] != '' can be empty */) {
 				if ($displayPriceItems['tax'] == 1) {
-					echo '<div class="' . $r . ' ph-cart-shipping-box ph-checkout-cart-row-shipping-box-tax">';
+					echo '<div class="' . $r . ' ph-cart-shipping-box ph-checkout-cart-row-shipping-box-tax ph-checkout-cart-row-subtotal">';
 					echo '<div class="' . $cTotE . '"></div>';
 					echo '<div class="' . $cTotT . ' ph-cart-shipping-tax-txt">' . $sC['title'] . PhocacartUtils::addSeparator($sC['taxtxt']) . '</div>';
 					echo '<div class="' . $cTotB . ' ph-checkout-total-amount ph-right ph-cart-shipping-tax">' . $sC['taxformat'] . '</div>';
@@ -548,7 +585,7 @@ if (!empty($d['fullitems'][1])) {
 
 			if ((isset($sC['bruttoformat']) && $sC['bruttoformat'] != '' && isset($sC['bruttotxt']) /* && $sC['bruttotxt'] != '' - can be empty */) || $sC['freeshipping'] == 1) {
 
-				echo '<div class="'.$r.' ph-cart-shipping-box ph-checkout-cart-row-shipping-box-brutto">';
+				echo '<div class="'.$r.' ph-cart-shipping-box ph-checkout-cart-row-shipping-box-brutto ph-checkout-cart-row-subtotal">';
 				echo '<div class="'.$cTotE.'"></div>';
 				echo '<div class="'.$cTotT.' ph-cart-shipping-brutto-txt">'.$sC['title']. PhocacartUtils::addSeparator($sC['bruttotxt']).'</div>';
 				echo '<div class="'.$cTotB.' ph-checkout-total-amount ph-right ph-cart-shipping-brutto">'.$sC['bruttoformat'].'</div>';
@@ -566,14 +603,14 @@ if (!empty($d['fullitems'][1])) {
 			// Hide completely
 		} else 	if ($p['zero_payment_price_calculation'] == 0 && $pC['zero'] == 1) {
 			// Display blank price field
-			echo '<div class="'.$r.' ph-cart-payment-box ph-checkout-cart-row-payment-box">';
+			echo '<div class="'.$r.' ph-cart-payment-box ph-checkout-cart-row-payment-box ph-checkout-cart-row-subtotal">';
 			echo '<div class="'.$cTotE.'"></div>';
 			echo '<div class="'.$cTotT.' ph-cart-payment-txt">'.$pC['title'].'</div>';
 			echo '<div class="'.$cTotB.' ph-checkout-total-amount ph-right ph-cart-payment"></div>';
 			echo '</div>';// end row
 		} else if ($p['zero_payment_price_calculation'] == 2 && $pC['zero'] == 1) {
 			// Display free text
-			echo '<div class="'.$r.' ph-cart-payment-box ph-checkout-cart-row-payment-box">';
+			echo '<div class="'.$r.' ph-cart-payment-box ph-checkout-cart-row-payment-box ph-checkout-cart-row-subtotal">';
 			echo '<div class="'.$cTotE.'"></div>';
 			echo '<div class="'.$cTotT.' ph-cart-payment-txt">'.$pC['title'].'</div>';
 			echo '<div class="'.$cTotB.' ph-checkout-total-amount ph-right ph-cart-payment">'.Text::_('COM_PHOCACART_FREE').'</div>';
@@ -584,7 +621,7 @@ if (!empty($d['fullitems'][1])) {
 			if (isset($pC['nettoformat']) && $pC['nettoformat'] != '' && isset($pC['nettotxt'])/* && $pC['nettotxt'] != '' can be empty */) {
 
 				if ($displayPriceItems['netto'] == 1) {
-					echo '<div class="' . $r . ' ph-cart-payment-box ph-checkout-cart-row-payment-box-netto">';
+					echo '<div class="' . $r . ' ph-cart-payment-box ph-checkout-cart-row-payment-box-netto ph-checkout-cart-row-subtotal">';
 					echo '<div class="' . $cTotE . '"></div>';
 					echo '<div class="' . $cTotT . ' ph-cart-payment-netto-txt">' . $pC['title'] . PhocacartUtils::addSeparator($pC['nettotxt']) . '</div>';
 					echo '<div class="' . $cTotB . ' ph-checkout-total-amount ph-right ph-cart-payment-netto">' . $pC['nettoformat'] . '</div>';
@@ -594,7 +631,7 @@ if (!empty($d['fullitems'][1])) {
 
 			if (isset($pC['taxformat']) && $pC['taxformat'] != '' && isset($pC['taxtxt'])/* && $pC['taxtxt'] != '' can be empty */) {
 				if ($displayPriceItems['tax'] == 1) {
-					echo '<div class="' . $r . ' ph-cart-payment-box ph-checkout-cart-row-payment-box-tax">';
+					echo '<div class="' . $r . ' ph-cart-payment-box ph-checkout-cart-row-payment-box-tax ph-checkout-cart-row-subtotal">';
 					echo '<div class="' . $cTotE . '"></div>';
 					echo '<div class="' . $cTotT . ' ph-cart-payment-tax-txt">' . $pC['title'] . PhocacartUtils::addSeparator($pC['taxtxt']) . '</div>';
 					echo '<div class="' . $cTotB . ' ph-checkout-total-amount ph-right ph-cart-payment-tax">' . $pC['taxformat'] . '</div>';
@@ -604,7 +641,7 @@ if (!empty($d['fullitems'][1])) {
 
 			if ((isset($pC['bruttoformat']) && $pC['bruttoformat'] != '' && isset($pC['bruttotxt'])/* && $pC['bruttotxt'] != '' can be empty */) || $pC['freepayment'] == 1) {
 
-				echo '<div class="'.$r.' ph-cart-payment-box ph-checkout-cart-row-payment-box-brutto">';
+				echo '<div class="'.$r.' ph-cart-payment-box ph-checkout-cart-row-payment-box-brutto ph-checkout-cart-row-subtotal">';
 				echo '<div class="'.$cTotE.'"></div>';
 				echo '<div class="'.$cTotT.' ph-cart-payment-brutto-txt">'.$pC['title']. PhocacartUtils::addSeparator($pC['bruttotxt']).'</div>';
 				echo '<div class="'.$cTotB.' ph-checkout-total-amount ph-right ph-cart-payment-brutto">'.$pC['bruttoformat'].'</div>';
@@ -654,14 +691,14 @@ if (!empty($d['fullitems'][1])) {
 
 	if ($d['total'][0]['rounding_currency'] !== 0) {
 
-		echo '<div class="'.$r.' ph-cart-currency-box ph-checkout-cart-row-currency-rounding-box">';
+		echo '<div class="'.$r.' ph-cart-currency-box ph-checkout-cart-row-currency-rounding-box ph-checkout-cart-row-subtotal">';
 		echo '<div class="'.$cTotE.'"></div>';
 		echo '<div class="'.$cTotT.' ph-cart-rounding-currency-txt">'.Text::_('COM_PHOCACART_ROUNDING_CURRENCY').'</div>';
 		echo '<div class="'.$cTotB.' ph-right ph-cart-rounding-currency">'.$price->getPriceFormat($d['total'][0]['rounding_currency'], 0, 1).'</div>';
 		echo '</div>';// end row
 	} else if ($d['total'][0]['rounding'] !== 0) {
 
-		echo '<div class="'.$r.' ph-cart-currency-box ph-checkout-cart-row-currency-rounding-box">';
+		echo '<div class="'.$r.' ph-cart-currency-box ph-checkout-cart-row-currency-rounding-box ph-checkout-cart-row-subtotal">';
 		echo '<div class="'.$cTotE.'"></div>';
 		echo '<div class="'.$cTotT.' ph-cart-rounding-txt">'.Text::_('COM_PHOCACART_ROUNDING').'</div>';
 		echo '<div class="'.$cTotB.' ph-right ph-cart-rounding">'.$price->getPriceFormat($d['total'][0]['rounding']).'</div>';
@@ -671,14 +708,14 @@ if (!empty($d['fullitems'][1])) {
 	// BRUTTO (Because of rounding currency we need to display brutto in currency which is set)
 	//if (!($price->roundPrice($d['total'][0]['brutto_currency']) > -0.01 && $price->roundPrice($d['total'][0]['brutto_currency'] < 0.01)) == 1) {
 	if ($d['total'][0]['brutto_currency'] !== 0) {
-		echo '<div class="'.$r.' ph-cart-currency-box ph-checkout-cart-row-currency-box">';
+		echo '<div class="'.$r.' ph-cart-currency-box ph-checkout-cart-row-currency-box ph-checkout-cart-row-subtotal">';
 		echo '<div class="'.$cTotE.'"></div>';
 		echo '<div class="'.$cTotT.' ph-cart-brutto-currency-txt">'.Text::_('COM_PHOCACART_TOTAL').'</div>';
 		echo '<div class="'.$cTotB.' ph-checkout-total-amount ph-cart-total ph-right ph-cart-brutto-currency">'.$price->getPriceFormat($d['total'][0]['brutto_currency'], 0, 1).'</div>';
 		echo '</div>';// end row
 	//} else if (!($price->roundPrice($d['total'][0]['brutto']) > -0.01 && $price->roundPrice($d['total'][0]['brutto'] < 0.01)) == 1) {
 	} else if ($d['total'][0]['brutto'] !== 0 || ($d['total'][0]['brutto'] === 0 && $p['display_zero_total'] == 1)) {
-		echo '<div class="'.$r.' ph-cart-total-box ph-checkout-cart-row-total-box">';
+		echo '<div class="'.$r.' ph-cart-total-box ph-checkout-cart-row-total-box ph-checkout-cart-row-subtotal">';
 		echo '<div class="'.$cTotE.'"></div>';
 		echo '<div class="'.$cTotT.' ph-cart-total-txt">'.Text::_('COM_PHOCACART_TOTAL').'</div>';
 		echo '<div class="'.$cTotB.' ph-checkout-total-amount ph-cart-total ph-right">'.$price->getPriceFormat($d['total'][0]['brutto']).'</div>';
@@ -687,14 +724,17 @@ if (!empty($d['fullitems'][1])) {
 	}
 
 
+	// ---
 	// Tax Recapitulation Possible part to display TC
+
+	// bdump(); comment;
 	/*if(!empty($d['total'][0]['taxrecapitulation']['items'])) {
 
 		echo '<table class="pc-tax-recapitulation">';
 
 		echo '<tr><th>'.Text::_('COM_PHOCACART_TAX_TITLE').'</th><th>'.Text::_('COM_PHOCACART_TAX_BASIS').'</th><th>'.Text::_('COM_PHOCACART_TAX_TAX').'</th><th>'.Text::_('COM_PHOCACART_TAX_TOTAL').'</th></tr>';
 
-		/*if ($d['total'][0]['brutto_currency'] !== 0) {
+		if ($d['total'][0]['brutto_currency'] !== 0) {
 
 			foreach($d['total'][0]['taxrecapitulation']['items'] as $k => $v) {
 				echo '<tr><td>'.$v['title'].'</td><td>'.$price->getPriceFormat($v['netto']).'</td><td>'.$price->getPriceFormat($v['tax']).'</td><td>'.$price->getPriceFormat($v['brutto_currency'], 0, 1).' '.'</td></tr>';
@@ -704,7 +744,7 @@ if (!empty($d['fullitems'][1])) {
 				echo '<tr><td>'.Text::_('COM_PHOCACART_TOTAL').'</td><td colspan="3">'.$price->getPriceFormat($d['total'][0]['brutto_currency'], 0, 1).'</td></tr>';
 			}
 
-		} else {*//*
+		} else {
 
 
 		$b = 0; $c = 0;
@@ -715,16 +755,25 @@ if (!empty($d['fullitems'][1])) {
 
 			if (!($price->roundPrice($d['total'][0]['taxrecapitulation']['rounding']) > -0.01 && $price->roundPrice($d['total'][0]['taxrecapitulation']['rounding'] < 0.01)) == 1) {
 
-				echo '<tr><td>'.Text::_('COM_PHOCACART_ROUNDING').'</td><td colspan="3">'.$price->getPriceFormat($d['total'][0]['taxrecapitulation']['rounding_currency'], 0, 1).' '.'</td></tr>';
+				//echo '<tr><td>'.Text::_('COM_PHOCACART_ROUNDING').'</td><td colspan="3">'.$price->getPriceFormat($d['total'][0]['taxrecapitulation']['rounding_currency'], 0, 1).' '.'</td></tr>';
 				//- *$price->getPriceFormat($d['total'][0]['taxrecapitulation']['rounding_currency'])*//*.
 				$c = $d['total'][0]['taxrecapitulation']['rounding'];
 			}
-			echo '<tr><td>'.Text::_('COM_PHOCACART_TOTAL').'</td><td colspan="3">'.$price->getPriceFormat($d['total'][0]['brutto'])./*' '.$price->getPriceFormat($d['total'][0]['brutto_currency']).' <b>'.$b.'</b> <b>'.($b + $c).*//*'</b></td></tr>';
+			//echo '<tr><td>'.Text::_('COM_PHOCACART_ROUNDING_B').'</td><td colspan="3">'.$price->getPriceFormat($d['total'][0]['brutto'] - $b).'</td></tr>';
 
-		//}
+			echo '<tr><td>'.Text::_('COM_PHOCACART_ROUNDING').'</td><td colspan="3">'.$price->getPriceFormat($d['total'][0]['taxrecapitulation']['rounding'] ).'</td></tr>';
+			echo '<tr><td>'.Text::_('COM_PHOCACART_TOTAL').'</td><td colspan="3">'.$price->getPriceFormat($d['total'][0]['brutto']);
+
+			//echo ' '.$price->getPriceFormat($d['total'][0]['brutto_currency']).' <b>'.$b.'</b> <b>'.($b + $c);
+			echo '</b></td></tr>';
+
+		}
 
 		echo '</table>';
-	} */
+	}*/
+
+	// END TAX RECAPITULATION
+	// ---
 
 	// Possible points received
 

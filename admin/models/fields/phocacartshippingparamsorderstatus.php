@@ -46,10 +46,10 @@ class JFormFieldPhocacartShippingParamsOrderStatus extends FormField
 
 		}
 
-		$statuses 			= PhocacartOrderStatus::getOrderStatuses();
+		$statuses 			= PhocacartOrderStatus::getOptions();
 
 		$data               = $this->getLayoutData();
-		$data['options']    = (array)$statuses;
+		$data['options']    = $statuses;
 		$data['value']      = $activeMethods;
 
 

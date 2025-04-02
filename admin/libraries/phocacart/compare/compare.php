@@ -14,6 +14,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Layout\FileLayout;
+use Phoca\PhocaCart\I18n\I18nHelper;
 
 class PhocacartCompare
 {
@@ -130,18 +131,21 @@ class PhocacartCompare
 		$where 		= ( count( $wheres ) ? ' WHERE '. implode( ' AND ', $wheres ) : '' );
 
 		if ($full == 1) {
-
-			$columns		=
-			'a.id as id, a.title as title, a.alias as alias, a.description, a.price, a.image, a.type,'
-			.' GROUP_CONCAT(DISTINCT c.id) as catid, GROUP_CONCAT(DISTINCT c.alias) as catalias, GROUP_CONCAT(DISTINCT c.title) as cattitle, COUNT(pc.category_id) AS count_categories, a.catid AS preferred_catid,'
+			$columns = I18nHelper::sqlCoalesce(['title', 'alias', 'description']);
+			$columns .= ', a.id as id, a.price, a.image, a.type,'
+			.' GROUP_CONCAT(DISTINCT c.id) as catid, COUNT(pc.category_id) AS count_categories, a.catid AS preferred_catid,'
 			.' a.length, a.width, a.height, a.weight, a.volume, a.unit_amount, a.unit_unit, a.price_original,'
 			.' a.stock, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.availability,'
 			.' a.gift_types,'
-			.' m.title as manufacturer_title,'
-			.' t.id as taxid, t.tax_rate as taxrate, t.title as taxtitle, t.calculation_type as taxcalculationtype,'
-			.' MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received';
-			$groupsFull		=
-			'a.id, a.title, a.alias, a.description, a.price, a.image, a.type,'
+			//.' m.title as manufacturer_title,'
+			. I18nHelper::sqlCoalesce(['title'], 'm', 'manufacturer_', '', '', ',')
+			.' t.id as taxid, t.tax_rate as taxrate,'
+			. I18nHelper::sqlCoalesce(['title'], 't', 'tax', '', '', ',')
+			.'t.calculation_type as taxcalculationtype, t.tax_hide as taxhide,'
+			.' MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received,';
+			$columns .= I18nHelper::sqlCoalesce(['title', 'alias'], 'c', 'cat', 'groupconcatdistinct');
+
+			$groupsFull		= 'a.id, a.title, a.alias, a.description, a.price, a.image, a.type,'
 			.' a.length, a.width, a.height, a.weight, a.volume,'
 			.' a.stock, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.availability,'
 			.' a.gift_types,'
@@ -153,10 +157,14 @@ class PhocacartCompare
 			$query =
 			 ' SELECT '.$columns
 			.' FROM #__phocacart_products AS a'
+			 . I18nHelper::sqlJoin('#__phocacart_products_i18n')
 			.' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id =  a.id'
 			.' LEFT JOIN #__phocacart_categories AS c ON c.id =  pc.category_id'
+		    . I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'c')
 			.' LEFT JOIN #__phocacart_taxes AS t ON t.id = a.tax_id'
+			 . I18nHelper::sqlJoin('#__phocacart_taxes_i18n', 't')
 			.' LEFT JOIN #__phocacart_manufacturers AS m ON a.manufacturer_id = m.id'
+		 	. I18nHelper::sqlJoin('#__phocacart_manufacturers_i18n', 'm')
 			.' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3'// type 3 is product
 			.' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
 
@@ -169,18 +177,24 @@ class PhocacartCompare
 			. ' GROUP BY '.$groups
 			. ' ORDER BY a.id';
 		} else {
-			$columns		=
-			'a.id as id, a.title as title, a.alias as alias,'
-			.' GROUP_CONCAT(DISTINCT c.id) as catid, GROUP_CONCAT(DISTINCT c.alias) as catalias, GROUP_CONCAT(DISTINCT c.title) as cattitle, COUNT(pc.category_id) AS count_categories, a.catid AS preferred_catid';
-			$groupsFull		= 'a.id, a.title, a.alias';
+
+			$columns = I18nHelper::sqlCoalesce(['title', 'alias', 'description']);
+
+			$columns		.= ', a.id as id,'
+			.' GROUP_CONCAT(DISTINCT c.id) as catid, COUNT(pc.category_id) AS count_categories, a.catid AS preferred_catid, ';
+			$columns .= I18nHelper::sqlCoalesce(['title', 'alias'], 'c', 'cat', 'groupconcatdistinct');
+
+			$groupsFull		= 'a.id, a.title, a.alias, a.catid';
 			$groupsFast		= 'a.id';
 			$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
 
 			$query =
 			 ' SELECT '.$columns
 			.' FROM #__phocacart_products AS a'
+			 . I18nHelper::sqlJoin('#__phocacart_products_i18n')
 			.' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id =  a.id'
 			.' LEFT JOIN #__phocacart_categories AS c ON c.id =  pc.category_id'
+		 	. I18nHelper::sqlJoin('#__phocacart_categories_i18n', 'c')
 			.' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 3'// type 3 is product
 			.' LEFT JOIN #__phocacart_item_groups AS gc ON c.id = gc.item_id AND gc.type = 2'// type 2 is category
 			.  $where
@@ -218,7 +232,7 @@ class PhocacartCompare
 		$app				= Factory::getApplication();
 		$s                  = PhocacartRenderStyle::getStyles();
 		$paramsC 			= PhocacartUtils::getComponentParameters();
-		$add_compare_method	= $paramsC->get( 'add_compare_method', 0 );
+		$add_compare_method	= $paramsC->get( 'add_compare_method', 2 );
 
 		if (empty($this->itemsDb)) {
 			// we asked them in construct, don't ask again

@@ -30,6 +30,8 @@ if ($this->a->paymentnotused == 1) {
 	// Payment is added and goes to confirm
 	// ONLY DISPLAY - pamyent method was added and user don't want to edit it
 
+	echo '<div class="ph-checkout-box-payment ph-checkout-box-status-'.$d['status'].'">';
+
 	// Header
 	echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-row" >';
 
@@ -50,7 +52,7 @@ if ($this->a->paymentnotused == 1) {
 	if (isset($this->t['paymentmethod']) && isset($this->t['paymentmethod']['title']) && $this->t['paymentmethod']['title'] != '') {
 
 		//echo '<div class="'.$this->s['c']['row'].'">';
-		echo '<div class="'.$this->s['c']['col.xs12.sm8.md8'].'">';
+		echo '<div class="'.$this->s['c']['col.xs12.sm8.md8'].' ph-checkout-payment-row-item">';
 
 		if (isset($this->t['paymentmethod']['image']) && $this->t['paymentmethod']['image'] != '') {
 			echo '<div class="ph-payment-image"><img src="'.Uri::base(true) .'/'. $this->t['paymentmethod']['image'].'" alt="'.htmlspecialchars(strip_tags($this->t['paymentmethod']['title'])).'" /></div>';
@@ -91,12 +93,16 @@ if ($this->a->paymentnotused == 1) {
 	echo '</form>'. "\n";
     //echo '</div>';// end checkout box row
 
+	echo '</div>';// end box payment
+
 // PAYMENT EDIT
 } else if ($this->a->paymentedit == 1) {
 
 	$d['status']	= 'pending';
 	$total			= $this->cart->getTotal();
 	$price			= new PhocacartPrice();
+
+	echo '<div class="ph-checkout-box-payment ph-checkout-box-status-'.$d['status'].'">';
 
 	// Paymnet is not added or we edit it but payment is added, we can edit
 	echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-row" >';
@@ -117,8 +123,11 @@ if ($this->a->paymentnotused == 1) {
 
 	//echo '<div class="'.$this->s['c']['row'].' ph-checkout-shipping-cost-box">';
 
+	echo '<div class="'.$this->s['c']['row'].' ph-checkout-payment-items-box">';
+
 	foreach($this->t['paymentmethods'] as $k => $v) {
 
+		echo '<div class="'.$this->s['c']['row'].' ph-checkout-payment-item">';
 
 		$checked = '';
 		if (isset($v->selected) && $v->selected == 1 ) {
@@ -204,6 +213,8 @@ if ($this->a->paymentnotused == 1) {
 		echo '</div>';// end row second column
 		//echo '<div class="ph-cb grid"></div>';
 
+		echo '</div>'; // end checkout payment item
+
 	}
 
 	//echo '<div class="ph-cb"></div>';
@@ -225,14 +236,14 @@ if ($this->a->paymentnotused == 1) {
 		//echo '<div class="ph-cb"></div>';
 	}
 
-	//echo '</div>';// end payment cost box
+	echo '</div>';// end payment items box
 	//echo '</div>';// end payment row
 
 	//echo '<div class="ph-cb"></div>';
 
 	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].'">';
 	echo '<div class="'.$this->s['c']['pull-right'].' ph-checkout-payment-save">';
-	echo '<button class="'.$this->s['c']['btn.btn-primary.btn-sm'].' ph-btn">'.PhocacartRenderIcon::icon($this->s['i']['save'], '', ' ') .Text::_('COM_PHOCACART_SAVE').'</button>';
+	echo '<button class="'.$this->s['c']['btn.btn-primary.btn-sm'].' ph-btn">'.PhocacartRenderIcon::icon($this->s['i']['save'], '', ' ') .Text::_('COM_PHOCACART_CHECKOUT_PAYMENT_SAVE').'</button>';
 	echo '</div>';
 	echo '</div>';
 
@@ -246,13 +257,19 @@ if ($this->a->paymentnotused == 1) {
 	echo HTMLHelper::_('form.token');
 	echo '</form>'. "\n";
 
+	echo '</div>';// end box payment
+
 // PAYMENT NOT ADDED OR SHIPPING IS EDITED OR ADDRESS IS EDITED
 } else {
 
 	$d['status']	= 'pending';
 
+	echo '<div class="ph-checkout-box-payment ph-checkout-box-status-'.$d['status'].'">';
+
 	echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-row">';
 	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-checkout-box-header-pas">'.$layoutI->render($d).'<h3>'.$this->t['np'].'. '.Text::_('COM_PHOCACART_PAYMENT_OPTIONS').'</h3></div>';
 	echo '</div>';
+
+	echo '</div>';// end box payment
 }
 ?>

@@ -13,9 +13,6 @@ $zero_price_text			= $paramsC->get( 'zero_price_text', '' );
 $zero_price_label			= $paramsC->get( 'zero_price_label', '' );
 $price_on_demand_text       = $paramsC->get( 'price_on_demand_text', '' );
 $price_on_demand_label      = $paramsC->get( 'price_on_demand_label', '' );
-if ($zero_price_label == '0') {
-
-}
 
 $d 			= $displayData;
 $classPS	= 'ph-standard';// class price suffix
@@ -142,7 +139,6 @@ if (isset($d['discount']) && $d['discount']) {
     echo $labelNetto . $priceNetto;
     echo $labelTax . $priceTax;
     echo $labelBrutto . $priceBrutto;
-
 
 
 	// PRODUCT DISCOUNT

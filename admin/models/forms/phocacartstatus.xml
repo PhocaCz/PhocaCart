@@ -1,166 +1,156 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
+    <config>
+        <inlinehelp button="show"/>
+    </config>
 
-    <fieldset addfieldpath="/administrator/components/com_phocacart/models/fields">
+    <fieldset name="header" addfieldpath="/administrator/components/com_phocacart/models/fields">
+        <field name="title" type="PhocaText" required="true" showTranslation="true" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_LANG_STRING_DESC" />
 
-        <field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" required="true" readonly="true" class="readonly"/>
+        <field name="alias" type="text" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC" />
+    </fieldset>
 
-        <field name="title" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_LANG_STRING_DESC" required="true"/>
+    <fieldset name="general" label="COM_PHOCACART_GENERAL_OPTIONS" addfieldprefix="Phoca\PhocaCart\Form\Field">
+        <!-- Only to hide Legacy fields, will be removed in future version -->
+        <field name="__legacy" type="hidden" filter="unset" default="0" />
 
-        <field name="alias" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC"/>
-
-
-        <field name="stock_movements" type="list" label="COM_PHOCACART_FIELD_STOCK_MOVEMENTS_LABEL" description="COM_PHOCACART_FIELD_STOCK_MOVEMENTS_DESC" class="form-select" size="1" default="=">
+        <field name="stock_movements" type="list" default="=" label="COM_PHOCACART_FIELD_STOCK_MOVEMENTS_LABEL" description="COM_PHOCACART_FIELD_STOCK_MOVEMENTS_DESC">
             <option value="=">COM_PHOCACART_ITEMS_UNCHANGED</option>
             <option value="+">COM_PHOCACART_ITEMS_ADDED</option>
             <option value="-">COM_PHOCACART_ITEMS_SUBTRACTED</option>
         </field>
 
-        <field name="change_user_group" type="list" label="COM_PHOCACART_FIELD_USER_GROUP_CHANGE_LABEL" description="COM_PHOCACART_FIELD_USER_GROUP_CHANGE_DESC" class="form-select" size="1" default="0">
+        <field name="change_user_group" type="list" default="0" label="COM_PHOCACART_FIELD_USER_GROUP_CHANGE_LABEL" description="COM_PHOCACART_FIELD_USER_GROUP_CHANGE_DESC">
             <option value="0">COM_PHOCACART_USER_GROUP_UNCHANGED</option>
             <option value="1">COM_PHOCACART_USER_GROUP_CHANGED</option>
         </field>
 
-        <field name="change_points_needed" type="list" label="COM_PHOCACART_FIELD_REWARD_POINTS_CHANGE_NEEDED_LABEL" description="COM_PHOCACART_FIELD_REWARD_POINTS_CHANGE_NEEDED_DESC" class="form-select" size="1"
-               default="1">
+        <field name="change_points_needed" type="list" default="1" label="COM_PHOCACART_FIELD_REWARD_POINTS_CHANGE_NEEDED_LABEL" description="COM_PHOCACART_FIELD_REWARD_POINTS_CHANGE_NEEDED_DESC">
             <option value="0">COM_PHOCACART_REWARD_POINTS_UNCHANGED</option>
             <option value="1">COM_PHOCACART_REWARD_POINTS_CHANGED_CHANGE_APPROVED</option>
             <option value="2">COM_PHOCACART_REWARD_POINTS_CHANGED_CHANGE_NOT_APPROVED</option>
         </field>
 
-        <field name="change_points_received" type="list" label="COM_PHOCACART_FIELD_REWARD_POINTS_CHANGE_RECEIVED_LABEL" description="COM_PHOCACART_FIELD_REWARD_POINTS_CHANGE_RECEIVED_DESC" class="form-select" size="1"
-               default="0">
+        <field name="change_points_received" type="list" default="0" label="COM_PHOCACART_FIELD_REWARD_POINTS_CHANGE_RECEIVED_LABEL" description="COM_PHOCACART_FIELD_REWARD_POINTS_CHANGE_RECEIVED_DESC">
             <option value="0">COM_PHOCACART_REWARD_POINTS_UNCHANGED</option>
             <option value="1">COM_PHOCACART_REWARD_POINTS_CHANGED_CHANGE_APPROVED</option>
             <option value="2">COM_PHOCACART_REWARD_POINTS_CHANGED_CHANGE_NOT_APPROVED</option>
         </field>
 
-        <field name="download" type="list" label="COM_PHOCACART_FIELD_STATUS_DOWNLOAD_LABEL" description="COM_PHOCACART_FIELD_STATUS_DOWNLOAD_DESC" class="form-select" size="1" default="0">
+        <field name="download" type="list" default="0" label="COM_PHOCACART_FIELD_STATUS_DOWNLOAD_LABEL" description="COM_PHOCACART_FIELD_STATUS_DOWNLOAD_DESC">
             <option value="1">COM_PHOCACART_YES</option>
             <option value="0">COM_PHOCACART_NO</option>
         </field>
 
-        <field name="email_customer" type="list" label="COM_PHOCACART_FIELD_EMAIL_CUSTOMER_LABEL" description="COM_PHOCACART_FIELD_EMAIL_CUSTOMER_DESC" class="form-select" size="1" default="0">
-            <option value="1">COM_PHOCACART_YES</option>
-			<option value="2">COM_PHOCACART_YES_EXCLUDING_POS</option>
-            <option value="0">COM_PHOCACART_NO</option>
-        </field>
-        <field name="email_others" type="textarea" class="form-control" label="COM_PHOCACART_FIELD_EMAIL_OTHERS_LABEL" filter="\Joomla\CMS\Component\ComponentHelper::filterText" description="COM_PHOCACART_FIELD_EMAIL_OTHERS_DESC"/>
-
-
-        <field name="email_subject" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_EMAIL_SUBJECT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SUBJECT_DESC"/>
-
-        <field name="email_text" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_EMAIL_TEXT_LABEL" filter="\Joomla\CMS\Component\ComponentHelper::filterText"
-               description="COM_PHOCACART_FIELD_EMAIL_TEXT_DESC"/>
-
-        <field name="email_footer" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_EMAIL_FOOTER_LABEL" filter="\Joomla\CMS\Component\ComponentHelper::filterText"
-               description="COM_PHOCACART_FIELD_EMAIL_FOOTER_DESC"/>
-
-        <field name="email_subject_others" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_EMAIL_SUBJECT_OTHERS_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SUBJECT_OTHERS_DESC"/>
-
-        <field name="email_text_others" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_EMAIL_TEXT_OTHERS_LABEL" filter="\Joomla\CMS\Component\ComponentHelper::filterText"
-               description="COM_PHOCACART_FIELD_EMAIL_TEXT_OTHERS_DESC"/>
-
-        <field name="email_downloadlink_description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_EMAIL_DOWNLOAD_LINK_DESCRIPTION_LABEL" filter="\Joomla\CMS\Component\ComponentHelper::filterText"
-               description="COM_PHOCACART_FIELD_EMAIL_DOWNLOAD_LINK_DESCRIPTION_DESC"/>
-
-        <field name="email_send" type="list" label="COM_PHOCACART_FIELD_EMAIL_SEND_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SEND_DESC" class="form-select" size="1" default="0">
-            <option value="0">COM_PHOCACART_NOTHING</option>
+        <field name="orders_view_display" type="list" layout="joomla.form.field.list-fancy-select" multiple="true" filter="int_array" default="" label="COM_PHOCACART_FIELD_DISPLAY_DOCUMENT_ORDERS_VIEW_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_DOCUMENT_ORDERS_VIEW_LABEL">
             <option value="1">COM_PHOCACART_ORDER</option>
             <option value="2">COM_PHOCACART_INVOICE</option>
             <option value="3">COM_PHOCACART_DELIVERY_NOTE</option>
         </field>
 
-        <field name="email_send_format" default="0" type="list" label="COM_PHOCACART_FIELD_EMAIL_SEND_FORMAT_LABEL" class="form-select" description="COM_PHOCACART_FIELD_EMAIL_SEND_FORMAT_DESC">
-                <option value="0">COM_PHOCACART_HTML</option>
-                <option value="1">COM_PHOCACART_PDF</option>
-                <option value="2">COM_PHOCACART_BOTH</option>
-            </field>
+        <field name="description" type="editor" buttons="true" hide="pagebreak,readmore" filter="\Joomla\CMS\Component\ComponentHelper::filterText" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC"/>
+    </fieldset>
 
-        <field name="email_attachments" type="subform" label="COM_PHOCACART_FIELD_EMAIL_ATTACHMENTS_LABEL" description="COM_PHOCACART_FIELD_EMAIL_ATTACHMENTS_DESC" multiple="true" max="3"
-                   layout="joomla.form.field.subform.repeatable" formsource="administrator/components/com_phocacart/models/forms/subform_email_attachments.xml"/>
+    <fieldset name="email" label="COM_PHOCACART_EMAIL_OPTIONS">
+        <field name="email_customer" type="list" default="0" label="COM_PHOCACART_FIELD_EMAIL_CUSTOMER_LABEL" description="COM_PHOCACART_FIELD_EMAIL_CUSTOMER_DESC">
+            <option value="1">COM_PHOCACART_YES</option>
+            <option value="2">COM_PHOCACART_YES_EXCLUDING_POS</option>
+            <option value="0">COM_PHOCACART_NO</option>
+        </field>
 
-        <field name="orders_view_display" type="list" label="COM_PHOCACART_FIELD_DISPLAY_DOCUMENT_ORDERS_VIEW_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_DOCUMENT_ORDERS_VIEW_LABEL" layout="joomla.form.field.list-fancy-select" multiple="true" size="1" filter="int_array" default="">
+        <field name="__html_format_warning" type="HtmlEmailWarning" />
+
+        <field name="__buttons_edit_mail" type="EmailEditButtons" templates="status,notification" />
+
+        <field name="email_subject" showon="__legacy:1" type="text" label="COM_PHOCACART_FIELD_EMAIL_SUBJECT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SUBJECT_DESC" />
+
+        <field name="email_send" type="list" default="1" label="COM_PHOCACART_FIELD_EMAIL_SEND_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SEND_DESC">
             <option value="1">COM_PHOCACART_ORDER</option>
             <option value="2">COM_PHOCACART_INVOICE</option>
             <option value="3">COM_PHOCACART_DELIVERY_NOTE</option>
         </field>
 
-        <field name="ordering" type="PhocacartOrdering" table="status" class="form-select" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC"/>
+        <field name="email_send_format" type="radio" default="0" filter="options" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_EMAIL_ATTACH_PDF_LABEL" description="COM_PHOCACART_FIELD_EMAIL_ATTACH_PDF_DESC">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
 
+        <field name="email_text" showon="__legacy:1" type="editor" buttons="true" hide="pagebreak,readmore" filter="\Joomla\CMS\Component\ComponentHelper::filterText" label="COM_PHOCACART_FIELD_EMAIL_TEXT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_TEXT_DESC"/>
 
-		<field name="activate_gift" type="list" label="COM_PHOCACART_FIELD_ACTIVATE_GIFT_LABEL" description="COM_PHOCACART_FIELD_ACTIVATE_GIFT_DESC" class="form-select" size="1" default="0">
-			<option value="1">COM_PHOCACART_YES</option>
+        <field name="email_footer" showon="__legacy:1" type="editor" buttons="true" hide="pagebreak,readmore" filter="\Joomla\CMS\Component\ComponentHelper::filterText" label="COM_PHOCACART_FIELD_EMAIL_FOOTER_LABEL" description="COM_PHOCACART_FIELD_EMAIL_FOOTER_DESC"/>
+
+        <field name="email_others" type="textarea" filter="\Joomla\CMS\Component\ComponentHelper::filterText" label="COM_PHOCACART_FIELD_EMAIL_OTHERS_LABEL" description="COM_PHOCACART_FIELD_EMAIL_OTHERS_DESC" />
+
+        <field name="email_subject_others" showon="__legacy:1" type="text" label="COM_PHOCACART_FIELD_EMAIL_SUBJECT_OTHERS_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SUBJECT_OTHERS_DESC" />
+
+        <field name="email_text_others" showon="__legacy:1" type="editor" buttons="true" hide="pagebreak,readmore" filter="\Joomla\CMS\Component\ComponentHelper::filterText" label="COM_PHOCACART_FIELD_EMAIL_TEXT_OTHERS_LABEL" description="COM_PHOCACART_FIELD_EMAIL_TEXT_OTHERS_DESC"/>
+
+        <field name="email_downloadlink_description" showon="__legacy:1" type="editor" buttons="true" hide="pagebreak,readmore" filter="\Joomla\CMS\Component\ComponentHelper::filterText" label="COM_PHOCACART_FIELD_EMAIL_DOWNLOAD_LINK_DESCRIPTION_LABEL" description="COM_PHOCACART_FIELD_EMAIL_DOWNLOAD_LINK_DESCRIPTION_DESC"/>
+
+        <field name="email_attachments" type="subform" multiple="true" max="3" layout="joomla.form.field.subform.repeatable" formsource="administrator/components/com_phocacart/models/forms/subform_email_attachments.xml" label="COM_PHOCACART_FIELD_EMAIL_ATTACHMENTS_LABEL" description="COM_PHOCACART_FIELD_EMAIL_ATTACHMENTS_DESC" />
+    </fieldset>
+
+    <fieldset name="gift" label="COM_PHOCACART_GIFT_VOUCHER_OPTIONS">
+        <field name="activate_gift" type="list" default="0" label="COM_PHOCACART_FIELD_ACTIVATE_GIFT_LABEL" description="COM_PHOCACART_FIELD_ACTIVATE_GIFT_DESC">
+            <option value="1">COM_PHOCACART_YES</option>
             <option value="0">COM_PHOCACART_NO</option>
         </field>
 
-
-		<field name="email_gift" type="list" label="COM_PHOCACART_FIELD_SEND_EMAIL_GIFT_LABEL" description="COM_PHOCACART_FIELD_SEND_EMAIL_GIFT_DESC" class="form-select" size="1" default="0">
+        <field name="email_gift" type="list" default="0" label="COM_PHOCACART_FIELD_SEND_EMAIL_GIFT_LABEL" description="COM_PHOCACART_FIELD_SEND_EMAIL_GIFT_DESC">
             <option value="1">COM_PHOCACART_YES_BUYER</option>
-			<option value="2">COM_PHOCACART_YES_RECIPIENT</option>
-			<option value="3">COM_PHOCACART_YES_BUYER_AND_RECIPIENT</option>
+            <option value="2">COM_PHOCACART_YES_RECIPIENT</option>
+            <option value="3">COM_PHOCACART_YES_BUYER_AND_RECIPIENT</option>
             <option value="0">COM_PHOCACART_NO_ONE</option>
         </field>
 
-		<field name="email_subject_gift_sender" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_EMAIL_SUBJECT_BUYER_GIFT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SUBJECT_BUYER_GIFT_DESC"/>
+        <field name="__buttons_edit_gift_mail" type="EmailEditButtons" templates="gift,gift_notification" />
 
-        <field name="email_text_gift_sender" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_EMAIL_TEXT_BUYER_GIFT_LABEL" filter="\Joomla\CMS\Component\ComponentHelper::filterText"
-               description="COM_PHOCACART_FIELD_EMAIL_TEXT_BUYER_GIFT_DESC"/>
+        <field name="email_gift_format" type="radio" default="0" filter="options" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_EMAIL_GIFT_ATTACH_PDF_LABEL" description="COM_PHOCACART_FIELD_EMAIL_GIFT_ATTACH_PDF_DESC">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
 
-		<field name="email_subject_gift_recipient" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_EMAIL_SUBJECT_RECIPIENT_GIFT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SUBJECT_RECIPIENT_GIFT_DESC"/>
+        <field name="email_subject_gift_sender" showon="__legacy:1" type="text" label="COM_PHOCACART_FIELD_EMAIL_SUBJECT_BUYER_GIFT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SUBJECT_BUYER_GIFT_DESC" />
 
-        <field name="email_text_gift_recipient" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_EMAIL_TEXT_RECIPIENT_GIFT_LABEL" filter="\Joomla\CMS\Component\ComponentHelper::filterText"
-               description="COM_PHOCACART_FIELD_EMAIL_TEXT_RECIPIENT_GIFT_DESC"/>
+        <field name="email_text_gift_sender" showon="__legacy:1" type="editor" buttons="true" hide="pagebreak,readmore" filter="\Joomla\CMS\Component\ComponentHelper::filterText" label="COM_PHOCACART_FIELD_EMAIL_TEXT_BUYER_GIFT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_TEXT_BUYER_GIFT_DESC"/>
 
-		<field name="email_gift_format" default="0" type="list" label="COM_PHOCACART_FIELD_EMAIL_SEND_FORMAT_GIFT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SEND_FORMAT_GIFT_DESC" class="form-select">
-                <option value="0">COM_PHOCACART_HTML</option>
-                <option value="1">COM_PHOCACART_PDF</option>
-                <option value="2">COM_PHOCACART_BOTH</option>
-            </field>
+        <field name="email_subject_gift_recipient" showon="__legacy:1" type="text" label="COM_PHOCACART_FIELD_EMAIL_SUBJECT_RECIPIENT_GIFT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_SUBJECT_RECIPIENT_GIFT_DESC" />
 
-        <field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="\Joomla\CMS\Component\ComponentHelper::filterText"
-               description="COM_PHOCACART_FIELD_DESCRIPTION_DESC"/>
-
+        <field name="email_text_gift_recipient" showon="__legacy:1" type="editor" buttons="true" hide="pagebreak,readmore" filter="\Joomla\CMS\Component\ComponentHelper::filterText" label="COM_PHOCACART_FIELD_EMAIL_TEXT_RECIPIENT_GIFT_LABEL" description="COM_PHOCACART_FIELD_EMAIL_TEXT_RECIPIENT_GIFT_DESC"/>
     </fieldset>
-    <fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS">
 
-        <field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" class="form-select" size="1" default="1">
+    <fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS">
+        <field name="published" type="list" default="1" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC">
             <option value="1">JPUBLISHED</option>
             <option value="0">JUNPUBLISHED</option>
         </field>
 
-        <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" class="form-select">
+        <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC">
             <option value="*">JALL</option>
         </field>
-        <!--
-        <field name="date" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="user_utc" translateformat="true" />
 
-        <field name="hits" type="Text" class="form-control" size="6" label="COM_PHOCACART_FIELD_HITS" description="COM_PHOCACART_FIELD_HITS_DESC" />
-        -->
+        <field name="ordering" type="PhocacartOrdering" table="status" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC"/>
+
+        <field name="code" type="text" readonly="true" filter="unset" label="COM_PHOCACART_FIELD_CODE_LABEL" description="COM_PHOCACART_FIELD_CODE_DESC" />
+
+        <field name="id" type="text" default="0" readonly="true" label="JGLOBAL_FIELD_ID_LABEL" />
     </fieldset>
 
-    <fields name="metadata">
-        <fieldset name="metadata" label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
-            <!--
-                <field name="robots" type="list"
-                    label="JField_Metadata_Robots_Label" description="JField_Metadata_Robots_Desc"
-                >
-                    <option value="">JGLOBAL_USE_GLOBAL</option>
-                    <option value="0">JGLOBAL_INDEX_FOLLOW</option>
-                    <option value="1">JGLOBAL_NOINDEX_FOLLOW</option>
-                    <option value="2">JGLOBAL_INDEX_NOFOLLOW</option>
-                    <option value="3">JGLOBAL_NOINDEX_NOFOLLOW</option>
-                    <option value="4">JGLOBAL_NO_ROBOTS_TAG</option>
-                </field>
+    <fields name="params">
+        <fieldset name="display" label="JGLOBAL_FIELDSET_DISPLAY_OPTIONS">
+            <field name="background" type="color" label="COM_PHOCACART_FIELD_BACKGROUND_LABEL" description="COM_PHOCACART_FIELD_BACKGROUND_DESC" />
 
-                <field name="author" type="text" label="JAUTHOR"
-                    description="JField_Metadata_Author_Desc" size="20" />
+            <field name="foreground" type="color" label="COM_PHOCACART_FIELD_FOREGROUND_LABEL" description="COM_PHOCACART_FIELD_FOREGROUND_DESC" />
 
-                <field name="rights" type="text"
-                    label="JFIELD_META_RIGHTS_LABEL" description="JFIELD_META_RIGHTS_DESC"
-                    required="" filter="string" cols="30" rows="2" /> -->
+            <field name="class" type="text" label="COM_PHOCACART_FIELD_CLASS_LABEL" description="COM_PHOCACART_FIELD_CLASS_DESC" />
         </fieldset>
+
+        <fieldset name="general" label="COM_PHOCACART_GENERAL_OPTIONS">
+<field name="order_paid" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_STATUS_ORDER_PAID_LABEL" description="COM_PHOCACART_FIELD_STATUS_ORDER_PAID_DESC">
+            <option value="0">COM_PHOCACART_NO</option>
+            <option value="1">COM_PHOCACART_YES</option>
+        </field>
+        </fieldset>
+
     </fields>
-
-
 </form>

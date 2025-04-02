@@ -7,14 +7,14 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+
 use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Toolbar\ToolbarHelper;
-use Joomla\CMS\Language\Associations;
 use Joomla\CMS\Component\ComponentHelper;
-jimport( 'joomla.application.component.view' );
+use Phoca\PhocaCart\I18n\I18nHelper;
 
 class PhocaCartCpViewPhocaCartItem extends HtmlView
 {
@@ -33,6 +33,7 @@ class PhocaCartCpViewPhocaCartItem extends HtmlView
 		$this->state	= $this->get('State');
 		$this->form		= $this->get('Form');
 		$this->item		= $this->get('Item');
+
 
 		$params    = PhocacartUtils::getComponentParameters();
 		$media = new PhocacartRenderAdminmedia();
@@ -125,7 +126,7 @@ class PhocaCartCpViewPhocaCartItem extends HtmlView
 		$canDo		= $class::getActions($this->t, $this->state->get('filter.category_id'));
 
 		$text = $isNew ? Text::_( $this->t['l'] . '_NEW' ) : Text::_($this->t['l'] . '_EDIT');
-		ToolbarHelper::title(   Text::_( $this->t['l'] . '_PRODUCT' ).': <small><small>[ ' . $text.' ]</small></small>' , 'folder-close');
+		ToolbarHelper::title(   Text::_( $this->t['l'] . '_PRODUCT' ).': <small><small>[ ' . $text.' ]</small></small>' , 'archive');
 
 		// If not checked out, can save the item.
 		if (!$checkedOut && $canDo->get('core.edit')){
@@ -140,7 +141,7 @@ class PhocaCartCpViewPhocaCartItem extends HtmlView
 		}
 
 
-		if (!$isNew && Associations::isEnabled() && ComponentHelper::isEnabled('com_associations')) {
+		if (!$isNew && I18nHelper::associationsEnabled() && ComponentHelper::isEnabled('com_associations')) {
 			ToolbarHelper::custom($this->t['task'] . '.editAssociations', 'contract', 'contract', 'JTOOLBAR_ASSOCIATIONS', false, false);
 		}
 
@@ -152,9 +153,9 @@ class PhocaCartCpViewPhocaCartItem extends HtmlView
 		}
 
 		ToolbarHelper::divider();
+		ToolbarHelper::inlinehelp();
 		ToolbarHelper::help( 'screen.'.$this->t['c'], true );
 
 		PhocacartRenderAdminview::renderWizardButton('back');
 	}
 }
-?>

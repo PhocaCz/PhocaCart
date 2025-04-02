@@ -23,4 +23,10 @@ class AbstractEvent extends Event
   {
     return $this->pluginType;
   }
+
+  public function shouldProceed(string $pluginName): bool
+  {
+    $eventData = $this->getArgument('eventData');
+    return !!$eventData && is_array($eventData) && isset($eventData['pluginname']) && $eventData['pluginname'] == $pluginName;
+  }
 }

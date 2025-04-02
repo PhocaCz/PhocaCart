@@ -12,6 +12,9 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Plugin\PluginHelper;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
+
 jimport( 'joomla.application.component.view');
 jimport( 'joomla.filesystem.folder' );
 jimport( 'joomla.filesystem.file' );
@@ -53,6 +56,7 @@ class PhocaCartViewItems extends HtmlView
 		$this->t['image_height_cat']		= $this->p->get( 'image_height_cat', '' );
 		//$this->t['image_link']			= $this->p->get( 'image_link', 0 );
 		$this->t['columns_cat']				= $this->p->get( 'columns_cat', 3 );
+        $this->t['columns_cat_mobile']		= $this->p->get( 'columns_cat_mobile', 3 );
 		$this->t['columns_subcat_cat']		= $this->p->get( 'columns_subcat_cat', 3 );
 		$this->t['enable_social']			= $this->p->get( 'enable_social', 0 );
 		$this->t['cv_display_subcategories']= $this->p->get( 'cv_display_subcategories', 5 );
@@ -74,11 +78,11 @@ class PhocaCartViewItems extends HtmlView
 		$this->t['dynamic_change_price']	= $this->p->get( 'dynamic_change_price', 0 );
 		$this->t['dynamic_change_stock']	= $this->p->get( 'dynamic_change_stock', 0 );
 		$this->t['remove_select_option_attribute']= $this->p->get( 'remove_select_option_attribute', 1 );
-		$this->t['add_compare_method']		= $this->p->get( 'add_compare_method', 0 );
-		$this->t['add_wishlist_method']		= $this->p->get( 'add_wishlist_method', 0 );
+		$this->t['add_compare_method']		= $this->p->get( 'add_compare_method', 2 );
+		$this->t['add_wishlist_method']		= $this->p->get( 'add_wishlist_method', 2 );
 		$this->t['display_addtocart']		= $this->p->get( 'display_addtocart', 1 );
 		$this->t['display_star_rating']		= $this->p->get( 'display_star_rating', 0 );
-		$this->t['add_cart_method']			= $this->p->get( 'add_cart_method', 0 );
+		$this->t['add_cart_method']			= $this->p->get( 'add_cart_method', 2 );
 		$this->t['hide_attributes_category']= $this->p->get( 'hide_attributes_category', 1 );
 		$this->t['hide_attributes']			= $this->p->get( 'hide_attributes', 0 );
 		$this->t['display_stock_status']	= $this->p->get( 'display_stock_status', 1 );
@@ -140,6 +144,7 @@ class PhocaCartViewItems extends HtmlView
 
 		$this->t['layouttypeactive'] 	= PhocacartRenderFront::setActiveLayoutType($this->t['layouttype']);
 		$this->t['columns_cat'] 		= $this->t['layouttype'] == 'grid' ? $this->t['columns_cat'] : 1;
+        $this->t['columns_cat_mobile'] 		= $this->t['layouttype'] == 'grid' ? $this->t['columns_cat_mobile'] : 1;
 
 
 		$uri->delVar('format');// !!! REMOVE format parameter because return url needs to go to standard html
@@ -164,14 +169,12 @@ class PhocaCartViewItems extends HtmlView
 
 		//$model->hit((int)$this->t['categoryid']);
 
-		// Plugins ------------------------------------------
-        PluginHelper::importPlugin('pcv');
-        //$this->t['dispatcher']	= J EventDispatcher::getInstance();
+				// Plugins ------------------------------------------
         $this->t['event']                      = new stdClass;
-        $results                               = Factory::getApplication()->triggerEvent('onPCVonItemsBeforeHeader', array('com_phocacart.items', &$this->items, &$this->p));
+				$results                               = Dispatcher::dispatch(new Event\View\Items\BeforeHeader('com_phocacart.items', $this->items, $this->p));
         $this->t['event']->onItemsBeforeHeader = trim(implode("\n", $results));
 
-				$results                               = Factory::getApplication()->triggerEvent('onPCVonItemsBeforePaginationTop', array('com_phocacart.items', &$this->items, &$this->p));
+				$results                               = Dispatcher::dispatch(new Event\View\Items\BeforePaginationTop('com_phocacart.items', $this->items, $this->p));
 				$this->t['event']->onItemsBeforePaginationTop = trim(implode("\n", $results));
         // Foreach values are rendered in default foreaches
 
@@ -190,4 +193,4 @@ class PhocaCartViewItems extends HtmlView
 
 	}
 }
-?>
+

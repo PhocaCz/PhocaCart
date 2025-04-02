@@ -24,7 +24,7 @@ class JFormFieldPhocaTax extends FormField
 
 		$db = Factory::getDBO();
 
-		$query = 'SELECT a.title AS text, a.id AS value'
+		$query = 'SELECT a.title AS text, a.id AS value, tax_rate, calculation_type'
 		. ' FROM #__phocacart_taxes AS a'
 		. ' WHERE a.published = 1'
 		. ' ORDER BY a.ordering';
@@ -32,8 +32,24 @@ class JFormFieldPhocaTax extends FormField
 		$data = $db->loadObjectList();
 
 		if (!empty($data)) {
+
+			// This field can be loaded e.g. in plugins
+			if (file_exists(JPATH_ADMINISTRATOR . '/components/com_phocacart/libraries/bootstrap.php')) {
+				// Joomla 5 and newer
+				require_once(JPATH_ADMINISTRATOR . '/components/com_phocacart/libraries/bootstrap.php');
+			} else {
+				// Joomla 4
+				if (!class_exists('PhocaCartLoader')) {
+					require_once( JPATH_ADMINISTRATOR.'/components/com_phocacart/libraries/loader.php');
+				}
+				JLoader::registerPrefix('Phocacart', JPATH_ADMINISTRATOR . '/components/com_phocacart/libraries/phocacart');
+				phocacartimport('phocacart.price.price');
+			}
+
+
+			$price 	= new PhocacartPrice();
 			foreach($data as $k => $v) {
-				$data[$k]->text = Text::_($v->text);
+				$data[$k]->text = Text::_($v->text) . ' (' . $price->getTaxFormat($v->tax_rate, (int)$v->calculation_type) . ')';
 			}
 		}
 

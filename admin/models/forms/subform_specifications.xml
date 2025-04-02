@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-	<fieldset>
+	<fields addfieldpath="/administrator/components/com_phocacart/models/fields">
+		<fieldset>
+			<field name="id" type="hidden" />
 
-		<field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" readonly="true" class="readonly hidden" hidden="true" />
+			<field name="title" type="phocatext" i18n="true" label="COM_PHOCACART_FIELD_PARAMETER_LABEL" description="COM_PHOCACART_FIELD_PARAMETER_DESC" />
 
-		<field name="title" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_PARAMETER_LABEL" description="COM_PHOCACART_FIELD_PARAMETER_DESC" />
+			<field name="alias" type="phocatext" i18n="true"  label="COM_PHOCACART_FIELD_ALIAS_LABEL" />
 
-		<field name="alias" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" />
+			<field name="value" type="phocatext" i18n="true"  label="COM_PHOCACART_FIELD_VALUE_LABEL"/>
 
-		<field name="value" type="textarea" class="form-control" size="40" label="COM_PHOCACART_FIELD_VALUE_LABEL"/>
+			<field name="alias_value" type="phocatext" i18n="true"  label="COM_PHOCACART_FIELD_ALIAS_VALUE_LABEL" />
 
-<field name="alias_value" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_ALIAS_VALUE_LABEL" />
+			<field name="group_id" type="PhocacartSpecificationGroups" default="0" label="COM_PHOCACART_FIELD_GROUP_LABEL" />
 
-<field name="group_id" type="PhocacartSpecificationGroups" default="0" label="COM_PHOCACART_FIELD_GROUP_LABEL" class="form-select"  />
+			<field name="image" type="phocaselectfilenameimage" manager="productimage" class="form-control inputbox imageCreateThumbs" label="COM_PHOCACART_FIELD_IMAGE_LABEL" />
 
-<field name="image" type="phocaselectfilenameimage" manager="productimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL" class="form-control inputbox imageCreateThumbs" size="40" />
+			<field name="image_medium" type="phocaselectfilenameimage" manager="productimage" class="form-control inputbox imageCreateThumbs" label="COM_PHOCACART_FIELD_IMAGE_MEDIUM_LABEL" />
 
-<field name="image_medium" type="phocaselectfilenameimage" manager="productimage" label="COM_PHOCACART_FIELD_IMAGE_MEDIUM_LABEL" class="form-control inputbox imageCreateThumbs" size="40" />
+			<field name="image_small" type="phocaselectfilenameimage" manager="productimage" class="form-control inputbox imageCreateThumbs" label="COM_PHOCACART_FIELD_IMAGE_SMALL_LABEL" />
 
-<field name="image_small" type="phocaselectfilenameimage" manager="productimage" label="COM_PHOCACART_FIELD_IMAGE_SMALL_LABEL" class="form-control inputbox imageCreateThumbs" size="40" />
-
-<field name="color" type="color" label="COM_PHOCACART_FIELD_COLOR_LABEL"  class="form-control" size="40" default=""  />
-
-	</fieldset>
+			<field name="color" type="color" label="COM_PHOCACART_FIELD_COLOR_LABEL" />
+		</fieldset>
+	</fields>
 </form>

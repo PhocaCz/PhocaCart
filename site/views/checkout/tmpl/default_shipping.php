@@ -10,11 +10,13 @@
 use Joomla\CMS\Factory;
 
 defined('_JEXEC') or die();
-use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\HTML\HTMLHelper;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
 
 $layoutI 		= new FileLayout('icon_checkout_status', null, array('component' => 'com_phocacart'));
 $d				= array();
@@ -33,6 +35,8 @@ if ($this->a->shippingnotused == 1) {
 } else if ($this->a->shippingview) {
 
 	$d['status']	= 'finished';
+
+	echo '<div class="ph-checkout-box-shipping ph-checkout-box-status-'.$d['status'].'">';
 
 	// Header
 	echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-row" >';
@@ -91,7 +95,7 @@ if ($this->a->shippingnotused == 1) {
 	if (isset($this->t['shippingmethod']) && isset($this->t['shippingmethod']['title']) && $this->t['shippingmethod']['title'] != '') {
 
 		//echo '<div class="'.$this->s['c']['row'].'">';
-		echo '<div class="'.$this->s['c']['col.xs12.sm8.md8'].'">';
+		echo '<div class="'.$this->s['c']['col.xs12.sm8.md8'].' ph-checkout-shipping-row-item">';
 
 		if (isset($this->t['shippingmethod']['image']) && $this->t['shippingmethod']['image'] != '') {
 			echo '<div class="ph-shipping-image"><img src="'.Uri::base(true) .'/'. $this->t['shippingmethod']['image'].'" alt="'.htmlspecialchars(strip_tags($this->t['shippingmethod']['title'])).'" /></div>';
@@ -102,18 +106,13 @@ if ($this->a->shippingnotused == 1) {
 		// Event
 		$paramsShipping = array();
 		if (isset($this->t['shippingmethod']['params_shipping']) && !empty($this->t['shippingmethod']['params_shipping'])) {
-
 			$paramsShipping = json_decode($this->t['shippingmethod']['params_shipping'], true);
 		}
 
 		if (isset($this->t['shippingmethod']['method']) && $this->t['shippingmethod']['method'] != '') {
-
-			PluginHelper::importPlugin('pcs', htmlspecialchars(strip_tags($this->t['shippingmethod']['method'])));
-			$eventData 					= array();
-			$eventData['pluginname'] 	= htmlspecialchars(strip_tags($this->t['shippingmethod']['method']));
-
-
-			$results = Factory::getApplication()->triggerEvent('onPCSgetShippingBranchInfo', array('com_phocacart.checkout', $this->t['shippingmethod'], $paramsShipping, $eventData));
+			$results = Dispatcher::dispatch(new Event\Shipping\GetShippingBranchInfo('com_phocacart.checkout', $this->t['shippingmethod'], $paramsShipping, [
+				'pluginname' => $this->t['shippingmethod']['method'],
+			]));
 
 			if (!empty($results)) {
 				foreach ($results as $k => $v) {
@@ -123,7 +122,7 @@ if ($this->a->shippingnotused == 1) {
 				}
 			}
 			/*
-			// INSTRUCTINS: test the plugin in event this way:
+			// INSTRUCTIONS: test the plugin in event this way:
 
 			protected $name 	= 'plugin_name';
 
@@ -170,12 +169,16 @@ if ($this->a->shippingnotused == 1) {
 	echo '</form>'. "\n";
 	//echo '</div>';// end checkout box row
 
+	echo '</div>';// end box shipping
+
 // ADD OR EDIT - user didn't add the shipping yet or user wants to edit it now
 } else if ($this->a->shippingedit == 1)  {
 
 	$d['status']	= 'pending';
 	$total			= $this->cart->getTotal();
 	$price			= new PhocacartPrice();
+
+	echo '<div class="ph-checkout-box-shipping ph-checkout-box-status-'.$d['status'].'">';
 
 
 	echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-row" >';
@@ -198,8 +201,11 @@ if ($this->a->shippingnotused == 1) {
 
 	//echo '<div class="'.$this->s['c']['row'].' ph-checkout-shipping-cost-box">';
 
+	echo '<div class="'.$this->s['c']['row'].' ph-checkout-shipping-items-box">';
+
 	foreach($this->t['shippingmethods'] as $k => $v) {
 
+		echo '<div class="'.$this->s['c']['row'].' ph-checkout-shipping-item">';
 
 		$checked = '';
 		if (isset($v->selected) && $v->selected == 1 ) {
@@ -224,16 +230,10 @@ if ($this->a->shippingnotused == 1) {
 
 		// Event
 		if (isset($v->method) && $v->method != '') {
+			$results = Dispatcher::dispatch(new Event\Shipping\GetShippingBranches('com_phocacart.checkout', $v, [
+				'pluginname' => $v->method,
+			]));
 
-			PluginHelper::importPlugin('pcs', htmlspecialchars(strip_tags($v->method)));
-			$eventData 					= array();
-			$eventData['pluginname'] 	= htmlspecialchars(strip_tags($v->method));
-
-			$results = Factory::getApplication()->triggerEvent('onPCSgetShippingBranches', array('com_phocacart.checkout', $v, $eventData));
-
-			/*if (!empty($results)) {
-				echo trim(implode("\n", $results));
-			}*/
 			if (!empty($results)) {
 				foreach ($results as $k2 => $v2) {
 					if ($v2 != false && isset($v2['content']) && $v2['content'] != '') {
@@ -303,18 +303,20 @@ if ($this->a->shippingnotused == 1) {
 		echo '</div>';// end row second column
 		//echo '<div class="ph-cb grid"></div>';
 
+		echo '</div>'; // end checkout shipping item
+
 	}
 
 	//echo '<div class="ph-cb"></div>';
 
-	//echo '</div>';// end shipping cost box
+	echo '</div>';// end shipping items box
 	//echo '</div>';// end shipping row
 
 	//echo '<div class="ph-cb"></div>';
 
 	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].'">';
 	echo '<div class="'.$this->s['c']['pull-right'].' ph-checkout-shipping-save">';
-	echo '<button class="'.$this->s['c']['btn.btn-primary.btn-sm'].' ph-btn">'.PhocacartRenderIcon::icon($this->s['i']['save'], '', ' ') .Text::_('COM_PHOCACART_SAVE').'</button>';
+	echo '<button class="'.$this->s['c']['btn.btn-primary.btn-sm'].' ph-btn">'.PhocacartRenderIcon::icon($this->s['i']['save'], '', ' ') .Text::_('COM_PHOCACART_CHECKOUT_SHIPPING_SAVE').'</button>';
 	echo '</div>';
 	echo '</div>';
 
@@ -329,6 +331,8 @@ if ($this->a->shippingnotused == 1) {
 	echo HTMLHelper::_('form.token');
 	echo '</form>'. "\n";
 
+	echo '</div>';// end box shipping
+
 
 }  else {
 
@@ -336,9 +340,13 @@ if ($this->a->shippingnotused == 1) {
 
 	$d['status']	= 'pending';
 
+	echo '<div class="ph-checkout-box-shipping ph-checkout-box-status-'.$d['status'].'">';
+
 	echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-row" >';
 	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-checkout-box-header-pas">'.$layoutI->render($d).'<h3>'.$this->t['ns'].'. '.Text::_('COM_PHOCACART_SHIPPING_OPTIONS').'</h3></div>';
 	echo '</div>';
+
+	echo '</div>';// end box shipping
 }
 
 

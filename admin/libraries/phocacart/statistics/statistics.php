@@ -313,8 +313,8 @@ var config".$id." = {
 	type: 'pie',
 	data: {
 		datasets: [{
-			data: [".htmlspecialchars($dS)."],
-			backgroundColor : [".htmlspecialchars($bS)."],
+			data: [".$dS."],
+			backgroundColor : [".$bS."],
 		}],
 		labels: [".$lS."]
 	},

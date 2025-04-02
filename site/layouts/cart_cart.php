@@ -31,6 +31,8 @@ $p['zero_shipping_price_calculation']	= $d['params']->get( 'zero_shipping_price_
 $p['zero_payment_price_calculation']	= $d['params']->get( 'zero_payment_price_calculation', 0 );
 $p['display_webp_images']				= $d['params']->get( 'display_webp_images', 0 );
 $p['display_zero_total']			    = $d['params']->get( 'display_zero_total', 0 );
+$p['tax_calculation_sales']	 			= $d['params']->get( 'tax_calculation_sales', 1);
+$p['tax_calculation_sales_change_subtotal']= $d['params']->get( 'tax_calculation_sales_change_subtotal', 0);
 
 if (!empty($d['fullitems'])) {
 
@@ -45,6 +47,17 @@ if (!empty($d['fullitems'])) {
 		$cXT 	= $d['s']['c']['col.xs5.sm5.md5'];// -1 //xs12
 		$cXP 	= $d['s']['c']['col.xs4.sm4.md4'];// -1 //xs12
 		$cS		= '-i';
+
+		if ((int)$p['tax_calculation'] > 0 && isset($d['paramsmodule']['display_product_tax_info']) && $d['paramsmodule']['display_product_tax_info'] == 1) {
+
+			$cI 	= $d['s']['c']['col.xs2.sm2.md2'];// +2 //xs12
+			$cX 	= $d['s']['c']['col.xs1.sm1.md1'];// //xs12
+			$cXT 	= $d['s']['c']['col.xs3.sm3.md3'];// -1 //xs12
+			$cXP 	= $d['s']['c']['col.xs2.sm2.md2'];// -1 //xs12
+			$cS		= ''; // S Suffix
+
+		}
+
 	} else {
 		//$c2 = 2;
 		//$c3 = 3;
@@ -53,6 +66,16 @@ if (!empty($d['fullitems'])) {
 		$cXT 	= $d['s']['c']['col.xs6.sm6.md6']; // T Text/Title //xs12
 		$cXP 	= $d['s']['c']['col.xs5.sm5.md5']; // P Price //xs12
 		$cS		= ''; // S Suffix
+
+		if ((int)$p['tax_calculation'] > 0 && isset($d['paramsmodule']['display_product_tax_info']) && $d['paramsmodule']['display_product_tax_info'] == 1) {
+
+			$cI 	= '';
+			$cX 	= $d['s']['c']['col.xs1.sm1.md1']; // X Emtpy space //xs12
+			$cXT 	= $d['s']['c']['col.xs5.sm5.md5']; // T Text/Title //xs12
+			$cXP 	= $d['s']['c']['col.xs2.sm2.md2']; // * 3 !!! P Price //xs12 * 3
+			$cS		= ''; // S Suffix
+
+		}
 	}
 	//$r	= 'row';
 	$r	= $d['s']['c']['row'];
@@ -97,7 +120,6 @@ if (!empty($d['fullitems'])) {
 	echo '</div>';// end row
 
 	foreach($d['fullitems'][1] as $k => $v) {
-
 		$link = PhocacartRoute::getItemRoute((int)$v['id'], (int)$v['catid'], $v['alias']);
 		if ($v['netto']) {
 			$priceItem = (int)$v['quantity'] * $v['netto'];
@@ -154,14 +176,27 @@ if (!empty($d['fullitems'])) {
 		if ($d['client'] == 1) {
 			echo $v['title'];
 		} else {
-			echo '<a href="'.$link.'">'.$v['title'].'</a>';
+			echo '<a href="'.Route::_($link).'">'.$v['title'].'</a>';
 		}
 
 		echo '</div>';
 
-		echo '<div class="'.$cXP.' ph-small ph-cart-small-price ph-right">'.$priceItem.'</div>';
-		echo '</div>';// end row
 
+		if ((int)$p['tax_calculation'] > 0 && isset($d['paramsmodule']['display_product_tax_info']) && $d['paramsmodule']['display_product_tax_info'] == 1) {
+			$priceItemNetto  = $price->getPriceFormat((int)$v['quantity'] * $v['netto']);
+			$priceItemBrutto = $price->getPriceFormat((int)$v['quantity'] * $v['brutto']);
+			$priceItemTax = $price->getPriceFormat($v['tax'] * $v['quantity']);
+			$priceItemFinal = $price->getPriceFormat($v['final']);
+
+			echo '<div class="' . $cXP . ' ph-small ph-cart-small-price ph-right ph-netto">' . $priceItemNetto . '</div>';
+			echo '<div class="' . $cXP . ' ph-small ph-cart-small-price ph-right ph-tax">' . $priceItemTax . '</div>';
+			echo '<div class="' . $cXP . ' ph-small ph-cart-small-price ph-right ph-brutto">' . $priceItemBrutto . '</div>';
+
+		} else {
+			echo '<div class="' . $cXP . ' ph-small ph-cart-small-price ph-right">' . $priceItem . '</div>';
+		}
+
+		echo '</div>';// end row
 
 
 		if (!empty($v['attributes'])) {
@@ -208,7 +243,20 @@ if (!empty($d['fullitems'])) {
 		//- echo '</tr>';
 		echo '<div class="'.$r.' ph-cart-cart-row-netto">';
 		echo '<div class="'.$cT.' ph-small ph-cart-subtotal-netto-txt">'.Text::_('COM_PHOCACART_SUBTOTAL').'</div>';
-		echo '<div class="'.$cP.' ph-small ph-right ph-cart-subtotal-netto">'.$price->getPriceFormat($d['total'][1]['netto']).'</div>';
+
+		if ($p['tax_calculation_sales'] == 2 && $p['tax_calculation_sales_change_subtotal'] == 1) {
+			// $d['total'][4]['rounding'] is not the final rounding but rounding after discounts
+			//$subTotalFromBrutto = $d['total'][0]['subtotalbrutto'] - $d['total'][0]['taxsum'] - $d['total'][4]['rounding'];
+			// This method is used, because tax calculation can change the subtotal/total calculation
+			$dBrutto = $d['total'][2]['dbrutto'] + $d['total'][3]['dbrutto'] + $d['total'][4]['dbrutto'] + $d['total'][5]['dbrutto'];
+			$subTotalFromBrutto = $d['total'][0]['brutto'] + $dBrutto - $d['total'][0]['taxsum'] - $d['total'][0]['rounding'];
+			echo '<div class="'.$cP.' ph-small ph-right ph-cart-subtotal-netto">'.$price->getPriceFormat($subTotalFromBrutto).'</div>';
+
+		} else {
+			echo '<div class="'.$cP.' ph-small ph-right ph-cart-subtotal-netto">'.$price->getPriceFormat($d['total'][1]['netto']).'</div>';
+		}
+
+
 		echo '</div>';// end row
 	}
 
@@ -224,7 +272,12 @@ if (!empty($d['fullitems'])) {
 	if ($d['total'][2]['dnetto']) {
 		echo '<div class="'.$r.' ph-cart-cart-row-discount-product">';
 		echo '<div class="'.$cT.' ph-small ph-cart-product-discount-txt">'.Text::_('COM_PHOCACART_PRODUCT_DISCOUNT').'</div>';
-		echo '<div class="'.$cP.' ph-small ph-right ph-cart-product-discount">'.$price->getPriceFormat($d['total'][2]['dnetto'], 1).'</div>';
+
+		if ($p['tax_calculation_sales'] == 2) {
+			echo '<div class="'.$cP.' ph-small ph-right ph-cart-product-discount">'.$price->getPriceFormat($d['total'][2]['dbrutto'], 1).'</div>';
+		} else {
+			echo '<div class="'.$cP.' ph-small ph-right ph-cart-product-discount">'.$price->getPriceFormat($d['total'][2]['dnetto'], 1).'</div>';
+		}
 		echo '</div>';// end row
 	}
 
@@ -232,7 +285,12 @@ if (!empty($d['fullitems'])) {
 	if ($d['total'][3]['dnetto']) {
 		echo '<div class="'.$r.' ph-cart-cart-row-discount-cart">';
 		echo '<div class="'.$cT.' ph-small ph-cart-cart-discount-txt">'.Text::_('COM_PHOCACART_CART_DISCOUNT').$d['total'][3]['discountcarttxtsuffix'].'</div>';
-		echo '<div class="'.$cP.' ph-small ph-right ph-cart-cart-discount">'.$price->getPriceFormat($d['total'][3]['dnetto'], 1).'</div>';
+
+		if ($p['tax_calculation_sales'] == 2) {
+			echo '<div class="'.$cP.' ph-small ph-right ph-cart-cart-discount">'.$price->getPriceFormat($d['total'][3]['dbrutto'], 1).'</div>';
+		} else {
+			echo '<div class="'.$cP.' ph-small ph-right ph-cart-cart-discount">'.$price->getPriceFormat($d['total'][3]['dnetto'], 1).'</div>';
+		}
 		echo '</div>';// end row
 	}
 
@@ -244,11 +302,15 @@ if (!empty($d['fullitems'])) {
 		}
 		echo '<div class="'.$r.' ph-cart-cart-row-discount-coupon">';
 		echo '<div class="'.$cT.' ph-small ph-cart-coupon-txt">'.$couponTitle.$d['total'][4]['couponcarttxtsuffix'].'</div>';
-		echo '<div class="'.$cP.' ph-small ph-right ph-cart-coupon">'.$price->getPriceFormat($d['total'][4]['dnetto'], 1).'</div>';
+
+
+		if ($p['tax_calculation_sales'] == 2) {
+			echo '<div class="'.$cP.' ph-small ph-right ph-cart-coupon">'.$price->getPriceFormat($d['total'][4]['dbrutto'], 1).'</div>';
+		} else {
+			echo '<div class="'.$cP.' ph-small ph-right ph-cart-coupon">'.$price->getPriceFormat($d['total'][4]['dnetto'], 1).'</div>';
+		}
 		echo '</div>';// end row
 	}
-
-
 
 	// TAX
 	if (!empty($d['total'][0]['tax'])) {

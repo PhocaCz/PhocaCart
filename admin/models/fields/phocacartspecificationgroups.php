@@ -49,7 +49,12 @@ class JFormFieldPhocacartSpecificationGroups extends FormField
 
 
 		if (!$multiple) {
+
+			// array unshift changes the numerical indexes
 			array_unshift($attributes, HTMLHelper::_('select.option', '', '- ' . Text::_('COM_PHOCACART_SELECT_GROUP') . ' -', 'value', 'text'));
+			//$attributes = array_merge(['' => HTMLHelper::_('select.option', '', '- ' . Text::_('COM_PHOCACART_SELECT_GROUP') . ' -', 'value', 'text')], $attributes);
+			//$attributes = ['' => HTMLHelper::_('select.option', '', '- ' . Text::_('COM_PHOCACART_SELECT_GROUP') . ' -', 'value', 'text')] + $attributes;
+
 			return HTMLHelper::_('select.genericlist',  $attributes,  $this->name, $attr, 'value', 'text', $this->value, $this->id );
 		} else {
 

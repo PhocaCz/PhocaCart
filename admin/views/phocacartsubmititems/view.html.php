@@ -66,7 +66,7 @@ class PhocaCartCpViewPhocaCartSubmititems extends HtmlView
 
 
 
-		ToolbarHelper::title( Text::_($this->t['l'].'_SUBMITTED_ITEMS'), 'duplicate' );
+		ToolbarHelper::title( Text::_($this->t['l'].'_SUBMITTED_ITEMS'), 'duplicate-alt' );
 		if ($canDo->get('core.create')) {
 			ToolbarHelper::addNew( $this->t['task'].'.add','JTOOLBAR_NEW');
 
@@ -107,7 +107,7 @@ class PhocaCartCpViewPhocaCartSubmititems extends HtmlView
 
 */
 
-		$dhtml = '<joomla-toolbar-button><button class="btn btn-small" onclick="javascript: if(document.adminForm.boxchecked.value==0){alert(\''.Text::_('COM_PHOCACART_WARNING_CREATE_PRODUCTS_ITEMS_MAKE_SELECTION').'\');}else{if(confirm(\''.Text::_('COM_PHOCACART_WARNING_CREATE_PRODUCTS_ITEMS').'\')){Joomla.submitbutton(\'phocacartsubmititem.create\');}}" ><i class="icon-new" title="'.Text::_('COM_PHOCACART_CREATE_PRODUCTS').'"></i> '.Text::_('COM_PHOCACART_CREATE_PRODUCTS').'</button></joomla-toolbar-button>';
+		$dhtml = '<joomla-toolbar-button><button class="btn btn-primary btn-small" onclick="javascript: if(document.adminForm.boxchecked.value==0){alert(\''.Text::_('COM_PHOCACART_WARNING_CREATE_PRODUCTS_ITEMS_MAKE_SELECTION').'\');}else{if(confirm(\''.Text::_('COM_PHOCACART_WARNING_CREATE_PRODUCTS_ITEMS').'\')){Joomla.submitbutton(\'phocacartsubmititem.create\');}}" ><i class="icon-new" title="'.Text::_('COM_PHOCACART_CREATE_PRODUCTS').'"></i> '.Text::_('COM_PHOCACART_CREATE_PRODUCTS').'</button></joomla-toolbar-button>';
 
 
 

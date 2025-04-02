@@ -136,9 +136,15 @@ class PhocacartPrice
             $this->setCurrency((int)$forceCurrency);
         }
 
-        if ($price < 0) {
-            $negative = 1;
-
+        // Due to backward compatibility (previously discounts were always - now they can be +
+        // e.g. Discount with added value -10
+        // is marked as negative but it has reversed value in options so it needs to be transformed to positive (only design issue)
+        if ($negative == 1 && $price < 0) {
+            $negativeSign = 0;
+        } else if ($price < 0) {
+            $negativeSign = 1;
+        } else {
+            $negativeSign = $negative;
         }
 
         // If negative is forced by parameter but the price is 0 in real - skip the negative sign
@@ -158,7 +164,10 @@ class PhocacartPrice
         // Round after exchange rate
         $price = $this->roundPrice($price);
 
-        if ($negative) {
+
+        if ($negative == 1 && $price < 0) {
+            $price = abs($price);
+        } else if ($price < 0) {
             $price = abs($price);
         }
 
@@ -194,7 +203,8 @@ class PhocacartPrice
         }
 
         $o = '';
-        if ($negative) {
+
+        if ($negativeSign == 1) {
 
             $o = '- ' . $pricePrefix . $price . $priceSuffix;
         } else {
@@ -307,9 +317,6 @@ class PhocacartPrice
      */
 
     public function getPriceItems($price, $taxId, $tax, $taxCalculationType, $taxTitle = '', $baseAmount = 0, $baseUnit = '', $zeroPrice = 0, $round = 1, $groupPrice = null, $taxHide = []) {
-
-
-
 
         // We need to round because if not
         // BRUTTO          0.15  ... 0.15
@@ -515,10 +522,10 @@ class PhocacartPrice
      * ROUNDING - TAX EXCLUSIVE - ROUND UP
      * ROUNDING - TAX INCLUSIVE - ROUND DOWN
      */
-    public function roundPrice($price, $type = 'price') {
+    public function roundPrice($price, $forceRounding = -1) {
 
-        $app = Factory::getApplication();
-        //$paramsC 					= PhocacartUtils::getComponentParameters();
+        //$app = Factory::getApplication();
+        //$paramsC 			  = PhocacartUtils::getComponentParameters();
         $paramsC              = PhocacartUtils::getComponentParameters();
         $rounding_calculation = $paramsC->get('rounding_calculation', 1);
 
@@ -543,12 +550,23 @@ class PhocacartPrice
 
         }*/
 
-
+        // 1 PHP_ROUND_HALF_UP
+        // 2 PHP_ROUND_HALF_DOWN
+        // 3 PHP_ROUND_HALF_EVEN
+        // 4 PHP_ROUND_HALF_ODD
         $rounding = $rounding_calculation; // 1 ... up, 2 ... down
+
+        if ($forceRounding != -1) {
+            $rounding = (int)$forceRounding;
+        }
 
 
         if (!$price) {
             $price = 0;
+        }
+
+        if ($rounding == 0) {
+            return $price;
         }
 
         $priceR = round($price, $this->price_decimals, $rounding);

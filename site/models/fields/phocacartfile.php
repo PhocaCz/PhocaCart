@@ -7,13 +7,12 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
-
-
 
 class JFormFieldPhocacartFile extends FormField
 {
@@ -105,7 +104,7 @@ class JFormFieldPhocacartFile extends FormField
 			$accepts = '';
 			if ($typeMethod == 'image'){
 				$accepts = 'accept="image/*"';
-				$accepts = 'accept="image/x-png,image/gif,image/jpeg,image/webp"';
+				$accepts = 'accept="image/x-png,image/gif,image/jpeg,image/webp,image/avif"';
 			}
 
 			$s  = PhocacartRenderStyle::getStyles();
@@ -147,4 +146,3 @@ class JFormFieldPhocacartFile extends FormField
         return implode("\n", $o);
 	}
 }
-?>

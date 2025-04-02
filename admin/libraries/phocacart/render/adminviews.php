@@ -28,7 +28,6 @@ class PhocacartRenderAdminviews extends Adminviews
     public $option      = '';
     public $optionLang  = '';
     public $tmpl        = '';
-    public $compatible  = false;
     public $sidebar     = true;
     protected $document	= false;
 

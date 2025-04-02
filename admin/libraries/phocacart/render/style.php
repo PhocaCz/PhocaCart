@@ -23,6 +23,16 @@ class PhocacartRenderStyle
      * Not all classes are loaded this way, only the classes which can change for different libraries like bootstrap3, bootstrap4, etc.
      */
 
+    public static function icon(string $icon): string {
+        self::getStyles();
+        return self::$styles['i'][$icon] ?? $icon;
+    }
+
+    public static function class(string $class): string {
+        self::getStyles();
+        return self::$styles['c'][$class] ?? $class;
+    }
+
     public static function getStyles() {
 
         if (empty(self::$styles)) {
@@ -41,7 +51,7 @@ class PhocacartRenderStyle
                 $icons = 'fa5';// only icons are now active for admin
             } else {
                 $theme = $pC->get('theme', 'bs5');
-                $icons = $pC->get('icon_type', 'fa5');
+                $icons = $pC->get('icon_type', 'svg');
             }
 
             $params = [];
@@ -73,6 +83,7 @@ class PhocacartRenderStyle
         $s['c']['row']      = 'row';
         $s['c']['row-item'] = 'row-item';
 
+        // mobile - one column
         $s['c']['col.xs12.sm1.md1']   = 'col-12 col-sm-1 col-md-2';
         $s['c']['col.xs12.sm2.md2']   = 'col-12 col-sm-1 col-md-2';
         $s['c']['col.xs12.sm3.md3']   = 'col-sm-12 col-md-3 col-lg-3 col-xl-3';
@@ -84,6 +95,19 @@ class PhocacartRenderStyle
         $s['c']['col.xs12.sm9.md9']   = 'col-12 col-sm-9 col-md-9';
         $s['c']['col.xs12.sm10.md10'] = 'col-12 col-sm-10 col-md-10';
         $s['c']['col.xs12.sm12.md12'] = 'col-12 col-sm-12 col-md-12';
+
+        // mobile - two column
+        $s['c']['col.xs6.sm1.md1']   = 'col-6 col-sm-1 col-md-2';
+        $s['c']['col.xs6.sm2.md2']   = 'col-6 col-sm-1 col-md-2';
+        $s['c']['col.xs6.sm3.md3']   = 'col-6 col-sm-6 col-md-3 col-lg-3 col-xl-3';
+        $s['c']['col.xs6.sm4.md4']   = 'col-6 col-sm-6 col-md-4 col-lg-4 col-xl-4';
+        $s['c']['col.xs6.sm5.md5']   = 'col-6 col-sm-5 col-md-5';
+        $s['c']['col.xs6.sm6.md6']   = 'col-6 col-sm-6 col-md-6';
+        $s['c']['col.xs6.sm7.md7']   = 'col-6 col-sm-7 col-md-7';
+        $s['c']['col.xs6.sm8.md8']   = 'col-6 col-sm-8 col-md-8';
+        $s['c']['col.xs6.sm9.md9']   = 'col-6 col-sm-9 col-md-9';
+        $s['c']['col.xs6.sm10.md10'] = 'col-6 col-sm-10 col-md-10';
+        $s['c']['col.xs6.sm12.md12'] = 'col-6 col-sm-12 col-md-12';
 
         // Small not 12
         $s['c']['col.xs1.sm1.md1']   = 'col-1 col-sm-1 col-md-1';
@@ -169,6 +193,8 @@ class PhocacartRenderStyle
         $s['c']['modal-body']         = 'modal-body';
         $s['c']['modal-footer']       = 'modal-footer';
         $s['c']['modal-lg']           = 'modal-lg';
+        $s['c']['modal-xl']           = 'modal-xl';
+        $s['c']['modal-sm']           = 'modal-sm';
 
         $s['c']['controls']                      = 'controls';
         $s['c']['control-label']                 = 'control-label';
@@ -210,6 +236,7 @@ class PhocacartRenderStyle
 
 
         $s['c']['dropdown']             = 'dropdown';
+        $s['c']['modal']                = 'modal';
         $s['c']['dropdown-toggle']      = 'dropdown-toggle';
         $s['c']['dropdown-menu']        = 'dropdown-menu';
         $s['c']['dropdown-item']        = 'dropdown-item';
@@ -228,6 +255,7 @@ class PhocacartRenderStyle
         $s['a']['alert']                 = ' role="alert"';
         $s['a']['alert-close']           = ' data-bs-dismiss="alert"';
         $s['a']['dropdown']              = '';
+        $s['a']['modal']                 = '';
 
         $s['a']['lazyload']              = ' loading="lazy"';
 
@@ -257,6 +285,20 @@ class PhocacartRenderStyle
                 $s['c']['col.xs12.sm9.md9']   = 'uk-width-1-1@s uk-width-3-4@m uk-width-3-4@l ';
                 $s['c']['col.xs12.sm10.md10'] = 'uk-width-1-1@s uk-width-5-6@m uk-width-5-6@l';
                 $s['c']['col.xs12.sm12.md12'] = 'uk-width-1-1@s uk-width-1-1@m uk-width-1-1@l';
+
+                // mobile - two column
+                $s['c']['col.xs6.sm1.md1']   = 'uk-width-1-2@s uk-width-1-6@m uk-width-1-6@l';
+                $s['c']['col.xs6.sm2.md2']   = 'uk-width-1-2@s uk-width-1-6@m uk-width-1-6@l';
+                $s['c']['col.xs6.sm3.md3']   = 'uk-width-1-2@s uk-width-1-4@m uk-width-1-4@l';
+                $s['c']['col.xs6.sm4.md4']   = 'uk-width-1-2@s uk-width-1-3@m uk-width-1-3@l';
+                $s['c']['col.xs6.sm5.md5']   = 'uk-width-1-2@s uk-width-1-3@m uk-width-1-3@l';
+                $s['c']['col.xs6.sm6.md6']   = 'uk-width-1-2@s uk-width-1-2@m uk-width-1-2@l';
+                $s['c']['col.xs6.sm7.md7']   = 'uk-width-1-2@s uk-width-2-3@m uk-width-2-3@l';
+                $s['c']['col.xs6.sm8.md8']   = 'uk-width-1-2@s uk-width-2-3@m uk-width-2-3@l';
+                $s['c']['col.xs6.sm9.md9']   = 'uk-width-1-2@s uk-width-3-4@m uk-width-3-4@l ';
+                $s['c']['col.xs6.sm10.md10'] = 'uk-width-1-2@s uk-width-5-6@m uk-width-5-6@l';
+                $s['c']['col.xs6.sm12.md12'] = 'uk-width-1-2@s uk-width-1-1@m uk-width-1-1@l';
+
 
                 // Small not 12
                 $s['c']['col.xs1.sm1.md1']   = 'uk-width-1-6@s uk-width-1-6@m uk-width-1-6@l';
@@ -343,6 +385,8 @@ class PhocacartRenderStyle
                 $s['c']['modal-body']         = 'uk-modal-body';
                 $s['c']['modal-footer']       = 'uk-modal-footer';
                 $s['c']['modal-lg']           = 'uk-modal-lg';// not exist
+                $s['c']['modal-xl']           = 'uk-width-auto';// not exist
+                $s['c']['modal-sm']           = 'uk-modal-sm';// not exist
 
                 $s['c']['controls']                      = 'uk-form-controls';
                 $s['c']['control-label']                 = 'uk-form-label';
@@ -386,6 +430,7 @@ class PhocacartRenderStyle
                 $s['c']['dropdown-toggle']      = 'uk-dropdown-toggle';
                 $s['c']['dropdown-menu']        = 'uk-dropdown';
                 $s['c']['dropdown-item']        = 'uk-dropdown-item';
+                $s['c']['modal']                = 'uk-modal';
 
                 //$s['c']['px-3']                 = 'px-3';
                 //$s['c']['py-3']                 = 'py-3';
@@ -404,6 +449,7 @@ class PhocacartRenderStyle
                 $s['a']['alert-close']           = ' uk-close';
                 $s['a']['dropdown']              = ' uk-dropdown';
                 //$s['a']['dropdown']               = 'uk-dropdown="mode: click"';
+                $s['a']['modal']                = 'uk-modal';
 
             break;
 
@@ -448,6 +494,7 @@ class PhocacartRenderStyle
         $s['i']['download-alt']    = $pf . 'download-alt' . $sf;
         $s['i']['quick-view']      = $pf . 'eye-open' . $sf;
         $s['i']['wish-list']       = $pf . 'heart' . $sf;
+        $s['i']['watchdog']        = $pf . 'eye-open' . $sf;
         $s['i']['ban']             = $pf . 'ban-circle' . $sf;
         $s['i']['refresh']         = $pf . 'refresh' . $sf;
         $s['i']['trash']           = $pf . 'trash' . $sf;
@@ -476,6 +523,7 @@ class PhocacartRenderStyle
         $s['i']['globe']           = $pf . 'globe' . $sf;
         $s['i']['upload']          = $pf . 'upload' . $sf;
         $s['i']['filter']          = $pf . 'filter' . $sf;
+        $s['i']['marker']          = $pf . 'map-marker' . $sf;
 
 
         switch ($icons) {
@@ -512,6 +560,7 @@ class PhocacartRenderStyle
                 $s['i']['download']        = $pf . 'download' . $sf;
                 $s['i']['quick-view']      = $pf . 'eye' . $sf;
                 $s['i']['wish-list']       = $pf . 'heart' . $sf;
+                $s['i']['watchdog']        = $pf . 'shield-dog' . $sf;
                 $s['i']['ban']             = $pf . 'ban' . $sf;
                 $s['i']['refresh']         = $pf . 'refresh' . $sf;
                 $s['i']['trash']           = $pf . 'trash' . $sf;
@@ -540,6 +589,7 @@ class PhocacartRenderStyle
                 $s['i']['globe']           = $pf . 'globe' . $sf;
                 $s['i']['upload']          = $pf . 'upload' . $sf;
                 $s['i']['filter']          = $pf . 'filter' . $sf;
+                $s['i']['marker']          = $pf . 'map-marker' . $sf;
 
                 if ($icons == 'fa5') {
 
@@ -582,6 +632,7 @@ class PhocacartRenderStyle
                 $s['i']['download']        = $pf . 'download' . $sf;
                 $s['i']['quick-view']      = $pf . 'quick-view' . $sf;
                 $s['i']['wish-list']       = $pf . 'wish-list' . $sf;
+                $s['i']['watchdog']        = $pf . 'watchdog' . $sf;
                 $s['i']['ban']             = $pf . 'ban' . $sf;
                 $s['i']['refresh']         = $pf . 'refresh' . $sf;
                 $s['i']['trash']           = $pf . 'trash' . $sf;
@@ -610,6 +661,7 @@ class PhocacartRenderStyle
                 $s['i']['globe']           = $pf . 'globe' . $sf;
                 $s['i']['upload']          = $pf . 'upload' . $sf;
                 $s['i']['filter']          = $pf . 'filter' . $sf;
+                $s['i']['marker']          = $pf . 'marker' . $sf;
 
 
             break;

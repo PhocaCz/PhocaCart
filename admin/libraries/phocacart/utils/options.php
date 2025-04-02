@@ -23,7 +23,7 @@ class PhocacartUtilsOptions
 	 * Load Phoca Cart Options only once per site
 	 * Options can be different when they are called in administration or in site, or on com_phocacart site or not com_phocacart site
 	 * Component = PC (Phoca Cart)
-	 * Client = A (Administrator) | S (Site)
+	 * Client = A (Administrator) | S (Site) | P (API)
 	 * Option = com_phocacart
 	 *
 	 * Possible values:
@@ -34,40 +34,32 @@ class PhocacartUtilsOptions
 	 *
 	 * PhocaCartUtils::getComponentParameters -> PhocaCartUtilsOptions::getOptions (singleton)
 	 *
+	 * TODO parameter $component not needed, neither $client ($app->getName())
 	 */
 
 	public static function getOptions($component, $client, $option) {
 
 		$elementOption = $component . $client . $option;
 
-		if( is_null( $elementOption ) ) {
-			throw new Exception('Function Error: No element added', 500);
-			return false;
-		}
-
 		if( !array_key_exists( $elementOption, self::$options ) ) {
-
-			$app = Factory::getApplication();
-
-			if ($client == 'A') {
-				self::$options[$elementOption] = ComponentHelper::getParams('com_phocacart');
-			} else {
-				if ($option == 'com_phocacart') {
-					self::$options[$elementOption] =  $app->getParams();
-				} else {
+			switch ($client) {
+				case 'site':
+					if ($option == 'com_phocacart')
+						self::$options[$elementOption] =  Factory::getApplication()->getParams();
+					else
+						self::$options[$elementOption] = ComponentHelper::getParams('com_phocacart');
+					break;
+				default:
 					self::$options[$elementOption] = ComponentHelper::getParams('com_phocacart');
-				}
+					break;
 			}
-
 		}
 
 		return self::$options[$elementOption];
-
 	}
 
 	public final function __clone() {
 		throw new Exception('Function Error: Cannot clone instance of Singleton pattern', 500);
-		return false;
 	}
 }
-?>
+

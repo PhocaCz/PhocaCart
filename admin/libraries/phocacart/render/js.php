@@ -21,7 +21,7 @@ final class PhocacartRenderJs
     public static function renderAjaxAddToCart() {
 
         $paramsC 			= PhocacartUtils::getComponentParameters();
-        $add_cart_method 	= $paramsC->get('add_cart_method', 0);
+        $add_cart_method 	= $paramsC->get('add_cart_method', 2);
 
         // We need to refresh checkout site when AJAX used for removing or adding products to cart
         $task = 'checkout.add';
@@ -168,7 +168,7 @@ final class PhocacartRenderJs
     public static function renderAjaxUpdateCart() {
 
         $paramsC 			= PhocacartUtils::getComponentParameters();
-        $add_cart_method 	= $paramsC->get('add_cart_method', 0);
+        $add_cart_method 	= $paramsC->get('add_cart_method', 2);
 
         // We need to refresh checkout site when AJAX used for removing or adding products to cart
         $task = 'checkout.update';
@@ -273,7 +273,7 @@ final class PhocacartRenderJs
     public static function renderAjaxAddToCompare() {
 
         $paramsC 			= PhocacartUtils::getComponentParameters();
-        $add_compare_method = $paramsC->get('add_compare_method', 0);
+        $add_compare_method = $paramsC->get('add_compare_method', 2);
 
         // We need to refresh comparison site when AJAX used for removing or adding products to comparison list
         $app 	= Factory::getApplication();
@@ -343,7 +343,7 @@ final class PhocacartRenderJs
     public static function renderAjaxRemoveFromCompare() {
 
         $paramsC 			= PhocacartUtils::getComponentParameters();
-        $add_compare_method = $paramsC->get('add_compare_method', 0);
+        $add_compare_method = $paramsC->get('add_compare_method', 2);
 
         // We need to refresh comparison site when AJAX used for removing or adding products to comparison list
         $app 	= Factory::getApplication();
@@ -413,7 +413,7 @@ final class PhocacartRenderJs
     public static function renderAjaxAddToWishList() {
 
         $paramsC 				= PhocacartUtils::getComponentParameters();
-        $add_wishlist_method 	= $paramsC->get('add_wishlist_method', 0);
+        $add_wishlist_method 	= $paramsC->get('add_wishlist_method', 2);
 
         // We need to refresh wishlist site when AJAX used for removing or adding products to wishlist list
         $app 	= Factory::getApplication();
@@ -482,7 +482,7 @@ final class PhocacartRenderJs
     public static function renderAjaxRemoveFromWishList() {
 
         $paramsC = PhocacartUtils::getComponentParameters();
-        $add_wishlist_method = $paramsC->get('add_wishlist_method', 0);
+        $add_wishlist_method = $paramsC->get('add_wishlist_method', 2);
 
         // We need to refresh wishlist site when AJAX used for removing or adding products to wishlist list
         $app = Factory::getApplication();
@@ -1207,15 +1207,14 @@ final class PhocacartRenderJs
     public static function renderJsAddTrackingCode($idSource, $classDestination) {
         $s = array();
         $s[] = 'jQuery(document).ready(function() {';
-        $s[] = '   var destGlobal 	= jQuery( \'.' . $classDestination . '\').text();';
+        $s[] = '   var destGlobal 	= jQuery( \'.' . $classDestination . '\').val();';
         $s[] = '   var sourceGlobal	= jQuery(\'#' . $idSource . '\').val();';
-        $s[] = '   var textGlobal 	= destGlobal + sourceGlobal';
-        $s[] = '   jQuery( \'.' . $classDestination . '\').html(textGlobal);';
+        $s[] = '   jQuery( \'.' . $classDestination . '\').val(destGlobal + sourceGlobal);';
 
         $s[] = '   jQuery(\'#' . $idSource . '\').on("input", function() {';
         $s[] = '       var source	= jQuery(this).val();';
         $s[] = '       var text = destGlobal + source;';
-        $s[] = '       jQuery( \'.' . $classDestination . '\').html(text);';
+        $s[] = '       jQuery( \'.' . $classDestination . '\').val(text);';
         $s[] = '   })';
         $s[] = '})';
         Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
@@ -1274,6 +1273,58 @@ final class PhocacartRenderJs
 
             Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
         }
+    }
+
+    public static function renderModalCommonIframeWindow($options = []) {
+
+        $params         = PhocacartUtils::getComponentParameters();
+        $p['theme']     = $params->get('theme', 'bs5');
+
+        $s[] = ' jQuery(document).ready(function(){';
+        $s[] = '	jQuery(document).on("click", "a.phModalContainerCommonIframeButton", function (e) {';
+        $s[] = '      var src = jQuery(this).attr("data-src");';
+        $s[] = '      var height = "100%";';//jQuery(this).attr("data-height") || 300;// Does not work and it is solved by CSS
+        $s[] = '      var width = "100%";';//jQuery(this).attr("data-width") || 400;
+        $s[] = '      var id = jQuery(this).attr("data-id");';
+        $s[] = '      var idIframe = "#" + id + " iframe";';
+
+        // Loaded dynamically to not have previous src in iframe, see: components/com_phocacart/layouts/popup_container_iframe.php
+
+        if ($p['theme'] != 'uikit') {
+            $s[] = '      var idBody = "#" + id + " .modal-body";';
+        } else {
+            $s[] = '      var idBody = "#" + id + " .uk-modal-body";';
+        }
+
+        $iframe = '      jQuery(idBody).html(\'<iframe frameborder="0"';
+
+        if(isset($options['allow_geolocation']) && $options['allow_geolocation']) {
+            $iframe .= ' allow="geolocation"';
+        }
+        $iframe .= ' ></iframe>\');';
+        $s[] = $iframe;
+        // end iframe could be a past of layout file
+
+        $s[] = '      jQuery(idIframe).attr({"src":src, "height": height, "width": width});';
+
+        /*if(isset($options['allow_geolocation']) && $options['allow_geolocation']) {
+
+           $s[] = '       , "allow": "geolocation"';
+        }*/
+
+        //$s[] = '      });';
+        //$s[] = '      jQuery(id).modal();';
+
+    // Is loaded by HTML
+    //    $s[] = '      var modal = new bootstrap.Modal(document.getElementById(id), {});';
+    //    $s[] = '      modal.show();';
+
+
+        $s[] = '   });';
+        $s[] = ' });';
+
+        Factory::getDocument()->addScriptDeclaration(implode("\n", $s));
+
     }
 
     public final function __clone()

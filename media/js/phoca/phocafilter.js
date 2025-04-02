@@ -342,10 +342,10 @@ function phRemoveFilter(paramV, value, isItemsView, urlItemsView, filteredProduc
 
     /* Handle pagination - when changing filter, set pagination to zero - to start */
     if (typeof paramsAll["start"] !== "undefined") {
-        paramsTypeStringNew["start"] = 0;
+        paramsTypeStringNew["start"] = '';// 0;
     }
     if (typeof paramsAll["limitstart"] !== "undefined") {
-        paramsTypeStringNew["limitstart"] = 0;
+        paramsTypeStringNew["limitstart"] = '';// 0;
     }
 
     if (uniqueValue == 1) {
@@ -515,10 +515,10 @@ function phSetFilter(paramV, value, isItemsView, urlItemsView, filteredProductsO
 
     /* Handle pagination - when changing filter, set pagination to zero - to start */
     if (typeof paramsAll["start"] !== "undefined") {
-        paramsTypeStringNew["start"] = 0;
+        paramsTypeStringNew["start"] = '';// 0
     }
     if (typeof paramsAll["limitstart"] !== "undefined") {
-        paramsTypeStringNew["limitstart"] = 0;
+        paramsTypeStringNew["limitstart"] = '';// 0;
     }
 
     if (uniqueValue == 1) {
@@ -601,7 +601,7 @@ function phChangeFilter(paramV, value, formAction, formType, uniqueValue, wait, 
     const phParams = Joomla.getOptions("phParamsModPhocacartFilter");
     const isItemsView = phVars["isItemsView"];
     let isSef = phVars["isSef"];
-    const urlItemsView = phVars["urlItemsView"];
+    let urlItemsView = phVars["urlItemsView"];
     const urlItemsViewWithoutParams = phVars["urlItemsViewWithoutParams"];
     let phA = 1;
 
@@ -694,7 +694,7 @@ function phChangeSearch(paramV, value, formAction) {
     } else {
         phA = phRemoveFilter(paramV, value, isItemsView, urlItemsView, filteredProductsOnly, 1, 0, 2);
     }
-    
+
     // Possible search in offcanvas
     var phItemSearchBoxOffCanvas = document.getElementById('phItemSearchBoxOffCanvas');
     if(phItemSearchBoxOffCanvas) {

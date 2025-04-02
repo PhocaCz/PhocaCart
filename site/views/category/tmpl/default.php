@@ -11,10 +11,12 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 
 defined('_JEXEC') or die();
-use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\Language\Text;
 use Joomla\Registry\Registry;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
 
 $layoutC 	= new FileLayout('button_compare', null, array('component' => 'com_phocacart'));
 $layoutW 	= new FileLayout('button_wishlist', null, array('component' => 'com_phocacart'));
@@ -41,13 +43,11 @@ if (!$this->t['ajax']) {
 
 // ITEMS a) items displayed by layout plugin, b) items displayed common way, c) no items found
 if (!empty($this->items) && $this->t['pluginlayout']) {
-
-	$pluginOptions 				= array();
-	$eventData 					= array();
-	$dLA 						= array();
-	$eventData['pluginname'] 	= $this->t['category_layout_plugin'];
-
-	Factory::getApplication()->triggerEvent('onPCLonCategoryGetOptions', array('com_phocacart.category', &$pluginOptions, $eventData));
+	$pluginOptions = [];
+	$dLA = [];
+	Dispatcher::dispatch(new Event\Layout\Category\GetOptions('com_phocacart.category', $pluginOptions, [
+		'pluginname' => $this->t['category_layout_plugin'],
+	]));
 
 	if (isset($pluginOptions['layouttype']) && $pluginOptions['layouttype'] != '') {
 		$this->t['layouttype'] = PhocacartText::filterValue($pluginOptions['layouttype'], 'alphanumeric5');
@@ -59,7 +59,9 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 
 	echo '<div id="phItems" class="ph-items '.$lt.'">';
 
-	Factory::getApplication()->triggerEvent('onPCLonCategoryInsideLayout', array('com_phocacart.category', &$this->items, $dLA, $eventData));
+	Dispatcher::dispatch(new Event\Layout\Category\InsideLayout('com_phocacart.category', $this->items, $dLA, [
+		'pluginname' => $this->t['category_layout_plugin'],
+	]));
 
 	echo $this->loadTemplate('pagination');
 
@@ -69,6 +71,7 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 
 	$price			= new PhocacartPrice;
 	$col 			= PhocacartRenderFront::getColumnClass((int)$this->t['columns_cat']);
+	$colMobile 		= PhocacartRenderFront::getColumnClass((int)$this->t['columns_cat_mobile']);
 	$lt				= $this->t['layouttype'];
 	$i				= 1; // Not equal Heights
 
@@ -201,12 +204,26 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 		$dSO 				= '';
 		$dA['class_btn']	= '';
 		$dA['class_icon']	= '';
+
+        // Possible to do (here in category view (html, raw) and even in items view (category, raw)
+        /*
+        if ($this->t['display_stock_status'] == 0) {
+            if status is not displayed and there is hide add to cart stock and stock < 1, should we hide the button too?
+            $stockStatus 				= array();
+			$stock 						= PhocacartStock::getStockItemsChangedByAttributes($stockStatus, $attributesOptions, $v);
+
+			if ($this->t['hide_add_to_cart_stock'] == 1 && (int)$stock < 1) {
+				$dA['class_btn'] 		= 'ph-visibility-hidden';// hide button
+				$dA['class_icon']		= 'ph-display-none';// hide icon
+				$addToCartHidden 			= 1;// used for displaying Ask Question
+			}
+        } else
+        */
+
 		if ($this->t['display_stock_status'] == 2 || $this->t['display_stock_status'] == 3) {
 
 			$stockStatus 				= array();
 			$stock 						= PhocacartStock::getStockItemsChangedByAttributes($stockStatus, $attributesOptions, $v);
-
-
 
 			if ($this->t['hide_add_to_cart_stock'] == 1 && (int)$stock < 1) {
 				$dA['class_btn'] 		= 'ph-visibility-hidden';// hide button
@@ -406,6 +423,7 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 		$dL['t']				= $this->t;
 		$dL['s']				= $this->s;
 		$dL['col']				= $col;
+		$dL['col_mobile']		= $colMobile;
 		$dL['link'] 			= $link;
 		$dL['lt']				= $lt;// Layout Type
 		$dL['layout']['dI']		= $dI;// Image
@@ -435,6 +453,14 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 			$classAdditional[] = 'pc-status-featured';
 		}
 
+        if (isset($dP['discount']) && $dP['discount']) {
+            $classAdditional[] = 'pc-status-discount-product';
+        }
+
+        if (isset($dP['discountcart']) && $dP['discountcart']) {
+            $classAdditional[] = 'pc-status-discount-cart';
+        }
+
 		$dL['class_additional'] = !empty($classAdditional) ? implode(' ', $classAdditional) : '';// Additional class
 
 		$dL['product_header']	= PhocacartRenderFront::renderProductHeader($this->t['product_name_link'], $v, 'item', '', $lt);
@@ -443,7 +469,7 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 		//$dL['product_header'] .= '<div>EAN: '.$v->ean.'</div>';
 
 		// Events
-		$results = Factory::getApplication()->triggerEvent('onPCVonCategoryItemAfterAddToCart', array('com_phocacart.category', &$v, &$this->p));
+		$results = Dispatcher::dispatch(new Event\View\Category\ItemAfterAddToCart('com_phocacart.category', $v, $this->p));
 		$dL['event']['onCategoryItemsItemAfterAddToCart'] = trim(implode("\n", $results));
 
 		// LABELS
@@ -481,7 +507,6 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 		$dL['manufacturer'] =  '';
 		if ($this->t['category_display_manufacturer'] > 0 && (int)$v->manufacturerid > 0 && $v->manufacturertitle != '') {
 			$dL['manufacturer'] .= PhocacartManufacturer::getManufacturerRendered((int)$v->manufacturerid, $v->manufacturertitle, $v->manufactureralias, $this->t['manufacturer_alias'], $this->t['category_display_manufacturer'], 0, '');
-
 		}
 
 		if ($lt == 'list') {
@@ -514,10 +539,17 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 	echo '</div>'. "\n"; // end items
 }
 
+// BOTTOM DESCRIPTION
+if ($this->category[0]->description_bottom) {
+?>
+	<div class="ph-desc-bottom"><?php echo HTMLHelper::_('content.prepare', $this->category[0]->description_bottom); ?></div>
+<?php
+}
+
+
 
 // FOOTER - NOT AJAX
 if (!$this->t['ajax']) {
-
 	echo '</div>';// end #phItemsBox
 	echo '</div>';// end #ph-pc-category-box
 
@@ -539,4 +571,3 @@ if (!$this->t['ajax']) {
 	echo '<div>&nbsp;</div>';
 	echo PhocacartUtilsInfo::getInfo();
 }
-?>

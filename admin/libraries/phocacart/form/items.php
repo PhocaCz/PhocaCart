@@ -45,7 +45,7 @@ class PhocacartFormItems
 
 		$where 		= ( count( $wheres ) ? ' WHERE '. implode( ' AND ', $wheres ) : '' );
 		$query = 'SELECT a.id, a.title, a.label, a.description, a.type, a.predefined_values, a.predefined_values_first_option, a.default, a.class, a.read_only, a.required, a.pattern, a.maxlength,'
-				.' a.display_billing, a.display_shipping, a.display_account, a.validate, a.unique, a.published, a.access'
+				.' a.display_billing, a.display_shipping, a.display_account, a.validate, a.unique, a.published, a.access, a.autocomplete'
 				.' FROM #__phocacart_form_fields AS a'
 				.' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 9'// type 9 is formfield
 				. $where

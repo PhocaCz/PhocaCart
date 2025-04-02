@@ -9,7 +9,10 @@
 defined( '_JEXEC' ) or die();
 use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Toolbar\Toolbar;
+use Joomla\CMS\Router\Route;
 jimport( 'joomla.application.component.view' );
 
 class PhocaCartCpViewPhocacartReports extends HtmlView
@@ -38,6 +41,11 @@ class PhocaCartCpViewPhocacartReports extends HtmlView
 		$this->t['date_from'] 	= $this->state->get('filter.date_from', PhocacartDate::getCurrentDate(30));
 		$this->t['date_to'] 	= $this->state->get('filter.date_to', PhocacartDate::getCurrentDate());
 		$this->t['date_days'] 	= PhocacartDate::getDateDays($this->t['date_from'], $this->t['date_to']);
+		$this->t['report_type'] = $this->state->get('filter.report_type', 0);
+		$this->t['order_status'] = $this->state->get('filter.order_status', 0);
+		$this->t['flow_type'] = $this->state->get('filter.flow_type', 1);
+		$this->t['payment_type'] = $this->state->get('filter.payment_type', 0);
+
 		$this->params			= PhocacartUtils::getComponentParameters();
 		$app				= Factory::getApplication();
 		$this->t['format']	= $app->input->get('format', '', 'string');
@@ -49,21 +57,50 @@ class PhocaCartCpViewPhocacartReports extends HtmlView
 		}
 
 		$this->t['data_error'] 			= 0;
-		$this->t['data_possible_days'] 	= 365;
+		$this->t['data_possible_days'] 	= PhocacartUtilsSettings::getReportLimitDays();
 		if ($count > (int)$this->t['data_possible_days']) {
 			$this->state->set('filter.date_to', '');
 			$this->state->set('filter.date_from', '');
 			$this->t['data_error'] = 1;
+			$this->t['data_error_message'] = Text::_('COM_PHOCACART_SELECT_INTERVAL_THAT_HAS_FEWER_DAYS_THAN_LIMIT'). ' '. Text::_('COM_PHOCACART_LIMIT_IS'). ': '.$this->t['data_possible_days'];
+		}
+
+		// We can report cash flow (flow type = 2) only for paid orders (
+		if ($this->t['flow_type'] == 2 && $this->t['payment_type'] != 1) {
+			$this->t['data_error'] = 1;
+			$this->t['data_error_message'] = Text::_('COM_PHOCACART_CASH_FLOW_CAN_ONLY_BE_DISPLAYED_FOR_PAID_ORDERS');
 		}
 
 		if ($this->t['data_error'] == 0) {
 
-			$items				= $this->get('Items');
-			$orderCalc 			= new PhocacartOrderCalculation();
-			$orderCalc->calculateOrderItems($items);
-			$this->items		= $orderCalc->getItems();
-			$this->total		= $orderCalc->getTotal();
-			$this->currencies 	= $orderCalc->getCurrencies();
+			switch ($this->t['report_type']) {
+
+				case 2:
+				case 3:
+				case 4:
+
+
+					$this->items	= $this->get('Items');
+					$this->total	= false;
+
+				break;
+
+				case 0:
+				case 1:
+				default:
+
+					$items				= $this->get('Items');
+					$orderCalc 			= new PhocacartOrderCalculation();
+					$orderCalc->calculateOrderItems($items);
+					$this->items		= $orderCalc->getItems();
+					$this->total		= $orderCalc->getTotal();
+					$this->currencies 	= $orderCalc->getCurrencies();
+
+
+				break;
+
+			}
+
 
 		}
 
@@ -71,7 +108,7 @@ class PhocaCartCpViewPhocacartReports extends HtmlView
 			throw new Exception(implode("\n", $errors), 500);
 			return false;
 		}
-		
+
 		$this->document->setName(Text::_('COM_PHOCACART_REPORT'));
 
 		parent::display('report');

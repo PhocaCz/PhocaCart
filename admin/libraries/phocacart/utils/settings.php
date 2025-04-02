@@ -9,8 +9,11 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
+
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Factory;
+use Joomla\Registry\Registry;
 
 
 //=========
@@ -305,9 +308,13 @@ class PhocacartUtilsSettings
 
 	public static function isFullGroupBy() {
 
-		$pC							= PhocacartUtils::getComponentParameters();
+		/*$pC							= PhocacartUtils::getComponentParameters();
 		$sql_only_full_group_by		= $pC->get( 'sql_only_full_group_by', 0 );
-		return (bool)$sql_only_full_group_by;
+		return (bool)$sql_only_full_group_by;*/
+
+        // Joomla does not require full group by now
+        // This can be enabled in future but then all SQL Queries must be revised
+        return false;
 	}
 
 	public static function getShopType() {
@@ -332,6 +339,68 @@ class PhocacartUtilsSettings
 			2 => Text::_('COM_PHOCACART_POS')
 		);
 	}
+
+    public static function getShopTypesForm() {
+
+        $a = [];
+        $types = self::getShopTypes();
+        foreach($types as $k => $v) {
+            $a[] = HTMLHelper::_('select.option', $k, $v, 'value', 'text');
+        }
+
+        return $a;
+    }
+
+    public static function getReportTypes() {
+		return array(
+			0 => Text::_('COM_PHOCACART_DEFAULT'),
+			1 => Text::_('COM_PHOCACART_DEFAULT_PAYMENT_DATE'),
+            2 => Text::_('COM_PHOCACART_PRODUCTS'),
+            3 => Text::_('COM_PHOCACART_SHIPPING'),
+            4 => Text::_('COM_PHOCACART_PAYMENT'),
+		);
+	}
+
+    public static function getReportTypesForm() {
+
+        $a = [];
+        $types = self::getReportTypes();
+        foreach($types as $k => $v) {
+            $a[] = HTMLHelper::_('select.option', $k, $v, 'value', 'text');
+        }
+
+        return $a;
+    }
+
+    public static function getPaymentTypesForm() {
+
+        $a = [];
+        $types = array(
+            0 => Text::_('COM_PHOCACART_ALL'),
+            1 => Text::_('COM_PHOCACART_PAID'),
+            2 => Text::_('COM_PHOCACART_UNPAID'),
+        );
+        foreach($types as $k => $v) {
+            $a[] = HTMLHelper::_('select.option', $k, $v, 'value', 'text');
+        }
+
+        return $a;
+    }
+
+    public static function getFlowTypesForm() {
+
+        $a = [];
+        $types = array(
+            1 => Text::_('COM_PHOCACART_REPORT_SALES'),
+            2 => Text::_('COM_PHOCACART_REPORT_CASH_FLOW')
+        );
+        foreach($types as $k => $v) {
+            $a[] = HTMLHelper::_('select.option', $k, $v, 'value', 'text');
+        }
+
+        return $a;
+
+    }
 
 	public static function getLangQuery($column, $lang) {
 
@@ -364,43 +433,82 @@ class PhocacartUtilsSettings
 	}
 
 
-	public static function getOrderStatusClass($status) {
-
-
-	    $status = str_replace('COM_PHOCACART_STATUS_', '', $status);
-
+	public static function getOrderStatusClass($status, string $extraClass = '') {
+	    $status = str_replace('COM_PHOCACART_STATUS_', '', $status ?? '');
 
         switch ($status) {
             case 'CANCELED':
-                $class = 'label label-warning badge bg-warning ph-order-status-canceled';
-            break;
+                $class = 'badge bg-warning ph-order-status-canceled';
+                break;
 
             case 'COMPLETED':
-                $class = 'label label-success badge bg-success ph-order-status-completed';
-            break;
+                $class = 'badge bg-success ph-order-status-completed';
+                break;
 
             case 'CONFIRMED':
-                $class = 'label label-success badge bg-success ph-order-status-confirmed';
-            break;
+                $class = 'badge bg-success ph-order-status-confirmed';
+                break;
 
             case 'PENDING':
-                $class = 'label label-info badge bg-info label-primary ph-order-status-pending';
-            break;
+                $class = 'badge bg-info ph-order-status-pending';
+                break;
 
             case 'REFUNDED':
-                $class = 'label label-important label-danger badge bg-danger ph-order-status-refunded';
-            break;
+                $class = 'badge bg-danger ph-order-status-refunded';
+                break;
 
             case 'SHIPPED':
-                $class = 'label label-info badge bg-info ph-order-status-shipped';
-            break;
+                $class = 'badge bg-info ph-order-status-shipped';
+                break;
 
-            default:
-                $class = 'label label-default ph-order-status-default';
-            break;
-
+			default:
+                $class = 'badge bg-secondary ph-order-status-default';
+                break;
         }
+
+		if ($extraClass) {
+			$class .= ' ' . $extraClass;
+		}
         return $class;
     }
+
+	public static function getOrderStatusBadge($title, $params, string $extraClass = '') {
+		$params = new Registry($params);
+
+		$statusClass = PhocacartUtilsSettings::getOrderStatusClass($title, $params->get('class') . ' ' . $extraClass);
+
+		$style = '';
+		if ($params->get('background')) {
+			$style .= 'background: ' . $params->get('background') . ' !important;';
+		}
+
+		if ($params->get('foreground')) {
+			$style .= 'color: ' . $params->get('foreground') . ' !important;';
+		}
+
+		if ($style) {
+			$style = ' style="' . $style . '"';
+		}
+
+		return '<span class="' . $statusClass . '"' . $style . '>' . Text::_($title) . '</span>';
+	}
+
+    public static function getViews() {
+
+        $views = [];
+        $views['basetree']  = ['categories', 'items', 'category', 'item'] ;
+        $views['withoutid'] = ['checkout', 'comparison', 'download', 'terms', 'account', 'orders', 'payment', 'info', 'wishlist', 'pos', 'submit'];
+        $views['withoutidspec'] = array_merge(['categories'], $views['withoutid']);
+        $views['withid']    = ['feed'];
+        // ID is not used by question but we need it because of SEF url (id is transformed to suffix "question" and product id replaces the ID in process
+        // Question is managed by product id, not by question id
+        $views['withidspec']  = ['question'];
+        return $views;
+    }
+
+    public static function getReportLimitDays() {
+        return 365;
+    }
+
 }
-?>
+

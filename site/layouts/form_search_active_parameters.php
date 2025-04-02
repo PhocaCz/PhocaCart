@@ -70,8 +70,15 @@ if (!empty($d['f'])) {
 
                         }
 
+                        // Specifications e.g.
+                        $alias = $v2['alias'];
+                        if (isset($v2['alias_value']) && $v2['alias_value'] != '') {
+                            $alias = $v2['alias_value'];
+                        }
+
+
                         echo '<span class="' . $d['s']['c']['label.label-info'] . ' ph-label-close">';
-                        echo '<a href="#" onclick="event.preventDefault(); phChangeFilter(\'' . $v2['parameteralias'] . '\', \'' . $v2['alias'] . '\', this, \'checked\',0, 0, 2);">' . $title .PhocacartRenderIcon::icon($d['s']['i']['remove-circle'] . ' ph-label-close-remove', '', '', ' ').'</a>';
+                        echo '<a href="#" onclick="event.preventDefault(); phChangeFilter(\'' . $v2['parameteralias'] . '\', \'' . $alias . '\', this, \'checked\',0, 0, 2);">' . $title .PhocacartRenderIcon::icon($d['s']['i']['remove-circle'] . ' ph-label-close-remove', '', '', ' ').'</a>';
                         echo '</span>';
 
                         $filterItems = 1;

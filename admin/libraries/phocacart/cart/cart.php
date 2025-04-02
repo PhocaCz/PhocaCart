@@ -11,13 +11,8 @@
 defined('_JEXEC') or die();
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-
-/*
-phocacart import('phocacart.user.user');
-phocacart import('phocacart.user.guestuser');
-phocacart import('phocacart.shipping.shipping');
-phocacart import('phocacart.payment.payment');
-*/
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
 
 class PhocacartCart
 {
@@ -359,12 +354,15 @@ class PhocacartCart
 
         if ($k != '' && (int)$quantity > 0) {
             if (isset($this->items[$k]['quantity']) && (int)$this->items[$k]['quantity'] > 0) {
-
+                $oldQuantity = $this->items[$k]['quantity'];
                 $this->items[$k]['quantity'] = $this->items[$k]['quantity'] + (int)$quantity;
             } else {
+                $oldQuantity = 0;
                 $this->items[$k]['quantity'] = (int)$quantity;
             }
-            $this->updateItems();
+
+            $this->updateItems($k, $this->items[$k], $oldQuantity, $this->items[$k]['quantity']);
+
             //$this->updateSubTotal();
             return true;
         } else {
@@ -380,22 +378,39 @@ class PhocacartCart
     public function updateItemsFromCheckout($idKey = '', $quantity = 0) {
 
         // Don't check for quantity as it can be NULL
-        if ($idKey != '' && (int)$quantity > 0) {
-            $this->items[$idKey]['quantity'] = (int)$quantity;
-            $this->updateItems();
-            return true;
-        } else if ($idKey != '' && (int)$quantity == 0) {
-            unset($this->items[$idKey]);
-            $this->updateItems();
-            return true;
+        if ($idKey != '') {
+            if (isset($this->items[$idKey])) {
+
+                $oldQuantity = $this->items[$idKey]['quantity'];
+
+                if ((int)$quantity > 0) {
+                    $this->items[$idKey]['quantity'] = (int)$quantity;
+                    $newQuantity                     = $quantity;
+                } else {
+                    unset($this->items[$idKey]);
+                    $newQuantity = 0;
+                }
+
+                if (!isset($this->items[$idKey])) {
+                    // it was unset
+                    //$this->updateItems($idKey, [], $oldQuantity, $newQuantity);
+                    $this->updateItems($idKey, null, $oldQuantity, $newQuantity);
+                } else {
+                    $this->updateItems($idKey, $this->items[$idKey], $oldQuantity, $newQuantity);
+                }
+
+                return true;
+            }
         }
+
+        return false;
     }
 
 
     /*
      * UPDATE - protected internal function to update session or database
      */
-    protected function updateItems() {
+    protected function updateItems(string $idKey, ?array $item, ?int $quantityOld, int $quantityNew) {
 
         $session = Factory::getSession();
 
@@ -415,6 +430,8 @@ class PhocacartCart
 
         $this->updateShipping();
         $this->updatePayment();
+
+        Dispatcher::dispatch(new Event\View\Cart\UpdateItems($idKey, $item, $quantityOld, $quantityNew));
     }
 
     /*
@@ -636,8 +653,11 @@ class PhocacartCart
                             . Text::_('COM_PHOCACART_PLEASE_RECHECK_PRODUCTS_IN_YOUR_CART'), 'error');
                         }
 
-                        unset($this->items[$k]);
+
+
                         $this->updateItemsFromCheckout($k, 0);
+                        unset($this->items[$k]);
+
                         // In case this all happens when order is made - stop the order and inform user
                         $this->updateProductsRemoved($k);
 
@@ -660,8 +680,9 @@ class PhocacartCart
                                     Text::_('COM_PHOCACART_ERROR_ATTRIBUTE_OF_PRODUCT_STORED_IN_CART_NOT_EXISTS') . ' '
                                     . Text::_('COM_PHOCACART_ERROR_PRODUCT_REMOVED_FROM_CART') . ' '
                                     . Text::_('COM_PHOCACART_PLEASE_RECHECK_PRODUCTS_IN_YOUR_CART'), 'error');
-                                unset($this->items[$k]);
+
                                 $this->updateItemsFromCheckout($k, 0);
+                                unset($this->items[$k]);
                                 // In case this all happens when order is made - stop the order and inform user
                                 $this->updateProductsRemoved($k);
 
@@ -680,6 +701,19 @@ class PhocacartCart
                 // 1) Basic Calculation
                 // --------------------
                 $calc->calculateBasicProducts($this->fullitems[1], $this->fullitemsgroup[1], $this->total[1], $this->stock, $this->minqty, $this->minmultipleqty, $this->items);
+
+                $options = PhocaCartUtils::getComponentParameters();
+                if ($options->get('checkout_separate_by_owner')) {
+                    usort($this->fullitems[1], function($a, $b) {
+                        switch (true) {
+                            case $a['owner_id'] === $b['owner_id']: return 0;
+                            case !$a['owner_id']: return 1;
+                            case !$b['owner_id']: return -1;
+                            case $a['owner_ordering'] === $b['owner_ordering']: return strcmp($a['owner_name'], $b['owner_name']);
+                            default: return $a['owner_ordering'] < $b['owner_ordering'] ? -1 : 1;
+                        }
+                    });
+                }
 
                 //$calc->round($this->total[1]);
 
@@ -752,12 +786,15 @@ class PhocacartCart
                 $this->fullitemsgroup[0] = $this->fullitemsgroup[4] = $this->fullitemsgroup[3];
                 $this->total[0]          = $this->total[4] = $this->total[3];
 
-
                 // Subtotal after 3) Discount
                 $this->total[3]['dnetto']  = $this->total[2]['netto'] - $this->total[3]['netto'];
                 $this->total[3]['dbrutto'] = $this->total[2]['brutto'] - $this->total[3]['brutto'];
 
                 $calc->roundFixedAmountDiscount($this->total[3]);// Last because now we know the dnetto
+                // Reasign other totals after rounding:
+                $this->total[0]          = $this->total[4] = $this->total[3];
+                $this->total[0]['dnetto'] = $this->total[4]['dnetto'] = 0;
+                $this->total[0]['dbrutto'] = $this->total[4]['dbrutto'] = 0;
 
 
                 // --------------------
@@ -780,12 +817,16 @@ class PhocacartCart
                 $this->total[4]['dbrutto'] = $this->total[3]['brutto'] - $this->total[4]['brutto'];
 
                 $calc->roundFixedAmountCoupon($this->total[4]);
+                // Reasign other totals after rounding:
+                $this->total[0]          = $this->total[4];
+                $this->total[0]['dnetto'] = 0;
+                $this->total[0]['dbrutto'] = 0;
 
 
                 //Subtotal after all discounts
                 $this->total[0]['wdnetto'] = $this->total[1]['netto'] - $this->total[5]['dnetto'] - $this->total[2]['dnetto'] - $this->total[3]['dnetto'] - $this->total[4]['dnetto'];
+                $this->total[0]['wdbrutto'] = $this->total[1]['brutto'] - $this->total[5]['dbrutto'] - $this->total[2]['dbrutto'] - $this->total[3]['dbrutto'] - $this->total[4]['dbrutto'];
                 //$this->total[0]['subtotalafterdiscounts'] = $this->total[0]['netto'] - $this->total[5]['dnetto'] - $this->total[2]['dnetto'] - $this->total[3]['dnetto'] - $this->total[4]['dnetto'];
-
 
                 //$calc->taxRecapitulation($this->total[0]);
 
@@ -842,15 +883,16 @@ class PhocacartCart
 
         // 1) CORRECT TOTAL ITEMS (Rounding), CORRECT CURRENCY TOTAL ITEMS (Rounding for each item)
         $calc->correctTotalItems($this->total, $this->shipping['costs'], $this->payment['costs']);
+
         // 2) MAKE TAX RECAPITULATION and correct total by tax recapitulation if asked
         $calc->taxRecapitulation($this->total[0], $this->shipping['costs'], $this->payment['costs']);
+
         // 3) CORRECT TOTAL ITEMS (Rounding), CORRECT CURRENCY TOTAL ITEMS (Rounding for each item) - AGAIN WHEN TOTAL CHANGED BY TAX RECAPITULATION
         $options = array();
 
         $options['brutto_currency_set'] = 1; // Brutto currency exists yet, so don't create it again from "brutto * currencyRating"
         $calc->correctTotalItems($this->total, $this->shipping['costs'], $this->payment['costs'], $options);
         // 4) ROUND TOTAL AMOUNT IF ASKED (e.g. 95.67 => 96)
-
 
         $calc->roundTotalAmount($this->total[0]);
 
@@ -874,7 +916,7 @@ class PhocacartCart
 
     public function getTotal() {
 
-        $items = array('netto', 'brutto', 'quantity', 'weight', 'length', 'width', 'height');
+        $items = array('netto', 'brutto', 'subtotalnetto', 'subtotalbrutto', 'wdnetto', 'wdbrutto', 'quantity', 'weight', 'length', 'width', 'height');
         foreach ($items as $k => $v) {
             if (!isset($this->total[0][$v])) {
                 $this->total[0][$v] = 0;
@@ -1090,11 +1132,14 @@ class PhocacartCart
         $shippingObject = new PhocacartShipping();
 
         $shippingObject->setType($this->type);
-        $sI = $shippingObject->getShippingMethod((int)$shippingId);
+
 
         if (!isset($this->total[0])) {
             $this->total[0] = array();
         }
+
+        $sI = $shippingObject->getShippingMethod((int)$shippingId, $this->total[0]);
+
         $shippingValid = $shippingObject->checkAndGetShippingMethod((int)$shippingId, $this->total[0]);
         if (!$shippingValid) {
             PhocacartShipping::removeShipping();// In case user has in cart shipping method which does not exists
@@ -1135,6 +1180,7 @@ class PhocacartCart
                 $this->shipping['costs']['method']             = $sI->method;
 
                 $this->shipping['costs']['params_shipping']    = !empty($this->shipping['params_shipping']) ? $this->shipping['params_shipping'] : array();
+                $this->shipping['costs']['params']             = !empty($sI->params) ? $sI->params : null;
 
                 // Update even the shipping info
                 $this->shipping['id']     = $sI->id;
@@ -1208,6 +1254,7 @@ class PhocacartCart
                 $this->payment['costs']['method']             = $pI->method;
 
                 $this->payment['costs']['params_payment']    = !empty($this->payment['params_payment']) ? $this->payment['params_payment'] : array();
+                $this->payment['costs']['params']             = !empty($pI->params) ? $pI->params : null;
 
                 // Update even the payment info
                 $this->payment['id']     = $pI->id;

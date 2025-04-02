@@ -1,47 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
+    <config>
+        <inlinehelp button="show"/>
+    </config>
 
     <fieldset addfieldpath="/administrator/components/com_phocacart/models/fields">
+        <field name="id" type="text" default="0" required="true" readonly="true" label="JGLOBAL_FIELD_ID_LABEL" />
 
-        <field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" required="true" readonly="true" class="readonly"/>
+        <field name="title" type="phocatext" i18n="true" required="true" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" />
 
-        <field name="title" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" required="true"/>
+        <field name="alias" type="phocatext" i18n="true" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC"/>
 
-        <field name="alias" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC"/>
+        <field name="title_long" type="phocatext" i18n="true" label="COM_PHOCACART_FIELD_TITLE_LONG_LABEL" description="COM_PHOCACART_FIELD_TITLE_LONG_DESC" />
 
-        <field name="title_long" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_TITLE_LONG_LABEL" description="COM_PHOCACART_FIELD_TITLE_LONG_DESC" />
+        <field name="sku" type="text" label="COM_PHOCACART_FIELD_SKU_LABEL" description="COM_PHOCACART_FIELD_SKU_DESC"/>
+        <field name="upc" type="text" label="COM_PHOCACART_FIELD_UPC_LABEL" description="COM_PHOCACART_FIELD_UPC_DESC"/>
+        <field name="ean" type="text" label="COM_PHOCACART_FIELD_EAN_LABEL" description="COM_PHOCACART_FIELD_EAN_DESC"/>
+        <field name="jan" type="text" label="COM_PHOCACART_FIELD_JAN_LABEL" description="COM_PHOCACART_FIELD_JAN_DESC"/>
+        <field name="isbn" type="text" label="COM_PHOCACART_FIELD_ISBN_LABEL" description="COM_PHOCACART_FIELD_ISBN_DESC"/>
+        <field name="mpn" type="text" label="COM_PHOCACART_FIELD_MPN_LABEL" description="COM_PHOCACART_FIELD_MPN_DESC"/>
 
-        <field name="sku" type="text" class="form-control" size="255" label="COM_PHOCACART_FIELD_SKU_LABEL" description="COM_PHOCACART_FIELD_SKU_DESC"/>
-        <field name="upc" type="text" class="form-control" size="15" label="COM_PHOCACART_FIELD_UPC_LABEL" description="COM_PHOCACART_FIELD_UPC_DESC"/>
-        <field name="ean" type="text" class="form-control" size="15" label="COM_PHOCACART_FIELD_EAN_LABEL" description="COM_PHOCACART_FIELD_EAN_DESC"/>
-        <field name="jan" type="text" class="form-control" size="15" label="COM_PHOCACART_FIELD_JAN_LABEL" description="COM_PHOCACART_FIELD_JAN_DESC"/>
-        <field name="isbn" type="text" class="form-control" size="15" label="COM_PHOCACART_FIELD_ISBN_LABEL" description="COM_PHOCACART_FIELD_ISBN_DESC"/>
-        <field name="mpn" type="text" class="form-control" size="255" label="COM_PHOCACART_FIELD_MPN_LABEL" description="COM_PHOCACART_FIELD_MPN_DESC"/>
+        <field name="serial_number" type="text" label="COM_PHOCACART_FIELD_SERIAL_NUMBER_LABEL" description="COM_PHOCACART_FIELD_SERIAL_NUMBER_DESC"/>
+        <field name="registration_key" type="text" label="COM_PHOCACART_FIELD_REGISTRATION_KEY_LABEL" description="COM_PHOCACART_FIELD_REGISTRATION_KEY_DESC"/>
 
-        <field name="serial_number" type="text" class="form-control" size="255" label="COM_PHOCACART_FIELD_SERIAL_NUMBER_LABEL" description="COM_PHOCACART_FIELD_SERIAL_NUMBER_DESC"/>
-        <field name="registration_key" type="text" class="form-control" size="255" label="COM_PHOCACART_FIELD_REGISTRATION_KEY_LABEL" description="COM_PHOCACART_FIELD_REGISTRATION_KEY_DESC"/>
+        <field name="external_id" type="text" label="COM_PHOCACART_FIELD_EXTERNAL_PRODUCT_ID_LABEL" description="COM_PHOCACART_FIELD_EXTERNAL_PRODUCT_ID_DESC"/>
+        <field name="external_key" type="text" label="COM_PHOCACART_FIELD_EXTERNAL_PRODUCT_KEY_LABEL" description="COM_PHOCACART_FIELD_EXTERNAL_PRODUCT_KEY_DESC"/>
 
-        <field name="external_id" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_EXTERNAL_PRODUCT_ID_LABEL" description="COM_PHOCACART_FIELD_EXTERNAL_PRODUCT_ID_DESC"/>
-        <field name="external_key" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_EXTERNAL_PRODUCT_KEY_LABEL" description="COM_PHOCACART_FIELD_EXTERNAL_PRODUCT_KEY_DESC"/>
-
-        <field name="external_link" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_EXTERNAL_LINK_LABEL" description="COM_PHOCACART_FIELD_EXTERNAL_LINK_DESC"/>
-        <field name="external_text" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_EXTERNAL_TEXT_LABEL" description="COM_PHOCACART_FIELD_EXTERNAL_TEXT_DESC"/>
-        <field name="external_link2" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_EXTERNAL_LINK_2_LABEL" description="COM_PHOCACART_FIELD_EXTERNAL_LINK_2_DESC"/>
-        <field name="external_text2" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_EXTERNAL_TEXT_2_LABEL" description="COM_PHOCACART_FIELD_EXTERNAL_TEXT_2_DESC"/>
+        <field name="external_link" type="text" label="COM_PHOCACART_FIELD_EXTERNAL_LINK_LABEL" description="COM_PHOCACART_FIELD_EXTERNAL_LINK_DESC"/>
+        <field name="external_text" type="text" label="COM_PHOCACART_FIELD_EXTERNAL_TEXT_LABEL" description="COM_PHOCACART_FIELD_EXTERNAL_TEXT_DESC"/>
+        <field name="external_link2" type="text" label="COM_PHOCACART_FIELD_EXTERNAL_LINK_2_LABEL" description="COM_PHOCACART_FIELD_EXTERNAL_LINK_2_DESC"/>
+        <field name="external_text2" type="text" label="COM_PHOCACART_FIELD_EXTERNAL_TEXT_2_LABEL" description="COM_PHOCACART_FIELD_EXTERNAL_TEXT_2_DESC"/>
 
         <field name="featured" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_FEATURED_LABEL" description="COM_PHOCACART_FIELD_FEATURED_DESC" default="0">
             <option value="0">COM_PHOCACART_NO</option>
             <option value="1">COM_PHOCACART_YES</option>
         </field>
 
-		<field name="featured_background_image" type="media" label="COM_PHOCACART_FIELD_FEATURED_PRODUCT_BACKGROUND_IMAGE_LABEL" description="COM_PHOCACART_FIELD_FEATURED_PRODUCT_BACKGROUND_IMAGE_LABEL" class="form-control" size="40"/>
-        <field name="price" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_PRICE_LABEL" description="COM_PHOCACART_FIELD_PRICE_DESC"/>
-        <field name="price_original" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_ORIGINAL_PRICE_LABEL" description="COM_PHOCACART_FIELD_ORIGINAL_PRICE_DESC"/>
+    		<field name="featured_background_image" type="media" label="COM_PHOCACART_FIELD_FEATURED_PRODUCT_BACKGROUND_IMAGE_LABEL" description="COM_PHOCACART_FIELD_FEATURED_PRODUCT_BACKGROUND_IMAGE_LABEL"/>
 
-        <field name="tax_id" type="phocatax" class="form-control" size="40" label="COM_PHOCACART_FIELD_TAX_LABEL" description="COM_PHOCACART_FIELD_TAX_DESC"/>
+        <field name="price" type="text" label="COM_PHOCACART_FIELD_PRICE_LABEL" description="COM_PHOCACART_FIELD_PRICE_DESC" />
 
+        <field name="price_original" type="text" label="COM_PHOCACART_FIELD_ORIGINAL_PRICE_LABEL" description="COM_PHOCACART_FIELD_ORIGINAL_PRICE_DESC" />
 
-        <field name="catid_multiple" type="phocacartcategory" label="COM_PHOCACART_FIELD_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_DESC" multiple="true" required="true" />
+        <field name="tax_id" type="phocatax" label="COM_PHOCACART_FIELD_TAX_LABEL" description="COM_PHOCACART_FIELD_TAX_DESC"/>
+
+        <field name="catid_multiple" type="phocacartcategory" splitCategoryTypes="true" multiple="true" required="true" label="COM_PHOCACART_FIELD_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_DESC" />
 
         <field name="catid" type="phocacartcategory" label="COM_PHOCACART_FIELD_PREFERRED_CATEGORY_LABEL" description="COM_PHOCACART_FIELD_PREFERRED_CATEGORY_DESC" />
 
@@ -49,29 +52,26 @@
 
         <field name="ordering" type="PhocacartOrdering" table="product" class="form-select" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC"/>
 
-        <field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" description="JFIELD_ACCESS_DESC" class="form-control" size="1"/>
+        <field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" description="JFIELD_ACCESS_DESC"/>
 
         <field name="group" type="PhocacartGroups" layout="joomla.form.field.list-fancy-select" multiple="true" table="3" label="COM_PHOCACART_FIELD_CUSTOMER_GROUP_LABEL" description="COM_PHOCACART_FIELD_CUSTOMER_GROUP_DESC"/>
 
-        <field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="\Joomla\CMS\Component\ComponentHelper::filterText"
-               description="COM_PHOCACART_FIELD_DESCRIPTION_DESC"/>
-        <field name="description_long" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_DESCRIPTION_LONG_LABEL" filter="\Joomla\CMS\Component\ComponentHelper::filterText"
-               description="COM_PHOCACART_FIELD_DESCRIPTION_LONG_DESC"/>
-        <field name="features" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_FEATURES_LABEL" filter="\Joomla\CMS\Component\ComponentHelper::filterText"
-               description="COM_PHOCACART_FIELD_FEATURES_DESC"/>
+        <field name="description" type="phocaeditor" i18n="true" buttons="true" hide="pagebreak,readmore" filter="\Phoca\PhocaCart\Input\InputHelper::filterText" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC"/>
 
+        <field name="description_long" type="phocaeditor" i18n="true" buttons="true" hide="pagebreak,readmore" filter="\Phoca\PhocaCart\Input\InputHelper::filterText" label="COM_PHOCACART_FIELD_DESCRIPTION_LONG_LABEL" description="COM_PHOCACART_FIELD_DESCRIPTION_LONG_DESC"/>
 
-        <field name="stock" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_IN_STOCK_LABEL" description="COM_PHOCACART_FIELD_IN_STOCK_DESC"/>
-        <field name="stock_calculation" type="list" label="COM_PHOCACART_FIELD_PRODUCT_STOCK_CALCULATION_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_STOCK_CALCULATION_DESC" class="form-control" size="1" default="0">
+        <field name="features" type="phocaeditor" i18n="true" buttons="true" hide="pagebreak,readmore" filter="\Phoca\PhocaCart\Input\InputHelper::filterText" label="COM_PHOCACART_FIELD_FEATURES_LABEL" description="COM_PHOCACART_FIELD_FEATURES_DESC"/>
+
+        <field name="stock" type="text" label="COM_PHOCACART_FIELD_IN_STOCK_LABEL" description="COM_PHOCACART_FIELD_IN_STOCK_DESC"/>
+        <field name="stock_calculation" type="list" default="0" label="COM_PHOCACART_FIELD_PRODUCT_STOCK_CALCULATION_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_STOCK_CALCULATION_DESC">
             <option value="0">COM_PHOCACART_MAIN_PRODUCT</option>
             <option value="1">COM_PHOCACART_PRODUCT_VARIATIONS_ATTRIBUTES</option>
             <option value="2">COM_PHOCACART_ADVANCED_STOCK_MANAGEMENT</option>
-			<option value="3">COM_PHOCACART_ADVANCED_STOCK_AND_PRICE_MANAGEMENT</option>
+            <option value="3">COM_PHOCACART_ADVANCED_STOCK_AND_PRICE_MANAGEMENT</option>
         </field>
 
-
-        <field name="min_quantity" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_MIN_ORDER_QUANTITY_LABEL" description="COM_PHOCACART_FIELD_MIN_ORDER_QUANTITY_DESC"/>
-        <field name="min_multiple_quantity" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_MIN_MULTIPLE_ORDER_QUANTITY_LABEL" description="COM_PHOCACART_FIELD_MIN_MULTIPLE_ORDER_QUANTITY_DESC"/>
+        <field name="min_quantity" type="text" label="COM_PHOCACART_FIELD_MIN_ORDER_QUANTITY_LABEL" description="COM_PHOCACART_FIELD_MIN_ORDER_QUANTITY_DESC"/>
+        <field name="min_multiple_quantity" type="text" label="COM_PHOCACART_FIELD_MIN_MULTIPLE_ORDER_QUANTITY_LABEL" description="COM_PHOCACART_FIELD_MIN_MULTIPLE_ORDER_QUANTITY_DESC"/>
 
         <field name="min_quantity_calculation" default="0" type="list" label="COM_PHOCACART_FIELD_MINIMUM_QUANTITY_CALCULATION_LABEL" description="COM_PHOCACART_FIELD_MINIMUM_QUANTITY_CALCULATION_DESC">
             <option value="0">COM_PHOCACART_MAIN_PRODUCT</option>
@@ -79,96 +79,92 @@
             <option value="2">COM_PHOCACART_ADVANCED_STOCK_MANAGEMENT</option>
         </field>
 
-        <field name="stockstatus_a_id" type="phocastockstatus" manager="a" class="form-control" size="40" label="COM_PHOCACART_FIELD_STOCK_STATUS_A_LABEL" description="COM_PHOCACART_FIELD_STOCK_STATUS_A_DESC" default="2"/>
-        <field name="stockstatus_n_id" type="phocastockstatus" manager="n" class="form-control" size="40" label="COM_PHOCACART_FIELD_STOCK_STATUS_B_LABEL" description="COM_PHOCACART_FIELD_STOCK_STATUS_B_DESC" default="1"/>
+        <field name="stockstatus_a_id" type="phocastockstatus" manager="a" label="COM_PHOCACART_FIELD_STOCK_STATUS_A_LABEL" description="COM_PHOCACART_FIELD_STOCK_STATUS_A_DESC" default="2"/>
+        <field name="stockstatus_n_id" type="phocastockstatus" manager="n" label="COM_PHOCACART_FIELD_STOCK_STATUS_B_LABEL" description="COM_PHOCACART_FIELD_STOCK_STATUS_B_DESC" default="1"/>
 
-        <field name="related" type="PhocaSelectItem" label="COM_PHOCACART_FIELD_RELATED_PRODUCTS_LABEL" description="COM_PHOCACART_FIELD_RELATED_PRODUCTS_DESC" class="" size="40" multiple="true" related="true" />
+        <field name="related" type="subform" multiple="true" layout="joomla.form.field.subform.repeatable-table" label="COM_PHOCACART_FIELD_RELATED_PRODUCTS_LABEL" description="COM_PHOCACART_FIELD_RELATED_PRODUCTS_DESC">
+            <form>
+                <field name="related_type" type="PhocaCartContentType" context="product_related" label="COM_PHOCACART_FIELD_RELATED_PRODUCTS_TYPE_LABEL" />
+                <field name="id" type="PhocaCartItem" label="COM_PHOCACART_FIELD_RELATED_PRODUCTS_LABEL" />
+            </form>
+        </field>
 
-        <field name="image" type="phocaselectfilenameimage" manager="productimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL" description="COM_PHOCACART_FIELD_IMAGE_DESC" class="form-control imageCreateThumbs" size="40"/>
+        <field name="related2" type="PhocaSelectItem" label="COM_PHOCACART_FIELD_RELATED_PRODUCTS_LABEL" description="COM_PHOCACART_FIELD_RELATED_PRODUCTS_DESC" class="" multiple="true" related="true" />
 
-        <field name="special_parameter" type="textarea" label="COM_PHOCACART_FIELD_PRODUCT_SPECIAL_PARAMETER_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_SPECIAL_PARAMETER_DESC" class="form-control"/>
-        <field name="special_image" type="media" label="COM_PHOCACART_FIELD_PRODUCT_SPECIAL_IMAGE_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_SPECIAL_IMAGE_DESC" class="form-control" size="40"/>
+        <field name="image" type="phocaselectfilenameimage" manager="productimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL" description="COM_PHOCACART_FIELD_IMAGE_DESC" class="form-control imageCreateThumbs"/>
 
-        <field name="public_download_file" type="phocaselectfilename" manager="publicfile" label="COM_PHOCACART_FIELD_PUBLIC_DOWNLOAD_FILE_LABEL" description="COM_PHOCACART_FIELD_PUBLIC_DOWNLOAD_FILE_DESC"
-               class="form-control" size="40"/>
+        <field name="special_parameter" type="textarea" label="COM_PHOCACART_FIELD_PRODUCT_SPECIAL_PARAMETER_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_SPECIAL_PARAMETER_DESC" />
+        <field name="special_image" type="media" label="COM_PHOCACART_FIELD_PRODUCT_SPECIAL_IMAGE_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_SPECIAL_IMAGE_DESC"/>
 
-        <field name="public_download_text" type="text" label="COM_PHOCACART_FIELD_PUBLIC_DOWNLOAD_FILE_TEXT_LABEL" description="COM_PHOCACART_FIELD_PUBLIC_DOWNLOAD_FILE_TEXT_LABEL" class="form-control" size="40"/>
+        <field name="public_download_file" type="phocaselectfilename" manager="publicfile" label="COM_PHOCACART_FIELD_PUBLIC_DOWNLOAD_FILE_LABEL" description="COM_PHOCACART_FIELD_PUBLIC_DOWNLOAD_FILE_DESC"/>
 
-        <field name="public_play_file" type="phocaselectfilename" manager="publicfile" label="COM_PHOCACART_FIELD_PUBLIC_FILE_PLAY_LABEL" description="COM_PHOCACART_FIELD_PUBLIC_FILE_PLAY_DESC" class="form-control"
-               size="40"/>
+        <field name="public_download_text" type="text" label="COM_PHOCACART_FIELD_PUBLIC_DOWNLOAD_FILE_TEXT_LABEL" description="COM_PHOCACART_FIELD_PUBLIC_DOWNLOAD_FILE_TEXT_LABEL"/>
 
-        <field name="public_play_text" type="text" label="COM_PHOCACART_FIELD_PUBLIC_FILE_PLAY_TEXT_LABEL" description="COM_PHOCACART_FIELD_PUBLIC_FILE_PLAY_TEXT_DESC" class="form-control" size="40"/>
+        <field name="public_play_file" type="phocaselectfilename" manager="publicfile" label="COM_PHOCACART_FIELD_PUBLIC_FILE_PLAY_LABEL" description="COM_PHOCACART_FIELD_PUBLIC_FILE_PLAY_DESC" />
 
-        <field name="video" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_VIDEO_URL_LABEL" description="COM_PHOCACART_FIELD_VIDEO_URL_DESC"/>
+        <field name="public_play_text" type="text" label="COM_PHOCACART_FIELD_PUBLIC_FILE_PLAY_TEXT_LABEL" description="COM_PHOCACART_FIELD_PUBLIC_FILE_PLAY_TEXT_DESC" />
 
-        <field name="download_folder" type="phocacarttoken" readonly="true" manager="folder" class="form-control" size="40" label="COM_PHOCACART_FIELD_DOWNLOAD_FOLDER_LABEL"
+        <field name="video" type="text" label="COM_PHOCACART_FIELD_VIDEO_URL_LABEL" description="COM_PHOCACART_FIELD_VIDEO_URL_DESC"/>
+
+        <field name="download_folder" type="phocacarttoken" readonly="true" manager="folder" managerpath="productfile" label="COM_PHOCACART_FIELD_DOWNLOAD_FOLDER_LABEL"
                description="COM_PHOCACART_FIELD_DOWNLOAD_FOLDER_DESC"/>
 
-        <field name="download_file" type="phocaselectfilename" manager="productfile" label="COM_PHOCACART_FIELD_DOWNLOAD_FILE_LABEL" description="COM_PHOCACART_FIELD_DOWNLOAD_FILE_DESC" class="form-select" size="40"/>
+        <field name="download_file" type="phocaselectfilename" manager="productfile" label="COM_PHOCACART_FIELD_DOWNLOAD_FILE_LABEL" description="COM_PHOCACART_FIELD_DOWNLOAD_FILE_DESC" class="form-select" />
 
-		<field name="download_days" default="-1" size="4" type="text" label="COM_PHOCACART_FIELD_DOWNLOAD_FILE_EXPIRATION_DATE_DAYS_LABEL" description="COM_PHOCACART_FIELD_DOWNLOAD_FILE_EXPIRATION_DATE_DAYS_DESC"/>
+    		<field name="download_days" type="text" default="-1" label="COM_PHOCACART_FIELD_DOWNLOAD_FILE_EXPIRATION_DATE_DAYS_LABEL" description="COM_PHOCACART_FIELD_DOWNLOAD_FILE_EXPIRATION_DATE_DAYS_DESC"/>
 
-        <field name="download_token" type="phocacarttoken" manager="token" class="form-control" size="40" label="COM_PHOCACART_FIELD_DOWNLOAD_TOKEN_LABEL" description="COM_PHOCACART_FIELD_DOWNLOAD_TOKEN_DESC"/>
+        <field name="download_token" type="phocacarttoken" manager="token" label="COM_PHOCACART_FIELD_DOWNLOAD_TOKEN_LABEL" description="COM_PHOCACART_FIELD_DOWNLOAD_TOKEN_DESC"/>
 
-        <field name="download_hits" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_DOWNLOAD_HITS_LABEL" description="COM_PHOCACART_FIELD_DOWNLOAD_HITS_DESC"/>
-
-
+        <field name="download_hits" type="text" label="COM_PHOCACART_FIELD_DOWNLOAD_HITS_LABEL" description="COM_PHOCACART_FIELD_DOWNLOAD_HITS_DESC"/>
 
 
-        <!--
-        <field name="attributes" type="PhocaAttributes" multiple="1" label="COM_PHOCACART_FIELD_ATTRIBUTES_LABEL" description="COM_PHOCACART_FIELD_ATTRIBUTES_DESC" class="form-control" size="1" /> -->
-
-        <field name="unit_amount" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_UNIT_AMOUNT_LABEL" description="COM_PHOCACART_FIELD_UNIT_AMOUNT_DESC"/>
-        <field name="unit_unit" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_UNIT_UNIT_LABEL" description="COM_PHOCACART_FIELD_UNIT_UNIT_DESC"/>
 
 
-        <field name="length" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_LENGTH_LABEL" description="COM_PHOCACART_FIELD_LENGTH_DESC"/>
-        <field name="width" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_WIDTH_LABEL" description="COM_PHOCACART_FIELD_WIDTH_DESC"/>
-        <field name="height" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_HEIGHT_LABEL" description="COM_PHOCACART_FIELD_HEIGHT_DESC"/>
+        <field name="unit_amount" type="text" label="COM_PHOCACART_FIELD_UNIT_AMOUNT_LABEL" description="COM_PHOCACART_FIELD_UNIT_AMOUNT_DESC"/>
+        <field name="unit_unit" type="text" label="COM_PHOCACART_FIELD_UNIT_UNIT_LABEL" description="COM_PHOCACART_FIELD_UNIT_UNIT_DESC"/>
 
 
-        <field name="weight" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_WEIGHT_LABEL" description="COM_PHOCACART_FIELD_WEIGHT_DESC"/>
+        <field name="length" type="text" label="COM_PHOCACART_FIELD_LENGTH_LABEL" description="COM_PHOCACART_FIELD_LENGTH_DESC"/>
+        <field name="width" type="text" label="COM_PHOCACART_FIELD_WIDTH_LABEL" description="COM_PHOCACART_FIELD_WIDTH_DESC"/>
+        <field name="height" type="text" label="COM_PHOCACART_FIELD_HEIGHT_LABEL" description="COM_PHOCACART_FIELD_HEIGHT_DESC"/>
 
 
-        <field name="volume" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_VOLUME_LABEL" description="COM_PHOCACART_FIELD_VOLUME_DESC"/>
+        <field name="weight" type="text" label="COM_PHOCACART_FIELD_WEIGHT_LABEL" description="COM_PHOCACART_FIELD_WEIGHT_DESC"/>
 
-        <field name="points_needed" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_POINTS_NEEDED_LABEL" description="COM_PHOCACART_FIELD_POINTS_NEEDED_DESC"/>
 
-        <field name="points_received" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_POINTS_RECEIVED_LABEL" description="COM_PHOCACART_FIELD_POINTS_RECEIVED_DESC"/>
+        <field name="volume" type="text" label="COM_PHOCACART_FIELD_VOLUME_LABEL" description="COM_PHOCACART_FIELD_VOLUME_DESC"/>
 
-        <field name="condition" type="list" label="COM_PHOCACART_FIELD_PRODUCT_CONDITION_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_CONDITION_DESC" class="form-control" size="1" default="0">
+        <field name="points_needed" type="text" label="COM_PHOCACART_FIELD_POINTS_NEEDED_LABEL" description="COM_PHOCACART_FIELD_POINTS_NEEDED_DESC"/>
+
+        <field name="points_received" type="text" label="COM_PHOCACART_FIELD_POINTS_RECEIVED_LABEL" description="COM_PHOCACART_FIELD_POINTS_RECEIVED_DESC"/>
+
+        <field name="condition" type="list" default="0" label="COM_PHOCACART_FIELD_PRODUCT_CONDITION_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_CONDITION_DESC">
             <option value="0">COM_PHOCACART_CONDITION_NEW</option>
             <option value="1">COM_PHOCACART_CONDITION_REFURBISHED</option>
             <option value="2">COM_PHOCACART_CONDITION_USED</option>
             <!--<option value="3">COM_PHOCACART_CONDITION_DAMAGED</option>-->
         </field>
 
-        <field name="type_feed" type="textarea" label="COM_PHOCACART_FIELD_PRODUCT_TYPE_FEED_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_TYPE_FEED_DESC" class="form-control" rows="3" cols="30"/>
+        <field name="type_feed" type="textarea" label="COM_PHOCACART_FIELD_PRODUCT_TYPE_FEED_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_TYPE_FEED_DESC" rows="3" cols="30"/>
 
-        <field name="type_category_feed" type="textarea" label="COM_PHOCACART_FIELD_PRODUCT_CATEGORY_TYPE_FEED_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_CATEGORY_TYPE_FEED_DESC" class="form-control" rows="3"
+        <field name="type_category_feed" type="textarea" label="COM_PHOCACART_FIELD_PRODUCT_CATEGORY_TYPE_FEED_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_CATEGORY_TYPE_FEED_DESC" rows="3"
                cols="30"/>
 
-        <field name="delivery_date" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_PRODUCT_DELIVERY_DATE_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_DELIVERY_DATE_DESC"
-               filter="\Joomla\CMS\Component\ComponentHelper::filterText" showtime="true" format="%Y-%m-%d %H:%M:%S" translateformat="true"/>
+        <field name="delivery_date" type="Calendar" label="COM_PHOCACART_FIELD_PRODUCT_DELIVERY_DATE_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_DELIVERY_DATE_DESC"
+               filter="user_utc" showtime="true" translateformat="true"/>
 
 
-        <field name="metatitle" type="text"
-               label="COM_PHOCACART_FIELD_META_TITLE_LABEL" description="COM_PHOCACART_FIELD_META_TITLE_DESC"
-               class="form-control"/>
+        <field name="metatitle" type="phocatext" i18n="true" label="COM_PHOCACART_FIELD_META_TITLE_LABEL" description="COM_PHOCACART_FIELD_META_TITLE_DESC" />
 
-        <field name="metakey" type="textarea"
-               label="JFIELD_META_KEYWORDS_LABEL" description="JFIELD_META_KEYWORDS_DESC"
-               class="form-control" rows="3" cols="30"/>
+        <field name="metakey" type="phocatextarea" i18n="true" rows="3" cols="30" label="JFIELD_META_KEYWORDS_LABEL" description="JFIELD_META_KEYWORDS_DESC" />
 
-        <field name="metadesc" type="textarea"
-               label="JFIELD_META_DESCRIPTION_LABEL" description="JFIELD_META_DESCRIPTION_DESC"
-               class="form-control" rows="3" cols="30"/>
+        <field name="metadesc" type="phocatextarea" i18n="true" rows="3" cols="30" label="JFIELD_META_DESCRIPTION_LABEL" description="JFIELD_META_DESCRIPTION_DESC"/>
 
         <!-- SUBFORM -->
         <field name="additional_images" type="subform" label="COM_PHOCACART_FIELD_ADDITIONAL_IMAGES_LABEL" description="COM_PHOCACART_FIELD_ADDITIONAL_IMAGES_DESC" multiple="true"
                layout="joomla.form.field.subform.repeatable" formsource="administrator/components/com_phocacart/models/forms/subform_additional_images.xml"/>
 
-        <field name="attributes" fieldname="attributes" type="subform" label="COM_PHOCACART_FIELD_ATTRIBUTES_LABEL" description="COM_PHOCACART_FIELD_ATTRIBUTES_DESC" multiple="true" layout="joomla.form.field.subform.repeatable"
+        <field name="attributes" fieldname="attributes" type="subform" groupByFieldset="true" label="COM_PHOCACART_FIELD_ATTRIBUTES_LABEL" description="COM_PHOCACART_FIELD_ATTRIBUTES_DESC" multiple="true" layout="joomla.form.field.subform.repeatable"
                formsource="administrator/components/com_phocacart/models/forms/subform_attributes.xml" class="phSubformAttributes"/>
 
         <field name="specifications" type="subform" label="COM_PHOCACART_FIELD_SPECIFICATIONS_LABEL" description="COM_PHOCACART_FIELD_SPECIFICATIONS_DESC" multiple="true" layout="joomla.form.field.subform.repeatable"
@@ -184,45 +180,50 @@
     </fieldset>
 
     <fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS">
-
-        <field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" class="form-control" size="1" default="1">
+        <field name="published" type="list" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" class="form-select-color-state" default="1" validate="options">
             <option value="1">JPUBLISHED</option>
             <option value="0">JUNPUBLISHED</option>
+            <option value="2">JARCHIVED</option>
+            <option value="-2">JTRASHED</option>
         </field>
 
-		<field name="type" default="0" type="list" label="COM_PHOCACART_FIELD_PRODUCT_TYPE_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_TYPE_DESC">
+        <field name="redirect_product_id" type="Modal_Phocacartitem" label="COM_PHOCACART_FIELD_REDIRECT_PRODUCT_ID_LABEL" description="COM_PHOCACART_FIELD_REDIRECT_PRODUCT_ID_DESC" />
+        <field name="redirect_url" type="text" label="COM_PHOCACART_FIELD_REDIRECT_URL_LABEL" description="COM_PHOCACART_FIELD_REDIRECT_URL_DESC" />
+
+    		<field name="type" default="0" type="list" label="COM_PHOCACART_FIELD_PRODUCT_TYPE_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_TYPE_DESC">
             <option value="0">COM_PHOCACART_PHYSICAL_PRODUCT</option>
             <option value="1">COM_PHOCACART_DIGITAL_DOWNLOADABLE_PRODUCT</option>
             <option value="2">COM_PHOCACART_MIXED_PRODUCT_DIGITAL_PHYSICAL</option>
             <option value="3">COM_PHOCACART_PRICE_ON_DEMAND_PRODUCT</option>
-			<option value="4">COM_PHOCACART_GIFT_VOUCHER</option>
+			      <option value="4">COM_PHOCACART_GIFT_VOUCHER</option>
+            <option value="5">COM_PHOCACART_BUNDLE</option>
         </field>
 
-        <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" class="form-control">
+        <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC">
             <option value="*">JALL</option>
         </field>
 
-        <field name="date" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="\Joomla\CMS\Component\ComponentHelper::filterText" translateformat="true" />
-        <field name="date_update" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_UPDATE_DATE_LABEL" description="COM_PHOCACART_FIELD_UPDATE_DATE_DESC" filter="\Joomla\CMS\Component\ComponentHelper::filterText" translateformat="true" />
+        <field name="date" type="Calendar" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="user_utc" translateformat="true" />
+        <field name="date_update" type="Calendar" label="COM_PHOCACART_FIELD_UPDATE_DATE_LABEL" description="COM_PHOCACART_FIELD_UPDATE_DATE_DESC" filter="user_utc" translateformat="true" />
 
-        <field name="tags" type="phocatags" layout="joomla.form.field.list-fancy-select" multiple="true" table="3" label="COM_PHOCACART_FIELD_TAGS_LABEL" description="COM_PHOCACART_FIELD_TAGS_DESC"  size="1"/>
+        <field name="tags" type="phocatags" layout="joomla.form.field.list-fancy-select" multiple="true" table="3" label="COM_PHOCACART_FIELD_TAGS_LABEL" description="COM_PHOCACART_FIELD_TAGS_DESC" />
 
-        <field name="taglabels" type="phocataglabels" layout="joomla.form.field.list-fancy-select" multiple="true" table="3" label="COM_PHOCACART_FIELD_LABELS_LABEL" description="COM_PHOCACART_FIELD_LABELS_DESC" size="1"/>
+        <field name="taglabels" type="phocataglabels" layout="joomla.form.field.list-fancy-select" multiple="true" table="3" label="COM_PHOCACART_FIELD_LABELS_LABEL" description="COM_PHOCACART_FIELD_LABELS_DESC" />
 
-        <field name="created" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_CREATED_DATE_LABEL" description="COM_PHOCACART_FIELD_CREATED_DATE_DESC" readonly="readonly" translateformat="true"
-               showtime="true"/>
+        <field name="created" type="Calendar" label="COM_PHOCACART_FIELD_CREATED_DATE_LABEL" description="COM_PHOCACART_FIELD_CREATED_DATE_DESC" readonly="readonly" translateformat="true"
+               filter="user_utc" showtime="true"/>
 
-        <field name="created_by" type="user" class="form-control" label="COM_PHOCACART_FIELD_CREATED_BY_LABEL" description="COM_PHOCACART_FIELD_CREATED_BY_DESC" readonly="readonly"/>
+        <field name="created_by" type="user" label="COM_PHOCACART_FIELD_CREATED_BY_LABEL" description="COM_PHOCACART_FIELD_CREATED_BY_DESC" readonly="readonly"/>
 
-        <field name="modified" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_MODIFIED_DATE_LABEL" description="COM_PHOCACART_FIELD_MODIFIED_DATE_DESC" readonly="readonly" translateformat="true"
-               showtime="true"/>
+        <field name="modified" type="Calendar" label="COM_PHOCACART_FIELD_MODIFIED_DATE_LABEL" description="COM_PHOCACART_FIELD_MODIFIED_DATE_DESC" readonly="readonly" translateformat="true"
+               filter="user_utc" showtime="true"/>
 
-        <field name="modified_by" type="user" class="form-control" label="COM_PHOCACART_FIELD_MODIFIED_BY_LABEL" description="COM_PHOCACART_FIELD_MODIFIED_BY_DESC" readonly="readonly"/>
+        <field name="modified_by" type="user" label="COM_PHOCACART_FIELD_MODIFIED_BY_LABEL" description="COM_PHOCACART_FIELD_MODIFIED_BY_DESC" readonly="readonly"/>
 
 
 
-        <field name="hits" type="Text" class="form-control" size="6" label="COM_PHOCACART_FIELD_HITS_LABEL" description="COM_PHOCACART_FIELD_HITS_DESC" />
-        <field name="sales" type="Text" class="form-control" size="6" label="COM_PHOCACART_FIELD_SALES_LABEL" description="COM_PHOCACART_FIELD_SALES_DESC" readonly="readonly" />
+        <field name="hits" type="Text" label="COM_PHOCACART_FIELD_HITS_LABEL" description="COM_PHOCACART_FIELD_HITS_DESC" />
+        <field name="sales" type="Text" label="COM_PHOCACART_FIELD_SALES_LABEL" description="COM_PHOCACART_FIELD_SALES_DESC" readonly="readonly" />
 
 
 
@@ -230,40 +231,28 @@
 		<field name="gift_types" type="subform" label="COM_PHOCACART_FIELD_GIFT_VOUCHER_TYPE_LABEL" description="COM_PHOCACART_FIELD_GIFT_VOUCHER_TYPE_DESC" multiple="true" layout="joomla.form.field.subform.repeatable"
                formsource="administrator/components/com_phocacart/models/forms/subform_gifttypes.xml" class="phSubformGiftTypes"/>
 
-       <field name="internal_comment" type="textarea"  class="form-control" label="COM_PHOCACART_FIELD_INTERNAL_COMMENT_LABEL" description="COM_PHOCACART_FIELD_INTERNAL_COMMENT_DESC"/>
+       <field name="internal_comment" type="textarea"  label="COM_PHOCACART_FIELD_INTERNAL_COMMENT_LABEL" description="COM_PHOCACART_FIELD_INTERNAL_COMMENT_DESC"/>
 
+        <field name="owner_id" type="PhocacartProductVendor" label="COM_PHOCACART_FIELD_OWNER_ID_LABEL" description="COM_PHOCACART_FIELD_OWNER_ID_DESC">
+            <option value="0">JSELECT</option>
+        </field>
     </fieldset>
 
     <fields name="metadata">
         <fieldset name="metadata" label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
-
-            <field name="robots"
-                   type="list"
-                   label="JFIELD_METADATA_ROBOTS_LABEL"
-                   description="JFIELD_METADATA_ROBOTS_DESC"
-            >
+            <field name="robots" type="list" label="JFIELD_METADATA_ROBOTS_LABEL" description="JFIELD_METADATA_ROBOTS_DESC">
                 <option value="">JGLOBAL_USE_GLOBAL</option>
-				<option value="index, follow" />
-				<option value="noindex, follow" />
-				<option value="index, nofollow" />
-				<option value="noindex, nofollow" />
+		        		<option value="index, follow" />
+				        <option value="noindex, follow" />
+				        <option value="index, nofollow" />
+				        <option value="noindex, nofollow" />
             </field>
-            <!--
-                <field name="author" type="text" label="JAUTHOR"
-                    description="JField_Metadata_Author_Desc" size="20" />
-
-                <field name="rights" type="text"
-                    label="JFIELD_META_RIGHTS_LABEL" description="JFIELD_META_RIGHTS_DESC"
-                    required="" filter="string" cols="30" rows="2" /> -->
         </fieldset>
     </fields>
 
     <fields name="aidata">
         <fieldset name="aidata" label="COM_PHOCACART_FIELDSET_AIDATA_OPTIONS">
-
-            <field name="ai_keywords" type="text" class="form-control" size="6" label="COM_PHOCACART_FIELD_AI_KEYWORDS_LABEL" description="COM_PHOCACART_FIELD_AI_KEYWORDS_DESC" />
+            <field name="ai_keywords" type="text" size="6" label="COM_PHOCACART_FIELD_AI_KEYWORDS_LABEL" description="COM_PHOCACART_FIELD_AI_KEYWORDS_DESC" />
         </fieldset>
     </fields>
-
-
 </form>

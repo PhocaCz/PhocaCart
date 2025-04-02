@@ -7,22 +7,25 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die;
+
+use Joomla\CMS\Factory;
 use Joomla\CMS\Table\Table;
-jimport('joomla.filter.input');
+use Joomla\Database\DatabaseDriver;
+use Joomla\Event\DispatcherInterface;
 
 class TablePhocacartWishlist extends Table
 {
-	function __construct(& $db) {
-		parent::__construct('#__phocacart_wishlists', 'id', $db);
+    public function __construct(DatabaseDriver $db, DispatcherInterface $dispatcher = null)
+    {
+		parent::__construct('#__phocacart_wishlists', 'id', $db, $dispatcher);
 	}
-	
-	function check() {
-		/*if(empty($this->alias)) {
-			$this->alias = $this->title;
-		}
-		$this->alias = PhocacartUtils::getAliasName($this->alias);
-		*/
-		return true;
-	}
+
+    public function store($updateNulls = false)
+    {
+        if (!(int)$this->date) {
+            $this->date = Factory::getDate()->toSql();
+        }
+
+        return parent::store($updateNulls);
+    }
 }
-?>

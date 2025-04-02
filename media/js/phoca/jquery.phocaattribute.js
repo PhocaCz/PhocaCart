@@ -235,6 +235,8 @@ function phSetAttributeUrl(phSetValueByUser) {
 						jQuery("#" + attributeId + " option[data-value-alias='" + this + "']").attr("selected","selected");// Select box
 						jQuery(phSelectNameIdT + " div[data-value-alias='" + this + "']").addClass('on'); // Select Color or Image
 						jQuery("#" + attributeId + " input[data-value-alias='" + this + "']").attr("checked","checked");// Check box
+						// Need to set active label for Bootstrap checkboxes (checkbox is active, but BS label not)
+						jQuery("#" + attributeId + " input[data-value-alias='" + this + "']").parent().addClass('active');
 					})
 				}
 			} else {
@@ -245,6 +247,7 @@ function phSetAttributeUrl(phSetValueByUser) {
 				if (jQuery(this).find(':selected').data('value-alias') !== undefined) {
 					valueAlias = jQuery(this).find(':selected').data('value-alias');
 					phHashNew = phHashNew + 'a[' + jQuery(this).data('alias') + ']=' + valueAlias;
+
 				}
 
 				// CHECKBOX
@@ -260,6 +263,7 @@ function phSetAttributeUrl(phSetValueByUser) {
 					if (valuesAlias != '') {
 						phHashNew = phHashNew + 'a[' + jQuery(this).data('alias') + ']=' + valuesAlias;
 					}
+
 				}
 			}
 
@@ -283,6 +287,7 @@ function phSetAttributeUrl(phSetValueByUser) {
 	if (phHashNew.lastIndexOf('&') == (phHashNew.length - 1)) {
 		phHashNew = phHashNew.slice(0, -1);
 	}
+
 	// Update URL after #
 	if (phSetValueByUser == 0 && phHashNew != '') {
 		phHashNew = '#' + phHashNew;
@@ -315,10 +320,16 @@ jQuery(document).ready(function() {
 	jQuery(document).on('change', phSelectboxA, function(e){
 
 
-
 		const phParams = Joomla.getOptions('phParamsPC');
 		if (phParams['dynamicChangePrice'] == 0 && phParams['dynamicChangeStock'] == 0 && phParams['dynamicChangeId'] == 0 && (phParams['dynamicChangeImage'] == 0 || phParams['dynamicChangeImage'] == 1)) {
-			return false;// Interactive Change is disabled
+
+			// Interactive Change is disabled (ajax)
+			// But interactive URL change can be enabled
+			if (phParams['dynamicChangeUrlAttributes'] == 1) {
+				phSetAttributeUrl(1);
+			}
+
+			return false;
 		}
 
 		//jQuery(this).off("change");';
@@ -385,7 +396,14 @@ jQuery(document).ready(function() {
 		const phParams = Joomla.getOptions('phParamsPC');
 
 		if (phParams['dynamicChangePrice'] == 0 && phParams['dynamicChangeStock'] == 0 && phParams['dynamicChangeId'] == 0 && (phParams['dynamicChangeImage'] == 0 || phParams['dynamicChangeImage'] == 1)) {
-			return;// Interactive Change is disabled
+
+			// Interactive Change is disabled (ajax)
+			// But interactive URL change can be enabled
+			if (phParams['dynamicChangeUrlAttributes'] == 1) {
+				phSetAttributeUrl(1);
+			}
+
+			return;
 		}
 
 		if (e.target.tagName.toUpperCase() === "LABEL") { return;}// Prevent from twice running
@@ -401,7 +419,6 @@ jQuery(document).ready(function() {
         let phProductGroup = '.phjAddToCartV' + phTypeView + 'P' + phProductId;
         let phDataA1 = jQuery(phProductGroup).find('select').serialize();// All Selects
         let phDataA2 = jQuery(phProductGroup).find(':checkbox').serialize();// All Checkboxes
-
 		phAjaxChangeAttributeData(phProductId, phTypeView, phDataA1, phDataA2);
 		phSetAttributeUrl(1);
     })

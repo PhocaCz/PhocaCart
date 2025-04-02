@@ -1,38 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
+	<config>
+		<inlinehelp button="show"/>
+	</config>
 
-	<fieldset addfieldpath="/administrator/components/com_phocacart/models/fields">
+	<fields addfieldpath="/administrator/components/com_phocacart/models/fields">
+		<fieldset name="general" label="COM_PHOCACART_GENERAL_OPTIONS">
+			<field name="user_id" type="user" required="true"  label="COM_PHOCACART_FIELD_USER_ID_LABEL" description="COM_PHOCACART_FIELD_USER_ID_DESC"  />
 
-<field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" required="true" readonly="true" class="readonly" />
+			<field name="product_id" type="PhocaSelectItem" required="true" filter="integer" label="COM_PHOCACART_FIELD_PRODUCT_ID_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_ID_DESC" />
 
-<field name="product_id" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_PRODUCT_ID_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_ID_DESC"  />
+			<field name="category_id" type="phocacartcategory" required="true"  label="COM_PHOCACART_FIELD_CATEGORY_ID_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_ID_DESC"  />
 
-<field name="category_id" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_CATEGORY_ID_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_ID_DESC"  />
+			<field name="date" type="calendar" default="now" showtime="true" filter="user_utc" translateformat="true" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" />
+		</fieldset>
 
-<field name="user_id" type="user" class="form-control" size="40" label="COM_PHOCACART_FIELD_USER_ID_LABEL" description="COM_PHOCACART_FIELD_USER_ID_DESC"  />
+		<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
+			<field name="type" type="list" default="0" label="COM_PHOCACART_FIELD_WISHLIST_TYPE_LABEL" description="COM_PHOCACART_FIELD_WISHLIST_TYPE_DESC">
+				<option value="0">COM_PHOCACART_WISHLIST_TYPE_WISHLIST</option>
+				<option value="1">COM_PHOCACART_WISHLIST_TYPE_WATCHDOG</option>
+			</field>
 
+			<field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" >
+				<option value="*">JALL</option>
+			</field>
 
-<field name="ip" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_IP_LABEL" description="COM_PHOCACART_FIELD_IP_DESC"  />
+			<field name="ordering" type="PhocacartOrdering" table="wishlist" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
 
-
-
-<field name="ordering" type="PhocacartOrdering" table="wishlist" class="form-select" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
-
-	</fieldset>
-	<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
-
-<field name="published" type="list" class="form-select" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" size="1" default="1">
-	<option value="1">JPUBLISHED</option>
-	<option	value="0">JUNPUBLISHED</option>
-</field>
-
-<field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" class="form-control">
-	<option value="*">JALL</option>
-</field>
-
-<field name="date" type="Calendar" class="form-control" label="COM_PHOCACART_FIELD_DATE_LABEL" description="COM_PHOCACART_FIELD_DATE_DESC" filter="user_utc" translateformat="true" />
-
-	</fieldset>
-
-
+			<field name="id" type="hidden"  />
+		</fieldset>
+	</fields>
 </form>

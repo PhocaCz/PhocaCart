@@ -29,7 +29,7 @@
 		<downloads>
 			<downloadurl type="full" format="zip">https://github.com/PhocaCz/PhocaCart/releases/download/4.0.11/com_phocacart_v4.0.11.zip</downloadurl>
 		</downloads>
-		<sha512>5132393567b2877ebef79541acd0ff4fea0c28fea6b402e2275d9e98073452bf78887f546932952d16284818cbe18abfc879fca2cf4b4c81d07f3a6c0f6026b2</sha512>
+		<sha512>2463c42edd0a5a98764a237aa9aa8c2e84dca0c294d1da6c37b611b71e4615a9cae94a9c673e3ab2cef34629e145cc3c16e6e054df0de3d2477bc5f2ae3514a8</sha512>
 		<tags>
 			<tag>stable</tag>
 		</tags>
@@ -37,6 +37,26 @@
 		<maintainerurl>https://www.phoca.cz/</maintainerurl>
 		<section>Updates</section>
 		<targetplatform name="joomla" version="4\.*"/>
+		<client>administrator</client>
+	</update>
+	<update>
+		<name><![CDATA[ Phoca Cart ]]></name>
+		<description><![CDATA[ Phoca Cart is e-commerce extension - powerful shopping cart for Joomla! CMS. Phoca Cart is based on Joomla! framework and it is designed by modern responsive Bootstrap library. ]]></description>
+		<element>com_phocacart</element>
+		<type>component</type>
+		<version>5.0.0</version>
+		<infourl title="Phoca Cart 5.0.0">http://www.phoca.cz/version/index.php?phocacart=5.0.0</infourl>
+		<downloads>
+			<downloadurl type="full" format="zip">https://github.com/PhocaCz/PhocaCart/releases/download/5.0.0/com_phocacart_v5.0.0.zip</downloadurl>
+		</downloads>
+		<sha512>51c2d3574edab59995f3341af83d47036c77aeee19ad01c7de0295371aa32f8101c87cff4231d97751de35baaa2fcd0ac35bfead2552f6c4964284348c3d968b</sha512>
+		<tags>
+			<tag>stable</tag>
+		</tags>
+		<maintainer><![CDATA[ Phoca.cz ]]></maintainer>
+		<maintainerurl>https://www.phoca.cz/</maintainerurl>
+		<section>Updates</section>
+		<targetplatform name="joomla" version="5\.*"/>
 		<client>administrator</client>
 	</update>
 </updates>

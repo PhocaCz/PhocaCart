@@ -7,12 +7,14 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
-use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Plugin\PluginHelper;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
+
 jimport('joomla.application.component.view');
 
 class PhocaCartViewCheckout extends HtmlView
@@ -164,7 +166,6 @@ class PhocaCartViewCheckout extends HtmlView
         $this->a->shippingnotused = PhocacartShipping::isShippingNotUsed($sOCh);
         $this->a->paymentnotused  = PhocacartPayment::isPaymentNotUsed($pOCh);
 
-
         // COUPONS - Coupon can be added in payment method or below calculation
         $this->t['couponcodevalue'] = '';
         if ($this->cart->getCouponCode() != '') {
@@ -231,7 +232,9 @@ class PhocaCartViewCheckout extends HtmlView
                     $this->a->addressedit       = 1;
                     $scrollTo                   = 'phcheckoutaddressedit';
                     $this->form                 = $this->get('FormGuest');
+
                     $this->t['dataaddressform'] = PhocacartUser::getAddressDataForm($this->form, $this->fields['array'], '', '', '_phs', 1);
+
                 }
                 // REGISTERED
             } else {
@@ -295,7 +298,7 @@ class PhocaCartViewCheckout extends HtmlView
                 // and redirect outside the editing mode
                 if ($this->t['automatic_shipping_method_setting'] == 1) {
                     //- $shipping					= new PhocacartShipping();
-                    $this->t['shippingmethods'] = $shipping->getPossibleShippingMethods($total[0]['netto'], $total[0]['brutto'], $total[0]['quantity'], $country, $region, $zip, $total[0]['weight'], $total[0]['length'], $total[0]['width'], $total[0]['height'], 0, $shippingId);
+                    $this->t['shippingmethods'] = $shipping->getPossibleShippingMethods($total[0]['subtotalnetto'], $total[0]['subtotalbrutto'], $total[0]['quantity'], $country, $region, $zip, $total[0]['weight'], $total[0]['length'], $total[0]['width'], $total[0]['height'], 0, $shippingId);
                     if (!empty($this->t['shippingmethods']) && count($this->t['shippingmethods']) == 1) {
                         $this->a->shippingdisplayeditbutton = 0;
                     }
@@ -324,7 +327,7 @@ class PhocaCartViewCheckout extends HtmlView
                 $this->cart->roundTotalAmount();
                 $total = $this->cart->getTotal();
 
-                $this->t['shippingmethods'] = $shipping->getPossibleShippingMethods($total[0]['netto'], $total[0]['brutto'], $total[0]['quantity'], $country, $region, $zip, $total[0]['weight'], $total[0]['length'], $total[0]['width'], $total[0]['height'], 0, $shippingId);//$shippingId = 0 so all possible shipping methods will be listed
+                $this->t['shippingmethods'] = $shipping->getPossibleShippingMethods($total[0]['subtotalnetto'], $total[0]['subtotalbrutto'], $total[0]['quantity'], $country, $region, $zip, $total[0]['weight'], $total[0]['length'], $total[0]['width'], $total[0]['height'], 0, $shippingId);//$shippingId = 0 so all possible shipping methods will be listed
 
 
                 // If there is only one valid shipping method and it is set in parameter we can directly store this method so user does not need to add it
@@ -333,30 +336,42 @@ class PhocaCartViewCheckout extends HtmlView
                 if (!empty($this->t['shippingmethods']) && count($this->t['shippingmethods']) == 1 && $this->t['automatic_shipping_method_setting'] == 1) {
                     if (isset($this->t['shippingmethods'][0]->id) && (int)$this->t['shippingmethods'][0]->id > 0) {
 
-                        $shippingStored = 0;
-                        if ($this->a->login == 1 && isset($this->u->id) && $this->u->id > 0) {
-                            if ($shipping->storeShippingRegistered($this->t['shippingmethods'][0]->id, $this->u->id)) {
-                                $shippingStored = 1;
+                        // Don't set it in case the parameter Skip Shipping Methods parameter meets criteria:
+                        $sOCh = array();// Shipping Options Checkout
+                        // PRODUCTTYPE - Digital products are even gift vouchers
+                        $sOCh['all_digital_products'] = isset($total[0]['countdigitalproducts']) && isset($total[0]['countallproducts']) && (int)$total[0]['countdigitalproducts'] == $total[0]['countallproducts'] ? 1 : 0;
+                        $shippingNotUsed              = PhocacartShipping::isShippingNotUsed($sOCh);// REVERSE
+
+                        if ($shippingNotUsed) {
+                            // e.g. we have digital products and we set in parameter Skip Shipping Methods that we skip shipping methods
+                            // so even there is one shipping method found, it cannot be set
+                        } else {
+
+                            $shippingStored = 0;
+                            if ($this->a->login == 1 && isset($this->u->id) && $this->u->id > 0) {
+                                if ($shipping->storeShippingRegistered($this->t['shippingmethods'][0]->id, $this->u->id)) {
+                                    $shippingStored = 1;
+                                }
+                            } else if ($this->a->login == 2) {
+                                if (PhocacartUserGuestuser::storeShipping((int)$this->t['shippingmethods'][0]->id)) {
+                                    $shippingStored = 1;
+                                }
                             }
-                        } else if ($this->a->login == 2) {
-                            if (PhocacartUserGuestuser::storeShipping((int)$this->t['shippingmethods'][0]->id)) {
-                                $shippingStored = 1;
+
+                            if ($shippingStored == 1) {
+                                $shippingId = (int)$this->t['shippingmethods'][0]->id;// will be used for payment - updated now
+                                $this->cart->addShippingCosts($shippingId);           // add the costs to cart so it has updated information
+
+                                $this->t['shippingmethod'] = $this->cart->getShippingCosts();
+
+                                $this->a->shippingadded             = 1;
+                                $this->a->shippingview              = 1;
+                                $this->a->shippingedit              = 0;
+                                $this->a->shippingdisplayeditbutton = 0;
+                                $scrollTo                           = 'phcheckoutpaymentedit';
+
+
                             }
-                        }
-
-                        if ($shippingStored == 1) {
-                            $shippingId = (int)$this->t['shippingmethods'][0]->id;// will be used for payment - updated now
-                            $this->cart->addShippingCosts($shippingId);           // add the costs to cart so it has updated information
-
-                            $this->t['shippingmethod'] = $this->cart->getShippingCosts();
-
-                            $this->a->shippingadded             = 1;
-                            $this->a->shippingview              = 1;
-                            $this->a->shippingedit              = 0;
-                            $this->a->shippingdisplayeditbutton = 0;
-                            $scrollTo                           = 'phcheckoutpaymentedit';
-
-
                         }
                     }
                 }
@@ -413,7 +428,7 @@ class PhocaCartViewCheckout extends HtmlView
                 if ($this->t['automatic_payment_method_setting'] == 1) {
                     //$payment					= new PhocacartPayment();
                     $shippingId                = $this->cart->getShippingId();// Shipping stored in cart or not?
-                    $this->t['paymentmethods'] = $payment->getPossiblePaymentMethods($total[0]['netto'], $total[0]['brutto'], $country, $region, $shippingId, 0, $paymentMethodId, $currencyId);
+                    $this->t['paymentmethods'] = $payment->getPossiblePaymentMethods($total[0]['subtotalnetto'], $total[0]['subtotalbrutto'], $country, $region, $shippingId, 0, $paymentMethodId, $currencyId);
                     if (!empty($this->t['paymentmethods']) && count($this->t['paymentmethods']) == 1) {
                         $this->a->paymentdisplayeditbutton = 0;
                     }
@@ -442,8 +457,7 @@ class PhocaCartViewCheckout extends HtmlView
                 $this->cart->roundTotalAmount();
                 $total = $this->cart->getTotal();
 
-                $this->t['paymentmethods'] = $payment->getPossiblePaymentMethods($total[0]['netto'], $total[0]['brutto'], $country, $region, $shippingId, 0, $paymentMethodId, $currencyId);
-
+                $this->t['paymentmethods'] = $payment->getPossiblePaymentMethods($total[0]['subtotalnetto'], $total[0]['subtotalbrutto'], $country, $region, $shippingId, 0, $paymentMethodId, $currencyId);
 
                 // If there is only one valid payment method and it is set in parameter we can directly store this method so user does not need to add it
                 // When setting the payment method then the cart needs to be "refreshed", payment costs needs to be added and info about shpping id
@@ -605,36 +619,32 @@ class PhocaCartViewCheckout extends HtmlView
 
         // Plugins ------------------------------------------
         $this->t['total'] = $total;
-        PluginHelper::importPlugin('pcv');
-        //$this->t['dispatcher']	= J EventDispatcher::getInstance();
+
         $this->t['event'] = new stdClass;
 
-        $results                               = Factory::getApplication()->triggerEvent('onPCVonCheckoutAfterCart', array('com_phocacart.checkout', $this->a, &$this->p, $this->t['total']));
+        $results = Dispatcher::dispatch(new Event\View\Checkout\AfterCart('com_phocacart.checkout', $this->a, $this->p, $this->t['total']));
         $this->t['event']->onCheckoutAfterCart = trim(implode("\n", $results));
 
-        $results                                = Factory::getApplication()->triggerEvent('onPCVonCheckoutAfterLogin', array('com_phocacart.checkout', $this->a, &$this->p, $this->t['total']));
+        $results = Dispatcher::dispatch(new Event\View\Checkout\AfterLogin('com_phocacart.checkout', $this->a, $this->p, $this->t['total']));
         $this->t['event']->onCheckoutAfterLogin = trim(implode("\n", $results));
 
-        $results                                  = Factory::getApplication()->triggerEvent('onPCVonCheckoutAfterAddress', array('com_phocacart.checkout', $this->a, &$this->p, $this->t['total']));
+        $results = Dispatcher::dispatch(new Event\View\Checkout\AfterAddress('com_phocacart.checkout', $this->a, $this->p, $this->t['total']));
         $this->t['event']->onCheckoutAfterAddress = trim(implode("\n", $results));
 
-        $results                                   = Factory::getApplication()->triggerEvent('onPCVonCheckoutAfterShipping', array('com_phocacart.checkout', $this->a, &$this->p, $this->t['total']));
+        $results = Dispatcher::dispatch(new Event\View\Checkout\AfterShipping('com_phocacart.checkout', $this->a, $this->p, $this->t['total']));
         $this->t['event']->onCheckoutAfterShipping = trim(implode("\n", $results));
 
-        $results                                  = Factory::getApplication()->triggerEvent('onPCVonCheckoutAfterPayment', array('com_phocacart.checkout', $this->a, &$this->p, $this->t['total']));
+        $results = Dispatcher::dispatch(new Event\View\Checkout\AfterPayment('com_phocacart.checkout', $this->a, $this->p, $this->t['total']));
         $this->t['event']->onCheckoutAfterPayment = trim(implode("\n", $results));
 
-        $results                                  = Factory::getApplication()->triggerEvent('onPCVonCheckoutAfterConfirm', array('com_phocacart.checkout', $this->a, &$this->p, $this->t['total']));
+        $results = Dispatcher::dispatch(new Event\View\Checkout\AfterConfirm('com_phocacart.checkout', $this->a, $this->p, $this->t['total']));
         $this->t['event']->onCheckoutAfterConfirm = trim(implode("\n", $results));
 
         // END Plugins --------------------------------------
 
         $media->loadSpec();
 
-
         parent::display($tpl);
-
-
     }
 
     protected function _prepareDocument() {
@@ -642,4 +652,3 @@ class PhocaCartViewCheckout extends HtmlView
     }
 }
 
-?>

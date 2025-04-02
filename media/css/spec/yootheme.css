@@ -185,3 +185,16 @@ img {
 .ph-filter-box-horizontal .uk-dropdown-box li {
     list-style-type: none;
 }
+
+.ph-row-flex.grid .row-item {
+    margin-bottom: 1em;
+}
+
+.ph-items .ph-cb {
+    display: none;
+}
+
+
+.pc-modal .uk-modal-dialog.uk-width-auto .uk-modal-body iframe {
+    height: 65vh;
+}

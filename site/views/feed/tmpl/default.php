@@ -17,14 +17,14 @@ $e		= '</';
 
 
 // HEADER
-if (isset($this->t['feed']['header']) && $this->t['feed']['header'] != '') {
+    if (isset($this->t['feed']['header']) && $this->t['feed']['header'] != '') {
     $o['header'] = $this->t['feed']['header'];
 } else {
     $o['header'] = '<?xml version="1.0" encoding="utf-8"?>';
-}
+    }
 
 // ROOT START
-if (isset($this->t['feed']['root']) && $this->t['feed']['root'] != '') {
+    if (isset($this->t['feed']['root']) && $this->t['feed']['root'] != '') {
     $o['rootstart'] = $l.$this->t['feed']['root'].$r;
 }
 
@@ -539,13 +539,13 @@ if (!empty($this->t['products'])) {
 
 
 // ROOT END
-if (isset($this->t['feed']['root']) && $this->t['feed']['root'] != '') {
+    if (isset($this->t['feed']['root']) && $this->t['feed']['root'] != '') {
     $o['rootend'] = $e.$this->t['feed']['root'].$r;
-}
+    }
 
 
 // FOOTER
-if (isset($this->t['feed']['footer']) && $this->t['feed']['footer'] != '') {
+    if (isset($this->t['feed']['footer']) && $this->t['feed']['footer'] != '') {
     $o['footer'] = $this->t['feed']['footer'];
 }
 

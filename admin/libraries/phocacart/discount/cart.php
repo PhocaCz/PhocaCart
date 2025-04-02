@@ -10,67 +10,77 @@
  */
 defined('_JEXEC') or die();
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Phoca\PhocaCart\Constants\GroupType;
+use Phoca\PhocaCart\I18n\I18nHelper;
 
 class PhocacartDiscountCart
 {
-	private static $cart = array();
-
-	private function __construct(){}
+	private static $cart = [];
 
 	/*
 	 * ID ... id of cart
 	 */
+	public static function getCartDiscountsById($id = 0, $returnArray = 0)
+    {
+        if (is_null($id)) {
+            throw new Exception('Function Error: No id passed', 500);
+        }
 
-	public static function getCartDiscountsById($id = 0, $returnArray = 0) {
+        $id = (int)$id;
 
-		if( is_null( $id ) ) {
-			throw new Exception('Function Error: No id added', 500);
-			return false;
-		}
+        $db   = Factory::getDBO();
+        $user = PhocacartUser::getUser();
 
-		$id = (int)$id;
+        $where   = [];
+        $where[] = 'a.access IN (' . implode(',', $user->getAuthorisedViewLevels()) . ')';
+        $where[] = ' (ga.group_id IN (' . implode(',', PhocacartGroup::getGroupsById($user->id, 1, 1)) . ') OR ga.group_id IS NULL)';
+        $where[] = 'a.published = 1';
 
-		//- if( !array_key_exists( $id, self::$cart ) ) {
+        $columns = 'a.id, a.discount, a.access, a.discount, a.total_amount, a.free_shipping, a.free_payment, a.calculation_type, a.quantity_from, a.quantity_to, a.valid_from, a.valid_to, a.category_filter, a.product_filter';
 
-			$db 			= Factory::getDBO();
-			$user 			= PhocacartUser::getUser();
+        if (PhocacartUtilsSettings::isFullGroupBy()) {
+            $groupBy = $columns;
+            if (I18nHelper::useI18n()) {
+                $groupBy .= ' ';
+            } else {
+                $groupBy .= ', a.title, a.alias';
+            }
+        } else {
+            $groupBy = 'a.id';
+        }
 
-			$userLevels		= implode (',', $user->getAuthorisedViewLevels());
-			$userGroups 	= implode (',', PhocacartGroup::getGroupsById($user->id, 1, 1));
+       /* if (I18nHelper::useI18n()) {
+            $columns .= ', coalesce(i18n.title, a.title) as title, coalesce(i18n.alias, a.alias) as alias';
+        } else {
+            $columns .= ', a.title, a.alias';
+        }*/
+        $columns .= I18nHelper::sqlCoalesce(['title', 'alias'], 'a', '', '', ',');
 
-			$wheres 		= array();
-			$wheres[] 		= "a.access IN (".$userLevels.")";
-			$wheres[] 		= " (ga.group_id IN (".$userGroups.") OR ga.group_id IS NULL)";
-			$wheres[]		= 'a.published = 1';
-			$where 			= ( count( $wheres ) ? ' WHERE '. implode( ' AND ', $wheres ) : '' );
+        $columns .= ', GROUP_CONCAT(DISTINCT dp.product_id) AS product' // line of selected products
+            . ', GROUP_CONCAT(DISTINCT dc.category_id) AS category'; // line of selected categories
 
-			$columns		= 'a.id, a.title, a.alias, a.discount, a.access, a.discount, a.total_amount, a.free_shipping, a.free_payment, a.calculation_type, a.quantity_from, a.quantity_to, a.valid_from, a.valid_to, a.category_filter, a.product_filter,'
-			.' GROUP_CONCAT(DISTINCT dp.product_id) AS product,' // line of selected products
-			.' GROUP_CONCAT(DISTINCT dc.category_id) AS category'; // line of selected categories
-			$groupsFull		= 'a.id, a.title, a.alias, a.discount, a.access, a.discount, a.total_amount, a.free_shipping, a.free_payment, a.calculation_type, a.quantity_from, a.quantity_to, a.valid_from, a.valid_to, a.category_filter, a.product_filter';
-			$groupsFast		= 'a.id';
-			$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
+        $query = 'SELECT ' . $columns
+            . ' FROM #__phocacart_discounts AS a'
+            . I18nHelper::sqlJoin('#__phocacart_discounts_i18n')
+            . ' LEFT JOIN #__phocacart_discount_products AS dp ON dp.discount_id = a.id'
+            . ' LEFT JOIN #__phocacart_discount_categories AS dc ON dc.discount_id = a.id'
+            . ' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = ' . GroupType::Discount
+            . ' WHERE ' . implode(' AND ', $where)
+            . ' GROUP BY ' . $groupBy
+            . ' ORDER BY a.id';
 
-			$query = 'SELECT '.$columns
-					.' FROM #__phocacart_discounts AS a'
-					.' LEFT JOIN #__phocacart_discount_products AS dp ON dp.discount_id = a.id'
-					.' LEFT JOIN #__phocacart_discount_categories AS dc ON dc.discount_id = a.id'
-					.' LEFT JOIN #__phocacart_item_groups AS ga ON a.id = ga.item_id AND ga.type = 5'// type 5 is discount
-					. $where
-					.' GROUP BY '.$groups;
-					$query .= ' ORDER BY a.id';
+        PhocacartUtils::setConcatCharCount();
+        $db->setQuery($query);
+        if ($returnArray) {
+            $discounts = $db->loadAssocList();
+        } else {
+            $discounts = $db->loadObjectList();
+        }
+        self::$cart[$id] = $discounts;
 
-			PhocacartUtils::setConcatCharCount();
-			$db->setQuery($query);
-			if ($returnArray) {
-				$discounts = $db->loadAssocList();
-			} else {
-				$discounts = $db->loadObjectList();
-			}
-			self::$cart[$id] = $discounts;
-		//- }
-		return self::$cart[$id];
-	}
+        return self::$cart[$id];
+    }
 
 	/*
 	 * id ... id of current checked product
@@ -399,6 +409,7 @@ class PhocacartDiscountCart
 
 		$paramsC 								= PhocacartUtils::getComponentParameters();
 		$display_discount_cart_product_views	= $paramsC->get( 'display_discount_cart_product_views', 0 );
+        $tax_calculation                    = $paramsC->get( 'tax_calculation', 0 );
 
 		if ($display_discount_cart_product_views == 0) {
 			return false;
@@ -413,8 +424,15 @@ class PhocacartDiscountCart
 
 		if (isset($discount['discount']) && isset($discount['calculation_type'])) {
 
-			$priceItems['bruttotxt'] 	= $discount['title'];
-			$priceItems['nettotxt'] 	= $discount['title'];
+			//$priceItems['bruttotxt'] 	= $discount['title'];
+			//$priceItems['nettotxt'] 	= $discount['title'];
+
+            $priceItems['bruttotxt'] = $discount['title'] != '' ? $discount['title'] . ' ' . Text::_('COM_PHOCACART_EXCL_TAX_SUFFIX') : Text::_('COM_PHOCACART_DISCOUNT'). ' ' . Text::_('COM_PHOCACART_EXCL_TAX_SUFFIX');
+            $priceItems['nettotxt']  = $discount['title'] != '' ? $discount['title'] . ' ' . Text::_('COM_PHOCACART_INCL_TAX_SUFFIX') : Text::_('COM_PHOCACART_DISCOUNT'). ' ' . Text::_('COM_PHOCACART_INCL_TAX_SUFFIX');
+            if ($tax_calculation == 0) {
+                $priceItems['bruttotxt'] = $discount['title'] != '' ? $discount['title'] : Text::_('COM_PHOCACART_DISCOUNT');
+                $priceItems['nettotxt']  = $discount['title'] != '' ? $discount['title'] : Text::_('COM_PHOCACART_DISCOUNT');
+            }
 
 			$quantity					= 1;//Quantity for displaying the price in items,category and product view is always 1
 			$total						= array();// not used in product view

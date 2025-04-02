@@ -26,10 +26,9 @@ $d 		= $displayData;
 $t		= $d['t'];
 $s      = $d['s'];
 $col    = $d['col'];
+$colMobile    = $d['col_mobile'];
 
-
-
-echo '<div class="'.$s['c']['row-item'].' '.$s['c']["col.xs12.sm{$col}.md{$col}"].'">';
+echo '<div class="'.$s['c']['row-item'].' '.$s['c']["col.xs{$colMobile}.sm{$col}.md{$col}"].'">';
 echo '<div class="ph-item-box '.$d['lt'].'">';
 
 if (!empty($d['labels'])) { echo '<div class="ph-label-box">' . $d['labels'] . '</div>';}
@@ -95,6 +94,7 @@ if (!empty($d['layout']['dAb'])) { echo $layoutAB->render($d['layout']['dAb']);}
 if (!empty($d['layout']['dV'])) { echo $layoutV->render($d['layout']['dV']);}
 
 // :L: ADD TO CART
+
 if (!empty($d['layout']['dA'])) { echo $layoutA->render($d['layout']['dA']);} else if ($d['icon']['addtocart'] != '') { echo $layoutBSH->render();}
 
 // :L: ASK A QUESTION

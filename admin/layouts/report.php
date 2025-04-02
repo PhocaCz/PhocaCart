@@ -136,9 +136,14 @@ if ($p['report_display_rounding'] == 1) {
 	echo '<th '.$cRTRHC.'>'.Text::_('COM_PHOCACART_ROUNDING').'</th>';
 }
 if ($p['report_display_tax'] == 1) {
-	echo '<th '.$cRTRHC.'>'.Text::_('COM_PHOCACART_AMOUNT_INCLUDING_TAX').'</th>';
+    // BE AWARE it is not amount inclusive tax, it is total amount because there can be added items which are sold without VAT
+	echo '<th '.$cRTRHC.'>'.Text::_('COM_PHOCACART_REPORT_TOTAL_AMOUNT').'</th>';
 } else {
 	echo '<th '.$cRTRHC.'>'.Text::_('COM_PHOCACART_AMOUNT').'</th>';
+}
+
+if ($d['report_type'] == 1 /* && (int)$d['order_status'] > 0*/) {
+    echo '<th '.$cRTRHC.'>'.Text::_('COM_PHOCACART_ORDER_PAYMENT_DATE').'</th>';
 }
 
 echo '</tr>';
@@ -271,6 +276,19 @@ foreach($d['items'] as $k => $v) {
 	echo isset($v->brutto) ? $price->getPriceFormat($v->brutto, 0, 1): '';
 	echo '</td>';
 
+    if ($d['report_type'] == 1 /*&& (int)$d['order_status'] > 0*/) {
+        echo '<td '.$cRD.'>';
+        /*if (isset($v->order_history_date)) {
+            $dateTime = new DateTime($v->order_history_date);
+            echo $dateTime->format('Y-m-d');
+        }*/
+        if (isset($v->payment_date)){
+            $dateTime = new DateTime($v->payment_date);
+            echo $dateTime->format('Y-m-d');
+        }
+	    echo '</td>';
+    }
+
 
 	echo '</tr>';
 }
@@ -376,6 +394,11 @@ if (!empty($d['total'])) {
 			echo '<td '.$cRTotalC2.'>'.$bruttoTxt.'</td>';
 			//echo '<td '.$cRTotalC2.'>'.$bruttoTRCTxt.'</td>';// TRC
 
+
+            if ($d['report_type'] == 1 && (int)$d['order_status'] > 0) {
+                echo '<td '.$cRD.'>';
+                echo '</td>';
+            }
 
 
 			echo '</tr>';

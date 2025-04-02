@@ -39,13 +39,14 @@ class PhocaCartViewOrder extends HtmlView
 		$o = $order->render($id, $type, $format, $token, $pos);
 
 		$media = PhocacartRenderMedia::getInstance('main');
-
+		$this->_prepareDocument($id);
 		echo $o;
 
 	}
 
-	protected function _prepareDocument() {
-		PhocacartRenderFront::prepareDocument($this->document, $this->p, false, false, Text::_('COM_PHOCACART_ORDER'));
+	protected function _prepareDocument(int $orderId) {
+		$orderNo = PhocacartOrder::getOrderNumber($orderId);
+		PhocacartRenderFront::prepareDocument($this->document, $this->p, false, false, Text::sprintf('COM_PHOCACART_ORDER_NO', $orderNo));
 	}
 }
-?>
+

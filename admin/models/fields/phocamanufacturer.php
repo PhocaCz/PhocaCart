@@ -18,10 +18,19 @@ class JFormFieldPhocaManufacturer extends FormField
 
 	protected function getInput() {
 
-
+		$required	= ((string) $this->element['required'] == 'true') ? TRUE : FALSE;
+		$class		= ((string) $this->element['class'] != '') ? 'class="'.$this->element['class'].'"' : 'class="form-select"';
+		$multiple	= ((string) $this->element['multiple'] == 'true') ? TRUE : FALSE;
 		$class		= ((string) $this->element['class'] != '') ? 'class="'.$this->element['class'].'"' : 'class="form-select"';
 		$attr		= '';
 		$attr		.= $class . ' ';
+		if ($multiple) {
+			$attr		.= 'size="4" multiple="multiple" ';
+		}
+		if ($required) {
+			$attr		.= 'required aria-required="true" ';
+		}
+
 		$attr 		.= $this->element['onchange'] ? ' onchange="'.(string) $this->element['onchange'].'" ' : ' ';
 
 		$db = Factory::getDBO();
@@ -31,10 +40,22 @@ class JFormFieldPhocaManufacturer extends FormField
 		. ' WHERE a.published = 1'
 		. ' ORDER BY a.ordering';
 		$db->setQuery( $query );
-		$data = $db->loadObjectList();
+		$items = $db->loadObjectList();
 
-		array_unshift($data, HTMLHelper::_('select.option', '', '- '.Text::_('COM_PHOCACART_SELECT_MANUFACTURER').' -', 'value', 'text'));
-		return HTMLHelper::_('select.genericlist',  $data,  $this->name, $attr, 'value', 'text', $this->value, $this->id );
+		if (!$multiple) {
+
+			array_unshift($items, HTMLHelper::_('select.option', '', '- '.Text::_('COM_PHOCACART_SELECT_MANUFACTURER').' -', 'value', 'text'));
+			return HTMLHelper::_('select.genericlist',  $items,  $this->name, $attr, 'value', 'text', $this->value, $this->id );
+		} else {
+
+
+			$data               = $this->getLayoutData();
+			$data['options']    = (array)$items;
+			$data['value']      = $this->value;
+
+			return $this->getRenderer($this->layout)->render($data);
+		}
+
 	}
 }
 ?>

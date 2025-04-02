@@ -12,11 +12,7 @@ defined('_JEXEC') or die();
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 
-if (!class_exists('PhocaCartLoader')) {
-    require_once( JPATH_ADMINISTRATOR.'/components/com_phocacart/libraries/loader.php');
-}
-JLoader::registerPrefix('Phocacart', JPATH_ADMINISTRATOR . '/components/com_phocacart/libraries/phocacart');
-phocacartimport('phocacart.category.category');
+require_once( JPATH_ADMINISTRATOR.'/components/com_phocacart/libraries/bootstrap.php');
 
 class PhocacartCategoryMultiple
 {
@@ -461,7 +457,7 @@ class PhocacartCategoryMultiple
 
   public static function getCategoryChildrenString($id, $children = '') {
 
-    $categories = PhocaCartCategory::getChildren($id);
+    $categories = PhocacartCategory::getChildren($id);
     if ($categories) {
       foreach ($categories as $v) {
         if ($children != '') {
@@ -477,7 +473,7 @@ class PhocacartCategoryMultiple
   }
 
   public static function getCategoryChildrenArray($id) {
-    $categories = PhocaCartCategory::getChildren($id);
+    $categories = PhocacartCategory::getChildren($id);
     $children = [];
 
     if ($categories) {

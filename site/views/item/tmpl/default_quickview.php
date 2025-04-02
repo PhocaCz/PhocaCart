@@ -247,7 +247,7 @@ action="'.$this->t['linkcheckout'].'" method="post">';
 
 // ATTRIBUTES, OPTIONS
 $d							= array();
-$d['s']					    = $this->s;
+$d['s']      = $this->s;
 $d['attr_options']			= $this->t['attr_options'];
 $d['hide_attributes']		= $this->t['hide_attributes_item'];
 $d['dynamic_change_image'] 	= $this->t['dynamic_change_image'];

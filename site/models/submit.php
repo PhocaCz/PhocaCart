@@ -7,6 +7,8 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+
+use Joomla\CMS\Log\Log;
 use Joomla\CMS\MVC\Model\FormModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -15,7 +17,8 @@ use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Filesystem\Path;
 use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Form\Form;
-
+use Phoca\PhocaCart\Mail\MailHelper;
+use Phoca\PhocaCart\Mail\MailTemplate;
 
 
 jimport('joomla.application.component.model');
@@ -93,14 +96,9 @@ class PhocaCartModelSubmit extends FormModel
 
 	function store(&$data, $file)
 	{
-
-
 		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
-
-		$uri = Uri::getInstance();
-		$app = Factory::getApplication();
-		$user = Factory::getUser();
-		$path       = PhocacartPath::getPath('submititem');
+		$user = Factory::getApplication()->getIdentity();
+		$path = PhocacartPath::getPath('submititem');
 
 		$params = PhocacartUtils::getComponentParameters();
 		$submit_item_max_char_textarea 	= $params->get('submit_item_max_char_textarea', 5000);
@@ -109,38 +107,35 @@ class PhocaCartModelSubmit extends FormModel
 		$items = array_unique($items);
 
 		$submit_item_form_fields_contact = $params->get('submit_item_form_fields_contact', '');
-		$itemsC = array_map('trim', explode(',', $submit_item_form_fields_contact));
-		$itemsC = array_unique($itemsC);
+		$itemsContact = array_map('trim', explode(',', $submit_item_form_fields_contact));
+		$itemsContact = array_unique($itemsContact);
 
 		$submit_item_form_fields_parameters	= $params->get( 'submit_item_form_fields_parameters', '' );
-		$itemsP = array_map('trim', explode(',', $submit_item_form_fields_parameters));
-		$itemsP = array_unique($itemsP);
+		$itemsParams = array_map('trim', explode(',', $submit_item_form_fields_parameters));
+		$itemsParams = array_unique($itemsParams);
+
+		// Maximum of character, that will be saved in database
+		$data['items_item']['description'] = substr($data['items_item']['description'] ?? '', 0, $submit_item_max_char_textarea);
+		$data['items_item']['description_long'] = substr($data['items_item']['description_long'] ?? '', 0, $submit_item_max_char_textarea);
+		$data['items_item']['features'] = substr($data['items_item']['features'] ?? '', 0, $submit_item_max_char_textarea);
+		$data['items_item']['type_feed'] = substr($data['items_item']['type_feed'] ?? '', 0, $submit_item_max_char_textarea);
+		$data['items_item']['type_category_feed'] = substr($data['items_item']['type_category_feed'] ?? '', 0, $submit_item_max_char_textarea);
+		$data['items_item']['metakey'] = substr($data['items_item']['metakey'] ?? '', 0, $submit_item_max_char_textarea);
+		$data['items_item']['metadesc'] = substr($data['items_item']['metadesc'] ?? '', 0, $submit_item_max_char_textarea);
+		$data['items_item']['message'] = substr($data['items_item']['message'] ?? '', 0, $submit_item_max_char_textarea);
 
 
-
-
-		// Maximum of character, they will be saved in database
-		$data['items_item']['description'] = isset($data['items_item']['description']) ? substr($data['items_item']['description'], 0, $submit_item_max_char_textarea) : '';
-		$data['items_item']['description_long'] = isset($data['items_item']['description_long']) ? substr($data['items_item']['description_long'], 0, $submit_item_max_char_textarea) : '';
-		$data['items_item']['features'] = isset($data['items_item']['features']) ? substr($data['items_item']['features'], 0, $submit_item_max_char_textarea) : '';
-		$data['items_item']['type_feed'] = isset($data['items_item']['type_feed']) ? substr($data['items_item']['type_feed'], 0, $submit_item_max_char_textarea) : '';
-		$data['items_item']['type_category_feed'] = isset($data['items_item']['type_category_feed']) ? substr($data['items_item']['type_category_feed'], 0, $submit_item_max_char_textarea) : '';
-		$data['items_item']['metakey'] = isset($data['items_item']['metakey']) ? substr($data['items_item']['metakey'], 0, $submit_item_max_char_textarea) : '';
-		$data['items_item']['metadesc'] = isset($data['items_item']['metadesc']) ? substr($data['items_item']['metadesc'], 0, $submit_item_max_char_textarea) : '';
-		$data['items_item']['message'] = isset($data['items_item']['message']) ? substr($data['items_item']['message'], 0, $submit_item_max_char_textarea) : '';
-
-
-		$tempData = array();
+		$tempData = [];
 		$tempData['ip'] = $data['ip'];
 		$tempData['privacy'] = $data['privacy'];
 
 
-		$item = array();
-		$contact = array();
-		$parameter = array();
+		$item = [];
+		$contact = [];
+		$parameter = [];
 
 		if (!empty($items)) {
-			foreach ($items as $k => $v) {
+			foreach ($items as $v) {
 				$v = trim(str_replace('*', '', $v));
 				if (isset($data['items_item'][$v]) && $data['items_item'][$v] != '') {
 					$item[$v] = $data['items_item'][$v];
@@ -148,11 +143,9 @@ class PhocaCartModelSubmit extends FormModel
 			}
 		}
 
-
-
-		if (!empty($itemsP)) {
+		if (!empty($itemsParams)) {
 			$parameters = PhocacartParameter::getAllParameters('alias');
-			foreach ($itemsP as $k => $v) {
+			foreach ($itemsParams as $v) {
 				$v = trim(str_replace('*', '', $v));
 				$vId   	= 0;
                 if (isset($parameters[$v]->id) && $parameters[$v]->id > 0) {
@@ -165,17 +158,14 @@ class PhocaCartModelSubmit extends FormModel
 		}
 
 
-		if (!empty($itemsC)) {
-			foreach ($itemsC as $k => $v) {
+		if (!empty($itemsContact)) {
+			foreach ($itemsContact as $v) {
 				$v = trim(str_replace('*', '', $v));
 				if (isset($data['items_contact'][$v]) && $data['items_contact'][$v] != '') {
 					$contact[$v] = $data['items_contact'][$v];
 				}
 			}
 		}
-
-
-
 
 		$data = array();
 		$data = $tempData;
@@ -192,7 +182,8 @@ class PhocaCartModelSubmit extends FormModel
 		$data['published']	= 1;
 
 		$data['upload_token'] 			= PhocacartUtils::getToken();
-		$data['upload_folder']			= PhocacartUtils::getToken('folder');
+		$data['upload_folder']			= PhocacartUtils::getAndCheckToken('folder', PhocacartPath::getPath('submititem'));
+		//$data['upload_folder']			= PhocacartUtils::getToken('folder');
 
 		/*
 		if (isset($data['catid'])) {
@@ -214,7 +205,6 @@ class PhocaCartModelSubmit extends FormModel
 				$filesUploaded = PhocacartFileUpload::submitItemUpload($file['items_item']['image'], $data, $fileData, 'image');
 
 				if (!$filesUploaded) {
-
 					// message set in app
 					if (Folder::exists($folderPath)) {
 						Folder::delete($folderPath);
@@ -225,8 +215,6 @@ class PhocaCartModelSubmit extends FormModel
 					$data['items_item']['image'] = $fileData;
 				}
 			}
-
-
 		}
 
 
@@ -234,21 +222,17 @@ class PhocaCartModelSubmit extends FormModel
 		$dataContact 	= $data['items_contact'];
 		$dataParameter	= $data['items_parameter'];
 
-
 		$data['items_item'] = json_encode($dataItem);
 		$data['items_contact'] = json_encode($dataContact);
 		$data['items_parameter'] = json_encode($dataParameter);
 
-
 		$row = $this->getTable('PhocaCartSubmitItem');
-
 
 		if (!$row->bind($data)) {
 			$this->setError($row->getError());
 			if (Folder::exists($folderPath)) { Folder::delete($folderPath); }
 			return false;
 		}
-
 
 		if (!$row->check()) {
 			$this->setError($row->getError());
@@ -264,6 +248,38 @@ class PhocaCartModelSubmit extends FormModel
 
 		// Everything OK - send email
 		if ($params->get('send_email_submit_item', 0) > 0 || $params->get('send_email_submit_item_others', '') != '') {
+			// TODO MAIL template
+			/*$mailData = MailHelper::prepareSubmitItemMailData($row);
+			$mailData['html.document'] = MailHelper::renderBody('submit_item', 'html', [], $mailData);
+			$mailData['text.document'] = MailHelper::renderBody('submit_item', 'text', [], $mailData);
+
+			$mailer = new MailTemplate('com_phocacart.sumbmit_item.admin');
+			$mailer->addTemplateData($mailData);
+
+			if (MailHelper::submitItemMailRecipients($mailer)) {
+				//$mailer->setReplyTo($data['email'], $data['name']);
+
+				try {
+					$mailer->send();
+
+					// Send email confrmation to user
+					$mailer = new MailTemplate('com_phocacart.question');
+					$mailer->addTemplateData($mailData);
+					$mailer->addRecipient($row->email, $row->name);
+					$mailer->send();
+
+				} catch (\Exception $exception) {
+					try {
+						$this->setError(Text::_('COM_PHOCACART_ERROR_QUESTION_EMAIL_ERROR'));
+						Log::add(Text::_($exception->getMessage()), Log::WARNING, 'jerror');
+
+						$user = PhocacartUser::getUser();
+						PhocacartLog::add(2, 'Submit item - ERROR - Problems with sending email', 0, 'IP: ' . $data['ip'] . ', User ID: ' . $user->id);
+					} catch (\RuntimeException $exception) {
+						Factory::getApplication()->enqueueMessage(Text::_($exception->errorMessage()), 'warning');
+					}
+				}
+			}*/
 
 			$send = PhocacartEmail::sendSubmitItemMail($dataItem, $dataContact, $dataParameter, Uri::getInstance()->toString(), $params);
 
@@ -271,9 +287,11 @@ class PhocaCartModelSubmit extends FormModel
 				$user 	= PhocacartUser::getUser();
 				PhocacartLog::add(2, 'Submit Item - ERROR - Problems with sending email', 0, 'IP: '. $data['ip'].', User ID: '.$user->id);
 			}
+
+
 		}
 
-		$data['id'] = $row->id;
+		$data['id'] = $row->getId();
 
 		return true;
 	}

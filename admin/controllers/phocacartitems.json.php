@@ -100,7 +100,7 @@ class PhocaCartCpControllerPhocaCartItems extends PhocaCartCpControllerPhocaCart
         catch (\RuntimeException $e) {
         }
 
-        // TODO HTML
+        // TO DO HTML
         echo json_encode($items);
         $this->app->close();
     }

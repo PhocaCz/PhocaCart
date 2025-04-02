@@ -58,7 +58,7 @@ class PhocaCartCpViewPhocacartTags extends HtmlView
 		$canDo	= $class::getActions($this->t, $state->get('filter.tag_id'));
         $bar = Toolbar::getInstance('toolbar');
 
-		ToolbarHelper::title( Text::_( $this->t['l'].'_TAGS' ), 'tags' );
+		ToolbarHelper::title( Text::_( $this->t['l'].'_TAGS' ), 'tag-double' );
 
 		if ($canDo->get('core.create')) {
 			ToolbarHelper::addNew($this->t['task'].'.add','JTOOLBAR_NEW');
@@ -78,7 +78,7 @@ class PhocaCartCpViewPhocacartTags extends HtmlView
 			ToolbarHelper::deleteList( $this->t['l'].'_WARNING_DELETE_ITEMS', 'phocacarttags.delete', $this->t['l'].'_DELETE');
 		}
 
-		$dhtml = '<joomla-toolbar-button><button onclick="javascript:if(document.adminForm.boxchecked.value==0){alert(\''.Text::_('COM_PHOCACART_WARNING_COUNT_PRODUCTS_MAKE_SELECTION').'\');}else{Joomla.submitbutton(\'phocacarttag.countproducts\');}" class="btn btn-small button-plus"><i class="icon-plus" title="'.Text::_($this->t['l'].'_COUNT_PRODUCTS').'"></i> '.Text::_($this->t['l'].'_COUNT_PRODUCTS').'</button></joomla-toolbar-button>';
+		$dhtml = '<joomla-toolbar-button><button onclick="javascript:if(document.adminForm.boxchecked.value==0){alert(\''.Text::_('COM_PHOCACART_WARNING_COUNT_PRODUCTS_MAKE_SELECTION').'\');}else{Joomla.submitbutton(\'phocacarttag.countproducts\');}" class="btn btn-primary btn-small button-plus"><i class="icon-plus" title="'.Text::_($this->t['l'].'_COUNT_PRODUCTS').'"></i> '.Text::_($this->t['l'].'_COUNT_PRODUCTS').'</button></joomla-toolbar-button>';
 		$bar->appendButton('Custom', $dhtml, 'countproducts');
 
 		ToolbarHelper::divider();

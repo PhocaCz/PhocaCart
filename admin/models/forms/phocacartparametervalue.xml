@@ -1,54 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
+	<config>
+		<inlinehelp button="show"/>
+	</config>
 
-	<fieldset addfieldpath="/administrator/components/com_phocacart/models/fields">
+	<fields addfieldpath="/administrator/components/com_phocacart/models/fields">
+		<fieldset name="title">
+			<field name="title" type="phocatext" i18n="true" required="true" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" />
 
-<field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" required="true" readonly="true" class="readonly" />
+			<field name="alias" type="phocatext" i18n="true" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC" />
+		</fieldset>
 
-<field name="title" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_TITLE_LABEL" description="COM_PHOCACART_FIELD_TITLE_DESC" required="true"  />
+		<fieldset name="general" label="COM_PHOCACART_GENERAL_OPTIONS">
+			<field name="description" type="phocaeditor" i18n="true" buttons="true" hide="pagebreak,readmore" filter="\Phoca\PhocaCart\Input\InputHelper::filterText" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
+		</fieldset>
 
-<field name="alias" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC" />
-<!--
-<field name="link_cat" type="phocacartcategory" label="COM_PHOCACART_FIELD_CATEGORY_LINK_LABEL" description="COM_PHOCACART_FIELD_CATEGORY_LINK_DESC" class="form-control"  />
+		<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
+			<field name="published" type="list" default="1" class="form-select-color-state" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC">
+				<option value="1">JPUBLISHED</option>
+				<option	value="0">JUNPUBLISHED</option>
+			</field>
 
-<field name="link_ext" type="text" label="COM_PHOCACART_FIELD_EXT_LINK_TAG_LABEL"  description="COM_PHOCACART_FIELD_EXT_LINK_TAG_DESC" class="form-control" size="40" />
+			<field name="parameter_id" type="phocacartparameter" required="true" label="COM_PHOCACART_FIELD_PARAMETER_LINKED_LABEL" description="COM_PHOCACART_FIELD_PARAMETER_LINKED_DESC" />
 
-<field name="type" type="list" class="form-select" label="COM_PHOCACART_FIELD_TAG_TYPE_LABEL" description="COM_PHOCACART_FIELD_TAG_TYPE_DESC" class="form-control" size="1" default="0">
-	<option value="0">COM_PHOCACART_TAG</option>
-	<option	value="1">COM_PHOCACART_LABEL</option>
-</field>
+			<field name="type" type="list" default="0" label="COM_PHOCACART_FIELD_TAG_TYPE_LABEL" description="COM_PHOCACART_FIELD_TAG_TYPE_DESC">
+				<option value="0">COM_PHOCACART_TAG</option>
+				<option	value="1">COM_PHOCACART_LABEL</option>
+			</field>
 
-<field name="display_format" type="list" class="form-select" label="COM_PHOCACART_FIELD_TAG_DISPLAY_FORMAT_LABEL" description="COM_PHOCACART_FIELD_TAG_DISPLAY_FORMAT_DESC" class="form-control" size="1" default="1">
-	<option value="1">COM_PHOCACART_TITLE_ONLY</option>
-	<option value="2">COM_PHOCACART_ICON_ONLY</option>
-	<option	value="3">COM_PHOCACART_ICON_AND_TITLE</option>
-</field>
+			<field name="ordering" type="phocacartOrdering" table="parameter_values" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
 
-<field name="icon_class" type="text" label="COM_PHOCACART_FIELD_TAG_ICON_CLASS_LABEL"  description="COM_PHOCACART_FIELD_TAG_ICON_CLASS_DESC" class="form-control" size="40" />
--->
-
-		<field name="parameter_id" type="phocacartparameter" label="COM_PHOCACART_FIELD_PARAMETER_LINKED_LABEL" description="COM_PHOCACART_FIELD_PARAMETER_LINKED_DESC" class="form-select" required="true" />
-
-
-<field name="ordering" type="phocacartOrdering" table="tag" class="form-select" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
-
-<field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="\Joomla\CMS\Component\ComponentHelper::filterText" description="COM_PHOCACART_FIELD_DESCRIPTION_DESC" />
-
-	</fieldset>
-
-
-	<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
-
-<field name="published" type="list" class="form-select" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" size="1" default="1">
-	<option value="1">JPUBLISHED</option>
-	<option	value="0">JUNPUBLISHED</option>
-</field>
-
-
-
-
-
-	</fieldset>
-
-
+			<field name="id" type="hidden" />
+		</fieldset>
+	</fields>
 </form>

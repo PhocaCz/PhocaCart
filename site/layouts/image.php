@@ -32,6 +32,8 @@ if ($d['t']['display_webp_images'] == 1) {
     echo isset($d['alt-value']) ? ' alt="'.$d['alt-value'].'"' : ' alt=""';
     echo isset($d['class']) && $d['class'] != '' ? ' class="'.$d['class'].'"' : '';
     echo isset($d['style']) && $d['style'] != '' ? ' style="'.$d['style'].'"' : '';
+    echo isset($d['width']) && $d['width'] != '' ? ' width="'.$d['width'].'"' : '';
+    echo isset($d['height']) && $d['height'] != '' ? ' height="'.$d['height'].'"' : '';
     echo isset($d['data-image']) && $d['data-image'] != '' ? ' data-image="'.$d['data-image'].'"' : '';
 
     echo isset($d['data-image-small']) && $d['data-image-small'] != '' ? ' data-image-small="'.$d['data-image-small'].'"' : '';
@@ -47,11 +49,15 @@ if ($d['t']['display_webp_images'] == 1) {
 
 
 } else {
+
+    //list($width, $height) = getimagesize(JPATH_BASE . str_replace(Joomla\CMS\Uri\Uri::base(true), '', $d['src']));
     echo '<img';
     echo isset($d['src']) ? ' src="'.$d['src'].'"' : ' src=""';
     echo isset($d['alt-value']) ? ' alt="'.$d['alt-value'].'"' : ' alt=""';
     echo isset($d['class']) && $d['class'] != '' ? ' class="'.$d['class'].'"' : '';
     echo isset($d['style']) && $d['style'] != '' ? ' style="'.$d['style'].'"' : '';
+    echo isset($d['width']) && $d['width'] != '' ? ' width="'.$d['width'].'"' : '';
+    echo isset($d['height']) && $d['height'] != '' ? ' height="'.$d['height'].'"' : '';
     echo isset($d['data-image']) && $d['data-image'] != '' ? ' data-image="'.$d['data-image'].'"' : '';
 
     echo isset($d['data-image-small']) && $d['data-image-small'] != '' ? ' data-image-small="'.$d['data-image-small'].'"' : '';

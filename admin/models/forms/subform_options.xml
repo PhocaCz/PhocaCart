@@ -1,65 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-  <fieldset>
-    <field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" readonly="true" class="readonly hidden" hidden="true"/>
+  <fields addfieldpath="/administrator/components/com_phocacart/models/fields">
+    <fieldset name="header" class="ph-fieldset-specification-header">
+      <field name="id" type="hidden" />
 
-    <field name="current_options" type="PhocaCartCurrentAttributesOptions" typeview="option" class="form-control" size="40" label=""  />
+      <field name="current_options" type="PhocaCartCurrentAttributesOptions" typeview="option" />
+    </fieldset>
 
-    <field name="title" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_TITLE_LABEL"  required="true" />
+    <fieldset name="title" class="ph-fieldset-specification-title">
+      <field name="title" type="phocatext" i18n="true" required="true" label="COM_PHOCACART_FIELD_TITLE_LABEL" />
 
-    <field name="alias" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" />
+      <field name="alias" type="phocatext" i18n="true" label="COM_PHOCACART_FIELD_ALIAS_LABEL" />
+    </fieldset>
 
-    <field name="published" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL"  default="1" >
-      <option value="0">COM_PHOCACART_NO</option>
-      <option value="1">COM_PHOCACART_YES</option>
-    </field>
+    <fieldset name="publish" class="ph-fieldset-specification-publish">
+      <field name="published" type="radio" layout="joomla.form.field.radio.switcher" default="1" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL">
+        <option value="0">COM_PHOCACART_NO</option>
+        <option value="1">COM_PHOCACART_YES</option>
+      </field>
 
-    <field name="operator" type="list" class="form-select" label="COM_PHOCACART_FIELD_OPERATOR_PRICE_LABEL" description="COM_PHOCACART_FIELD_OPERATOR_PRICE_DESC" default="+">
-      <option value="+">+</option>
-      <option value="-">-</option>
-    </field>
+      <field name="default_value" type="radio" default="0" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_DEFAULT_LABEL">
+        <option value="0">COM_PHOCACART_NO</option>
+        <option value="1">COM_PHOCACART_YES</option>
+      </field>
 
-    <field name="amount" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_AMOUNT_LABEL" />
-    <field name="stock" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_STOCK_LABEL" />
+      <field name="required" type="radio" default="0" showon="%%type:7[OR]%%type:8[OR]%%type:9[OR]%%type:10[OR]%%type:11[OR]%%type:12[OR]%%type:20" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_REQUIRED_ATTR_OPTIONS_LABEL" description="COM_PHOCACART_FIELD_REQUIRED_ATTR_OPTIONS_DESC">
+        <option value="0">COM_PHOCACART_NO</option>
+        <option value="1">COM_PHOCACART_YES</option>
+      </field>
+    </fieldset>
 
-    <field name="operator_weight" type="list" class="form-select" label="COM_PHOCACART_FIELD_OPERATOR_WEIGHT_LABEL" description="COM_PHOCACART_FIELD_OPERATOR_WEIGHT_DESC" default="+">
-      <option value="+">+</option>
-      <option value="-">-</option>
-    </field>
-    <field name="weight" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_WEIGHT_LABEL" />
+    <fieldset name="price" class="ph-fieldset-specification-price">
+      <field name="operator" type="list" default="+" label="COM_PHOCACART_FIELD_OPERATOR_PRICE_LABEL" description="COM_PHOCACART_FIELD_OPERATOR_PRICE_DESC">
+        <option value="+">+</option>
+        <option value="-">-</option>
+      </field>
 
-    <field name="image" type="phocaselectfilenameimage" manager="productimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL"  class="form-control inputbox imageCreateThumbs" size="40"/>
+      <field name="amount" type="text" label="COM_PHOCACART_FIELD_AMOUNT_LABEL" />
+    </fieldset>
 
-    <field name="image_medium" type="phocaselectfilenameimage" manager="productimage" label="COM_PHOCACART_FIELD_IMAGE_MEDIUM_LABEL"
-           class="form-control inputbox imageCreateThumbs" size="40"/>
+    <fieldset name="stock" class="ph-fieldset-specification-stock">
+      <field name="sku" type="text" showon="#stock_calculation:1" label="COM_PHOCACART_FIELD_SKU_LABEL" />
 
-    <field name="image_small" type="phocaselectfilenameimage" manager="productimage" label="COM_PHOCACART_FIELD_IMAGE_SMALL_LABEL"  class="form-control inputbox imageCreateThumbs"
-           size="40"/>
+      <field name="ean" type="text" showon="#stock_calculation:1" label="COM_PHOCACART_FIELD_EAN_LABEL" />
 
-    <field name="download_folder" type="text" manager="productfile" label="COM_PHOCACART_FIELD_DOWNLOAD_FOLDER_LABEL" readonly="true"  class="form-control"
-           size="40"/>
-    <field name="download_token" type="text" manager="productfile" label="COM_PHOCACART_FIELD_DOWNLOAD_TOKEN_LABEL" class="form-control" size="40"/>
-    <field name="download_file" type="phocaselectfilename" manager="productfile" label="COM_PHOCACART_FIELD_DOWNLOAD_FILE_LABEL" class="form-control" size="40"/>
+      <field name="stock" type="text" showon="#stock_calculation:1" label="COM_PHOCACART_FIELD_STOCK_LABEL" />
+    </fieldset>
 
-    <field name="color" type="color" label="COM_PHOCACART_FIELD_COLOR_LABEL"  class="form-control" size="40" default=""/>
+    <fieldset name="weight" class="ph-fieldset-specification-weight">
+      <field name="operator_weight" type="list" default="+" label="COM_PHOCACART_FIELD_OPERATOR_WEIGHT_LABEL" description="COM_PHOCACART_FIELD_OPERATOR_WEIGHT_DESC">
+        <option value="+">+</option>
+        <option value="-">-</option>
+      </field>
 
-    <field name="default_value" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DEFAULT_LABEL">
-      <option value="0">COM_PHOCACART_NO</option>
-      <option value="1">COM_PHOCACART_YES</option>
-    </field>
+      <field name="weight" type="text" label="COM_PHOCACART_FIELD_WEIGHT_LABEL" />
+    </fieldset>
 
-    <field name="required" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_REQUIRED_ATTR_OPTIONS_LABEL" description="COM_PHOCACART_FIELD_REQUIRED_ATTR_OPTIONS_DESC" default="0" >
-      <option value="0">COM_PHOCACART_NO</option>
-      <option value="1">COM_PHOCACART_YES</option>
-    </field>
+    <fieldset name="image" class="ph-fieldset-specification-image">
+      <field name="image" type="phocaselectfilenameimage" manager="productimage" label="COM_PHOCACART_FIELD_IMAGE_LABEL"  class="form-control inputbox imageCreateThumbs" />
 
-    <field name="type" type="list" class="form-select" label="COM_PHOCACART_FIELD_TYPE_ATTR_OPTIONS_LABEL" description="COM_PHOCACART_FIELD_TYPE_ATTR_OPTIONS_DESC" default="1" >
-      <option value="0">COM_PHOCACART_ATTR_TYPE_DEFAULT</option>
-      <option value="20">COM_PHOCACART_ATTR_TYPE_GIFT_RECIPIENT_NAME</option>
-      <option value="21">COM_PHOCACART_ATTR_TYPE_GIFT_RECIPIENT_EMAIL</option>
-      <option value="22">COM_PHOCACART_ATTR_TYPE_GIFT_SENDER_NAME</option>
-      <option value="23">COM_PHOCACART_ATTR_TYPE_GIFT_SENDER_MESSAGE</option>
-      <option value="24">COM_PHOCACART_ATTR_TYPE_GIFT_TYPE</option>
-    </field>
-  </fieldset>
+      <field name="image_medium" type="phocaselectfilenameimage" manager="productimage" label="COM_PHOCACART_FIELD_IMAGE_MEDIUM_LABEL" class="form-control inputbox imageCreateThumbs" />
+
+      <field name="image_small" type="phocaselectfilenameimage" manager="productimage" label="COM_PHOCACART_FIELD_IMAGE_SMALL_LABEL"  class="form-control inputbox imageCreateThumbs" />
+    </fieldset>
+
+    <fieldset name="download" class="ph-fieldset-specification-download">
+      <field name="download_folder" type="phocatext" readonly="true" showon="#type:1[OR]#type:2" label="COM_PHOCACART_FIELD_DOWNLOAD_FOLDER_LABEL" />
+
+      <field name="download_token" type="phocatext" showon="#type:1[OR]#type:2" label="COM_PHOCACART_FIELD_DOWNLOAD_TOKEN_LABEL"/>
+
+      <field name="download_file" type="phocaselectfilename" manager="productfile" showon="#type:1[OR]#type:2" label="COM_PHOCACART_FIELD_DOWNLOAD_FILE_LABEL" />
+    </fieldset>
+
+    <fieldset name="advanced" class="ph-fieldset-specification-advanced">
+      <field name="color" type="color" showon="" label="COM_PHOCACART_FIELD_COLOR_LABEL" />
+
+      <field name="type" type="list" default="0" showon="%%type:20" label="COM_PHOCACART_FIELD_TYPE_ATTR_OPTIONS_LABEL" description="COM_PHOCACART_FIELD_TYPE_ATTR_OPTIONS_DESC">
+        <option value="0">COM_PHOCACART_ATTR_TYPE_DEFAULT</option>
+        <option value="20">COM_PHOCACART_ATTR_TYPE_GIFT_RECIPIENT_NAME</option>
+        <option value="21">COM_PHOCACART_ATTR_TYPE_GIFT_RECIPIENT_EMAIL</option>
+        <option value="22">COM_PHOCACART_ATTR_TYPE_GIFT_SENDER_NAME</option>
+        <option value="23">COM_PHOCACART_ATTR_TYPE_GIFT_SENDER_MESSAGE</option>
+        <option value="24">COM_PHOCACART_ATTR_TYPE_GIFT_TYPE</option>
+      </field>
+    </fieldset>
+  </fields>
 </form>

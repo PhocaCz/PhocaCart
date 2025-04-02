@@ -34,7 +34,7 @@ class PhocacartOrderView
 		/*if(isset($orderId) && (int)$orderId > 0) {
 			$return = $table->load(array('order_id' => (int)$orderId, 'type' => 0));
 			if ($return === false && $table->getError()) {
-				throw new Exception($table->getErrorMsg());
+				throw new Exception($table->getError());
 				return false;
 			}
 		}
@@ -43,7 +43,7 @@ class PhocacartOrderView
 		if(isset($orderId) && (int)$orderId > 0) {
 			$returnS = $tableS->load(array('order_id' => (int)$orderId, 'type' => 1));
 			if ($returnS === false && $tableS->getError()) {
-				throw new Exception($tableS->getErrorMsg());
+				throw new Exception($tableS->getError());
 				return false;
 			}
 		}*/
@@ -80,7 +80,7 @@ class PhocacartOrderView
 		//$item 	= JArrayHelper::toObject($properties, 'stdClass');
 		$item		= new stdClass();
 
-		if(!empty($properties['b']) && is_object($item)) {
+		if(isset($properties['b'])) {
 			foreach($properties['b'] as $k => $v) {
 				$newName = $k . '_phb';
 				$item->$newName = $v;
@@ -88,7 +88,7 @@ class PhocacartOrderView
 		}
 
 		//Add shipping data to billing and do both data package
-		if(!empty($properties['s']) && is_object($item)) {
+		if(isset($properties['s'])) {
 			foreach($properties['s'] as $k => $v) {
 				$newName = $k . '_phs';
 				$item->$newName = $v;
@@ -115,7 +115,7 @@ class PhocacartOrderView
 
 		$db = Factory::getDBO();
 		$query = 'SELECT u.*,'
-				.' c.title AS countrytitle, r.title AS regiontitle, c.code2 AS countrycode'
+				.' c.title AS countrytitle, r.title AS regiontitle, c.code2 AS countrycode, c.code3 AS countrycode3'
 				.' FROM #__phocacart_order_users AS u'
 				.' LEFT JOIN #__phocacart_countries AS c ON c.id = u.country'
 				.' LEFT JOIN #__phocacart_regions AS r ON r.id = u.region'
@@ -140,7 +140,7 @@ class PhocacartOrderView
 				.' sc.title as section_name, un.title as unit_name'
 				.' FROM #__phocacart_orders AS o'
 				.' LEFT JOIN #__users AS u ON u.id = o.user_id'
-				.' LEFT JOIN #__users AS uv ON uv.id = o.user_id'
+				.' LEFT JOIN #__users AS uv ON uv.id = o.vendor_id'
 				.' LEFT JOIN #__phocacart_order_statuses AS os ON os.id = o.status_id'
 				.' LEFT JOIN #__phocacart_payment_methods AS p ON p.id = o.payment_id'
 				.' LEFT JOIN #__phocacart_shipping_methods AS s ON s.id = o.shipping_id'
@@ -275,7 +275,7 @@ class PhocacartOrderView
 		$db = Factory::getDBO();
 		$q = 'SELECT d.*'
 			.' FROM #__phocacart_orders AS o'
-			.' LEFT JOIN #__phocacart_order_product_discounts AS d ON o.id = d.order_id'
+			.' JOIN #__phocacart_order_product_discounts AS d ON o.id = d.order_id'
 			.' WHERE o.id = '.(int)$orderId;
 		if ($onlyPublished == 1) {
 			$q.= ' AND d.published = 1';

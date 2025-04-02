@@ -71,14 +71,12 @@ if ($charcounter) {
 $attributes = [
     $columns ?: '',
     $rows ?: '',
-    !empty($class) ? 'class="form-control ' . $class . $charcounter . '"' : 'class="form-control' . $charcounter . '"',
     !empty($description) ? 'aria-describedby="' . ($id ?: $name) . '-desc"' : '',
     strlen($hint) ? 'placeholder="' . htmlspecialchars($hint, ENT_COMPAT, 'UTF-8') . '"' : '',
     $disabled ? 'disabled' : '',
     $readonly ? 'readonly' : '',
     $onchange ? 'onchange="' . $onchange . '"' : '',
     $onclick ? 'onclick="' . $onclick . '"' : '',
-    $required ? 'required' : '',
     !empty($autocomplete) ? 'autocomplete="' . $autocomplete . '"' : '',
     $autofocus ? 'autofocus' : '',
     $spellcheck ? '' : 'spellcheck="false"',
@@ -86,6 +84,13 @@ $attributes = [
     !empty($counterlabel) ? $counterlabel : '',
     $dataAttribute,
 ];
+
+$defLangAttributes = $attributes;
+$attributes[] = !empty($class) ? 'class="form-control ' . $class . $charcounter . ($i18n ? ' phocacart-i18n' : '') . '"' : 'class="form-control' . $charcounter . ($i18n ? ' phocacart-i18n' : '') . '"';
+
+$defLangAttributes[] = !empty($class) ? 'class="form-control ' . $class . $charcounter . ($i18n ? ' phocacart-i18n-def' : '') . '"' : 'class="form-control' . $charcounter . ($i18n ? ' phocacart-i18n-def' : '') . '"';
+$defLangAttributes[] = $required ? 'required' : '';
+
 ?>
 <?php if($i18n) : ?>
     <?php echo HTMLHelper::_('uitab.startTabSet', $id . '_i18nTabs', ['recall' => true, 'breakpoint' => 768]); ?>
@@ -103,7 +108,9 @@ $attributes = [
     <?php endif; ?>
 
     <textarea name="<?php echo $name .  ($i18n ? '[' . $language->lang_code . ']' : ''); ?>"
-        id="<?php echo $id . ($i18n ? '-' . $language->lang_code : ''); ?>" <?php echo implode(' ', $attributes); ?>
+        id="<?php echo $id . ($i18n ? '-' . $language->lang_code : ''); ?>"
+        <?php echo implode(' ', !$i18n || $language->lang_code !== $defLanguage ? $attributes : $defLangAttributes); ?>
+        <?php echo $i18n ? ' data-phocacart-i18n-lang="' . $language->lang_code . '"' : ''; ?>
     ><?php echo htmlspecialchars($i18n ? $value[$language->lang_code] ?? '' : $value, ENT_COMPAT, 'UTF-8'); ?></textarea>
 
     <?php if($i18n) : ?>

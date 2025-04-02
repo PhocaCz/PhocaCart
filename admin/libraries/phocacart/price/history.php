@@ -36,6 +36,7 @@ class PhocacartPriceHistory
 
 
 		$price		= PhocacartUtils::replaceCommaWithPoint($price);
+        $price      = PhocacartText::filterValue($price, 'float');
 
 		if (isset($history['price']) && $history['price'] == $price) {
 			// Do nothing
@@ -263,7 +264,7 @@ class PhocacartPriceHistory
 	}
 
 
-	public static function getPriceHistoryChartById($productId) {
+	public static function getPriceHistoryChartById($productId, $currencyRate = 0) {
 
 		$data = array();
 		$dataX = $dataY = array();
@@ -272,7 +273,11 @@ class PhocacartPriceHistory
 		if (!empty($history)) {
 			foreach($history as $k => $v) {
 
-				$dataY[] = '\'' . $v['price'] . '\'';
+                $price =  $v['price'];
+                if ($currencyRate > 0) {
+                    $price = $v['price'] * $currencyRate;
+                }
+				$dataY[] = '\'' . $price . '\'';
 				$dataX[] = '\'' . HTMLHelper::_('date', $v['date'] , Text::_('DATE_FORMAT_LC3')) .'\'';
 			}
 		}

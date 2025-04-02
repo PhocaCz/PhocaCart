@@ -154,6 +154,10 @@ abstract class I18nHelper
 
     public static function deleteI18nData(array $ids, string $i18nTable): bool
     {
+        if (!self::isI18n()) {
+            return true;
+        }
+
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         $query = $db->getQuery(true)
@@ -162,6 +166,31 @@ abstract class I18nHelper
 
         $db->setQuery($query);
         return $db->execute();
+    }
+
+    public static function copyI18nData(int $oldId, int $newId, string $i18nTable): void
+    {
+        if (!self::isI18n()) {
+            return;
+        }
+
+        /** @var DatabaseInterface $db */
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        $query = $db->getQuery(true)
+            ->select('*')
+            ->from($i18nTable)
+            ->where($db->quoteName('id') . ' = :id')
+            ->bind(':id', $oldId);
+
+        $db->setQuery($query);
+
+        $values = $db->loadObjectList();
+
+        foreach ($values as $i18nData) {
+            $i18nData->id = $newId;
+            $db->insertObject($i18nTable, $i18nData);
+        }
     }
 
     public static function checkI18nValue($value)
@@ -225,7 +254,7 @@ abstract class I18nHelper
      *
      * @since 5.0.0
      */
-    public static function sqlCoalesce(array $columns, string $mainTableAlias = 'a', string $columnAliasPrefix = '', string $type = '', string $prefix = '', string $suffix = '', bool $skipAs = false): string
+    public static function sqlCoalesce(array $columns, string $mainTableAlias = 'a', string $columnAliasPrefix = '', string $type = '', string $prefix = '', string $suffix = '', bool $skipAs = false, $forceI18n = false): string
     {
 
         $i18nTableAlias  = 'i18n_'. $mainTableAlias;
@@ -274,7 +303,7 @@ abstract class I18nHelper
         $columnsOutput = [];
         if (!empty($columns)) {
             foreach($columns as $column) {
-                if ($useI18n) {
+                if ($useI18n || $forceI18n) {
 
                     if (in_array($column, $columnsFallback)) {
                         $columnsOutput[] = $columnPrefix . 'COALESCE(' . $i18nTableAlias  . '.' . $column. ', ' . $mainTableAlias. '.' . $column . ')' . $columnSuffix

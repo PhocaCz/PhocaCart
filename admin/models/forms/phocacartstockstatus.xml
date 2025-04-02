@@ -24,7 +24,7 @@
             <option value="_top">COM_PHOCACART_OPEN_WINDOW_TOP</option>
         </field>
 
-        <field name="ordering" type="PhocacartOrdering" table="attribute" class="form-select" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC"/>
+        <field name="ordering" type="PhocacartOrdering" table="stockstatus" class="form-select" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC"/>
 
 
         <field name="description" type="editor" buttons="true" hide="pagebreak,readmore" class="form-control" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" filter="\Joomla\CMS\Component\ComponentHelper::filterText"
@@ -38,7 +38,7 @@
             <option value="0">JUNPUBLISHED</option>
         </field>
 
-        <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" class="form-control">
+        <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" >
             <option value="*">JALL</option>
         </field>
         <!--

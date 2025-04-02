@@ -111,7 +111,7 @@ class PhocaCartViewFeed extends HtmlView
             $this->p['item_type_feed']                  = $iP->get('item_type_feed', '');
             $this->p['item_category_type_feed']         = $iP->get('item_category_type_feed', '');
 
-            $this->p['item_fixed_elements'] = $iP->get('item_fixed_elements', '');
+            $this->p['item_fixed_elements']             = $iP->get('item_fixed_elements', '');
 
             /*
             // We can find specific feed and customize it for specific needs
@@ -140,9 +140,9 @@ class PhocaCartViewFeed extends HtmlView
             // Possible feature - accept languages
             $this->t['products'] = PhocacartProduct::getProducts(0, (int)$this->p['item_limit'], $this->p['item_ordering'], $this->p['category_ordering'], $this->p['export_published_only'], $this->p['export_in_stock_only'], $this->p['export_price_only'], $categoriesList, array(), 0, array(0, 1), '', '', false, $forceLang );
 
-            parent::display($tpl);
+                parent::display($tpl);
+            }
         }
     }
-}
 
 ?>

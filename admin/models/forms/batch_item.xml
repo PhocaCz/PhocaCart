@@ -16,13 +16,13 @@
         </fieldset>
 
         <fieldset name="basic" addfieldpath="/administrator/components/com_phocacart/models/fields">
-            <field name="copy_move" type="list" label="COM_PHOCACART_BATCH_COPY_MOVE">
+            <field name="move_copy" type="list" label="COM_PHOCACART_BATCH_COPY_MOVE">
                 <option value="">COM_PHOCACART_BATCH_COPY_MOVE_NO</option>
                 <option value="c">JLIB_HTML_BATCH_COPY</option>
                 <option value="m">JLIB_HTML_BATCH_MOVE</option>
             </field>
 
-            <field name="_copy_move_tip" type="note" showon="copy_move:c" class="alert alert-info w-100 m-0" description="COM_PHOCACART_BATCH_COPY_TIP" />
+            <field name="_copy_move_tip" type="note" showon="move_copy:c" class="alert alert-info w-100 m-0" description="COM_PHOCACART_BATCH_COPY_TIP" />
 
             <field name="assetgroup_id" type="accesslevel" label="JLIB_HTML_BATCH_ACCESS_LABEL">
                 <option value="">JLIB_HTML_BATCH_NOCHANGE</option>
@@ -94,28 +94,28 @@
         </fieldset>
 
         <fieldset name="params" addfieldpath="/administrator/components/com_phocacart/models/fields">
-            <field name="_move_copy_params_heading" type="note" showon="copy_move:c[OR]copy_move:m" class="bg-primary text-white p-2 fw-bold w-100" description="COM_PHOCACART_BATCH_MOVE_COPY_PARAMS_HEADING" />
+            <field name="_move_copy_params_heading" type="note" showon="move_copy:c[OR]move_copy:m" class="bg-primary text-white p-2 fw-bold w-100" description="COM_PHOCACART_BATCH_MOVE_COPY_PARAMS_HEADING" />
 
-            <field name="category_id" type="phocacartcategory" showon="copy_move:c[OR]copy_move:m" layout="joomla.form.field.list-fancy-select" label="JLIB_HTML_BATCH_MENU_LABEL">
+            <field name="category_id" type="phocacartcategory" showon="move_copy:c[OR]move_copy:m" layout="joomla.form.field.list-fancy-select" label="JLIB_HTML_BATCH_MENU_LABEL">
                 <option value="0">JLIB_HTML_ADD_TO_ROOT</option>
             </field>
 
-            <field name="copy_all_cats" type="radio" default="0" showon="copy_move:c" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_COPY_ALL_CATEGORIES_FROM_SOURCE">
+            <field name="copy_all_cats" type="radio" default="0" showon="move_copy:c" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_COPY_ALL_CATEGORIES_FROM_SOURCE">
                 <option value="0">JNO</option>
                 <option value="1">JYES</option>
             </field>
 
-            <field name="skip_creating_unique_name" type="radio" default="0" showon="copy_move:c" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_SKIP_CREATING_UNIQUE_NAME">
+            <field name="skip_creating_unique_name" type="radio" default="0" showon="move_copy:c" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_SKIP_CREATING_UNIQUE_NAME">
                 <option value="0">JNO</option>
                 <option value="1">JYES</option>
             </field>
 
-            <field name="copy_download_files" type="radio" default="0" showon="copy_move:c" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_COPY_DOWNLOAD_FILES">
+            <field name="copy_download_files" type="radio" default="0" showon="move_copy:c" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_COPY_DOWNLOAD_FILES">
                 <option value="0">JNO</option>
                 <option value="1">JYES</option>
             </field>
 
-            <field name="copy_attributes_download_files" type="radio" default="0" showon="copy_move:c" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_COPY_ATTRIBUTE_OPTION_DOWNLOAD_FILES">
+            <field name="copy_attributes_download_files" type="radio" default="0" showon="move_copy:c" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_COPY_ATTRIBUTE_OPTION_DOWNLOAD_FILES">
                 <option value="0">JNO</option>
                 <option value="1">JYES</option>
             </field>
@@ -201,6 +201,19 @@
 
             <field name="points_received" type="number" showon="_rewards_options:1" label="COM_PHOCACART_FIELD_POINTS_RECEIVED_LABEL" />
         </fieldset>
+
+        <fields name="parameters">
+            <fieldset name="basic">
+                <field name="_parameters" type="list" class="form-select-color-state" filter="unset" label="COM_PHOCACART_BATCH_PARAMETERS">
+                    <option value="">COM_PHOCACART_BATCH_NOCHANGE</option>
+                    <option value="1">COM_PHOCACART_BATCH_CHANGE</option>
+                </field>
+            </fieldset>
+
+            <fieldset name="params" addfieldpath="/administrator/components/com_phocacart/models/fields">
+                <field name="_parameters_heading" type="note" showon="_parameters:1" class="bg-primary text-white p-2 fw-bold w-100" description="COM_PHOCACART_BATCH_PARAMETERS_HEADING" />
+            </fieldset>
+        </fields>
 
         <fields name="com_fields">
             <fieldset name="basic">

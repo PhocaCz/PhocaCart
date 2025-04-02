@@ -36,11 +36,11 @@ echo '<form action="'.Route::_('index.php', true, $mP->get('usesecure')).'" meth
 
 echo '<div id="ph-form-login-username" class="'.$d['s']['c']['control-group.form_inline'].'">'. "\n";
 echo '<div class="'.$d['s']['c']['form-group'].'">'. "\n";
-echo '<label class="sr-only" for="modlgn-username">'.Text::_('MOD_LOGIN_VALUE_USERNAME') .'</label>'. "\n";
+echo '<label class="sr-only" for="ph-modlgn-username">'.Text::_('MOD_LOGIN_VALUE_USERNAME') .'</label>'. "\n";
 echo '<input id="ph-modlgn-username" type="text" name="username" class="'.$d['s']['c']['inputbox.form-control'].'" tabindex="0" placeholder="'.Text::_('MOD_LOGIN_VALUE_USERNAME') .'" />'. "\n";
 echo ' </div>'. "\n";
 echo ' <div class="'.$d['s']['c']['form-group'].'">'. "\n";
-echo '<label class="sr-only" for="modlgn-passwd">'.Text::_('JGLOBAL_PASSWORD') .'</label>'. "\n";
+echo '<label class="sr-only" for="ph-modlgn-passwd">'.Text::_('JGLOBAL_PASSWORD') .'</label>'. "\n";
 echo '<input id="ph-modlgn-passwd" type="password" name="password" class="'.$d['s']['c']['inputbox.form-control'].'" tabindex="0" size="18" placeholder="'.Text::_('JGLOBAL_PASSWORD') .'" />'. "\n";
 echo ' </div>'. "\n";
 

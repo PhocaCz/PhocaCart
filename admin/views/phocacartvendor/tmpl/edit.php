@@ -9,9 +9,10 @@
 defined('_JEXEC') or die();
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Layout\LayoutHelper;
 
 
-$r 			=  $this->r;
+$r = $this->r;
 $js ='
 Joomla.submitbutton = function(task) {
 	if (task == "'. $this->t['task'] .'.cancel" || document.formvalidator.isValid(document.getElementById("adminForm"))) {
@@ -23,37 +24,47 @@ Joomla.submitbutton = function(task) {
 ';
 Factory::getDocument()->addScriptDeclaration($js);
 echo $r->startForm($this->t['o'], $this->t['task'], $this->item->id, 'adminForm', 'adminForm');
-// First Column
-echo '<div class="col-xs-12 col-sm-12 col-md-12 form-horizontal">';
-$tabs = array (
-'general' 		=> Text::_($this->t['l'].'_GENERAL_OPTIONS'),
-'publishing' 	=> Text::_($this->t['l'].'_PUBLISHING_OPTIONS'));
+
+echo LayoutHelper::render('joomla.edit.title_alias', $this);
+
+echo '<div class="main-card">';
+
+$skipFieldsets = ['title', 'publish'];
+
+$tabs = [];
+foreach ($this->form->getFieldSets() as $fieldset) {
+    if (in_array($fieldset->name, $skipFieldsets)) {
+        continue;
+    }
+	$tabs[$fieldset->name] = Text::_($fieldset->label);
+}
 echo $r->navigation($tabs);
 
 echo $r->startTabs();
-
-echo $r->startTab('general', $tabs['general'], 'active');
-$formArray = array ( 'user_id', 'image', 'ordering');
-echo $r->group($this->form, $formArray);
-echo $r->endTab();
-
-echo $r->startTab('publishing', $tabs['publishing']);
-foreach($this->form->getFieldset('publish') as $field) {
-	echo '<div class="control-group">';
-	if (!$field->hidden) {
-		echo '<div class="control-label">'.$field->label.'</div>';
-	}
-	echo '<div class="controls">';
-	echo $field->input;
-	echo '</div></div>';
+$isActiveTab = true;
+foreach ($this->form->getFieldSets() as $fieldset) {
+    if (in_array($fieldset->name, $skipFieldsets)) {
+        continue;
+    }
+	echo $r->startTab($fieldset->name, Text::_($fieldset->label), $isActiveTab ? 'active' : '');
+    if ($fieldset->name == 'general') {
+        echo '<div class="row">';
+        echo '<div class="col-md-9">';
+    }
+	echo $this->form->renderFieldset($fieldset->name);
+    if ($fieldset->name == 'general') {
+        echo '</div>';
+        echo '<div class="col-md-3">';
+        echo $this->form->renderFieldset('publish');
+        echo '</div>';
+        echo '</div>';
+    }
+	echo $r->endTab();
+    $isActiveTab = false;
 }
-echo $r->endTab();
 
 echo $r->endTabs();
-echo '</div>';//end span10
-// Second Column
-//echo '<div class="col-xs-12 col-sm-2 col-md-2"></div>';//end span2
+echo '</div>';
+
 echo $r->formInputs($this->t['task']);
 echo $r->endForm();
-?>
-

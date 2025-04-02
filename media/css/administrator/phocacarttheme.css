@@ -435,7 +435,7 @@ table#extensionList tr td {
 	background-color: #F9E151 !important;
 	border-color: #F9E151 !important;
 	border: 0px !important;
-	
+
 }
 
 .btn-buy:hover, .btn-buy:focus {
@@ -514,7 +514,7 @@ a.ph-submenu:before {
 }
 .nav a.ph-submenu.ph-submenu-manufacturers:before {
 	color: #ff7d49;
-	content: "\13c5b";/*home*/
+	content: "\13cda";/*wrench*/
 }
 .nav a.ph-submenu.ph-submenu-orders:before {
 	color: #0099cc;
@@ -615,6 +615,10 @@ a.ph-submenu:before {
 .nav a.ph-submenu.ph-submenu-wishlists:before {
 	color: #EA7C7C;
     content: "\13c5a";/*heart*/
+}
+.nav a.ph-submenu.ph-submenu-contenttypes:before {
+	color: #7faa7f;
+	content: "\13cc9";/*sourcetree*/
 }
 .nav a.ph-submenu.ph-submenu-questions:before {
 	color: #9900CC;

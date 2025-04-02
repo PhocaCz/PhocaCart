@@ -1,110 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-
-	<fieldset addfieldpath="/administrator/components/com_phocacart/models/fields">
-
-<field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" required="true" readonly="true" class="readonly" />
-
-<field name="title" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_NAME_LABEL" description="COM_PHOCACART_FIELD_FORMFIELD_NAME_DESC" required="true" />
-
-<field name="alias" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC" />
-
-<field name="label" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_LABEL_LABEL" description="COM_PHOCACART_FIELD_LABEL_LANG_STRING_DESC" required="true" />
-
-<field name="description" type="textarea" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" description="COM_PHOCACART_FIELD_DESCRIPTION_LANG_STRING_DESC" class="form-control" rows="3" cols="30"  required="true" />
-
-<field name="id_input" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_ID_LABEL" description="COM_PHOCACART_FIELD_ID_DESC" />
-
-<field name="type" type="list" class="form-select" label="COM_PHOCACART_FIELD_TYPE_LABEL" description="COM_PHOCACART_FIELD_TYPE_DESC" required="true">
-<option value="text:varchar(10)">text - varchar(10)</option>
-<option value="text:varchar(20)">text - varchar(20)</option>
-<option value="text:varchar(25)">text - varchar(25)</option>
-<option value="text:varchar(100)">text - varchar(100)</option>
-<option value="text:varchar(255)">text - varchar(255)</option>
-<option value="textarea:text">textarea - text</option>
-<option value="calendar:datetime">calendar - datetime</option>
-<option value="phocaformcountry:int(11)">country int(11)</option>
-<option value="phocaformregion:int(11)">region int(11)</option>
-<option value="list:text">list - text</option>
-<option value="checkbox:text">checkbox - text</option>
-<option value="radio:text">radio - text</option>
-</field>
-
-
-<field name="predefined_values" type="textarea" label="COM_PHOCACART_FIELD_PREDEFINED_VALUES_LABEL" description="COM_PHOCACART_FIELD_PREDEFINED_VALUES_DESC" class="form-control" rows="3" cols="30"/>
-<field name="predefined_values_first_option" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_PREDEFINED_VALUES_FIRST_OPTION_TITLE_LABEL" description="COM_PHOCACART_FIELD_PREDEFINED_VALUES_FIRST_OPTION_TITLE_DESC" />
-<field name="default" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_DEFAULT_LABEL" description="COM_PHOCACART_FIELD_DEFAULT_DESC" />
-<field name="size" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_SIZE_LABEL" description="COM_PHOCACART_FIELD_SIZE_DESC" />
-<field name="cols" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_COLS_LABEL" description="COM_PHOCACART_FIELD_COLS_DESC" />
-<field name="rows" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_ROWS_LABEL" description="COM_PHOCACART_FIELD_ROWS_DESC" />
-<field name="class" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_CLASS_LABEL" description="COM_PHOCACART_FIELD_CLASS_DESC" />
-<field name="filter" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_FILTER_LABEL" description="COM_PHOCACART_FIELD_FILTER_DESC" />
-
-<field name="required" default="0" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_REQUIRED_LABEL" description="COM_PHOCACART_FIELD_REQUIRED_DESC" >
-<option value="0">COM_PHOCACART_NO</option>
-<option value="1">COM_PHOCACART_YES</option>
-</field>
-
-<field name="read_only" default="0" type="list" class="form-select" label="COM_PHOCACART_FIELD_READ_ONLY_LABEL" description="COM_PHOCACART_FIELD_READ_ONLY_DESC" >
-<option value="0">COM_PHOCACART_NO</option>
-<option value="1">COM_PHOCACART_YES</option>
-<option value="3">COM_PHOCACART_YES_EXCEPT_FOR_ORDER_EDITING_IN_ADMINISTRATION</option>
-<option value="2">COM_PHOCACART_YES_REGISTERED_USERS_NO_GUESTS</option>
-<option value="4">COM_PHOCACART_YES_REGISTERED_USERS_NO_GUESTS_EXCEPT_FOR_ORDER_EDITING_IN_ADMINISTRATION</option>
-</field>
-
-<field name="validate" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_VALIDATE_LABEL" description="COM_PHOCACART_FIELD_VALIDATE_DESC" />
-
-<field name="unique" default="0" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_UNIQUE_LABEL" description="COM_PHOCACART_FIELD_UNIQUE_DESC" >
-<option value="0">COM_PHOCACART_NO</option>
-	<option value="1">COM_PHOCACART_YES</option>
-</field>
-<field name="preicon" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_PREICON_LABEL" description="COM_PHOCACART_FIELD_PREICON_DESC" />
-
-<field name="additional" label="COM_PHOCACART_FIELD_ADDITIONAL_ATTRIBUTES_LABEL" description="COM_PHOCACART_FIELD_ADDITIONAL_ATTRIBUTES_DESC" class="form-control" />
-
-<field name="pattern" label="COM_PHOCACART_FIELD_PATTERN_LABEL" description="COM_PHOCACART_FIELD_PATTERN_DESC" class="form-control" />
-<field name="maxlength" label="COM_PHOCACART_FIELD_MAXLENGTH_LABEL" description="COM_PHOCACART_FIELD_MAXLENGTH_DESC" class="form-control" />
-
-
-<field name="ordering" type="PhocacartOrdering" table="formfield" class="form-select" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
-
-<field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" description="JFIELD_ACCESS_DESC" class="form-control" size="1" />
-
-<field name="group" type="PhocacartGroups" multiple="true" layout="joomla.form.field.list-fancy-select" table="9"  size="40" label="COM_PHOCACART_FIELD_CUSTOMER_GROUP_LABEL" description="COM_PHOCACART_FIELD_CUSTOMER_GROUP_DESC"  />
-
+	<fieldset name="title">
+		<field name="title" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_NAME_LABEL" description="COM_PHOCACART_FIELD_FORMFIELD_NAME_DESC" required="true" />
+		<!--<field name="alias" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_ALIAS_LABEL" description="COM_PHOCACART_FIELD_ALIAS_DESC" />-->
 	</fieldset>
 
+	<fieldset name="general" addfieldpath="/administrator/components/com_phocacart/models/fields" label="COM_PHOCACART_GENERAL_OPTIONS">
+		<field name="label" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_LABEL_LABEL" description="COM_PHOCACART_FIELD_LABEL_LANG_STRING_DESC" required="true" />
+
+		<field name="description" type="textarea" label="COM_PHOCACART_FIELD_DESCRIPTION_LABEL" description="COM_PHOCACART_FIELD_DESCRIPTION_LANG_STRING_DESC" class="form-control" rows="3" cols="30"  required="true" />
+
+		<!--<field name="id_input" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_ID_LABEL" description="COM_PHOCACART_FIELD_ID_DESC" />-->
+
+		<field name="type" type="list" class="form-select" label="COM_PHOCACART_FIELD_TYPE_LABEL" description="COM_PHOCACART_FIELD_TYPE_DESC" required="true">
+			<option value="text:varchar(10)">text - varchar(10)</option>
+			<option value="text:varchar(20)">text - varchar(20)</option>
+			<option value="text:varchar(25)">text - varchar(25)</option>
+			<option value="text:varchar(100)">text - varchar(100)</option>
+			<option value="text:varchar(255)">text - varchar(255)</option>
+			<option value="textarea:text">textarea - text</option>
+			<option value="calendar:datetime">calendar - datetime</option>
+			<option value="phocaformcountry:int(11)">country int(11)</option>
+			<option value="phocaformregion:int(11)">region int(11)</option>
+			<option value="list:text">list - text</option>
+			<option value="checkbox:text">checkbox - text</option>
+			<option value="radio:text">radio - text</option>
+		</field>
+
+		<field name="predefined_values" type="textarea" label="COM_PHOCACART_FIELD_PREDEFINED_VALUES_LABEL" description="COM_PHOCACART_FIELD_PREDEFINED_VALUES_DESC" class="form-control" rows="3" cols="30"/>
+		<field name="predefined_values_first_option" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_PREDEFINED_VALUES_FIRST_OPTION_TITLE_LABEL" description="COM_PHOCACART_FIELD_PREDEFINED_VALUES_FIRST_OPTION_TITLE_DESC" />
+		<field name="default" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_DEFAULT_LABEL" description="COM_PHOCACART_FIELD_DEFAULT_DESC" />
+		<!--
+		<field name="size" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_SIZE_LABEL" description="COM_PHOCACART_FIELD_SIZE_DESC" />
+		<field name="cols" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_COLS_LABEL" description="COM_PHOCACART_FIELD_COLS_DESC" />
+		<field name="rows" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_ROWS_LABEL" description="COM_PHOCACART_FIELD_ROWS_DESC" />
+		-->
+		<field name="class" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_CLASS_LABEL" description="COM_PHOCACART_FIELD_CLASS_DESC" />
+		<!--<field name="filter" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_FILTER_LABEL" description="COM_PHOCACART_FIELD_FILTER_DESC" />-->
+
+		<field name="required" default="0" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_REQUIRED_LABEL" description="COM_PHOCACART_FIELD_REQUIRED_DESC" >
+			<option value="0">COM_PHOCACART_NO</option>
+			<option value="1">COM_PHOCACART_YES</option>
+		</field>
+
+		<field name="read_only" default="0" type="list" class="form-select" label="COM_PHOCACART_FIELD_READ_ONLY_LABEL" description="COM_PHOCACART_FIELD_READ_ONLY_DESC" >
+			<option value="0">COM_PHOCACART_NO</option>
+			<option value="1">COM_PHOCACART_YES</option>
+			<option value="3">COM_PHOCACART_YES_EXCEPT_FOR_ORDER_EDITING_IN_ADMINISTRATION</option>
+			<option value="2">COM_PHOCACART_YES_REGISTERED_USERS_NO_GUESTS</option>
+			<option value="4">COM_PHOCACART_YES_REGISTERED_USERS_NO_GUESTS_EXCEPT_FOR_ORDER_EDITING_IN_ADMINISTRATION</option>
+		</field>
+
+		<field name="pattern" label="COM_PHOCACART_FIELD_PATTERN_LABEL" description="COM_PHOCACART_FIELD_PATTERN_DESC" class="form-control" />
+
+		<field name="maxlength" label="COM_PHOCACART_FIELD_MAXLENGTH_LABEL" description="COM_PHOCACART_FIELD_MAXLENGTH_DESC" class="form-control" />
+
+		<field name="autocomplete" default="" type="text" label="COM_PHOCACART_FIELD_AUTOCOMPLETE_LABEL" description="COM_PHOCACART_FIELD_AUTOCOMPLETE_DESC"/>
+
+		<field name="validate" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_VALIDATE_LABEL" description="COM_PHOCACART_FIELD_VALIDATE_DESC" />
+
+
+		<field name="unique" default="0" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_UNIQUE_LABEL" description="COM_PHOCACART_FIELD_UNIQUE_DESC" >
+			<option value="0">COM_PHOCACART_NO</option>
+			<option value="1">COM_PHOCACART_YES</option>
+		</field>
+
+		<!--
+		<field name="preicon" type="text" class="form-control" size="40" label="COM_PHOCACART_FIELD_PREICON_LABEL" description="COM_PHOCACART_FIELD_PREICON_DESC" />
+		<field name="additional" label="COM_PHOCACART_FIELD_ADDITIONAL_ATTRIBUTES_LABEL" description="COM_PHOCACART_FIELD_ADDITIONAL_ATTRIBUTES_DESC" class="form-control" />
+		-->
+	</fieldset>
 
 	<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
+		<field name="published" type="list" class="form-select-color-state" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" size="1" default="1" >
+			<option value="1">JPUBLISHED</option>
+			<option	value="0">JUNPUBLISHED</option>
+		</field>
 
-<field name="published" type="list" class="form-select" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC" size="1" default="1">
-	<option value="1">JPUBLISHED</option>
-	<option	value="0">JUNPUBLISHED</option>
-</field>
+		<field name="display_billing" default="0" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_DISPLAY_BILLING_FORM_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_BILLING_FORM_DESC" >
+			<option value="0">COM_PHOCACART_NO</option>
+			<option value="1">COM_PHOCACART_YES</option>
+		</field>
 
-<field name="display_billing" default="0" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_DISPLAY_BILLING_FORM_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_BILLING_FORM_DESC" >
-<option value="0">COM_PHOCACART_NO</option>
-	<option value="1">COM_PHOCACART_YES</option>
-</field>
+		<field name="display_shipping" default="0" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_DISPLAY_SHIPPING_FORM_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_SHIPPING_FORM_DESC" >
+			<option value="0">COM_PHOCACART_NO</option>
+			<option value="1">COM_PHOCACART_YES</option>
+		</field>
 
-<field name="display_shipping" default="0" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_DISPLAY_SHIPPING_FORM_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_SHIPPING_FORM_DESC" >
-<option value="0">COM_PHOCACART_NO</option>
-	<option value="1">COM_PHOCACART_YES</option>
-</field>
+		<field name="display_account" default="0" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_DISPLAY_USER_ACCOUNT_FORM_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_USER_ACCOUNT_FORM_DESC" >
+			<option value="0">COM_PHOCACART_NO</option>
+			<option value="1">COM_PHOCACART_YES</option>
+		</field>
 
-<field name="display_account" default="0" type="radio" layout="joomla.form.field.radio.switcher" label="COM_PHOCACART_FIELD_DISPLAY_USER_ACCOUNT_FORM_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_USER_ACCOUNT_FORM_DESC" >
-<option value="0">COM_PHOCACART_NO</option>
-	<option value="1">COM_PHOCACART_YES</option>
-</field>
-<!--
-<field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC" class="form-control">
-	<option value="*">JALL</option>
-</field> -->
+		<field name="ordering" type="PhocacartOrdering" table="formfield" class="form-select" label="COM_PHOCACART_FIELD_ORDERING_LABEL" description="COM_PHOCACART_FIELD_ORDERING_DESC" />
 
+		<field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" description="JFIELD_ACCESS_DESC" size="1" />
 
+		<field name="group" type="PhocacartGroups" multiple="true" layout="joomla.form.field.list-fancy-select" table="9"  size="40" label="COM_PHOCACART_FIELD_CUSTOMER_GROUP_LABEL" description="COM_PHOCACART_FIELD_CUSTOMER_GROUP_DESC"  />
+
+		<field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" required="true" readonly="true" class="readonly" />
 	</fieldset>
-
-
-
 </form>
