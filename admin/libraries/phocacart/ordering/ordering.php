@@ -150,7 +150,9 @@ class PhocacartOrdering
 
 			default://PRODUCTS
 				switch ((int)$ordering) {
-					case 2: return ['c.id', 'pc.ordering DESC'];
+					// in items view, this orders by category id even no category is selected
+					//case 2: return ['c.id', 'pc.ordering DESC'];
+					case 2: return ['pc.ordering DESC'];
 					case 3: return $usei18n ? ['coalesce(i18n_a.title, a.title) ASC'] : ['a.title ASC'];
 					case 4: return ['a.title DESC'];
 					case 5: return ['a.price ASC'];
@@ -181,7 +183,9 @@ class PhocacartOrdering
 					case 26: return ['a.featured DESC'];
 
 					case 99: return ['RAND()'];
-					case 1: default: return ['c.id', 'pc.ordering ASC'];
+					// in items view, this orders by category id even no category is selected
+					//case 1: default: return ['c.id', 'pc.ordering ASC'];
+					case 1: default: return ['pc.ordering ASC'];
 				}
 		}
 	}

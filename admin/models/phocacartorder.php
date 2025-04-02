@@ -127,6 +127,12 @@ class PhocaCartCpModelPhocacartOrder extends AdminModel
 		if ($table->tracking_date_shipped === '0' || $table->tracking_date_shipped === '') {
 			$table->tracking_date_shipped = '0000-00-00 00:00:00';
 		}
+
+        if ($table->payment_date === '0' || $table->payment_date === '') {
+			$table->payment_date = '0000-00-00 00:00:00';
+		}
+
+
 	}
 
     public function getItem($pk = null)
