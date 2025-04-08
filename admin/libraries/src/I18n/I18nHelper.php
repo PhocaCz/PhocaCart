@@ -19,6 +19,7 @@ use Joomla\CMS\Language\LanguageHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\QueryInterface;
+use Phoca\PhocaCart\Container\Container;
 
 abstract class I18nHelper
 {
@@ -406,4 +407,43 @@ abstract class I18nHelper
     {
         return !self::isI18n() && Associations::isEnabled();
     }
+
+    public static function loadI18nArray(?array $items, string $i18nTable, array $i18nFields): ?array
+    {
+        if (!I18nHelper::isI18n()) {
+            return $items;
+        }
+
+        if (!$items) {
+            return $items;
+        }
+
+        $db = Container::getDbo();
+
+        foreach ($items as &$item) {
+            $query = $db->getQuery(true)
+                ->select(array_merge($i18nFields, ['language']))
+                ->from($i18nTable)
+                ->where($db->quoteName('id') . ' = ' . $item['id']);
+
+            $db->setQuery($query);
+            $i18nData = $db->loadObjectList('language');
+
+            foreach ($i18nFields as $field) {
+                $defValue = $item[$field];
+
+                $item[$field] = [];
+                foreach (I18nHelper::getI18nLanguages() as $language) {
+                    $item[$field][$language->lang_code] = $i18nData[$language->lang_code]->$field ?? null;
+                }
+
+                if ($item[$field][I18nHelper::getDefLanguage()] === null || $item[$field][I18nHelper::getDefLanguage()] === '') {
+                    $item[$field][I18nHelper::getDefLanguage()] = $defValue;
+                }
+            }
+        }
+
+        return $items;
+    }
+
 }

@@ -56,40 +56,7 @@ trait I18nAdminModelTrait
 
     private function loadI18nArray(?array $items, string $i18nTable, array $i18nFields): ?array
     {
-        if (!I18nHelper::isI18n()) {
-            return $items;
-        }
-
-        if (!$items) {
-            return $items;
-        }
-
-        $db = Factory::getDbo();
-
-        foreach ($items as &$item) {
-            $query = $db->getQuery(true)
-                ->select(array_merge($i18nFields, ['language']))
-                ->from($i18nTable)
-                ->where($db->quoteName('id') . ' = ' . $item['id']);
-
-            $db->setQuery($query);
-            $i18nData = $db->loadObjectList('language');
-
-            foreach ($i18nFields as $field) {
-                $defValue = $item[$field];
-
-                $item[$field] = [];
-                foreach (I18nHelper::getI18nLanguages() as $language) {
-                    $item[$field][$language->lang_code] = $i18nData[$language->lang_code]->$field ?? null;
-                }
-
-                if ($item[$field][I18nHelper::getDefLanguage()] === null || $item[$field][I18nHelper::getDefLanguage()] === '') {
-                    $item[$field][I18nHelper::getDefLanguage()] = $defValue;
-                }
-            }
-        }
-
-        return $items;
+        return I18nHelper::loadI18nArray($items, $i18nTable, $i18nFields);
     }
 
     private function prepareI18nData(array &$data): array
