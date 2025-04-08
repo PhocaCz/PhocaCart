@@ -136,13 +136,19 @@ abstract class I18nHelper
                 }
             }
 
-            if (array_key_exists('alias', $fields) && !$fields['alias'] && array_key_exists('title', $fields) && $fields['title']) {
-                $fields['alias'] = ApplicationHelper::stringURLSafe($fields['title']);
+            if (array_key_exists('alias', $fields)) {
+                if (!$fields['alias'] && array_key_exists('title', $fields) && $fields['title']) {
+                    $fields['alias'] = $fields['title'];
+                }
+                $fields['alias'] = ApplicationHelper::stringURLSafe($fields['alias']);
             }
 
             // Specifications has alias also for value
             if (array_key_exists('alias_value', $fields) && !$fields['alias_value'] && array_key_exists('value', $fields) && $fields['value']) {
-                $fields['alias_value'] = ApplicationHelper::stringURLSafe($fields['value']);
+                if (!$fields['alias_value'] && array_key_exists('value', $fields) && $fields['value']) {
+                    $fields['alias_value'] = $fields['value'];
+                }
+                $fields['alias_value'] = ApplicationHelper::stringURLSafe($fields['alias_value']);
             }
 
             $fields = (object)$fields;
