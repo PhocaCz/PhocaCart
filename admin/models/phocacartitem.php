@@ -1565,51 +1565,45 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
 	public function copyattributes(&$cid = array(), $idSource = 0)
     {
-		$app 							= Factory::getApplication();
-		$copy_attributes_download_files 	= $app->input->post->get('copy_attributes_download_files', 0, 'int');
+		$app = Factory::getApplication();
+		$copy_attributes_download_files 	= $app->getInput()->post->get('copy_attributes_download_files', 0, 'int');
 
 		$copy = 1;// When copying attributes or batch products we do a copy of attributes (copy = 1) but in this case without copying download files on the server
 		if ($copy_attributes_download_files == 1) {
 			$copy = 2;// The same like 1 but in this case we even copy the download files on the server, see: PhocacartAttribute::storeAttributesById() for more info
 		}
-		$cA = 0;
 
-		if (count( $cid ) && (int)$idSource > 0) {
+		$copyCount = 0;
+		if (count($cid) && (int)$idSource > 0) {
 			ArrayHelper::toInteger($cid);
 
 			// Attributes
-			$aA = PhocacartAttribute::getAttributesById($idSource, 1);
-			if (!empty($aA)) {
-				foreach ($aA as $k => $v) {
-					if (isset($v['id']) && $v['id'] > 0) {
-						$oA = PhocacartAttribute::getOptionsById((int)$v['id'], 1);
-						if (!empty($oA)) {
-							$aA[$k]['options'] = $oA;
-						}
-					}
-				}
-			} else {
-				$app->enqueueMessage(Text::_('COM_PHOCACART_SELECTED_SOURCE_PRODUCT_DOES_NOT_HAVE_ANY_ATTRIBUTES'), 'error');
-				return false;
-			}
+            $attributes = PhocacartAttribute::getAttributesById($idSource, 1);
+            $attributes = I18nHelper::loadI18nArray($attributes, '#__phocacart_attributes_i18n', ['title', 'alias']);
+            if ($attributes) {
+                foreach ($attributes as &$attribute) {
+                    $attribute['options'] = PhocacartAttribute::getOptionsById((int)$attribute['id'], 1);
+                    $attribute['options'] = I18nHelper::loadI18nArray($attribute['options'], '#__phocacart_attribute_values_i18n', ['title', 'alias']);
+                }
+            } else {
+                $app->enqueueMessage(Text::_('COM_PHOCACART_SELECTED_SOURCE_PRODUCT_DOES_NOT_HAVE_ANY_ATTRIBUTES'), 'error');
+                return false;
+            }
 
-			if (!empty($aA)) {
-				foreach($cid as $k => $v) {
-
-					if ((int)$v != $idSource) { // Do not copy to itself
-
-
-
-
-						PhocacartAttribute::storeAttributesById((int)$v, $aA, 1, $copy);
-						$cA++;
-					}
+			if (!empty($attributes)) {
+				foreach($cid as $id) {
+                    if ($id == $idSource) {
+                        // Do not copy to itself
+                        continue;
+                    }
+					PhocacartAttribute::storeAttributesById($id, $attributes, 1, $copy);
+					$copyCount++;
 				}
 			}
 
 		}
 
-		if ($cA > 0) {
+		if ($copyCount) {
 			return true;
 		} else {
 			$app->enqueueMessage(Text::_('COM_PHOCACART_NO_ATTRIBUTE_COPIED'), 'error');
