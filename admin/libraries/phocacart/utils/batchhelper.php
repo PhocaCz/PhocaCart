@@ -44,7 +44,7 @@ class PhocacartUtilsBatchhelper
 
 				$fANew = array();
 				if(!empty($fA)) {
-					foreach($fA as $k => $v) {
+					foreach($fA as $v) {
 						if (isset($v['download_file']) && $v['download_file'] != '') {
 							$fANew[]['download_file'] = str_replace($params['olddownloadfolder'], $params['newdownloadfolder'], $v['download_file']);
 						}

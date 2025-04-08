@@ -84,8 +84,8 @@ trait I18nAdminModelTrait
         return $form;
     }
 
-    private function copyI18nData(int $oldId, int $newId): void
+    private function copyI18nData(int $oldId, int $newId, array $defLanguageData = []): void
     {
-        I18nHelper::copyI18nData($oldId, $newId, $this->i18nTable);
+        I18nHelper::copyI18nData($oldId, $newId, $this->i18nTable, $defLanguageData);
     }
 }

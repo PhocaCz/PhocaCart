@@ -175,14 +175,13 @@ abstract class I18nHelper
         return $db->execute();
     }
 
-    public static function copyI18nData(int $oldId, int $newId, string $i18nTable): void
+    public static function copyI18nData(int $oldId, int $newId, string $i18nTable, array $defLanguageData = []): void
     {
         if (!self::isI18n()) {
             return;
         }
 
-        /** @var DatabaseInterface $db */
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        $db = Container::getDbo();
 
         $query = $db->getQuery(true)
             ->select('*')
@@ -196,6 +195,11 @@ abstract class I18nHelper
 
         foreach ($values as $i18nData) {
             $i18nData->id = $newId;
+            if ($i18nData->language == self::getDefLanguage()) {
+                foreach ($defLanguageData as $key => $value) {
+                    $i18nData->{$key} = $value;
+                }
+            }
             $db->insertObject($i18nTable, $i18nData);
         }
     }

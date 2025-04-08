@@ -960,8 +960,8 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
 			// Alter the title & alias
 			$data = $this->generateNewTitle($categoryId, $table->alias, $table->title);
-			$table->title   = $data['0'];
-			$table->alias   = $data['1'];
+			$table->title   = $data[0];
+			$table->alias   = $data[1];
 			$table->published = 0;// As default the copied new product is unpublished
 
 			// Reset the ID because we are making a copy
@@ -1052,7 +1052,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
 			$newId = $table->get('id');
 
-            $this->copyI18nData($pk, $newId);
+            $this->copyI18nData($pk, $newId, ['title' => $table->title, 'alias' => $table->alias]);
 
 			// Add the new ID to the array
 			$newIds[$pk]	= $newId;
@@ -1545,27 +1545,22 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 	}
 
 	protected function generateNewTitle($category_id, $alias, $title) {
-
-		$app 			= Factory::getApplication('administrator');
-		$batchParams 	= $app->input->post->get('batch', array(), 'array');
-
+		$app 		 = Factory::getApplication();
+		$batchParams = $app->getInput()->post->get('batch', [], 'array');
+        $skipCreatingUniqueName = !!($batchParams['skip_creating_unique_name'] ?? 0);
 
 		// Alter the title & alias
 		$table = $this->getTable();
 		// Product can be stored in different categories, so we ignore "parent id - category" - each product will have new name
 		// not like standard new name for each category
-		while ($table->load(array('alias' => $alias))) {
-
-			// Skip creating unique name
-			if (isset($batchParams['skip_creating_unique_name']) && $batchParams['skip_creating_unique_name'] == 1) {
-
-			} else {
+		while ($table->load(['alias' => $alias])) {
+			if (!$skipCreatingUniqueName) {
 				$title = StringHelper::increment($title);
 			}
 			$alias = StringHelper::increment($alias, 'dash');
 		}
 
-		return array($title, $alias);
+		return [$title, $alias];
 	}
 
 	public function copyattributes(&$cid = array(), $idSource = 0)
