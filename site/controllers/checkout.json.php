@@ -197,7 +197,8 @@ class PhocaCartControllerCheckout extends FormController
                 }
 
                 // ================
-                // IMAGE
+                // IMAGE - only works for Advanced Stock Management because each combination has own image
+                //       - does not work for standard attributes and options because one product can have more attributes - then there is no rule which image to display
                 if ($dynamic_change_image == 2) {
 
                     $params = array();
