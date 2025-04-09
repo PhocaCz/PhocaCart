@@ -8,49 +8,43 @@
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
+
+use Phoca\PhocaCart\I18n\I18nHelper;
+
 defined( '_JEXEC' ) or die( 'Restricted access' );
 class PhocacartUtilsBatchhelper
 {
-	public static function storeProductItems($idSource, $idDest, $batchParams, $params = array()) {
-
+	public static function storeProductItems($idSource, $idDest, $batchParams, $params = array()): bool {
 		if ($idSource > 0 && $idDest > 0) {
 			PhocacartRelated::copyRelatedItems($idSource, $idDest);
 
 			// Additional Images
-			$iA = PhocacartImageAdditional::getImagesByProductId($idSource, 2);
-			PhocacartImageAdditional::storeImagesByProductId((int)$idDest, $iA, 1);
+			$additonalImages = PhocacartImageAdditional::getImagesByProductId($idSource, 2);
+			PhocacartImageAdditional::storeImagesByProductId((int)$idDest, $additonalImages, 1);
 
 			// Attributes
-			$aA = PhocacartAttribute::getAttributesById($idSource, 1);
-			if (!empty($aA)) {
-				foreach ($aA as $k => $v) {
-					if (isset($v['id']) && $v['id'] > 0) {
-						$oA = PhocacartAttribute::getOptionsById((int)$v['id'], 1);
-						if (!empty($oA)) {
-							$aA[$k]['options'] = $oA;
-						}
-					}
-				}
-
-			}
-
+            $attributes = PhocacartAttribute::getAttributesById($idSource, 1);
+            $attributes = I18nHelper::loadI18nArray($attributes, '#__phocacart_attributes_i18n', ['title', 'alias']);
+            if ($attributes) {
+                foreach ($attributes as &$attribute) {
+                    $attribute['options'] = PhocacartAttribute::getOptionsById((int)$attribute['id'], 1);
+                    $attribute['options'] = I18nHelper::loadI18nArray($attribute['options'], '#__phocacart_attribute_values_i18n', ['title', 'alias']);
+                }
+            }
 
             $copy = 1;// When copying attributes or batch products we do a copy of attributes (copy = 1) but in this case without copying download files on the server
             if (isset($batchParams['copy_attributes_download_files']) && $batchParams['copy_attributes_download_files'] == 1) {
                 $copy = 2;// The same like 1 but in this case we even copy the download files on the server, see: PhocacartAttribute::storeAttributesById() for more info
             }
-
-			PhocacartAttribute::storeAttributesById((int)$idDest, $aA, 1, $copy);
-
+			PhocacartAttribute::storeAttributesById((int)$idDest, $attributes, 1, $copy);
 
             // Additional download files
 			if (isset($batchParams['copy_download_files']) && $batchParams['copy_download_files'] == 1) {
-
 				$fA = PhocacartFileAdditional::getProductFilesByProductId($idSource, 2);
 
 				$fANew = array();
 				if(!empty($fA)) {
-					foreach($fA as $k => $v) {
+					foreach($fA as $v) {
 						if (isset($v['download_file']) && $v['download_file'] != '') {
 							$fANew[]['download_file'] = str_replace($params['olddownloadfolder'], $params['newdownloadfolder'], $v['download_file']);
 						}
@@ -60,20 +54,17 @@ class PhocacartUtilsBatchhelper
 				PhocacartFileAdditional::storeProductFilesByProductId((int)$idDest, $fANew, 1);
 			}
 
-
-
-
-
 			// Specifications
-			$sA = PhocacartSpecification::getSpecificationsById($idSource, 1);
-			PhocacartSpecification::storeSpecificationsById((int)$idDest, $sA, 1);
+			$specifications = PhocacartSpecification::getSpecificationsById($idSource, 1);
+            $specifications = I18nHelper::loadI18nArray($specifications, '#__phocacart_specifications_i18n', ['title', 'alias', 'value', 'alias_value']);
+            PhocacartSpecification::storeSpecificationsById((int)$idDest, $specifications, 1);
 
 			// Discounts
-			$dA = PhocacartDiscountProduct::getDiscountsById($idSource, 1);
-			PhocacartDiscountProduct::storeDiscountsById((int)$idDest, $dA, 1);
+			$discounts = PhocacartDiscountProduct::getDiscountsById($idSource, 1);
+			PhocacartDiscountProduct::storeDiscountsById((int)$idDest, $discounts, 1);
 
 			// Advanced Stock Options
-			 $aSOA = PhocacartAttribute::getCombinationsStockById($idSource, 1);// NOT POSSIBLE TO COPY
+			// $aSOA = PhocacartAttribute::getCombinationsStockById($idSource, 1);// NOT POSSIBLE TO COPY
 			// We need to create new attributes including new product key, etc.
 
 
@@ -100,14 +91,9 @@ class PhocacartUtilsBatchhelper
 						$i++;
 					}
 
-
 					PhocacartAttribute::storeCombinationsById((int)$idDest, $aSOANew, 1);
 				}
-
 			}
-
-
-
 
 			// Customer groups
 			$cA = PhocacartGroup::getGroupsById($idSource, 3, 1);
@@ -143,6 +129,7 @@ class PhocacartUtilsBatchhelper
 				}
 			}
 		}
+
 		return true;
 	}
 

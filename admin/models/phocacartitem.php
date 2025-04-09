@@ -936,14 +936,11 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 			return false;
 		}
 
-		//$i		= 0;
-
-		// Parent exists so we let's proceed
+		// Parent exists - let's proceed
 		while (!empty($pks))
 		{
 			// Pop the first ID off the stack
 			$pk = array_shift($pks);
-
 
 			$table->reset();
 
@@ -961,28 +958,18 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 				}
 			}
 
-
-
 			// Alter the title & alias
 			$data = $this->generateNewTitle($categoryId, $table->alias, $table->title);
-			$table->title   = $data['0'];
-			$table->alias   = $data['1'];
+			$table->title   = $data[0];
+			$table->alias   = $data[1];
 			$table->published = 0;// As default the copied new product is unpublished
 
 			// Reset the ID because we are making a copy
 			$table->id		= 0;
-
-			// New category ID
-		//	$table->catid	= $categoryId;
-
-			// Ordering
-		//	$table->ordering = $this->increaseOrdering($categoryId);
-
 			$table->hits = 0;
 
-
-			$params['olddownloadfolder']		= $table->download_folder;
-			$params['newdownloadfolder']		= $params['olddownloadfolder'];
+			$params['olddownloadfolder'] = $table->download_folder;
+			$params['newdownloadfolder'] = $params['olddownloadfolder'];
 
 			// COPY OR BATCH functions - we cannot do the same tokens so create new token and token folder and if set copy the files
 			// EACH DOWNLOAD FILE MUST HAVE UNIQUE DOWNLOAD TOKEN AND DOWNLOAD FOLDER
@@ -990,77 +977,66 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 			if (isset($batchParams['copy_download_files']) && $batchParams['copy_download_files'] == 1) {
 				$copy = 2;// The same like 1 but in this case we even copy the download files on the server
 			}
-			if ($copy > 0) {
 
-                $pathFile = PhocacartPath::getPath('productfile');
+            $pathFile = PhocacartPath::getPath('productfile');
+            // First create new token and token folder
+			$table->download_token 			= PhocacartUtils::getToken();
+			$table->download_folder			= PhocacartUtils::getAndCheckToken('folder', $pathFile);
+			$params['newdownloadfolder']	= $table->download_folder;
 
-                // First create new token and token folder
-				$table->download_token 			= PhocacartUtils::getToken();
-				$table->download_folder			= PhocacartUtils::getAndCheckToken('folder', $pathFile);
-                //$table->download_folder			= PhocacartUtils::getToken('folder');
-				$params['newdownloadfolder']	= $table->download_folder;
+            if($copy == 2) {
 
+                // Download File
+                if ($table->download_file != '' && File::exists($pathFile['orig_abs_ds'] . $table->download_file)) {
 
+                    $newDownloadFile = str_replace($params['olddownloadfolder'], $table->download_folder, $table->download_file);
+                    if (!Folder::create($pathFile['orig_abs_ds'] . $table->download_folder)) {
+                        // Error message will be set below: COM_PHOCACART_ERROR_DOWNLOAD_FILE_OF_ATTRIBUTE_OPTION_DOES_NOT_EXIST
 
-				if($copy == 2) {
+                        $msg = Text::_('COM_PHOCACART_DOWNLOAD_FOLDER') . ': ' . $table->download_folder . "<br />";
+                        $msg .= Text::_('COM_PHOCACART_ERROR_DOWNLOAD_FOLDER_NOT_CREATED');
+                        $app->enqueueMessage($msg, 'error');
+                    }
 
-					// Download File
-					if ($table->download_file != '' && File::exists($pathFile['orig_abs_ds'] . $table->download_file)) {
+                    if (!File::copy($pathFile['orig_abs_ds'] . $table->download_file, $pathFile['orig_abs_ds'] . $newDownloadFile)) {
+                        $msg = Text::_('COM_PHOCACART_DOWNLOAD_FILE') . ': ' . $table->download_file . "<br />";
+                        $msg .= Text::_('COM_PHOCACART_ERROR_DOWNLOAD_FILE_NOT_COPIED');
+                        $app->enqueueMessage($msg, 'error');
+                    }
+                    $table->download_file = $newDownloadFile;
+                }
 
-						$newDownloadFile = str_replace($params['olddownloadfolder'], $table->download_folder, $table->download_file);
-						if (!Folder::create($pathFile['orig_abs_ds'] . $table->download_folder)) {
-							// Error message will be set below: COM_PHOCACART_ERROR_DOWNLOAD_FILE_OF_ATTRIBUTE_OPTION_DOES_NOT_EXIST
+                // Additional Download Files
+                $downloadFiles = PhocacartFileAdditional::getProductFilesByProductId($pk);
 
-							$msg = Text::_('COM_PHOCACART_DOWNLOAD_FOLDER') . ': ' . $table->download_folder . "<br />";
-							$msg .= Text::_('COM_PHOCACART_ERROR_DOWNLOAD_FOLDER_NOT_CREATED');
-							$app->enqueueMessage($msg, 'error');
-						}
+                if (!empty($downloadFiles)) {
+                    foreach ($downloadFiles as $k => $v) {
 
-						if (!File::copy($pathFile['orig_abs_ds'] . $table->download_file, $pathFile['orig_abs_ds'] . $newDownloadFile)) {
-							$msg = Text::_('COM_PHOCACART_DOWNLOAD_FILE') . ': ' . $table->download_file . "<br />";
-							$msg .= Text::_('COM_PHOCACART_ERROR_DOWNLOAD_FILE_NOT_COPIED');
-							$app->enqueueMessage($msg, 'error');
-						}
-						$table->download_file = $newDownloadFile;
-					}
+                        if (isset($v['download_file']) && $v['download_file'] != '') {
+                            $newDownloadFile = str_replace($params['olddownloadfolder'], $table->download_folder, $v['download_file']);
 
-					// Additional Download Files
-					$downloadFiles = PhocacartFileAdditional::getProductFilesByProductId($pk);
+                            // In case download_file is emtpy we schould create the folder
+                            if (!Folder::exists($pathFile['orig_abs_ds'] . $table->download_folder)) {
+                                if (!Folder::create($pathFile['orig_abs_ds'] . $table->download_folder)) {
+                                    // Error message will be set below: COM_PHOCACART_ERROR_DOWNLOAD_FILE_OF_ATTRIBUTE_OPTION_DOES_NOT_EXIST
 
-					if(!empty($downloadFiles)) {
-						foreach($downloadFiles as $k => $v) {
-
-							if (isset($v['download_file']) && $v['download_file'] != '') {
-								$newDownloadFile = str_replace($params['olddownloadfolder'], $table->download_folder, $v['download_file']);
-
-								// In case download_file is emtpy we schould create the folder
-								if (!Folder::exists($pathFile['orig_abs_ds'] . $table->download_folder)) {
-									if (!Folder::create($pathFile['orig_abs_ds'] . $table->download_folder)) {
-										// Error message will be set below: COM_PHOCACART_ERROR_DOWNLOAD_FILE_OF_ATTRIBUTE_OPTION_DOES_NOT_EXIST
-
-										$msg = Text::_('COM_PHOCACART_DOWNLOAD_FOLDER') . ': ' . $table->download_folder . "<br />";
-										$msg .= Text::_('COM_PHOCACART_ERROR_DOWNLOAD_FOLDER_NOT_CREATED');
-										$app->enqueueMessage($msg, 'error');
-									}
-								}
-								if (!File::copy($pathFile['orig_abs_ds'] . $v['download_file'], $pathFile['orig_abs_ds'] . $newDownloadFile)) {
-									$msg = Text::_('COM_PHOCACART_DOWNLOAD_FILE') . ': ' . $table->download_file . "<br />";
-									$msg .= Text::_('COM_PHOCACART_ERROR_DOWNLOAD_FILE_NOT_COPIED');
-									$app->enqueueMessage($msg, 'error');
-								}
-							}
-						}
-					}
-					// Files copied on server, we will copy the database info below in PhocacartUtilsBatchhelper::storeProductItems
-
-				} else {
-					$table->download_file = '';
-				}
-
-			}
-
-
-
+                                    $msg = Text::_('COM_PHOCACART_DOWNLOAD_FOLDER') . ': ' . $table->download_folder . "<br />";
+                                    $msg .= Text::_('COM_PHOCACART_ERROR_DOWNLOAD_FOLDER_NOT_CREATED');
+                                    $app->enqueueMessage($msg, 'error');
+                                }
+                            }
+                            if (!File::copy($pathFile['orig_abs_ds'] . $v['download_file'], $pathFile['orig_abs_ds'] . $newDownloadFile)) {
+                                $msg = Text::_('COM_PHOCACART_DOWNLOAD_FILE') . ': ' . $table->download_file . "<br />";
+                                $msg .= Text::_('COM_PHOCACART_ERROR_DOWNLOAD_FILE_NOT_COPIED');
+                                $app->enqueueMessage($msg, 'error');
+                            }
+                        }
+                    }
+                }
+                // Files copied on server, we will copy the database info below in PhocacartUtilsBatchhelper::storeProductItems
+            }else {
+                $table->download_file = '';
+            }
 
 			// Check the row.
 			if (!$table->check()) {
@@ -1076,7 +1052,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
 			$newId = $table->get('id');
 
-            $this->copyI18nData($pk, $newId);
+            $this->copyI18nData($pk, $newId, ['title' => $table->title, 'alias' => $table->alias]);
 
 			// Add the new ID to the array
 			$newIds[$pk]	= $newId;
@@ -1569,76 +1545,65 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 	}
 
 	protected function generateNewTitle($category_id, $alias, $title) {
-
-		$app 			= Factory::getApplication('administrator');
-		$batchParams 	= $app->input->post->get('batch', array(), 'array');
-
+		$app 		 = Factory::getApplication();
+		$batchParams = $app->getInput()->post->get('batch', [], 'array');
+        $skipCreatingUniqueName = !!($batchParams['skip_creating_unique_name'] ?? 0);
 
 		// Alter the title & alias
 		$table = $this->getTable();
 		// Product can be stored in different categories, so we ignore "parent id - category" - each product will have new name
 		// not like standard new name for each category
-		while ($table->load(array('alias' => $alias))) {
-
-			// Skip creating unique name
-			if (isset($batchParams['skip_creating_unique_name']) && $batchParams['skip_creating_unique_name'] == 1) {
-
-			} else {
+		while ($table->load(['alias' => $alias])) {
+			if (!$skipCreatingUniqueName) {
 				$title = StringHelper::increment($title);
 			}
 			$alias = StringHelper::increment($alias, 'dash');
 		}
 
-		return array($title, $alias);
+		return [$title, $alias];
 	}
 
 	public function copyattributes(&$cid = array(), $idSource = 0)
     {
-		$app 							= Factory::getApplication();
-		$copy_attributes_download_files 	= $app->input->post->get('copy_attributes_download_files', 0, 'int');
+		$app = Factory::getApplication();
+		$copy_attributes_download_files 	= $app->getInput()->post->get('copy_attributes_download_files', 0, 'int');
 
 		$copy = 1;// When copying attributes or batch products we do a copy of attributes (copy = 1) but in this case without copying download files on the server
 		if ($copy_attributes_download_files == 1) {
 			$copy = 2;// The same like 1 but in this case we even copy the download files on the server, see: PhocacartAttribute::storeAttributesById() for more info
 		}
-		$cA = 0;
 
-		if (count( $cid ) && (int)$idSource > 0) {
+		$copyCount = 0;
+		if (count($cid) && (int)$idSource > 0) {
 			ArrayHelper::toInteger($cid);
 
 			// Attributes
-			$aA = PhocacartAttribute::getAttributesById($idSource, 1);
-			if (!empty($aA)) {
-				foreach ($aA as $k => $v) {
-					if (isset($v['id']) && $v['id'] > 0) {
-						$oA = PhocacartAttribute::getOptionsById((int)$v['id'], 1);
-						if (!empty($oA)) {
-							$aA[$k]['options'] = $oA;
-						}
-					}
-				}
-			} else {
-				$app->enqueueMessage(Text::_('COM_PHOCACART_SELECTED_SOURCE_PRODUCT_DOES_NOT_HAVE_ANY_ATTRIBUTES'), 'error');
-				return false;
-			}
+            $attributes = PhocacartAttribute::getAttributesById($idSource, 1);
+            $attributes = I18nHelper::loadI18nArray($attributes, '#__phocacart_attributes_i18n', ['title', 'alias']);
+            if ($attributes) {
+                foreach ($attributes as &$attribute) {
+                    $attribute['options'] = PhocacartAttribute::getOptionsById((int)$attribute['id'], 1);
+                    $attribute['options'] = I18nHelper::loadI18nArray($attribute['options'], '#__phocacart_attribute_values_i18n', ['title', 'alias']);
+                }
+            } else {
+                $app->enqueueMessage(Text::_('COM_PHOCACART_SELECTED_SOURCE_PRODUCT_DOES_NOT_HAVE_ANY_ATTRIBUTES'), 'error');
+                return false;
+            }
 
-			if (!empty($aA)) {
-				foreach($cid as $k => $v) {
-
-					if ((int)$v != $idSource) { // Do not copy to itself
-
-
-
-
-						PhocacartAttribute::storeAttributesById((int)$v, $aA, 1, $copy);
-						$cA++;
-					}
+			if (!empty($attributes)) {
+				foreach($cid as $id) {
+                    if ($id == $idSource) {
+                        // Do not copy to itself
+                        continue;
+                    }
+					PhocacartAttribute::storeAttributesById($id, $attributes, 1, $copy);
+					$copyCount++;
 				}
 			}
 
 		}
 
-		if ($cA > 0) {
+		if ($copyCount) {
 			return true;
 		} else {
 			$app->enqueueMessage(Text::_('COM_PHOCACART_NO_ATTRIBUTE_COPIED'), 'error');
