@@ -13,7 +13,6 @@ use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\LanguageHelper;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Uri\Uri;
@@ -26,6 +25,7 @@ use Joomla\CMS\Mail\MailHelper as JoomlaMailHelper;
 use Phoca\PhocaCart\Constants\EmailDocumentType;
 use Phoca\PhocaCart\Container\Container;
 use Phoca\PhocaCart\Helper\PhocaCartHelper;
+use Phoca\PhocaCart\Layout\SiteLayout;
 use Phoca\PhocaCart\Utils\TextUtils;
 
 defined('_JEXEC') or die;
@@ -562,7 +562,8 @@ abstract class MailHelper
 
         $data['mailData'] = &$mailData;
 
-        $result = LayoutHelper::render('phocacart.mail.' . $format . '.' . $layoutFile, $data, null, ['client' => 'site']);
+        $layout = new SiteLayout('phocacart.mail.' . $format . '.' . $layoutFile);
+        $result = $layout->render($data);
 
         foreach ($blocks as $name => $block) {
             $mailData[$format . '.' . $name] = $block;
