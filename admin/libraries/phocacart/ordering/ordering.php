@@ -86,6 +86,8 @@ class PhocacartOrdering
 					case 2: return ['s.id DESC'];
 					case 3: return ['s.title ASC', 's.value ASC'];
 					case 4: return ['s.title DESC', 's.value DESC'];
+					case 7: return ['s.ordering ASC'];
+					case 8: return ['s.ordering DESC'];
 					case 1: default: return ['s.id ASC'];
 				}
 
