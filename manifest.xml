@@ -49,7 +49,7 @@
 		<downloads>
 			<downloadurl type="full" format="zip">https://github.com/PhocaCz/PhocaCart/releases/download/5.0.1/com_phocacart_v5.0.1.zip</downloadurl>
 		</downloads>
-		<sha512>68f0873a84e84082ea075862c2b9935180f9473a27dce7a88850197b56fde34670ff79bdd0b469e62001ab184a97bdf07ddf1f16ec04f17eff8c40552269fb47</sha512>
+		<sha512>8ab9afcd4c64ba31dcc823865cd1bfb615e6fe1adb3da31f7d1f0f4d939a9d7c20496589adfb5b44fe714bb7c39ba2ae89dc080fd9192ea8ec90fa30c2eb674b</sha512>
 		<tags>
 			<tag>stable</tag>
 		</tags>
