@@ -1314,7 +1314,11 @@ if ($pR) {
 	// Run content plugins e.g. because of translation
 	// Disable emailclock for PDF | MAIL
 	if ($d['format'] == 'pdf' || $d['format'] == 'mail') {
-		$oPr2 = '{emailcloak=off}' . $oPr2;
+        $emailCloakEnabled = PluginHelper::isEnabled('content', 'emailcloak');
+        if ($emailCloakEnabled) {
+           $oPr2 = '{emailcloak=off}' . $oPr2;
+        }
+
 	}
 
 	$oPr2 = HTMLHelper::_('content.prepare', $oPr2);
@@ -1329,7 +1333,10 @@ if ($pR) {
 	// Run content plugins e.g. because of translation
 	// Disable emailclock for PDF | MAIL
 	if ($d['format'] == 'pdf' || $d['format'] == 'mail') {
-		$o2 = '{emailcloak=off}' . $o2;
+        $emailCloakEnabled = PluginHelper::isEnabled('content', 'emailcloak');
+        if ($emailCloakEnabled) {
+            $o2 = '{emailcloak=off}' . $o2;
+        }
 	}
 	$o2 = HTMLHelper::_('content.prepare', $o2);
 

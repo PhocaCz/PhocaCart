@@ -13,6 +13,7 @@ defined('_JEXEC') or die();
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Associations;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Registry\Registry;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -744,7 +745,10 @@ class PhocacartRenderFront
 
             // Disable emailclock for PDF | MAIL
             if ($format == 'pdf' || $format == 'mail') {
-                $o = '{emailcloak=off}' . $o;
+                $emailCloakEnabled = PluginHelper::isEnabled('content', 'emailcloak');
+                if ($emailCloakEnabled) {
+                    $o = '{emailcloak=off}' . $o;
+                }
             }
 
             $o = HTMLHelper::_('content.prepare', $o);

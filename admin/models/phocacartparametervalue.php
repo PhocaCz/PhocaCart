@@ -31,6 +31,7 @@ class PhocaCartCpModelPhocacartParameterValue extends AdminModel
         $this->i18nFields = [
             'title',
             'alias',
+            'description',
         ];
     }
 

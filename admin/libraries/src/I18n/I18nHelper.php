@@ -19,6 +19,7 @@ use Joomla\CMS\Language\LanguageHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\QueryInterface;
+use Phoca\PhocaCart\Container\Container;
 
 abstract class I18nHelper
 {
@@ -136,13 +137,19 @@ abstract class I18nHelper
                 }
             }
 
-            if (array_key_exists('alias', $fields) && !$fields['alias'] && array_key_exists('title', $fields) && $fields['title']) {
-                $fields['alias'] = ApplicationHelper::stringURLSafe($fields['title']);
+            if (array_key_exists('alias', $fields)) {
+                if (!$fields['alias'] && array_key_exists('title', $fields) && $fields['title']) {
+                    $fields['alias'] = $fields['title'];
+                }
+                $fields['alias'] = ApplicationHelper::stringURLSafe($fields['alias']);
             }
 
             // Specifications has alias also for value
             if (array_key_exists('alias_value', $fields) && !$fields['alias_value'] && array_key_exists('value', $fields) && $fields['value']) {
-                $fields['alias_value'] = ApplicationHelper::stringURLSafe($fields['value']);
+                if (!$fields['alias_value'] && array_key_exists('value', $fields) && $fields['value']) {
+                    $fields['alias_value'] = $fields['value'];
+                }
+                $fields['alias_value'] = ApplicationHelper::stringURLSafe($fields['alias_value']);
             }
 
             $fields = (object)$fields;
@@ -168,14 +175,13 @@ abstract class I18nHelper
         return $db->execute();
     }
 
-    public static function copyI18nData(int $oldId, int $newId, string $i18nTable): void
+    public static function copyI18nData(int $oldId, int $newId, string $i18nTable, array $defLanguageData = []): void
     {
         if (!self::isI18n()) {
             return;
         }
 
-        /** @var DatabaseInterface $db */
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        $db = Container::getDbo();
 
         $query = $db->getQuery(true)
             ->select('*')
@@ -189,6 +195,11 @@ abstract class I18nHelper
 
         foreach ($values as $i18nData) {
             $i18nData->id = $newId;
+            if ($i18nData->language == self::getDefLanguage()) {
+                foreach ($defLanguageData as $key => $value) {
+                    $i18nData->{$key} = $value;
+                }
+            }
             $db->insertObject($i18nTable, $i18nData);
         }
     }
@@ -400,4 +411,43 @@ abstract class I18nHelper
     {
         return !self::isI18n() && Associations::isEnabled();
     }
+
+    public static function loadI18nArray(?array $items, string $i18nTable, array $i18nFields): ?array
+    {
+        if (!I18nHelper::isI18n()) {
+            return $items;
+        }
+
+        if (!$items) {
+            return $items;
+        }
+
+        $db = Container::getDbo();
+
+        foreach ($items as &$item) {
+            $query = $db->getQuery(true)
+                ->select(array_merge($i18nFields, ['language']))
+                ->from($i18nTable)
+                ->where($db->quoteName('id') . ' = ' . $item['id']);
+
+            $db->setQuery($query);
+            $i18nData = $db->loadObjectList('language');
+
+            foreach ($i18nFields as $field) {
+                $defValue = $item[$field];
+
+                $item[$field] = [];
+                foreach (I18nHelper::getI18nLanguages() as $language) {
+                    $item[$field][$language->lang_code] = $i18nData[$language->lang_code]->$field ?? null;
+                }
+
+                if ($item[$field][I18nHelper::getDefLanguage()] === null || $item[$field][I18nHelper::getDefLanguage()] === '') {
+                    $item[$field][I18nHelper::getDefLanguage()] = $defValue;
+                }
+            }
+        }
+
+        return $items;
+    }
+
 }

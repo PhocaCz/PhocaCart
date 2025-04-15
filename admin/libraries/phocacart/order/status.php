@@ -815,7 +815,10 @@ class PhocacartOrderStatus
                 if ($object) {
                     // Run content plugins e.g. because of translation
                     // Disable emailclock for PDF | MAIL
-                    $object = '{emailcloak=off}' . $object;
+                    $emailCloakEnabled = PluginHelper::isEnabled('content', 'emailcloak');
+                    if ($emailCloakEnabled) {
+                        $object = '{emailcloak=off}' . $object;
+                    }
                     $object = HTMLHelper::_('content.prepare', $object);
                 }
 
@@ -827,7 +830,10 @@ class PhocacartOrderStatus
             if ($object) {
                 // Run content plugins e.g. because of translation
                 // Disable emailclock for PDF | MAIL
-                $object = '{emailcloak=off}' . $object;
+                $emailCloakEnabled = PluginHelper::isEnabled('content', 'emailcloak');
+                if ($emailCloakEnabled) {
+                    $object = '{emailcloak=off}' . $object;
+                }
                 $object = HTMLHelper::_('content.prepare', $object);
             }
 
@@ -843,7 +849,10 @@ class PhocacartOrderStatus
         if ($object) {
             // Run content plugins e.g. because of translation
             // Disable emailclock for PDF | MAIL
-            $object = '{emailcloak=off}' . $object;
+            $emailCloakEnabled = PluginHelper::isEnabled('content', 'emailcloak');
+            if ($emailCloakEnabled) {
+                $object = '{emailcloak=off}' . $object;
+            }
             $object = HTMLHelper::_('content.prepare', $object);
         }
 
