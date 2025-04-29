@@ -664,7 +664,7 @@ if (!empty($d['products'])){
 							if (isset($v['id']) && (int)$v['id'] > 0) {
 								$items = PhocacartRelated::getRelatedItemsById((int)$v['id'], 2, 1);
 
-								if (!empty($items)) {
+                                if (!empty($items)) {
 									if ($xml) {
 										$title = '';
 										if ($export_add_title == 1) {

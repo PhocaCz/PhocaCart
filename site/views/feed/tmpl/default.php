@@ -126,7 +126,7 @@ if (!empty($this->t['products'])) {
         }
 
         if ($this->p['item_sku'] != '' && isset($v->sku) && $v->sku != '') {
-            $oI['item_sku'] = $l.$this->p['item_sku'].$r.$v->sku.$e.$this->p['item_sku'].$r;
+            $oI['item_sku'] = $l.$this->p['item_sku'].$r.htmlspecialchars($v->sku).$e.$this->p['item_sku'].$r;
         }
 
         if ($this->p['item_ean'] != '' && isset($v->ean) && $v->ean != '') {

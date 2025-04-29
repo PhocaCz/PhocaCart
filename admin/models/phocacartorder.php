@@ -15,11 +15,15 @@ use Joomla\CMS\Table\Table;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\PluginHelper;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
 
 class PhocaCartCpModelPhocacartOrder extends AdminModel
 {
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
+    protected   $context        = 'com_phocacart.order';
 
 	protected $fieldsbas; //Billing and Shipping
 
@@ -278,6 +282,9 @@ class PhocaCartCpModelPhocacartOrder extends AdminModel
 			return false;
 		}
 
+        PluginHelper::importPlugin('pcp');
+        Dispatcher::dispatch(new Event\Payment\BeforeSaveOrderAdmin($this->context, $table, $isNew, $data));
+
 		if (!$table->store()) {
 			$this->setError($table->getError());
 			return false;
@@ -298,6 +305,8 @@ class PhocaCartCpModelPhocacartOrder extends AdminModel
 			// Store the history
 			PhocacartOrderStatus::setHistory((int)$data['id'], (int)$data['status_id'], (int)$notify, $comment);
 		}
+
+        //Dispatcher::dispatchAfterSave($this->event_after_save, $this->context, $table, $isNew, $data);
 
 
 

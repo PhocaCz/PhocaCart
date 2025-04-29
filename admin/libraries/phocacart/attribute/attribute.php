@@ -250,7 +250,7 @@ class PhocacartAttribute
             if (!empty($attributesArray)) {
 
                 foreach ($attributesArray as &$attribute) {
-                    if ($attribute['attribute_template']) {
+                    if (isset($attribute['attribute_template']) && $attribute['attribute_template']) {
                         $template = ContentTypeHelper::getContentTypeParams(ContentTypeHelper::Attribute, (int)$attribute['attribute_template']);
                         $attribute = array_merge($attribute, $template->toArray());
                     }
@@ -368,6 +368,22 @@ class PhocacartAttribute
                                 $option['alias'] = $option['title'];
                             }
                             $option['alias'] = PhocacartUtils::getAliasName($option['alias']);
+
+                            if (is_array($option['image']) && empty($option['image'])) {
+                                $option['image'] = '';
+                            }
+                            if (is_array($option['image_medium']) && empty($option['image_medium'])) {
+                                $option['image_medium'] = '';
+                            }
+                            if (is_array($option['image_small']) && empty($option['image_small'])) {
+                                $option['image_small'] = '';
+                            }
+                            if (is_array($option['download_file']) && empty($option['download_file'])) {
+                                $option['download_file'] = '';
+                            }
+                            if (is_array($option['default_value']) && empty($option['default_value'])) {
+                                $option['default_value'] = '';
+                            }
 
                             // Transform checkbox to INT (1 or 0)
                             // And check if there are more default values which is not possible e.g. for select box

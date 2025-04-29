@@ -418,7 +418,18 @@ if($xml) {
 					$data['related'] = array();
 				}
 
-				$data['related'] = implode(',', $data['related']);
+
+                // 5.0.0 change
+                //$data['related'] = implode(',', $data['related']);
+                $relatedToStore = [];
+                if (!empty($data['related'])) {
+                    foreach ($data['related'] as $kR => $vR) {
+                        $relatedToStore[$kR]['id'] = $vR;
+                        $relatedToStore[$kR]['related_type'] = 2;
+
+                    }
+                }
+                $data['related'] = $relatedToStore;
 
 
 
@@ -734,9 +745,18 @@ if($xml) {
 									$related[$kR] = PhocacartUtils::getIntFromString($vR);
 								}
 							}
-							$data['related'] = implode(',', $related);
+							// 5.0.0 change
+                            //$data['related'] = implode(',', $related);
+                            $relatedToStore = [];
+                            if (!empty($related)) {
+                                foreach ($related as $kR => $vR) {
+                                    $relatedToStore[$kR]['id'] = $vR;
+                                    $relatedToStore[$kR]['related_type'] = 2;
 
-						}
+                                }
+                            }
+                            $data['related'] = $relatedToStore;
+                        }
 
 						if (isset($data['tags'])) {
 

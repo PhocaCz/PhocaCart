@@ -8,13 +8,17 @@
  */
 defined( '_JEXEC' ) or die();
 
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Plugin\PluginHelper;
 
 class PhocaCartCpModelPhocaCartEditStatus extends AdminModel
 {
 	protected	$option 		= 'com_phocacart';
+    protected   $context        = 'com_phocacart.order.status';
 
 	public function getData() {
 		$app	= Factory::getApplication();
@@ -58,6 +62,8 @@ class PhocaCartCpModelPhocaCartEditStatus extends AdminModel
 	}
 
 	public function editStatus($data) {
+
+
         $order = $this->getTable('PhocacartOrder', 'Table');
         if (!$order->load(['id' => (int)$data['id']])) {
             return false;
@@ -106,6 +112,11 @@ class PhocaCartCpModelPhocaCartEditStatus extends AdminModel
                 return false;
             }
 
+            $isNew = false;
+            PluginHelper::importPlugin('pcp');
+            //Dispatcher::dispatchBeforeSave($this->event_before_save, $this->context, $order, $isNew, $data);
+            Dispatcher::dispatch(new Event\Payment\BeforeSaveOrderAdmin($this->context, $order, $isNew, $data));
+
             if (!$order->store()) {
                 $this->setError($order->getError());
 
@@ -114,7 +125,7 @@ class PhocaCartCpModelPhocaCartEditStatus extends AdminModel
 
             if ($statusChanged || $commentChanged) {
                 PhocacartOrder::storeOrderReceiptInvoiceId($order->id, false, $status['id'], ['I']);
-                
+
                 $notifyUser           = $data['notify_customer'] !== '' ? !!$data['notify_customer'] : !!$status['email_customer'];
                 $notifyOther          = $data['notify_others'] !== '' ? !!$data['notify_others'] : !!$status['email_others'];
                 $emailSend            = $data['email_send'] !== '' ? $data['email_send'] : $status['email_send'];
@@ -130,6 +141,8 @@ class PhocaCartCpModelPhocaCartEditStatus extends AdminModel
 
                 PhocacartOrderStatus::setHistory($order->id, $status['id'], (int) $notify, trim($data['comment_history']));
             }
+
+            //Dispatcher::dispatchAfterSave($this->event_after_save, $this->context, $order, $isNew, $data);
         }
 
         return true;
