@@ -210,90 +210,96 @@
 				"title": "COM_PHOCACART_WISH_LISTS"
 			},
 			"30": {
+				"image": "class:contenttypes",
+				"view": "phocacartcontenttypes",
+				"link": "option=com_phocacart&amp;view=phocacartcontenttypes",
+				"title": "COM_PHOCACART_CONTENT_TYPES"
+			},
+			"31": {
 				"image": "class:questions",
 				"view": "phocacartquestions",
 				"link": "option=com_phocacart&amp;view=phocacartquestions",
 				"title": "COM_PHOCACART_QUESTIONS"
 			},
-			"31": {
+			"32": {
 				"image": "class:times",
 				"view": "phocacarttimes",
 				"link": "option=com_phocacart&amp;view=phocacarttimes",
 				"title": "COM_PHOCACART_OPENING_TIMES"
 			},
-			"32": {
+			"33": {
 				"image": "class:submititems",
 				"view": "phocacartsubmititems",
 				"link": "option=com_phocacart&amp;view=phocacartsubmititems",
 				"title": "COM_PHOCACART_SUBMITTED_ITEMS"
 			},
-			"33": {
+			"34": {
 				"image": "class:statistics",
 				"view": "phocacartstatistics",
 				"link": "option=com_phocacart&amp;view=phocacartstatistics",
 				"title": "COM_PHOCACART_STATISTICS"
 			},
-			"34": {
+			"35": {
 				"image": "class:reports",
 				"view": "phocacartreports",
 				"link": "option=com_phocacart&amp;view=phocacartreports",
 				"title": "COM_PHOCACART_REPORTS"
 			},
-			"35": {
+			"36": {
 				"image": "class:hits",
 				"view": "phocacarthits",
 				"link": "option=com_phocacart&amp;view=phocacarthits",
 				"title": "COM_PHOCACART_HITS"
 			},
-			"36": {
+			"37": {
 				"image": "class:imports",
 				"view": "phocacartimports",
 				"link": "option=com_phocacart&amp;view=phocacartimports",
 				"title": "COM_PHOCACART_IMPORT"
 			},
-			"37": {
+			"38": {
 				"image": "class:exports",
 				"view": "phocacartexports",
 				"link": "option=com_phocacart&amp;view=phocacartexports",
 				"title": "COM_PHOCACART_EXPORT"
 			},
-			"38": {
+			"39": {
 				"image": "class:logs",
 				"view": "phocacartlogs",
 				"link": "option=com_phocacart&amp;view=phocacartlogs",
 				"title": "COM_PHOCACART_SYSTEM_LOG"
 			},
-			"39": {
+			"40": {
 				"image": "class:extensions",
 				"view": "phocacartextensions",
 				"link": "option=com_phocacart&amp;view=phocacartextensions",
 				"title": "COM_PHOCACART_EXTENSIONS"
 			},
-			"40": {
+			"41": {
 				"image": "class:vendors",
 				"view": "phocacartvendors",
 				"link": "option=com_phocacart&amp;view=phocacartvendors",
 				"title": "COM_PHOCACART_VENDORS"
 			},
-			"41": {
+			"42": {
 				"image": "class:sections",
 				"view": "phocacartsections",
 				"link": "option=com_phocacart&amp;view=phocacartsections",
 				"title": "COM_PHOCACART_SECTIONS"
 			},
-			"42": {
+			"43": {
 				"image": "class:units",
 				"view": "phocacartunits",
 				"link": "option=com_phocacart&amp;view=phocacartunits",
 				"title": "COM_PHOCACART_UNITS"
 			},
-			"43": {
+			"44": {
 				"image": "class:bulkprices",
 				"view": "phocacartbulkprices",
 				"link": "option=com_phocacart&amp;view=phocacartbulkprices",
 				"title": "COM_PHOCACART_BULK_PRICE_EDITOR"
 			},
-			"44": {
+			"45": {
 				"image": "class:info",
 				"view": "phocacartinfo",
 				"link": "option=com_phocacart&amp;view=phocacartinfo",

@@ -376,7 +376,7 @@ class PhocacartSpecification
 			}
 
 		}
-		
+
 		return $a;
 	}
 
