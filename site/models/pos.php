@@ -240,7 +240,7 @@ class PhocaCartModelPos extends BaseDatabaseModel
 		$p['search_custom_fields']	= $params->get( 'search_custom_fields', 0 );
 
 		$p['sql_search_skip_id_specific_type'] = 1;// POS or Online Shop (POS)
-		if ($p['sql_search_skip_id'] != 1 && $p['sql_search_skip_id'] != 3){
+		if ((int)$p['sql_search_skip_id'] != 1 && (int)$p['sql_search_skip_id'] != 3){
 			$p['sql_search_skip_id_specific_type'] = 0;
 
 		}
@@ -375,7 +375,7 @@ class PhocaCartModelPos extends BaseDatabaseModel
 			$lefts[] = ' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id =  a.id';
 			$lefts[] = ' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id';
 
-			if ($p['sql_search_skip_id_specific_type'] == 0){
+			if ((int)$p['sql_search_skip_id_specific_type'] == 0){
 				$lefts[] = ' LEFT JOIN #__phocacart_product_stock AS ps ON a.id = ps.product_id';// search sku ean in advanced stock management
 			}
 
@@ -396,7 +396,7 @@ class PhocaCartModelPos extends BaseDatabaseModel
 			$lefts[] = ' LEFT JOIN #__phocacart_product_categories AS pc ON pc.product_id = a.id';
 			$lefts[] = ' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id';
 
-			if ($p['sql_search_skip_id_specific_type'] == 0){
+			if ((int)$p['sql_search_skip_id_specific_type'] == 0){
 				$lefts[] = ' LEFT JOIN #__phocacart_product_stock AS ps ON a.id = ps.product_id';// search sku ean in advanced stock management
 			}
 			$lefts[] = ' LEFT JOIN #__phocacart_taxes AS t ON t.id = a.tax_id';
