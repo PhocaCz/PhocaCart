@@ -2631,12 +2631,12 @@ form.ph-form-placeholder .ph-checkout-billing-row {
 
 
 /* Button alignment when button includes long text */
-.phItemCartBoxForm .ph-pull-left,
-.phItemCartBoxForm .ph-pull-right {
+.grid .phItemCartBoxForm .ph-pull-left,
+.grid .phItemCartBoxForm .ph-pull-right {
     float: none;
 }
 
-.phItemCartBoxForm {
+.grid .phItemCartBoxForm {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -2649,8 +2649,8 @@ form.ph-form-placeholder .ph-checkout-billing-row {
     display: none;
 }
 
-.phItemCartBoxForm .ph-pull-right,
-.phItemCartBoxForm .ph-pull-left {
+.grid .phItemCartBoxForm .ph-pull-right,
+.grid .phItemCartBoxForm .ph-pull-left {
     margin-left: auto;
     margin-right: auto;
 }
