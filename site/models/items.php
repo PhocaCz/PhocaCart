@@ -248,15 +248,23 @@ class PhocaCartModelItems extends BaseDatabaseModel
 			}
 		}
 
+		// Help parameter because we use one search.php for online shop and for POS
+		// And this parameter changes based on where it is run (if in online shop [1,2] or POS [1,3])
+		$params->set('sql_search_skip_id_specific_type', 1);// POS or Online Shop (Online Shop)
+		if ((int)$params->get('sql_search_skip_id') != 1 && (int)$params->get('sql_search_skip_id') != 2){
+			$params->set('sql_search_skip_id_specific_type', 0);
+
+		}
+
 		$searchParams = [
 			'hide_products_out_of_stock' => $params->get( 'hide_products_out_of_stock', 0),
 			'switch_image_category_items' => $params->get( 'switch_image_category_items', 0 ),
 			'join_tag_label_filter' => $params->get( 'join_tag_label_filter', 0 ),
 			'search_matching_option' => $params->get( 'search_matching_option', 'any'),
 			'search_deep' => $params->get( 'search_deep', 0),
-			'sql_search_skip_id' => $params->get( 'sql_search_skip_id', 1),
+			'sql_search_skip_id' => (int)$params->get( 'sql_search_skip_id', 1),
 			'search_custom_fields' => $params->get( 'search_custom_fields', 0 ),
-			'sql_search_skip_id_specific_type' => in_array($params->get('search_custom_fields', 0), [0, 3]),
+			'sql_search_skip_id_specific_type' => (int)$params->get('sql_search_skip_id_specific_type'),
 			'sql_filter_method_tag' => $params->get('sql_filter_method_tag', 0),
 			'sql_filter_method_label' => $params->get('sql_filter_method_label', 0),
 			'sql_filter_method_parameter' => $params->get('sql_filter_method_parameter', 0),
@@ -413,7 +421,7 @@ class PhocaCartModelItems extends BaseDatabaseModel
 		$join[] = ' LEFT JOIN #__phocacart_categories AS c ON c.id = pc.category_id';
 		$join[] = ' LEFT JOIN #__phocacart_manufacturers AS m ON m.id = a.manufacturer_id';
 
-		if ($searchParams['sql_search_skip_id_specific_type'] == 0){
+		if ((int)$searchParams['sql_search_skip_id_specific_type'] == 0){
 			$join[] = ' LEFT JOIN #__phocacart_product_stock AS ps ON a.id = ps.product_id';// search sku ean in advanced stock management
 		}
 

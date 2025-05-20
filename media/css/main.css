@@ -2628,3 +2628,38 @@ form.ph-form-placeholder .ph-checkout-billing-row {
     right: 1em;
 }
 */
+
+
+/* Button alignment when button includes long text */
+.phItemCartBoxForm .ph-pull-left,
+.phItemCartBoxForm .ph-pull-right {
+    float: none;
+}
+
+.phItemCartBoxForm {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    row-gap: 0.25em;
+    column-gap: 0.75rem;
+}
+
+.phItemCartBoxForm .ph-cb {
+    display: none;
+}
+
+.phItemCartBoxForm .ph-pull-right,
+.phItemCartBoxForm .ph-pull-left {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+ul.ph-filter-module-category-tree {
+    padding-left: 0;
+    margin-left: 1em;
+}
+
+
+
+

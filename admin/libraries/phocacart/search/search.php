@@ -258,7 +258,7 @@ class PhocacartSearch
                         $conditions[] = 'coalesce(i18n_a.features, a.features) LIKE ' . $keyword;
                     }
 
-                    if (!in_array($searchParams['sql_search_skip_id'] ?? 1, [1, 2])) {
+                    if (isset($searchParams['sql_search_skip_id_specific_type']) && (int)$searchParams['sql_search_skip_id_specific_type'] == 0) {
                         $conditions[] = 'ps.sku LIKE ' . $keyword;
                         $conditions[] = 'ps.ean LIKE ' . $keyword;
                     }
@@ -280,7 +280,7 @@ class PhocacartSearch
                         $conditions[] = 'a.features LIKE ' . $keyword;
                     }
 
-                    if (!in_array($searchParams['sql_search_skip_id'] ?? 1, [1, 2])) {
+                    if (isset($searchParams['sql_search_skip_id_specific_type']) && (int)$searchParams['sql_search_skip_id_specific_type'] == 0) {
                         $conditions[] = 'ps.sku LIKE ' . $keyword;
                         $conditions[] = 'ps.ean LIKE ' . $keyword;
                     }
