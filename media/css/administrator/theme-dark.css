@@ -311,4 +311,12 @@
         font-size: 12em;
         font-weight: bold;
     }
+
+    .plupload_filelist {
+        background: transparent;
+    }
+
+    .plupload_filelist li {
+        background: transparent;
+    }
 }
