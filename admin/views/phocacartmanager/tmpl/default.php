@@ -9,7 +9,7 @@
 defined('_JEXEC') or die();
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Filesystem\Path;
+use Joomla\Filesystem\Path;
 HTMLHelper::_('bootstrap.tooltip');
 HTMLHelper::_('behavior.multiselect');
 HTMLHelper::_('dropdown.init');

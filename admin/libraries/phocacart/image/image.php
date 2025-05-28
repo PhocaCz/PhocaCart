@@ -9,7 +9,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die('Restricted access');
-use Joomla\CMS\Filesystem\Path;
+use Joomla\Filesystem\Path;
 use Joomla\CMS\Factory;
 use Phoca\PhocaCart\Filesystem\File;
 use Joomla\CMS\HTML\HTMLHelper;

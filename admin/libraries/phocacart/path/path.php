@@ -12,7 +12,7 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 
 use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\Path;
+use Joomla\Filesystem\Path;
 use Joomla\CMS\Router\SiteRouter;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Application\CMSApplication;

@@ -156,7 +156,8 @@ class PhocaCartCpModelPhocaCartEditStockAdvanced extends AdminModel
 
 					}
 
-					$item->set('product_stock', $combinations);
+					//$item->set('product_stock', $combinations);
+					$item->product_stock = $combinations;
 
 				}
 			}
