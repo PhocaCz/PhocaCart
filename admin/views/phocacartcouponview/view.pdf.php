@@ -9,7 +9,7 @@
 defined('_JEXEC') or die();
 use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
+use Phoca\PhocaCart\Filesystem\File;
 use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;

@@ -15,7 +15,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Filesystem\Path;
-use Joomla\CMS\Filesystem\Folder;
+use Phoca\PhocaCart\Filesystem\Folder;
 use Joomla\CMS\Form\Form;
 use Phoca\PhocaCart\Mail\MailHelper;
 use Phoca\PhocaCart\Mail\MailTemplate;

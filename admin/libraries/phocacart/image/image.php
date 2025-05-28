@@ -11,7 +11,7 @@
 defined('_JEXEC') or die('Restricted access');
 use Joomla\CMS\Filesystem\Path;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
+use Phoca\PhocaCart\Filesystem\File;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Uri\Uri;

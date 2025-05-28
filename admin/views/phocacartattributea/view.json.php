@@ -11,7 +11,7 @@ use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\Folder;
+use Phoca\PhocaCart\Filesystem\Folder;
 jimport( 'joomla.application.component.view');
 
 class PhocaCartCpViewPhocaCartAttributeA extends HtmlView

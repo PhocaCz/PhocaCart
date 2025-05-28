@@ -9,7 +9,7 @@
 defined('_JEXEC') or die();
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
-use Joomla\CMS\Filesystem\File;
+use Phoca\PhocaCart\Filesystem\File;
 $d 					= $displayData;
 $displayData 		= null;
 $v 					= $d['attribute'];

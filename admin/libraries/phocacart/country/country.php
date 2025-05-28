@@ -12,7 +12,7 @@ defined('_JEXEC') or die();
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Uri\Uri;
-use Joomla\CMS\Filesystem\File;
+use Phoca\PhocaCart\Filesystem\File;
 jimport('joomla.application.component.model');
 
 class PhocacartCountry

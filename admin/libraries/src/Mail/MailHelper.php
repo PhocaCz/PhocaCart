@@ -19,7 +19,7 @@ use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\User\UserFactoryInterface;
 use Joomla\Database\ParameterType;
 //use Joomla\Filesystem\File;
-use Joomla\CMS\Filesystem\File;
+use Phoca\PhocaCart\Filesystem\File;
 use Joomla\Utilities\IpHelper;
 use Joomla\CMS\Mail\MailHelper as JoomlaMailHelper;
 use Phoca\PhocaCart\Constants\EmailDocumentType;

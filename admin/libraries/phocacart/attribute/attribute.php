@@ -11,8 +11,8 @@
 defined('_JEXEC') or die();
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Folder;
+use Phoca\PhocaCart\Filesystem\File;
+use Phoca\PhocaCart\Filesystem\Folder;
 use Phoca\PhocaCart\ContentType\ContentTypeHelper;
 use Phoca\PhocaCart\I18n\I18nHelper;
 

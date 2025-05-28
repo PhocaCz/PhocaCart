@@ -10,7 +10,7 @@
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
 use Joomla\CMS\Uri\Uri;
-use Joomla\CMS\Filesystem\File;
+use Phoca\PhocaCart\Filesystem\File;
 
 require JPATH_ADMINISTRATOR . '/components/com_phocacart/libraries/autoloadEscpos.php';
 use Mike42\Escpos\Printer;

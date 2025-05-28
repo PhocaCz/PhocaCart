@@ -10,7 +10,7 @@ defined('_JEXEC') or die();
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\Folder;
+use Phoca\PhocaCart\Filesystem\Folder;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Filesystem\Path;
 jimport('joomla.application.component.modeladmin');
