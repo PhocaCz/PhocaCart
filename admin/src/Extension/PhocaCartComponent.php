@@ -33,7 +33,7 @@ use Joomla\Event\Event;
 use Joomla\Registry\Registry;
 use Phoca\PhocaCart\Schemaorg\Schema;
 
-\defined('JPATH_PLATFORM') or die;
+\defined('_JEXEC') or die;
 
 // Joomla 4 compatibility
 if (Version::MAJOR_VERSION < 5) {
