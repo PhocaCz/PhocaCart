@@ -12,7 +12,7 @@ use Joomla\CMS\Table\Table;
 use Joomla\CMS\Factory;
 use Phoca\PhocaCart\Filesystem\Folder;
 use Joomla\CMS\Object\CMSObject;
-use Joomla\CMS\Filesystem\Path;
+use Joomla\Filesystem\Path;
 jimport('joomla.application.component.modeladmin');
 jimport('joomla.filesystem.folder');
 jimport('joomla.filesystem.file');

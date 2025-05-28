@@ -58,7 +58,8 @@ class PhocaCartCpModelPhocaCartEditProductPriceHistory extends AdminModel
 				}
 			}
 
-			$item->set('price_history', $history);
+			//$item->set('price_history', $history);
+			$item->price_history = $history;
 
 
 		}

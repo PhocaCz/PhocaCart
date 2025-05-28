@@ -8,7 +8,7 @@
  * @copyright Copyright (C) Open Source Matters. All rights reserved.
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
-defined('JPATH_BASE') or die;
+defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 
 class PhocacartCaptchaRecaptcha

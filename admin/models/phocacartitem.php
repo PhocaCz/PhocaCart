@@ -225,8 +225,10 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 			$item->unit_amount 		= PhocacartPrice::cleanPrice($item->unit_amount);
 
 
-			$item->set('additional_download_files', PhocacartFileAdditional::getProductFilesByProductId((int)$item->id, 2));
-			$item->set('additional_images', PhocacartImageAdditional::getImagesByProductId((int)$item->id, 2));
+			//$item->set('additional_download_files', PhocacartFileAdditional::getProductFilesByProductId((int)$item->id, 2));
+            $item->additional_download_files = PhocacartFileAdditional::getProductFilesByProductId((int)$item->id, 2);
+			//$item->set('additional_images', PhocacartImageAdditional::getImagesByProductId((int)$item->id, 2));
+            $item->additional_images = PhocacartImageAdditional::getImagesByProductId((int)$item->id, 2);
 
 			$attributes = PhocacartAttribute::getAttributesById((int)$item->id, 2, true);
 			if (!empty($attributes)) {
@@ -234,26 +236,35 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 					$attributes[$k]['options']	= PhocacartAttribute::getOptionsById((int)$v['id'], 2, true);
 				}
 			}
-			$item->set('attributes', $attributes);
+			//$item->set('attributes', $attributes);
+            $item->attributes = $attributes;
 
-			$item->set('specifications', PhocacartSpecification::getSpecificationsById((int)$item->id, 2));
+			//$item->set('specifications', PhocacartSpecification::getSpecificationsById((int)$item->id, 2));
+            $item->specifications = PhocacartSpecification::getSpecificationsById((int)$item->id, 2);
 
-			$item->set('discounts', PhocacartDiscountProduct::getDiscountsById((int)$item->id, 2));
-			$item->set('catid_multiple', PhocacartCategoryMultiple::getCategories((int)$item->id, 1));
-			$item->set('tags', PhocacartTag::getTags((int)$item->id, 1));
-			$item->set('taglabels', PhocacartTag::getTagLabels((int)$item->id, 1));
+			//$item->set('discounts', PhocacartDiscountProduct::getDiscountsById((int)$item->id, 2));
+			//$item->set('catid_multiple', PhocacartCategoryMultiple::getCategories((int)$item->id, 1));
+			//$item->set('tags', PhocacartTag::getTags((int)$item->id, 1));
+			//$item->set('taglabels', PhocacartTag::getTagLabels((int)$item->id, 1));
+
+            $item->discounts = PhocacartDiscountProduct::getDiscountsById((int)$item->id, 2);
+			$item->catid_multiple = PhocacartCategoryMultiple::getCategories((int)$item->id, 1);
+			$item->tags = PhocacartTag::getTags((int)$item->id, 1);
+			$item->taglabels = PhocacartTag::getTagLabels((int)$item->id, 1);
 
 			$groups = PhocacartGroup::getGroupsById((int)$item->id, 3, 1);
 			if (!$groups)
 				$groups = PhocacartGroup::getDefaultGroup(1);
-			$item->set('group', $groups);
+			//$item->set('group', $groups);
+            $item->group = $groups;
 
 			$parameters = PhocacartParameter::getAllParameters();
 			$itemParameters = [];
 			foreach ($parameters as $parameter) {
 				$itemParameters[$parameter->id] = PhocacartParameter::getParameterValues((int)$item->id, $parameter->id, 1);
 			}
-			$item->set('items_parameter', $itemParameters);
+			//$item->set('items_parameter', $itemParameters);
+            $item->items_parameter = $itemParameters;
             $item->related = PhocacartRelated::getRelatedItemsById((int)$item->id, 3);
 
 			$value = '';
@@ -274,7 +285,8 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 					}
 				}
 			}
-			$item->set('bundles', $value);
+			//$item->set('bundles', $value);
+            $item->bundles = $value;
 
 			// ASSOCIATION
 			// Load associated Phoca Cart items
@@ -2111,7 +2123,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
         return $this->batchGroup(false, (array)$value, $pks, $contexts);
     }
 
-    private function batchTags(int $tagsType, bool $add, array $value, $pks, $contexts): bool
+    protected function batchTagsPhoca(int $tagsType, bool $add, array $value, $pks, $contexts): bool
     {
         $this->initBatch();
 
@@ -2162,22 +2174,22 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
     protected function batchTagsAdd($value, $pks, $contexts): bool
     {
-        return $this->batchTags(TagType::Tag, true, (array)$value, $pks, $contexts);
+        return $this->batchTagsPhoca(TagType::Tag, true, (array)$value, $pks, $contexts);
     }
 
     protected function batchTagsRemove($value, $pks, $contexts): bool
     {
-        return $this->batchTags(TagType::Tag, false, (array)$value, $pks, $contexts);
+        return $this->batchTagsPhoca(TagType::Tag, false, (array)$value, $pks, $contexts);
     }
 
     protected function batchLabelsAdd($value, $pks, $contexts): bool
     {
-        return $this->batchTags(TagType::Label, true, (array)$value, $pks, $contexts);
+        return $this->batchTagsPhoca(TagType::Label, true, (array)$value, $pks, $contexts);
     }
 
     protected function batchLabelsRemove($value, $pks, $contexts): bool
     {
-        return $this->batchTags(TagType::Label, false, (array)$value, $pks, $contexts);
+        return $this->batchTagsPhoca(TagType::Label, false, (array)$value, $pks, $contexts);
     }
 
     protected function batchFeedOptions($newValues, $pks, $contexts): bool

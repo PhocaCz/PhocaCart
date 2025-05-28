@@ -14,7 +14,7 @@ use Joomla\CMS\Session\Session;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Client\ClientHelper;
 use Phoca\PhocaCart\Filesystem\File;
-use Joomla\CMS\Filesystem\Path;
+use Joomla\Filesystem\Path;
 use Phoca\PhocaCart\Filesystem\Folder;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\HTML\HTMLHelper;
