@@ -12,7 +12,7 @@ use Joomla\CMS\Table\Table;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Filesystem\File;
+use Phoca\PhocaCart\Filesystem\File;
 use Joomla\Data\DataObject;
 use Joomla\CMS\Log\Log;
 use Joomla\Database\DatabaseDriver;

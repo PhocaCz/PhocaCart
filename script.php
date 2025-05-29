@@ -8,8 +8,9 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License version 2 or later;
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
-use Joomla\CMS\Filesystem\Folder;
-use Joomla\CMS\Filesystem\File;
+use Joomla\Filesystem\Folder;
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Path;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -88,7 +89,7 @@ class com_phocacartInstallerScript
 
 		$msg = '';
 		foreach ($this->createFolders as $folder) {
-			if (!Folder::exists( JPATH_ROOT . '/' . $folder)) {
+			if (!is_dir(Path::clean( JPATH_ROOT . '/' . $folder))) {
 				if (Folder::create( JPATH_ROOT . '/' . $folder )) {
 					$data = "<html>\n<body bgcolor=\"#FFFFFF\">\n</body>\n</html>";
 					File::write(JPATH_ROOT . '/' . $folder . '/' . "index.html", $data);

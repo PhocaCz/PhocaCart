@@ -14,8 +14,6 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Layout\LayoutHelper;
 
-defined('JPATH_PLATFORM') or die();
-
 abstract class PhocacartHtmlBatch
 {
 

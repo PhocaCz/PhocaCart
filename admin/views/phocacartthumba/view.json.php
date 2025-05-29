@@ -11,8 +11,8 @@ use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Folder;
+use Phoca\PhocaCart\Filesystem\File;
+use Phoca\PhocaCart\Filesystem\Folder;
 use Joomla\CMS\Component\ComponentHelper;
 jimport( 'joomla.application.component.view');
 

@@ -10,8 +10,8 @@
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Folder;
+use Phoca\PhocaCart\Filesystem\File;
+use Phoca\PhocaCart\Filesystem\Folder;
 use Joomla\CMS\Installer\Installer;
 use Joomla\CMS\Filter\OutputFilter;
 use Joomla\CMS\Component\ComponentHelper;

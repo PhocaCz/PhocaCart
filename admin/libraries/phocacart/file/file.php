@@ -9,10 +9,10 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
-use Joomla\CMS\Filesystem\Path;
-use Joomla\CMS\Filesystem\File;
+use Joomla\Filesystem\Path;
+use Phoca\PhocaCart\Filesystem\File;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Filesystem\Folder;
+use Phoca\PhocaCart\Filesystem\Folder;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Factory;
 jimport( 'joomla.filesystem.folder' );

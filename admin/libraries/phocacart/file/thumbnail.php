@@ -10,10 +10,10 @@
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
 use Joomla\CMS\Object\CMSObject;
-use Joomla\CMS\Filesystem\Path;
-use Joomla\CMS\Filesystem\File;
+use Joomla\Filesystem\Path;
+use Phoca\PhocaCart\Filesystem\File;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\Folder;
+use Phoca\PhocaCart\Filesystem\Folder;
 use Joomla\CMS\Language\Text;
 jimport( 'joomla.filesystem.folder' );
 jimport( 'joomla.filesystem.file' );

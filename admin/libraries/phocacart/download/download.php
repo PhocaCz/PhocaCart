@@ -12,7 +12,7 @@ defined('_JEXEC') or die();
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Filesystem\File;
+use Phoca\PhocaCart\Filesystem\File;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Utilities\ArrayHelper;
 jimport('joomla.filesystem.folder');
