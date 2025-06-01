@@ -439,10 +439,15 @@ class PhocacartSearch
                                 else {
 
                                     $where .= I18nHelper::sqlJoin('#__phocacart_specifications_i18n', 's2x' . $i );
-                                    if (I18nHelper::isI18n()) {
+                                    /*if (I18nHelper::isI18n()) {
                                         $where .= " INNER JOIN #__phocacart_specifications AS s2bx" . $i . " ON s2x" . $i . ".product_id = s2x" . $i . ".product_id AND " . $v;
                                     } else {
                                         $where .= " INNER JOIN #__phocacart_specifications AS s2x".$i." ON s2x" . $i . ".product_id = s2x".$i.".product_id AND ". $v;
+                                    }*/
+                                    if (I18nHelper::isI18n()) {
+                                        $where .= " INNER JOIN #__phocacart_specifications AS s2bx" . $i . " ON s2x0.product_id = s2x" . $i . ".product_id AND " . $v;
+                                    } else {
+                                        $where .= " INNER JOIN #__phocacart_specifications AS s2x".$i." ON s2x0.product_id = s2x".$i.".product_id AND ". $v;
                                     }
                                 }
                                 $i++;
