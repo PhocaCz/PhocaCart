@@ -7,8 +7,11 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+
+use Joomla\CMS\Filter\InputFilter;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Factory;
+use Joomla\Utilities\ArrayHelper;
 use Phoca\PhocaCart\Container\Container;
 use Phoca\PhocaCart\Helper\PhocaCartHelper;
 
@@ -33,7 +36,8 @@ class PhocaCartCpModelPhocacartUsers extends ListModel
 				'published','a.published',
 				'user_id', 'a.user_id',
 				'user_name_selected',
-				'u.email', 'u.id'
+				'u.email', 'u.id',
+                'group_id'
 			);
 		}
 		parent::__construct($config);
@@ -42,6 +46,7 @@ class PhocaCartCpModelPhocacartUsers extends ListModel
 	protected function populateState($ordering = 'u.name', $direction = 'ASC') {
 		// Initialise variables.
 		$app = Factory::getApplication('administrator');
+        $inputFilter = InputFilter::getInstance();
 
 		// Load the filter state.
 		$search = $app->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
@@ -60,6 +65,10 @@ class PhocaCartCpModelPhocacartUsers extends ListModel
 		// List state information.
 		parent::populateState($ordering, $direction);
 
+        $groups = $app->getUserStateFromRequest($this->context.'.filter.group_id', 'filter_group_id', [], 'array');
+        $groups = ArrayHelper::toInteger($groups);
+		$this->setState('filter.group_id', $groups);
+
 		// Let the parent do the filtering but to close the filter fields we need "" instead of 0 for users
 		$user = $app->getUserStateFromRequest($this->context.'.filter.user_id', 'filter_user_id');
 		if ($user == 0) {
@@ -74,6 +83,7 @@ class PhocaCartCpModelPhocacartUsers extends ListModel
 		$id	.= ':'.$this->getState('filter.user_id');
 		$id	.= ':'.$this->getState('filter.published');
 		$id	.= ':'.$this->getState('filter.user_id_id');
+        $id	.= ':'.serialize($this->getState('filter.group_id'));
 		return parent::getStoreId($id);
 	}
 
@@ -116,6 +126,25 @@ class PhocaCartCpModelPhocacartUsers extends ListModel
         // Usergroups
         $query->select('(SELECT GROUP_CONCAT(DISTINCT g.title ORDER BY g.title) FROM #__phocacart_item_groups ug LEFT JOIN #__phocacart_groups AS g ON g.id=ug.group_id WHERE ug.item_id=u.id AND ug.type = 1) AS usergroups');
 
+        // Filter User Groups
+        $groupS = '';
+        $group = $this->getState('filter.group_id');
+        if (\is_array($group) && \count($group) === 1) {
+            $groupS = (int)$group[0];
+        } else if ($group && \is_array($group)) {
+            $group = ArrayHelper::toInteger($group);
+            $groupS = implode(',', $group);
+        } else if ($group = (int)$group) {
+            $groupS = (int)$group;
+        }
+
+        if ($groupS != '') {
+            $query->join('LEFT', '#__phocacart_item_groups AS ug ON ug.item_id = u.id');
+            $query->join('LEFT', '#__phocacart_groups AS g ON g.id = ug.group_id');
+            $query->where('ug.type = 1 AND ug.group_id IN ('.$groupS.')');
+            $query->group('u.id');
+        }
+
         // Filter by search in title
         $search = $this->getState('filter.search');
         if (!empty($search))
@@ -137,6 +166,7 @@ class PhocaCartCpModelPhocacartUsers extends ListModel
             $query->join('LEFT', '#__users AS u2 ON u2.id=a.user_id');
             $query->where('( u.id = '.(int)$user.')');
         }
+
 
         $orderCol	= $this->state->get('list.ordering', 'u.name');
         $orderDirn	= $this->state->get('list.direction', 'u.name');
