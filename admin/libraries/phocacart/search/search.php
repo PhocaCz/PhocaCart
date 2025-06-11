@@ -306,6 +306,9 @@ class PhocacartSearch
         $inAS = [];
 
         if (is_array($value) && $value) {
+
+            $iS = 0;
+            $iA = 0;
             foreach ($value as $k => $v) {
                 $a = explode(',', $v);
                 $a = array_unique($a);
@@ -325,12 +328,13 @@ class PhocacartSearch
                         foreach ($a as $v2) {
 
                             if (I18nHelper::useI18n()) {
-                                $inAS[$i] = 'coalesce(i18n_at2.alias, at2.alias) = ' . $db->quote($k) . ' AND coalesce(i18n_v2x'.$i.'.alias, v2x'.$i.'.alias) = "' . $v2 . '"';
+                                $inAS[$iA] = 'coalesce(i18n_at2.alias, at2.alias) = ' . $db->quote($k) . ' AND coalesce(i18n_v2x'.$iA.'.alias, v2x'.$iA.'.alias) = "' . $v2 . '"';
                             } else {
-                                $inAS[$i] = 'at2.alias = ' . $db->quote($k) . ' AND v2x' . $i . '.alias = "' . $v2 . '"';
+                                $inAS[$iA] = 'at2.alias = ' . $db->quote($k) . ' AND v2x' . $iA . '.alias = "' . $v2 . '"';
                             }
 
                             $i++;
+                            $iA++;
                         }
                     }
                     else if ($searchArea == 's') {
@@ -348,12 +352,14 @@ class PhocacartSearch
                             //$inAS[$i] = 's2x' . $i . '.alias = ' . $db->quote($k) . ' AND s2x' . $i . '.alias_value = "' . $v2 . '"';
 
                             if (I18nHelper::useI18n()) {
-                                $inAS[$i] = 'coalesce(i18n_s2x'.$i.'.alias, s2x'.$i.'.alias) = ' . $db->quote($k) . ' AND coalesce(i18n_s2x'.$i.'.alias_value, s2x'.$i.'.alias_value) = "' . $v2 . '"';
+                                $inAS[$iS] = 'coalesce(i18n_s2x'.$iS.'.alias, s2x'.$iS.'.alias) = ' . $db->quote($k) . ' AND coalesce(i18n_s2x'.$iS.'.alias_value, s2x'.$iS.'.alias_value) = "' . $v2 . '"';
                             } else {
-                                $inAS[$i] = 's2x' . $i . '.alias = ' . $db->quote($k) . ' AND s2x' . $i . '.alias_value = "' . $v2 . '"';
+                                $inAS[$iS] = 's2x' . $iS . '.alias = ' . $db->quote($k) . ' AND s2x' . $iS . '.alias_value = "' . $v2 . '"';
                             }
 
                             $i++;
+                            $iS++;
+
                         }
                     }
 
@@ -439,10 +445,15 @@ class PhocacartSearch
                                 else {
 
                                     $where .= I18nHelper::sqlJoin('#__phocacart_specifications_i18n', 's2x' . $i );
-                                    if (I18nHelper::isI18n()) {
+                                    /*if (I18nHelper::isI18n()) {
                                         $where .= " INNER JOIN #__phocacart_specifications AS s2bx" . $i . " ON s2x" . $i . ".product_id = s2x" . $i . ".product_id AND " . $v;
                                     } else {
                                         $where .= " INNER JOIN #__phocacart_specifications AS s2x".$i." ON s2x" . $i . ".product_id = s2x".$i.".product_id AND ". $v;
+                                    }*/
+                                    if (I18nHelper::isI18n()) {
+                                        $where .= " INNER JOIN #__phocacart_specifications AS s2bx" . $i . " ON s2x0.product_id = s2x" . $i . ".product_id AND " . $v;
+                                    } else {
+                                        $where .= " INNER JOIN #__phocacart_specifications AS s2x".$i." ON s2x0.product_id = s2x".$i.".product_id AND ". $v;
                                     }
                                 }
                                 $i++;

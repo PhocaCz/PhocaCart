@@ -233,7 +233,8 @@ class PhocacartShipping
 					if (isset($v->zip) && $v->zip != '') {
 						$zips = array_map('trim', explode(',', $v->zip));
 
-						if (in_array((int)$zip, $zips)) {
+						//if (in_array((int)$zip, $zips)) { ZIP is not stored as ID
+						if (in_array($zip, $zips)) {
 							$zi = 1;
 
 						}

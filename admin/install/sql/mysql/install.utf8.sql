@@ -318,7 +318,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_attributes` (
   `type` tinyint(1) NOT NULL DEFAULT '0',
   `attribute_template` int(11),
   `is_filter` int(11) NOT NULL DEFAULT 1,
-  `published` tinyint(1) NOT NULL DEFAULT '1',
+  `published` int(1) NOT NULL DEFAULT '1',
   `checked_out` int unsigned,
   `checked_out_time` datetime,
   `ordering` int(11) NOT NULL DEFAULT '0',
@@ -1220,7 +1220,8 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_orders` (
 	`default_lang` char(7) NOT NULL DEFAULT '',
 	`language` char(7) NOT NULL DEFAULT '',
     `internal_comment` text,
-	PRIMARY KEY (`id`)
+	PRIMARY KEY (`id`),
+	KEY `idx_user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
 
 
