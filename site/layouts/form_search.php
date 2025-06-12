@@ -40,7 +40,7 @@ if (isset($d['activefilter']) && $d['activefilter']) {
 
 <?php if ($d['display_inner_icon'] == 1) { ?>
 
-    <div class="inner-addon right-addon"><?php echo PhocacartRenderIcon::icon($d['s']['i']['search']) ?><input type="text" class="<?php echo $d['s']['c']['form-control'] ?>" name="<?php echo $d['paramname']; ?>" placeholder="<?php echo Text::_($d['placeholder_text']); ?>" value="<?php echo $d['getparams']; ?>" id="<?php echo $d['id'] . $d['paramname']; ?>"/></div>
+    <div class="inner-addon right-addon"><?php echo PhocacartRenderIcon::icon($d['s']['i']['search']) ?><input type="text" class="<?php echo $d['s']['c']['form-control'] ?>" name="<?php echo $d['paramname']; ?>" placeholder="<?php echo Text::_($d['placeholder_text']); ?>" value="<?php echo $d['getparams']; ?>" id="<?php echo $d['id'] . $d['paramname']; ?>" aria-label="<?php echo Text::_('COM_PHOCACART_SEARCH'); ?>" /></div>
 
 <?php } else { ?>
     <input type="text" class="<?php echo $d['s']['c']['form-control'] ?> phSearchBoxSearchInput" name="<?php echo $d['paramname']; ?>" placeholder="<?php echo Text::_($d['placeholder_text']); ?>" value="<?php echo $d['getparams']; ?>" id="<?php echo $d['id'] . $d['paramname']; ?>" aria-label="<?php echo Text::_('COM_PHOCACART_SEARCH'); ?>" />
