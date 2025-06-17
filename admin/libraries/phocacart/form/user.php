@@ -192,7 +192,13 @@ abstract class PhocacartFormUser
 						}
 
 						if (isset($v->unique) &&  $v->unique == 1) {
-							$fB[] = $fS[] =  ' unique="true"';
+							// No unique for email in admin (this is email in phoca cart table not in joomla)
+						    if ($app->isClient('administrator') && $type == 'email') {
+
+                            } else {
+                                $fB[] = $fS[] =  ' unique="true"';
+                            }
+
 						}
 
 						if (isset($v->validate) && $v->validate != '') {
