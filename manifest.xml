@@ -24,10 +24,10 @@
 		<description><![CDATA[ Phoca Cart is e-commerce extension - powerful shopping cart for Joomla! CMS. Phoca Cart is based on Joomla! framework and it is designed by modern responsive Bootstrap library. ]]></description>
 		<element>com_phocacart</element>
 		<type>component</type>
-		<version>4.0.11</version>
-		<infourl title="Phoca Cart 4.0.11">http://www.phoca.cz/version/index.php?phocacart=4.0.11</infourl>
+		<version>4.0.12</version>
+		<infourl title="Phoca Cart 4.0.12">http://www.phoca.cz/version/index.php?phocacart=4.0.12</infourl>
 		<downloads>
-			<downloadurl type="full" format="zip">https://github.com/PhocaCz/PhocaCart/releases/download/4.0.11/com_phocacart_v4.0.11.zip</downloadurl>
+			<downloadurl type="full" format="zip">https://github.com/PhocaCz/PhocaCart/releases/download/4.0.12/com_phocacart_v4.0.12.zip</downloadurl>
 		</downloads>
 		<tags>
 			<tag>stable</tag>
@@ -43,12 +43,12 @@
 		<description><![CDATA[ Phoca Cart is e-commerce extension - powerful shopping cart for Joomla! CMS. Phoca Cart is based on Joomla! framework and it is designed by modern responsive Bootstrap library. ]]></description>
 		<element>com_phocacart</element>
 		<type>component</type>
-		<version>5.1.2Beta</version>
-		<infourl title="Phoca Cart 5.1.2Beta">http://www.phoca.cz/version/index.php?phocacart=5.1.2Beta</infourl>
+		<version>5.1.2</version>
+		<infourl title="Phoca Cart 5.1.2">http://www.phoca.cz/version/index.php?phocacart=5.1.2</infourl>
 		<downloads>
-			<downloadurl type="full" format="zip">https://github.com/PhocaCz/PhocaCart/releases/download/5.1.2Beta/com_phocacart_v5.1.2Beta.zip</downloadurl>
+			<downloadurl type="full" format="zip">https://github.com/PhocaCz/PhocaCart/releases/download/5.1.2/com_phocacart_v5.1.2.zip</downloadurl>
 		</downloads>
-		<sha512>9a19c11101acafcf801c815e48489d220f27b20a6f02c7700b2bb2d32b2c0f0511dbf56063cff5e1c5f9625cf359fe3716a08f5780b54ac0c8aa75ef84d40bc9</sha512>
+		<sha512>3f1eac527dccb6b51fccaefa4047d5d8e21da43298a93763047cdee810401a60833d23579c8603e74434c49e33c2e59c98aa45ee7c8acd5bf281dde84e9dc1ad</sha512>
 		<tags>
 			<tag>stable</tag>
 		</tags>

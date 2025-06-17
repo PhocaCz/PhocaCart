@@ -274,6 +274,20 @@ class PhocaCartControllerCheckout extends FormController
         $data = $item['jform'];
         $data = $model->validate($form, $data);
 
+        foreach($billing as $k => $v) {
+            if (isset($data[$k])) {
+                $billing[$k] = $data[$k];
+            }
+        }
+
+        foreach($shipping as $k => $v) {
+            $key = $k . '_phs';
+            if (isset($data[$key])) {
+                $shipping[$k] = $data[$key];
+            }
+        }
+
+
         if ($data === false) {
 
             $errors = $model->getErrors();
@@ -293,18 +307,18 @@ class PhocaCartControllerCheckout extends FormController
 
         if ($guest) {
             if ($item['phcheckoutbsas']) {
-                $item['jform']['ba_sa'] = 1;
-                foreach ($item['jform'] as $k => $v) {
+                $data['ba_sa'] = 1;
+                foreach ($data as $k => $v) {
                     $pos = strpos($k, '_phs');
                     if ($pos === false) {
 
                     } else {
-                        unset($item['jform'][$k]);
+                        unset($data[$k]);
                     }
                 }
             }
 
-            if (!$model->saveAddressGuest($item['jform'])) {
+            if (!$model->saveAddressGuest($data)) {
                 $msg = Text::_('COM_PHOCACART_ERROR_DATA_NOT_STORED');
                 $app->enqueueMessage($msg . $msgSuffix, 'error');
                 $error = 1;

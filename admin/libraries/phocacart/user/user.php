@@ -440,6 +440,7 @@ class PhocacartUser
 					$field  = (string)$v->title;
 					if (isset($data[0]->$field)) {
 						$value = $data[0]->$field;
+						$value = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
 
 						if ($v->required == 1 && $value == '') {
 							$o['filled'] = 0;
@@ -475,6 +476,7 @@ class PhocacartUser
 					$field  = (string)$v->title;
 					if (isset($data[1]->$field)) {
 						$value = $data[1]->$field;
+						$value = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
 
 						if ($v->required == 1 && $value == '' && $data[0]->ba_sa == 0 && $data[1]->ba_sa == 0) {
 							$o['filled'] = 0;

@@ -92,7 +92,7 @@ class PhocaCartCpControllerPhocacartUser extends PhocaCartCpControllerPhocaCartC
 
 		// Validate the posted data.
 		// Sometimes the form needs some posted data, such as for plugins and modules.
-		/*$form = $model->getForm($data, false);
+		$form = $model->getForm($data, false);
 
 		if (!$form)
 		{
@@ -102,7 +102,12 @@ class PhocaCartCpControllerPhocacartUser extends PhocaCartCpControllerPhocaCartC
 		}
 
 		// Test whether the data is valid.
-		/*$validData = $model->validate($form, $data);
+		$validData = $model->validate($form, $data);
+
+		$form2 = $model->getFormSpecific($data, false);
+
+		$validData2 = $model->validate($form2, $data);
+
 
 		// Check for validation errors.
 		if ($validData === false)
@@ -136,14 +141,16 @@ class PhocaCartCpControllerPhocacartUser extends PhocaCartCpControllerPhocaCartC
 
 			return false;
 		}
-		*/
+
 		/*if (!isset($validData['tags']))
 		{
 			$validData['tags'] = null;
 		}*/
-		$validData = $data;
+		//$validData = $data;
 
 		//$error = 0;
+
+		$data = array_merge($validData, $validData2);
 
 		if(!empty($data)) {
 
