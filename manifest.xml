@@ -29,7 +29,7 @@
 		<downloads>
 			<downloadurl type="full" format="zip">https://github.com/PhocaCz/PhocaCart/releases/download/4.0.12/com_phocacart_v4.0.12.zip</downloadurl>
 		</downloads>
-		<sha512>4700f236edbe94a508d5b3f88d861f4db3154423bbb57dcb8053cbc4df85c0048ece1b7bfa12ba703d82e21f7a6d75b00cc37ea18e893556dfea3ab0dba58005</sha512>
+		<sha512>b0a4565ca909dd4570a5d7ed398a4c0de0dcbdc9f4629ebb55807347f9625db079531318b9b7f71b762c8e35d9a1416e6bad061c8c08af7e7270d95cd4336b4c</sha512>
 		<tags>
 			<tag>stable</tag>
 		</tags>
