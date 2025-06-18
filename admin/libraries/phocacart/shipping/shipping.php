@@ -543,7 +543,6 @@ class PhocacartShipping
 
         $zip = '';
 
-
 		// Before we start to check, if user set that billing and shipping
 		// address is the same, this in fact means that
 		// shipping country, shipping region and shipping zip is zero
@@ -587,7 +586,6 @@ class PhocacartShipping
 			break;
 
 		}
-
 		return $zip;
 	}
 
