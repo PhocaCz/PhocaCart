@@ -667,6 +667,7 @@ function phChangeFilter(paramV, value, formAction, formType, uniqueValue, wait, 
 /* Function phChangeSearch */
 function phChangeSearch(paramV, value, formAction) {
 
+    phHandleSearchEvent(value);
 	const phVars = Joomla.getOptions("phVarsModPhocacartSearch");
     const phParams = Joomla.getOptions("phParamsModPhocacartSearch");
     //const phVarsPC = Joomla.getOptions("phParamsPC");
@@ -807,3 +808,23 @@ jQuery(document).ready(function () {
 
     phPriceFilterRange();
 });
+
+// ------
+// JS Phoca Cart Events
+// ------
+
+function phHandleSearchEvent(value) {
+    
+    const phParams	= Joomla.getOptions('phParamsPC');
+
+    document.dispatchEvent(new CustomEvent('PhocaCart.search', {
+		detail: {
+			items: [{
+				search_string: value
+			}],
+            params: [{
+				ajaxSearchingFilteringItems: phParams['ajaxSearchingFilteringItems']
+			}]
+		}
+    }));
+}

@@ -258,7 +258,7 @@ class PhocacartPrice
         }
 
         $priceDecSymbol = $this->price_dec_symbol;
-        if ($specPriceDecimals !== false) {
+        if ($specPriceDecSymbol !== false) {
             $priceDecSymbol = $specPriceDecSymbol;
         }
 
@@ -452,15 +452,19 @@ class PhocacartPrice
         //if ($tax_calculation > 0) {
         if ($priceO['netto']) {
             $priceO['nettoformat'] = $this->getPriceFormat($priceO['netto']);
+            $priceO['nettocurrency'] = $this->getPriceFormatRaw($priceO['netto'], 0, 0, 0, false, '.');
         }
 
         if (isset($priceO['tax'])) { // it can be even zero
             $priceO['taxformat'] = $this->getPriceFormat($priceO['tax']);
+            $priceO['taxcurrency'] = $this->getPriceFormatRaw($priceO['tax'], 0, 0, 0, false, '.');
         } else if ($priceO['tax'] === NULL) {
             $priceO['taxformat'] = $this->getPriceFormat(0);
+            $priceO['taxcurrency'] = $this->getPriceFormatRaw(0);
         }
         //}
         $priceO['bruttoformat'] = $this->getPriceFormat($priceO['brutto']);
+        $priceO['bruttocurrency'] = $this->getPriceFormatRaw($priceO['brutto'], 0, 0, 0, false, '.');
 
         // Unit price
         $priceO['base']       = '';
