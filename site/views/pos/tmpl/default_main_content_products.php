@@ -170,6 +170,8 @@ if (!empty($this->items)) {
 		$dF['linkch']				= $this->t['linkcheckout'];// link to checkout (add to cart)
 		$dF['id']					= (int)$v->id;
 		$dF['catid']				= (int)$v->catid;
+		$dF['sku']					= isset($v->sku) ? $v->sku : '';
+		$dF['ean']					= isset($v->ean) ? $v->ean : '';
 		$dF['ticketid']				= $this->t['ticket']->id;
 		$dF['unitid']				= $this->t['unit']->id;
 		$dF['sectionid']			= $this->t['section']->id;

@@ -10,12 +10,31 @@ defined('_JEXEC') or die();
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
 $d = $displayData;
-
 ?>
 <div class="<?php echo $d['s']['c']['pull-right'] ?> <?php echo $d['s']['c']['form-group'] ?> ph-item-add-to-cart-box">
 	<input type="hidden" name="id" value="<?php echo (int)$d['id']; ?>">
-	<input type="hidden" name="catid" value="<?php echo (int)$d['catid']; ?>">
-	<input type="hidden" name="task" value="checkout.add">
+    <input type="hidden" name="catid" value="<?php echo (int)$d['catid']; ?>"><?php
+
+    if (isset($d['sku']) && $d['sku'] != ''){
+       echo '<input type="hidden" name="sku" value="'.$d['sku'].'">';
+    }
+    if (isset($d['ean']) && $d['ean'] != ''){
+       echo '<input type="hidden" name="ean" value="'.$d['ean'].'">';
+    }
+    if (isset($d['basepricenetto']) && $d['basepricenetto'] != ''){
+       echo '<input type="hidden" name="basepricenetto" value="'.$d['basepricenetto'].'">';
+    }
+    if (isset($d['basepricetax']) && $d['basepricetax'] != ''){
+       echo '<input type="hidden" name="basepricetax" value="'.$d['basepricetax'].'">';
+    }
+    if (isset($d['basepricebrutto']) && $d['basepricebrutto'] != ''){
+       echo '<input type="hidden" name="basepricebrutto" value="'.$d['basepricebrutto'].'">';
+    }
+    if (isset($d['title']) && $d['title'] != ''){
+       echo '<input type="hidden" name="title" value="'.$d['title'].'">';
+    }
+
+    ?><input type="hidden" name="task" value="checkout.add">
 	<input type="hidden" name="tmpl" value="component" />
 	<input type="hidden" name="option" value="com_phocacart" />
 	<input type="hidden" name="return" value="<?php echo $d['return']; ?>" />

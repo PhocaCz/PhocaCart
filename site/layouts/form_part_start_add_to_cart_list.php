@@ -28,6 +28,12 @@ echo '<form
 
 echo '<input type="hidden" name="id" value="'.(int)$d['id'].'">';
 echo '<input type="hidden" name="catid" value="'.(int)$d['catid'].'">';
+echo isset($d['sku']) && $d['sku'] != '' ? '<input type="hidden" name="sku" value="'.$d['sku'].'">' : '';
+echo isset($d['ean']) && $d['ean'] != '' ? '<input type="hidden" name="ean" value="'.$d['ean'].'">' : '';
+echo isset($d['basepricenetto']) && $d['basepricenetto'] != '' ? '<input type="hidden" name="basepricenetto" value="'.$d['basepricenetto'].'">' : '';
+echo isset($d['basepricetax']) && $d['basepricetax'] != '' ? '<input type="hidden" name="basepricetax" value="'.$d['basepricetax'].'">' : '';
+echo isset($d['basepricebrutto']) && $d['basepricebrutto'] != '' ? '<input type="hidden" name="basepricebrutto" value="'.$d['basepricebrutto'].'">' : '';
+echo isset($d['title']) && $d['title'] != '' ? '<input type="hidden" name="title" value="'.$d['title'].'">' : '';
 echo (int)$ticketId > 0 ? '<input type="hidden" name="ticketid" value="'.(int)$ticketId.'">' : '';
 echo (int)$unitId > 0 ? '<input type="hidden" name="unitid" value="'.(int)$unitId.'">' : '';
 echo (int)$sectionId > 0 ? '<input type="hidden" name="sectionid" value="'.(int)$sectionId.'">' : '';

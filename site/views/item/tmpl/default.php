@@ -466,6 +466,14 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 		$d['s']				= $this->s;
 		$d['id']			= (int)$x->id;
 		$d['catid']			= $this->t['catid'];
+
+        $d['sku']			    = isset($x->sku) ? $x->sku : '';
+        $d['ean']			    = isset($x->ean) ? $x->ean : '';
+        $d['basepricenetto']    = isset($dP['priceitems']['nettocurrency']) ? $dP['priceitems']['nettocurrency'] : '';
+        $d['basepricetax']      = isset($dP['priceitems']['taxcurrency']) ? $dP['priceitems']['taxcurrency'] : '';
+        $d['basepricebrutto']   = isset($dP['priceitems']['bruttocurrency']) ? $dP['priceitems']['bruttocurrency'] : '';
+        $d['title']				= isset($x->title) ? $x->title : '';
+
 		$d['return']		= $this->t['actionbase64'];
 		$d['addtocart']		= $this->t['item_addtocart'];
 		$d['typeview']		= 'Item';

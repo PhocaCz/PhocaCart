@@ -264,6 +264,12 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
             $dF['s']	                = $this->s;
 			$dF['linkch']				= $this->t['linkcheckout'];// link to checkout (add to cart)
 			$dF['id']					= (int)$v->id;
+			$dF['sku']					= isset($v->sku) ? $v->sku : '';
+			$dF['ean']					= isset($v->ean) ? $v->ean : '';
+			$dF['basepricenetto']       = isset($dP['priceitems']['nettocurrency']) ? $dP['priceitems']['nettocurrency'] : '';
+            $dF['basepricetax']         = isset($dP['priceitems']['taxcurrency']) ? $dP['priceitems']['taxcurrency'] : '';
+            $dF['basepricebrutto']      = isset($dP['priceitems']['bruttocurrency']) ? $dP['priceitems']['bruttocurrency'] : '';
+            $dF['title']				= isset($v->title) ? $v->title : '';
 			$dF['catid']				= $this->t['categoryid'];
 			$dF['return']				= $this->t['actionbase64'];
 			$dF['typeview']				= 'Items';
