@@ -74,8 +74,9 @@ function phChangeAttributeType(typeView) {
 						phSBtn = jQuery('<div class="'+ phClass +' '+ phTypeIcon + ' color-' + jQuery(this).data('color').replace('#', '')  +'" style="background-color:' + jQuery(this).data('color') +'" data-value="'+ jQuery(this).val() +'" data-value-alias="'+ jQuery(this).data('value-alias') +'" title="'+ jQuery(this).text() +'">'+ '&nbsp;' +'</div>');
 
 					} else if (phType == 13) {
-						// Text
-						phSBtn = jQuery('<div class="'+ phClass	+' '+ phTypeIcon +'" data-value="'+ jQuery(this).val() +'" data-value-alias="'+ jQuery(this).data('value-alias') +'" title="'+ jQuery(this).text() +'">' + jQuery(this).text() + '</div>');
+						// Text jQuery(this).text() - jQuery(this).data('text') 
+						// Suffix will be displayed in title attribute (hover) not in html
+						phSBtn = jQuery('<div class="'+ phClass	+' '+ phTypeIcon +'" data-value="'+ jQuery(this).val() +'" data-value-alias="'+ jQuery(this).data('value-alias') +'" title="'+ jQuery(this).text() +'">' + jQuery(this).data('text') + '</div>'); 
 					}
 
 
