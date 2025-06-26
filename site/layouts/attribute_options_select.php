@@ -82,6 +82,11 @@ foreach ($v->options as $k2 => $v2) {
 		$attrO		.= ' data-image="'.strip_tags($linkI).'"';
 	}
 
+	// SELECTBOX TEXT
+	if ($v->type == 13 && isset($v2->title)) {
+		$attrO		.= ' data-text="'.strip_tags(htmlspecialchars($v2->title)).'"';
+	}
+
 	// SELECTED SOME VALUE?
 	if ($v2->default_value == 1) {
 		$attrO		.= ' selected="seleced"';

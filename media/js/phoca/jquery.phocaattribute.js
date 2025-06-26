@@ -36,6 +36,8 @@ function phChangeAttributeType(typeView) {
 			phClass			= 'phSelectBoxImage';// Image
 		} else if (phType == 2) {
 			phClass			= 'phSelectBoxButton';// Color
+		} else if (phType == 13) {
+			phClass			= 'phSelectBoxText';// Text
 		}
 
 		// Transform only attributes which are select box image - 3 or select box color - 2
@@ -71,6 +73,9 @@ function phChangeAttributeType(typeView) {
 						// Color
 						phSBtn = jQuery('<div class="'+ phClass +' '+ phTypeIcon + ' color-' + jQuery(this).data('color').replace('#', '')  +'" style="background-color:' + jQuery(this).data('color') +'" data-value="'+ jQuery(this).val() +'" data-value-alias="'+ jQuery(this).data('value-alias') +'" title="'+ jQuery(this).text() +'">'+ '&nbsp;' +'</div>');
 
+					} else if (phType == 13) {
+						// Text
+						phSBtn = jQuery('<div class="'+ phClass	+' '+ phTypeIcon +'" data-value="'+ jQuery(this).val() +'" data-value-alias="'+ jQuery(this).data('value-alias') +'" title="'+ jQuery(this).text() +'">' + jQuery(this).text() + '</div>');
 					}
 
 
