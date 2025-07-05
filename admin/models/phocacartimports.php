@@ -9,18 +9,20 @@
 defined( '_JEXEC' ) or die();
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Factory;
+use Phoca\PhocaCart\MVC\Model\AdminModelTrait;
 jimport('joomla.application.component.modellist');
 
 class PhocaCartCpModelPhocaCartImports extends ListModel
 {
-	protected $option 	= 'com_phocacart';	
-	
+    use AdminModelTrait;
+	protected $option 	= 'com_phocacart';
+
 	public function __construct($config = array()) {
 		parent::__construct($config);
 	}
-	
+
 	public function getItemsCountImport() {
-		
+
 		$db		= $this->getDbo();
 		$user	= Factory::getUser();
 		$q 		= 'SELECT COUNT(id)'
@@ -31,9 +33,9 @@ class PhocaCartCpModelPhocaCartImports extends ListModel
 				//.' ORDER BY id';
 		$db->setQuery($q);
 		$count = $db->loadResult();
-		
+
 		return $count;
-		
+
 	}
 }
 ?>

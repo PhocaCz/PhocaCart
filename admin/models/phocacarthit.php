@@ -12,14 +12,16 @@ defined( '_JEXEC' ) or die();
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Factory;
 use Joomla\Utilities\ArrayHelper;
+use Phoca\PhocaCart\MVC\Model\AdminModelTrait;
 jimport('joomla.application.component.modellist');
 
 class PhocaCartCpModelPhocaCartHit extends AdminModel
 {
+	use AdminModelTrait;
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
 	public $typeAlias 			= 'com_phocacart.phocacarthit';
-	
+
 	protected function canDelete($record){
 		$user = Factory::getUser();
 
@@ -30,14 +32,14 @@ class PhocaCartCpModelPhocaCartHit extends AdminModel
 			return parent::canDelete($record);
 		}
 	}
-	
+
 	public function getForm($data = array(), $loadData = true) {
 		return false;
 	}
-	
-	
+
+
 	public function delete(&$cid = array()) {
-		
+
 		if (count( $cid )) {
 			ArrayHelper::toInteger($cid);
 			$error 	= 0;

@@ -21,9 +21,11 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 use Phoca\PhocaCart\Constants\WishListType;
 use Phoca\PhocaCart\I18n\I18nHelper;
+use Phoca\PhocaCart\MVC\Model\AdminModelTrait;
 
 class PhocaCartCpModelPhocacartWishlist extends AdminModel
 {
+    use AdminModelTrait;
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
 

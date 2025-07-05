@@ -14,11 +14,13 @@ use Joomla\CMS\Factory;
 use Joomla\Utilities\ArrayHelper;
 use Phoca\PhocaCart\Container\Container;
 use Phoca\PhocaCart\Helper\PhocaCartHelper;
+use Phoca\PhocaCart\MVC\Model\AdminModelTrait;
 
 jimport('joomla.application.component.modellist');
 
 class PhocaCartCpModelPhocacartUsers extends ListModel
 {
+    use AdminModelTrait;
 	protected $option 	= 'com_phocacart';
 
 	public function __construct($config = array()) {

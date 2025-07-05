@@ -17,11 +17,13 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Registry\Registry;
 use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\MVC\Model\AdminModelTrait;
 
 jimport('joomla.application.component.modeladmin');
 
 class PhocaCartCpModelPhocacartZone extends AdminModel
 {
+	use AdminModelTrait;
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
 

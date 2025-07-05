@@ -8,10 +8,12 @@
  */
 defined( '_JEXEC' ) or die();
 use Joomla\CMS\MVC\Model\ListModel;
+use Phoca\PhocaCart\MVC\Model\AdminModelTrait;
 jimport( 'joomla.application.component.modellist' );
 
 class PhocaCartCpModelPhocaCartEditBulkprice extends ListModel
 {
+	use AdminModelTrait;
 	protected	$option 		= 'com_phocacart';
 
 }

@@ -11,25 +11,27 @@ use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Application\ApplicationHelper;
+use Phoca\PhocaCart\MVC\Model\AdminModelTrait;
 jimport('joomla.application.component.modeladmin');
 
 class PhocaCartCpModelPhocacartSection extends AdminModel
 {
+    use AdminModelTrait;
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
-	
+
 	protected function canDelete($record) {
 		return parent::canDelete($record);
 	}
-	
+
 	protected function canEditState($record) {
 		return parent::canEditState($record);
 	}
-	
+
 	public function getTable($type = 'PhocacartSection', $prefix = 'Table', $config = array()) {
 		return Table::getInstance($type, $prefix, $config);
 	}
-	
+
 	public function getForm($data = array(), $loadData = true) {
 		$app	= Factory::getApplication();
 		$form 	= $this->loadForm('com_phocacart.phocacartsection', 'phocacartsection', array('control' => 'jform', 'load_data' => $loadData));
@@ -38,7 +40,7 @@ class PhocaCartCpModelPhocacartSection extends AdminModel
 		}
 		return $form;
 	}
-	
+
 	protected function loadFormData() {
 		$data = Factory::getApplication()->getUserState('com_phocacart.edit.phocacartsection.data', array());
 		if (empty($data)) {
@@ -46,7 +48,7 @@ class PhocaCartCpModelPhocacartSection extends AdminModel
 		}
 		return $data;
 	}
-	
+
 	protected function prepareTable($table) {
 		jimport('joomla.filter.output');
 		$date = Factory::getDate();
@@ -54,8 +56,8 @@ class PhocaCartCpModelPhocacartSection extends AdminModel
 
 		$table->title		= htmlspecialchars_decode($table->title, ENT_QUOTES);
 		$table->alias		= ApplicationHelper::stringURLSafe($table->alias);
-		
-		
+
+
 		if (empty($table->alias)) {
 			$table->alias = ApplicationHelper::stringURLSafe($table->title);
 		}

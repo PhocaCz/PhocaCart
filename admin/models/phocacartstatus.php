@@ -15,11 +15,13 @@ use Joomla\CMS\Language\Text;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Log\Log;
 use Phoca\PhocaCart\Mail\MailHelper;
+use Phoca\PhocaCart\MVC\Model\AdminModelTrait;
 
 jimport('joomla.application.component.modeladmin');
 
 class PhocaCartCpModelPhocaCartStatus extends AdminModel
 {
+    use AdminModelTrait;
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
 

@@ -12,25 +12,29 @@ use Joomla\CMS\Table\Table;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\Registry\Registry;
+use Phoca\PhocaCart\MVC\Model\AdminModelTrait;
+
 jimport('joomla.application.component.modeladmin');
 
 class PhocaCartCpModelphocacartbulkprice extends AdminModel
 {
-	protected	$option 		= 'com_phocacart';
+
+    use AdminModelTrait;
+    protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
-	
+
 	protected function canDelete($record) {
 		return parent::canDelete($record);
 	}
-	
+
 	protected function canEditState($record) {
 		return parent::canEditState($record);
 	}
-	
+
 	public function getTable($type = 'PhocacartBulkprice', $prefix = 'Table', $config = array()) {
 		return Table::getInstance($type, $prefix, $config);
 	}
-	
+
 	public function getForm($data = array(), $loadData = true) {
 		$app	= Factory::getApplication();
 		$form 	= $this->loadForm('com_phocacart.phocacartbulkprice', 'phocacartbulkprice', array('control' => 'jform', 'load_data' => $loadData));
@@ -39,7 +43,7 @@ class PhocaCartCpModelphocacartbulkprice extends AdminModel
 		}
 		return $form;
 	}
-	
+
 	protected function loadFormData() {
 		$data = Factory::getApplication()->getUserState('com_phocacart.edit.phocacartbulkprice.data', array());
 		if (empty($data)) {
@@ -48,7 +52,7 @@ class PhocaCartCpModelphocacartbulkprice extends AdminModel
 		return $data;
 	}
 
-	
+
 	protected function prepareTable($table) {
 		jimport('joomla.filter.output');
 		$date = Factory::getDate();
@@ -60,17 +64,17 @@ class PhocaCartCpModelphocacartbulkprice extends AdminModel
 		if (empty($table->alias)) {
 			$table->alias = ApplicationHelper::stringURLSafe($table->title);
 		}
-		
+
 		if (!empty($table->params)) {
 			$registry 	= new Registry($table->params);
 			$dataPhNew 	= $registry->toString();
-	
+
 			if($dataPhNew != '') {
 				$table->params = $dataPhNew;
 			}
 		}
-		
-		
+
+
 
 
 		if (empty($table->id)) {
@@ -92,7 +96,7 @@ class PhocaCartCpModelphocacartbulkprice extends AdminModel
 			//$table->modified_by	= $user->get('id');
 		}
 	}
-	
+
 	public function delete(&$cid = array()) {
 
 		if (count( $cid )) {

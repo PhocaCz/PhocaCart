@@ -22,9 +22,11 @@ use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\LanguageHelper;
 use Joomla\String\StringHelper;
 use Phoca\PhocaCart\I18n\I18nHelper;
+use Phoca\PhocaCart\MVC\Model\AdminModelTrait;
 
 class PhocaCartCpModelPhocaCartSubmititem extends AdminModel
 {
+	use AdminModelTrait;
 	protected	$option 		        = 'com_phocacart';
 	protected 	$text_prefix	        = 'com_phocacart';
 	public      $typeAlias 		        = 'com_phocacart.phocacartsubmititem';
