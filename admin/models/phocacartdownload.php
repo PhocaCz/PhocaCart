@@ -13,10 +13,12 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Registry\Registry;
+use Phoca\PhocaCart\MVC\Model\AdminModelTrait;
 jimport('joomla.application.component.modeladmin');
 
 class PhocaCartCpModelPhocacartDownload extends AdminModel
 {
+    use AdminModelTrait;
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
 

@@ -2159,6 +2159,19 @@ class PhocacartOrder
 
         }
 
+        if (empty($d['valid_from'])) {
+            $d['valid_from'] = '0000-00-00';
+        }
+        if (empty($d['valid_to'])) {
+            $d['valid_to'] = '0000-00-00';
+        }
+
+        // Valid to - day including the last second
+        if ($d['valid_to'] == '0000-00-00' || $d['valid_to'] == '0000-00-00 00:00:00') {
+
+        } else {
+            $d['valid_to'] = str_replace('00:00:00', '23:59:59', Factory::getDate($d['valid_to'])->toSql());
+        }
 
         $db->setQuery('SELECT MAX(ordering) FROM #__phocacart_coupons');
         $max           = $db->loadResult();

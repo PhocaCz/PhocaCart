@@ -12,9 +12,11 @@ use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Factory;
 use Phoca\PhocaCart\I18n\I18nHelper;
+use Phoca\PhocaCart\MVC\Model\AdminModelTrait;
 
 class PhocaCartCpModelPhocacartContentType extends AdminModel
 {
+    use AdminModelTrait;
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
 

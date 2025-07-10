@@ -49,7 +49,7 @@ class PhocaCartCpViewPhocacartCouponView extends HtmlView
 		}
 
 		if ($pdfV['pdf'] == 1) {
-			
+
 				$layoutG	= new FileLayout('gift_voucher', null, array('component' => 'com_phocacart', 'client' => 0));
 
 				$price 		= new PhocacartPrice();
@@ -73,18 +73,31 @@ class PhocaCartCpViewPhocacartCouponView extends HtmlView
 				$document = new stdClass();
 				PhocaPDFRender::initializePDF($pdf, $content, $document, $staticData);
 
-				
+
 				$d['typeview']   = 'Coupon';
 				$d['product_id'] = $gift['gift_product_id'];
 
 				$d['discount']   = $price->getPriceFormat($gift['discount']);
-				$d['valid_from'] = HTMLHelper::date($gift['valid_from'], Text::_('DATE_FORMAT_LC3'));
-				$d['valid_to']   = HTMLHelper::date($gift['valid_to'], Text::_('DATE_FORMAT_LC3'));
+				//$d['valid_from'] = HTMLHelper::date($gift['valid_from'], Text::_('DATE_FORMAT_LC3'));
+				//$d['valid_to']   = HTMLHelper::date($gift['valid_to'], Text::_('DATE_FORMAT_LC3'));
+
+				if ($gift['valid_from'] == '' || $gift['valid_from'] == '0000-00-00 00:00:00') {
+					$d['valid_from'] = '';
+				} else {
+					$d['valid_from'] = HTMLHelper::date($gift['valid_from'], Text::_('DATE_FORMAT_LC3'));
+				}
+
+				if ($gift['valid_to'] == '' || $gift['valid_to'] == '0000-00-00 00:00:00') {
+					$d['valid_to'] = '';
+				} else {
+					$d['valid_to'] = HTMLHelper::date($gift['valid_to'], Text::_('DATE_FORMAT_LC3'));
+				}
+
 				$d['format']     = 'pdf';
 
 				$d['pdf_instance'] = $pdf;// we need tcpdf instance in output to use different tcpdf functions
 
-				
+
 				$staticData['pdf_destination'] = 'I';
 				$staticData['output']          = $layoutG->render($d);
 

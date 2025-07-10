@@ -18,12 +18,13 @@ use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Language\Text;
 use Phoca\PhocaCart\I18n\I18nAdminModelTrait;
+use Phoca\PhocaCart\MVC\Model\AdminModelTrait;
 
 jimport('joomla.application.component.modeladmin');
 
 class PhocaCartCpModelPhocacartTax extends AdminModel
 {
-	use I18nAdminModelTrait;
+	use I18nAdminModelTrait, AdminModelTrait;
 
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';

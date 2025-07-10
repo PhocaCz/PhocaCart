@@ -9,18 +9,20 @@
 defined( '_JEXEC' ) or die();
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
+use Phoca\PhocaCart\MVC\Model\AdminModelTrait;
 jimport('joomla.application.component.modeladmin');
 
 class PhocaCartCpModelPhocaCartReport extends AdminModel
 {
+    use AdminModelTrait;
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
-	
-	
+
+
 	public function getTable($type = 'PhocaCartReport', $prefix = 'Table', $config = array()) {
 		return Table::getInstance($type, $prefix, $config);
 	}
-	
+
 	public function getForm($data = array(), $loadData = true) {
 		return false;
 	}

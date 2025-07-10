@@ -11,32 +11,34 @@ use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Application\ApplicationHelper;
+use Phoca\PhocaCart\MVC\Model\AdminModelTrait;
 jimport('joomla.application.component.modeladmin');
 
 class PhocaCartCpModelPhocaCartQuestion extends AdminModel
 {
+	use AdminModelTrait;
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
-	
+
 	protected function canDelete($record)
 	{
 		//$user = Factory::getUser();
 		return parent::canDelete($record);
 	}
-	
+
 	protected function canEditState($record)
 	{
 		//$user = Factory::getUser();
 		return parent::canEditState($record);
 	}
-	
+
 	public function getTable($type = 'PhocaCartQuestion', $prefix = 'Table', $config = array())
 	{
 		return Table::getInstance($type, $prefix, $config);
 	}
-	
+
 	public function getForm($data = array(), $loadData = true) {
-		
+
 		$app	= Factory::getApplication();
 		$form 	= $this->loadForm('com_phocacart.phocacartquestion', 'phocacartquestion', array('control' => 'jform', 'load_data' => $loadData));
 		if (empty($form)) {
@@ -44,7 +46,7 @@ class PhocaCartCpModelPhocaCartQuestion extends AdminModel
 		}
 		return $form;
 	}
-	
+
 	protected function loadFormData()
 	{
 		// Check the session for previously entered form data.
@@ -56,7 +58,7 @@ class PhocaCartCpModelPhocaCartQuestion extends AdminModel
 
 		return $data;
 	}
-	
+
 	protected function prepareTable($table)
 	{
 		jimport('joomla.filter.output');
@@ -69,11 +71,11 @@ class PhocaCartCpModelPhocaCartQuestion extends AdminModel
 		if (empty($table->alias)) {
 			$table->alias = ApplicationHelper::stringURLSafe($table->title);
 		}
-		
+
 		$table->params 	= PhocacartUtils::getStringFromItem($table->params);
 		$table->date	= PhocacartUtils::getDateFromString($table->date);
-		
-		
+
+
 		if (empty($table->id)) {
 			// Set the values
 			//$table->created	= $date->toSql();
@@ -93,7 +95,7 @@ class PhocaCartCpModelPhocaCartQuestion extends AdminModel
 			//$table->modified_by	= $user->get('id');
 		}
 	}
-	
+
 	protected function getReorderConditions($table = null)
 	{
 		$condition = array();
@@ -102,7 +104,7 @@ class PhocaCartCpModelPhocaCartQuestion extends AdminModel
 	}
 	/*
 	public function increaseOrdering($productId) {
-		
+
 		$ordering = 1;
 		$this->_db->setQuery('SELECT MAX(ordering) FROM #__phocacart_reviews WHERE product_id='.(int)$productId);
 		$max = $this->_db->loadResult();

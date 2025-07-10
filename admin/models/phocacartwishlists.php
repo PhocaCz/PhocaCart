@@ -10,9 +10,11 @@ defined( '_JEXEC' ) or die();
 
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Factory;
+use Phoca\PhocaCart\MVC\Model\AdminModelTrait;
 
 class PhocaCartCpModelPhocacartWishlists extends ListModel
 {
+    use AdminModelTrait;
 	protected $option 	= 'com_phocacart';
 
 	public function __construct($config = array())

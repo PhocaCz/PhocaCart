@@ -16,11 +16,12 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
-
+use Phoca\PhocaCart\MVC\Model\AdminModelTrait;
 jimport( 'joomla.application.component.modellist' );
 
 class PhocaCartCpModelPhocaCartEditStockAdvanced extends AdminModel
 {
+	use AdminModelTrait;
 	protected	$option 		        = 'com_phocacart';
 	protected 	$text_prefix	        = 'com_phocacart';
 	public      $typeAlias 		        = 'com_phocacart.phocacartproductstock';

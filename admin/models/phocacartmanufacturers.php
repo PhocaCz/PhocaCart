@@ -12,10 +12,11 @@ use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Factory;
 use Phoca\PhocaCart\I18n\I18nHelper;
 use Phoca\PhocaCart\I18n\I18nListModelTrait;
+use Phoca\PhocaCart\MVC\Model\AdminModelTrait;
 
 class PhocaCartCpModelPhocacartManufacturers extends ListModel
 {
-    use I18nListModelTrait;
+    use I18nListModelTrait, AdminModelTrait;
 
 	protected $option 	= 'com_phocacart';
 

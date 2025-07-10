@@ -10,9 +10,11 @@ defined( '_JEXEC' ) or die();
 
 use Joomla\CMS\MVC\Model\ListModel;
 use Phoca\PhocaCart\Container\Container;
+use Phoca\PhocaCart\MVC\Model\AdminModelTrait;
 
 class PhocaCartCpModelPhocaCartExports extends ListModel
 {
+    use AdminModelTrait;
 	protected $option 	= 'com_phocacart';
 
 	public function getItemsCountProduct()

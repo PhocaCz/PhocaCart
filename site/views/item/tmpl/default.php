@@ -217,6 +217,11 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 			echo '<div class="' . $this->s['c']['row'] . ' ph-item-image-add-box">';
 
 			foreach ($this->t['add_images'] as $v2) {
+
+                if ($v2->image == '') {
+					continue;
+				}
+
 				echo '<div class="' . $this->s['c']['col.xs12.sm4.md4'] . ' ph-item-image-box">';
 				$image = PhocacartImage::getThumbnailName($this->t['pathitem'], $v2->image, 'small');
 				$imageL = PhocacartImage::getThumbnailName($this->t['pathitem'], $v2->image, 'large');

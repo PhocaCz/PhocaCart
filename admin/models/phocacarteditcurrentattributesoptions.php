@@ -10,10 +10,12 @@ defined( '_JEXEC' ) or die();
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Phoca\PhocaCart\MVC\Model\AdminModelTrait;
 jimport( 'joomla.application.component.modellist' );
 
 class PhocaCartCpModelPhocaCartEditCurrentAttributesOptions extends ListModel
 {
+	use AdminModelTrait;
 	protected	$option 		= 'com_phocacart';
 
 	public function getData() {

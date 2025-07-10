@@ -1303,6 +1303,48 @@ a.phSelectBoxImage.on:focus {
     text-decoration: none;
 }
 
+
+/*
+.phSelectBoxText.on:after {
+    position: absolute;
+    top: 30%;
+    left: 40%;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    box-sizing: content-box;
+    border-radius: 2px;
+    text-decoration: none;
+    color: var(--ph-warning);
+    text-shadow: -2px 0 #fff, 0 2px #fff, 2px 0 #fff, 0 -2px #fff;
+}*/
+
+.phSelectBoxText {
+    border: 2px solid transparent;
+    display: inline-block;
+    cursor: pointer;
+    padding: 0.25em;
+    margin: 3px;
+}
+.phSelectBoxText.on {
+    border: 2px solid currentColor;
+}
+
+.phSelectBoxText:hover,
+.phSelectBoxText.on:hover {
+    border: 2px solid currentColor;
+}
+
+a.phSelectBoxText:hover,
+a.phSelectBoxText.on:hover,
+a.phSelectBoxText:visited,
+a.phSelectBoxText.on:visited,
+a.phSelectBoxText:active,
+a.phSelectBoxText.on:active,
+a.phSelectBoxText:focus,
+a.phSelectBoxText.on:focus {
+    text-decoration: none;
+}
+
 .ph-question-message {
 }
 

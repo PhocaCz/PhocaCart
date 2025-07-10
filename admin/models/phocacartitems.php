@@ -17,10 +17,11 @@ use Phoca\PhocaCart\Dispatcher\Dispatcher;
 use Phoca\PhocaCart\Event;
 use Phoca\PhocaCart\I18n\I18nHelper;
 use Phoca\PhocaCart\I18n\I18nListModelTrait;
+use Phoca\PhocaCart\MVC\Model\AdminModelTrait;
 
 class PhocaCartCpModelPhocaCartItems extends ListModel
 {
-    use I18nListModelTrait;
+    use I18nListModelTrait, AdminModelTrait;
 
 	protected $option 	= 'com_phocacart';
 	protected $columns	= [];
