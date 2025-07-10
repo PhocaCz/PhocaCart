@@ -257,7 +257,14 @@ $d2['gift_image'] = $defaultImage;
 $d2['gift_title'] = $defaultTitle;
 $d2['gift_description'] = $defaultDescription;
 $d2['discount'] = isset($d['priceitems']['bruttoformat']) ? $d['priceitems']['bruttoformat'] : '';
-$d2['valid_to'] = HTMLHelper::date($defaultDate, Text::_('DATE_FORMAT_LC3'));
+//$d2['valid_to'] = HTMLHelper::date($defaultDate, Text::_('DATE_FORMAT_LC3'));
+
+if ($defaultDate == '' || $defaultDate == '0000-00-00 00:00:00') {
+	$d2['valid_to'] = '';
+} else {
+	$d2['valid_to'] = HTMLHelper::date($defaultDate, Text::_('DATE_FORMAT_LC3'));
+}
+
 $d2['valid_from'] = '';
 $d2['code'] = '';
 $d2['gift_sender_name'] = $giftSenderNameActive == 1 ? '&nbsp;' : '';

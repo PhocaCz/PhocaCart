@@ -27,10 +27,10 @@ class PhocaCartCpViewPhocacartCouponView extends HtmlView
 		/*$order	= new PhocacartOrderRender();
 		$o = $order->render($id, $type, $format);
 		echo $o;*/
-		
-		
+
+
 		$layoutG	= new FileLayout('gift_voucher', null, array('component' => 'com_phocacart', 'client' => 0));
-		
+
 		$price = new PhocacartPrice();
 		$gift = PhocacartCoupon::getGiftByCouponId($id);
 		$d               = $gift;
@@ -38,8 +38,23 @@ class PhocaCartCpViewPhocacartCouponView extends HtmlView
 		$d['product_id'] = $gift['gift_product_id'];
 
 		$d['discount']   = $price->getPriceFormat($gift['discount']);
-		$d['valid_from'] = HTMLHelper::date($gift['valid_from'], Text::_('DATE_FORMAT_LC3'));
-		$d['valid_to']   = HTMLHelper::date($gift['valid_to'], Text::_('DATE_FORMAT_LC3'));
+		//$d['valid_from'] = HTMLHelper::date($gift['valid_from'], Text::_('DATE_FORMAT_LC3'));
+		//$d['valid_to']   = HTMLHelper::date($gift['valid_to'], Text::_('DATE_FORMAT_LC3'));
+
+		if ($gift['valid_from'] == '' || $gift['valid_from'] == '0000-00-00 00:00:00') {
+			$d['valid_from'] = '';
+		} else {
+			$d['valid_from'] = HTMLHelper::date($gift['valid_from'], Text::_('DATE_FORMAT_LC3'));
+		}
+
+		if ($gift['valid_to'] == '' || $gift['valid_to'] == '0000-00-00 00:00:00') {
+			$d['valid_to'] = '';
+		} else {
+			$d['valid_to'] = HTMLHelper::date($gift['valid_to'], Text::_('DATE_FORMAT_LC3'));
+		}
+
+
+
 		$d['format']     = 'html';
 
 		echo $layoutG->render($d);

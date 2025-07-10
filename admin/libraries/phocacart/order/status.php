@@ -501,12 +501,16 @@ class PhocacartOrderStatus
         if ($buyer) {
             $buyer->gifts = $gifts;
         }
+
         foreach ($gifts as $gift) {
-            $recipients[$gift['gift_recipient_email']]->gifts[]                        = $gift;
-            $recipients[$gift['gift_recipient_email']]->mailData['emailgiftrecipient'] = $gift['gift_recipient_email'];
-            $recipients[$gift['gift_recipient_email']]->mailData['namegiftrecipient']  = $gift['gift_recipient_name'] ?? '';
-            $recipients[$gift['gift_recipient_email']]->mailData['namegiftsender']     = $gift['gift_sender_name'] ?? '';
-            $recipients[$gift['gift_recipient_email']]->mailData['validtogift']        = $gift['valid_to'] ? HTMLHelper::date($gift['valid_to'], Text::_('DATE_FORMAT_LC1')) : '';
+            if (isset($recipients[$gift['gift_recipient_email']])){
+
+                $recipients[$gift['gift_recipient_email']]->gifts[] = $gift;
+                $recipients[$gift['gift_recipient_email']]->mailData['emailgiftrecipient'] = $gift['gift_recipient_email'];
+                $recipients[$gift['gift_recipient_email']]->mailData['namegiftrecipient']  = $gift['gift_recipient_name'] ?? '';
+                $recipients[$gift['gift_recipient_email']]->mailData['namegiftsender']     = $gift['gift_sender_name'] ?? '';
+                $recipients[$gift['gift_recipient_email']]->mailData['validtogift']        = $gift['valid_to'] ? HTMLHelper::date($gift['valid_to'], Text::_('DATE_FORMAT_LC1')) : '';
+            }
         }
 
         $pdfLayout = new FileLayout('gift_voucher', null, ['component' => 'com_phocacart', 'client' => 0]);
@@ -521,10 +525,19 @@ class PhocacartOrderStatus
                     $displayData['product_id'] = $gift['gift_product_id'];
 
                     $displayData['discount']   = $price->getPriceFormat($gift['discount']);
-                    $displayData['valid_from'] = HTMLHelper::date($gift['valid_from'], Text::_('DATE_FORMAT_LC3'));
-                    $displayData['valid_to']   = HTMLHelper::date($gift['valid_to'], Text::_('DATE_FORMAT_LC3'));
-                    $displayData['format']     = 'pdf';
 
+                    if ($gift['valid_from'] == '' || $gift['valid_from'] == '0000-00-00 00:00:00') {
+                        $displayData['valid_from'] = '';
+                    } else {
+                        $displayData['valid_from'] = HTMLHelper::date($gift['valid_from'], Text::_('DATE_FORMAT_LC3'));
+                    }
+
+                    if ($gift['valid_to'] == '' || $gift['valid_to'] == '0000-00-00 00:00:00') {
+                        $displayData['valid_to'] = '';
+                    } else {
+                        $displayData['valid_to'] = HTMLHelper::date($gift['valid_to'], Text::_('DATE_FORMAT_LC3'));
+                    }
+                    $displayData['format']     = 'pdf';
                     // recipient PDF content
                     $displayData['pdf_instance'] = $recipient->pdf; // we need tcpdf instance in output to use different tcpdf functions
                     $recipient->attachments[]    = $pdfLayout->render($displayData);
@@ -572,6 +585,23 @@ class PhocacartOrderStatus
             if ($recipient->pdfFile) {
                 $mailer->addAttachment($recipient->pdfFileName, $recipient->pdfFile);
             }
+
+            // PHOCADEBUG
+            /*
+            $config = Factory::getConfig();
+            $tmp_path = $config->get('tmp_path');
+            $tmp_pdf_file =  $tmp_path . '/debug.pdf';
+            try {
+                if (!Joomla\Filesystem\File::write($tmp_pdf_file, $recipient->pdfFile)) {
+                    throw new Exception('Could not save ' . $tmp_pdf_file, 500);
+                }
+
+            } catch (Exception $e) {
+                echo "Error writing file: " . $tmp_pdf_file;
+            }
+            bdump($tmp_pdf_file);
+            exit;*/
+            // END PHOCADEBUG
 
             $mailer->addRecipient($recipient->email);
             try {
