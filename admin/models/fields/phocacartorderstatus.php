@@ -36,14 +36,14 @@ class JFormFieldPhocacartOrderstatus extends ListField
 
         if ($this->multiple) {
             $options = array_merge([
-                (object)['value' => 0, 'text' => 'COM_PHOCACART_NONE'],
-                (object)['value' => -1, 'text' => 'COM_PHOCACART_ALL'],
+                (object)['value' => 0, 'text' => Text::_('COM_PHOCACART_NONE')],
+                (object)['value' => -1, 'text' => Text::_('COM_PHOCACART_ALL')],
             ], $options);
         } else {
             $type = $this->element['typemethod'] ?? 0;
             if ($type == 1) {
                 $options = array_merge([
-                    (object)['value' => 0, 'text' => 'COM_PHOCACART_NONE'],
+                    (object)['value' => 0, 'text' => Text::_('COM_PHOCACART_NONE')],
                 ], $options);
             } else if ($type == 2) {
                 $options = array_merge([

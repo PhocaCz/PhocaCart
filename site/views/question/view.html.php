@@ -109,7 +109,7 @@ class PhocaCartViewQuestion extends HtmlView
 
 			$document->addCustomTag( "<style type=\"text/css\"> \n"
 			." #ph-pc-question-box {
-				margin: 20px
+				padding: 1em; margin: 0;
 			} \n"
 			." </style> \n");
 		}
