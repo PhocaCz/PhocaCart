@@ -567,6 +567,7 @@ if ($d['type'] == 2) {
 		//$invoiceTopDescArticle 	= PhocacartText::completeTextFormFields($invoiceTopDescArticle, $d['bas']['b'], 1);
 		//$invoiceTopDescArticle 	= PhocacartText::completeTextFormFields($invoiceTopDescArticle, $d['bas']['s'], 2);
 		$invoiceTopDescArticle 	= PhocacartText::completeTextFormFields($invoiceTopDescArticle, $d['bas']['b'], $d['bas']['s']);
+
 		$o[] = '<table '.$bDesc.'><tr><td>'.$invoiceTopDescArticle.'</td></tr></table>';
 	}
 } else if ($d['type'] == 1) {

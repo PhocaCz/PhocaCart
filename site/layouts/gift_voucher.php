@@ -100,8 +100,8 @@ if ($d['format'] == 'html') {
 
 
 // FIX image paths MAIL
-$d['gift_description'] 	= str_replace('src="', 'src="'. Uri::root(), $d['gift_description']);
-$d['gift_image'] 		= Uri::root() .  $d['gift_image'];
+$d['gift_description'] 	= str_replace('src="', 'src="'. Uri::root(), (string)$d['gift_description']);
+$d['gift_image'] 		= Uri::root() .  PhocacartUtils::realCleanImageUrl($d['gift_image']);
 
 // ------------------------
 // |     HTML | EMAIL     |
@@ -176,6 +176,7 @@ if ($d['format'] == 'html' || $d['format'] == 'mail') {
 		echo '<div'.$s['ph-gift-voucher-code'].' class="'.$c['ph-gift-voucher-code'].' phAOGiftCode">'.$d['code'].'</div>'. "\n";
 	}
 
+
 	if ($d['valid_to'] != '') {
 		echo '<div'.$s['ph-gift-voucher-date-to'].' class="'.$c['ph-gift-voucher-date-to'].'">'.Text::_('COM_PHOCACART_VALID_TILL').': <span class="phAOGiftDate">'.$d['valid_to'].'</span></div>'. "\n";
 	}
@@ -218,8 +219,10 @@ if ($d['format'] == 'pdf') {
 
 	$svgScissors= '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="60" xmlns:v="https://vecta.io/nano"><path d="M98.031 14.192c-4.319-5.182-12.083-4.976-17.876-2.727L43.761 25.227c-10.613-5.766-21.078-4.075-21.086-6.898-.007-2.206 2.021-1.729 1.701-7.473-.307-5.515-6.078-9.579-11.519-9.201C7.411 1.639 1.78 5.828 1.748 11.582 1.36 17.379 6.25 22.748 12.016 23.11c6.757.986 18.705-3.141 24.345 6.897-4.158 7.724-11.574 7.767-18.281 7.401-5.568-.304-12.25 1.311-14.889 6.791-2.55 5.252-.012 12.709 5.884 14.297 5.952 2.164 14.109-.617 15.503-7.458 1.074-5.273-2.664-7.738-1.237-9.655 1.077-1.447 7.943-.631 20.155-6.159L82.99 49.015c4.989 1.377 11.081 1.312 15.482-3.602l-40.95-15.341 40.51-15.88zM16.784 6c5.753 3.19 5.309 11.89-.654 13.592-5.392 1.895-12.303-3.331-10.6-9.185.994-4.803 7.316-6.59 11.254-4.407zm.355 35.568c5.999 2.195 5.012 12.338-1.079 13.719-4.038 1.415-9.822-.587-10.245-5.347-.805-5.788 5.984-11.039 11.324-8.372z"/></svg>';
 
-	$params = $d['pdf_instance']->serializeTCPDFtagParameters(array('@' . $svgScissors, $x='', $y='', $w='6', $h='4', $link='', $align='L', $palign='L', $border=0, $fitonpage=true));
-	echo '<div style="text-align:center"><tcpdf style="text-align:center;" method="ImageSVG" params="'.$params.'" /></div>';
+	//$params = $d['pdf_instance']->serializeTCPDFtagParameters(array('@' . $svgScissors, $x='', $y='', $w='6', $h='4', $link='', $align='L', $palign='L', $border=0, $fitonpage=true));
+	//echo '<div style="text-align:center"><tcpdf style="text-align:center;"method="ImageSVG" params="'.$params.'" /></div>';
+	$params = $d['pdf_instance']->serializeTCPDFtag('ImageSVG', array('@' . $svgScissors, $x='', $y='', $w='6', $h='4', $link='', $align='L', $palign='L', $border=0, $fitonpage=true));
+	echo '<div style="text-align:center"><tcpdf style="text-align:center;" data="'.$params.'" /></div>';
 
 
 	echo '<table cellpadding="5"><tr><td'.$s['ph-gift-voucher-box'].' class="phAOGiftType '.$c['ph-gift-voucher-box'].' '.$d['gift_class_name'].'">';
@@ -228,16 +231,20 @@ if ($d['format'] == 'pdf') {
 		echo '<div'.$s['ph-gift-voucher-image-box'].' class="'.$c['ph-gift-voucher-image-box'].'">';
 
 
-		$params = $d['pdf_instance']->serializeTCPDFtagParameters(array($d['gift_image'], $x='', $y='', $w='', $h='', $type='', $link='', $align='', $resize=true, $dpi=300, $palign='', $ismask=false, $imgmask=false, $border=0, $fitbox='CM', $hidden=false, $fitonpage=true, $alt=false, $altimgs=array()));
-		echo '<div style="text-align:center"><tcpdf style="text-align:center;" method="Image" params="'.$params.'" /></div>';
+		//$params = $d['pdf_instance']->serializeTCPDFtagParameters(array($d['gift_image'], $x='', $y='', $w='', $h='', $type='', $link='', $align='', $resize=true, $dpi=300, $palign='', $ismask=false, $imgmask=false, $border=0, $fitbox='CM', $hidden=false, $fitonpage=true, $alt=false, $altimgs=array()));
+		//echo '<div style="text-align:center"><tcpdf style="text-align:center;" method="Image" params="'.$params.'" /></div>';
+		$params = $d['pdf_instance']->serializeTCPDFtag('Image', array($d['gift_image'], $x='', $y='', $w='', $h='', $type='', $link='', $align='', $resize=true, $dpi=300, $palign='', $ismask=false, $imgmask=false, $border=0, $fitbox='CM', $hidden=false, $fitonpage=true, $alt=false, $altimgs=array()));
+		echo '<div style="text-align:center"><tcpdf style="text-align:center;" data="'.$params.'" /></div>';
 		echo '</div>';
 		echo '<tcpdf method="setPageMark" params="" />';
 
 
 		$html = '<div'.$s['ph-gift-voucher-title'].' class="'.$c['ph-gift-voucher-title'].' phAOGiftTitle">' . $d['gift_title'].'</div>';
-		$params = $d['pdf_instance']->serializeTCPDFtagParameters(array($w='', $h='', $x='', $y='', $html, $border=0, $ln=1, $fill=false, $reseth=true, $align='C', $autopadding=true));
+		//$params = $d['pdf_instance']->serializeTCPDFtagParameters(array($w='', $h='', $x='', $y='', $html, $border=0, $ln=1, $fill=false, $reseth=true, $align='C', $autopadding=true));
+		$params = $d['pdf_instance']->serializeTCPDFtag('writeHTMLCell', array($w='', $h='', $x='', $y='', $html, $border=0, $ln=1, $fill=false, $reseth=true, $align='C', $autopadding=true));
 		echo '<div style="font-size: 6px">&nbsp;</div>';
-		echo '<div style="text-align:center"><tcpdf style="text-align:center;" method="writeHTMLCell" params="'.$params.'" /></div>';
+		//echo '<div style="text-align:center"><tcpdf style="text-align:center;" method="writeHTMLCell" params="'.$params.'" /></div>';
+		echo '<div style="text-align:center"><tcpdf style="text-align:center;" data="'.$params.'" /></div>';
 		echo '<div style="font-size: 6px">&nbsp;</div>';
 
 
@@ -246,8 +253,9 @@ if ($d['format'] == 'pdf') {
 		echo '<td'.$s['ph-gift-voucher-col1'].' class="'.$c['ph-gift-voucher-col1'].'">'. "\n";
 
 		$svg = '<svg width="80" height="80"><circle cx="40" cy="40" r="35" fill="white" /></svg>';
-		$params = $d['pdf_instance']->serializeTCPDFtagParameters(array('@' . $svg, $x='', $y='', $w='', $h='', $link='', $align='', $palign='', $border=0, $fitonpage=true));
-		echo '<div style="text-align:center"><tcpdf style="text-align:center;" method="ImageSVG" params="'.$params.'" /></div>';
+		//$params = $d['pdf_instance']->serializeTCPDFtagParameters(array('@' . $svg, $x='', $y='', $w='', $h='', $link='', $align='', $palign='', $border=0, $fitonpage=true));
+		$params = $d['pdf_instance']->serializeTCPDFtag('ImageSVG', array('@' . $svg, $x='', $y='', $w='', $h='', $link='', $align='', $palign='', $border=0, $fitonpage=true));
+		echo '<div style="text-align:center"><tcpdf style="text-align:center;" data="'.$params.'" /></div>';
 		echo '<div'.$s['ph-gift-voucher-head'].' class="'.$c['ph-gift-voucher-head'].'"><div style="font-size: 10px">&nbsp;</div>'. "\n";
 		echo '<div'.$s['ph-gift-voucher-head-top'].' class="'.$c['ph-gift-voucher-head-top'].'">'.Text::_('COM_PHOCACART_TXT_GIFT_VOUCHER_GIFT').'</div>';
 		echo '<div'.$s['ph-gift-voucher-head-bottom'].' class="'.$c['ph-gift-voucher-head-bottom'].'">'.Text::_('COM_PHOCACART_TXT_GIFT_VOUCHER_VOUCHER').'</div>';
@@ -294,10 +302,11 @@ if ($d['format'] == 'pdf') {
 
 	echo '</td></tr></table>'. "\n"; // end ph-gift-voucher-box
 
-	$params = $d['pdf_instance']->serializeTCPDFtagParameters(array('@' . $svgScissors, $x='', $y='', $w='6', $h='4', $link='', $align='R', $palign='R', $border=0, $fitonpage=true));
-	echo '<div style="text-align:right"><tcpdf style="text-align:right;" method="ImageSVG" params="'.$params.'" /></div>';
+	//$params = $d['pdf_instance']->serializeTCPDFtagParameters(array('@' . $svgScissors, $x='', $y='', $w='6', $h='4', $link='', $align='R', $palign='R', $border=0, $fitonpage=true));
+	//echo '<div style="text-align:right"><tcpdf style="text-align:right;" method="ImageSVG" params="'.$params.'" /></div>';
+	$params = $d['pdf_instance']->serializeTCPDFtag('ImageSVG', array('@' . $svgScissors, $x='', $y='', $w='6', $h='4', $link='', $align='R', $palign='R', $border=0, $fitonpage=true));
+	echo '<div style="text-align:right"><tcpdf style="text-align:right;" data="'.$params.'" /></div>';
 
 	echo '</div>';// end no br
-
 }
 ?>

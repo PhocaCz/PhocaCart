@@ -9,6 +9,8 @@
 defined('_JEXEC') or die();
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\Form\Field\ListField;
+use Joomla\CMS\Language\Text;
+
 
 class JFormFieldPhocacartGroups extends ListField
 {
@@ -18,6 +20,19 @@ class JFormFieldPhocacartGroups extends ListField
 		$groups             = PhocacartGroup::getAllGroups();
 		$data               = $this->getLayoutData();
 		$data['options']    = (array)$groups;
+
+
+        // When filtering, standard rules applied
+        // When e.g. selecting group for edit form field, we load "Default" group as default value, so different behaviour to filtering
+		$multiple	= ((string) $this->element['multiple'] == 'true') ? TRUE : FALSE;
+		if ($this->group == 'filter' && $multiple) {
+			$item = new stdClass();
+			$item->value = '';
+			$item->text = Text::_('COM_PHOCACART_SELECT_GROUP');
+            array_unshift($data['options'], $item);
+
+		}
+
 		if ($this->value) {
 			$data['value']      = $this->value;
 		} else {
@@ -40,13 +55,22 @@ class JFormFieldPhocacartGroups extends ListField
 				$activeGroups	= PhocacartGroup::getGroupsById($id, $tableType, 1);
 			}
 
-			if (empty($activeGroups) && (string)$this->element['addempty'] !== 'false') {
-				$activeGroups	= PhocacartGroup::getDefaultGroup(1);
-			}
+            // Filtering does not set Default Value "Default"
+            if ($this->group == 'filter' && $multiple) {
+                if (empty($activeGroups)){
+                    $activeGroups	= [0 => 0];
+                }
+
+            } else {
+                if (empty($activeGroups) && (string)$this->element['addempty'] !== 'false') {
+				    $activeGroups	= PhocacartGroup::getDefaultGroup(1);
+			    }
+            }
+
+
 
 			$data['value'] = $activeGroups;
 		}
-
 		return $this->getRenderer($this->layout)->render($data);
 	}
 }

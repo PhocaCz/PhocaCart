@@ -187,7 +187,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 			if ($this->t['display_webp_images'] == 1) {
 				$linkS = Uri::base(true) . '/' . $imageS->rel_webp;
 			}
-			echo '<a href="' . $link . '" ' . $this->t['image_rel'] . ' class="' . $this->t['image_class'] . ' phjProductHref' . $idName . ' phImageFullHref" data-href="' . $link . '" data-href-s="' . $linkS . '">';
+			echo '<a href="' . $link . '" ' . $this->t['image_rel'] . ' class="' . $this->t['image_class'] . ' phjProductHref' . $idName . ' phImageFullHref phImageGalleryHref" data-href="' . $link . '" data-href-s="' . $linkS . '">';
 
 			$d = array();
 			$d['t'] = $this->t;
@@ -217,6 +217,11 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 			echo '<div class="' . $this->s['c']['row'] . ' ph-item-image-add-box">';
 
 			foreach ($this->t['add_images'] as $v2) {
+
+                if ($v2->image == '') {
+					continue;
+				}
+
 				echo '<div class="' . $this->s['c']['col.xs12.sm4.md4'] . ' ph-item-image-box">';
 				$image = PhocacartImage::getThumbnailName($this->t['pathitem'], $v2->image, 'small');
 				$imageL = PhocacartImage::getThumbnailName($this->t['pathitem'], $v2->image, 'large');
@@ -466,6 +471,14 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 		$d['s']				= $this->s;
 		$d['id']			= (int)$x->id;
 		$d['catid']			= $this->t['catid'];
+
+        $d['sku']			    = isset($x->sku) ? $x->sku : '';
+        $d['ean']			    = isset($x->ean) ? $x->ean : '';
+        $d['basepricenetto']    = isset($dP['priceitems']['nettocurrency']) ? $dP['priceitems']['nettocurrency'] : '';
+        $d['basepricetax']      = isset($dP['priceitems']['taxcurrency']) ? $dP['priceitems']['taxcurrency'] : '';
+        $d['basepricebrutto']   = isset($dP['priceitems']['bruttocurrency']) ? $dP['priceitems']['bruttocurrency'] : '';
+        $d['title']				= isset($x->title) ? $x->title : '';
+
 		$d['return']		= $this->t['actionbase64'];
 		$d['addtocart']		= $this->t['item_addtocart'];
 		$d['typeview']		= 'Item';
@@ -655,9 +668,12 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	$tabO	= '';
 	$tabLiO	= '';
 
+
 	// DESCRIPTION
 	if (isset($x->description_long) && $x->description_long != '') {
-		$tabLiO .= '<li class="'.$this->s['c']['nav-item'].' '.$activeTab.'"><a href="#phdescription" data-bs-toggle="tab" class="'.$this->s['c']['nav-link'].' '.$active.'">'.Text::_('COM_PHOCACART_DESCRIPTION').'</a></li>';
+
+        $tabAnchor = $this->s['c']['class-type'] == 'uikit' ? '#' : '#phdescription';
+		$tabLiO .= '<li class="'.$this->s['c']['nav-item'].' '.$activeTab.'"><a href="'.$tabAnchor.'" data-bs-toggle="tab" class="'.$this->s['c']['nav-link'].' '.$active.'">'.Text::_('COM_PHOCACART_DESCRIPTION').'</a></li>';
 
 		$tabO 	.= '<div class="'.$this->s['c']['tabpane'].' ph-tab-pane '.$active.'" id="phdescription">';
 		$tabO	.= HTMLHelper::_('content.prepare', $x->description_long);
@@ -667,7 +683,8 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 
 	// FEATURES
 	if (isset($x->features) && $x->features != '') {
-		$tabLiO .= '<li class="'.$this->s['c']['nav-item'].' '.$activeTab.'"><a href="#phfeatures" data-bs-toggle="tab" class="'.$this->s['c']['nav-link'].' '.$active.'">'.Text::_('COM_PHOCACART_FEATURES').'</a></li>';
+        $tabAnchor = $this->s['c']['class-type'] == 'uikit' ? '#' : '#phfeatures';
+		$tabLiO .= '<li class="'.$this->s['c']['nav-item'].' '.$activeTab.'"><a href="'.$tabAnchor.'" data-bs-toggle="tab" class="'.$this->s['c']['nav-link'].' '.$active.'">'.Text::_('COM_PHOCACART_FEATURES').'</a></li>';
 
 		$tabO 	.= '<div class="'.$this->s['c']['tabpane'].' ph-tab-pane '.$active.'" id="phfeatures">';
 		$tabO	.= HTMLHelper::_('content.prepare', $x->features);
@@ -677,7 +694,8 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 
 	// VIDEO
 	if (isset($x->video) && $x->video != '') {
-		$tabLiO .= '<li class="'.$this->s['c']['nav-item'].' '.$activeTab.'"><a href="#phvideo" data-bs-toggle="tab" class="'.$this->s['c']['nav-link'].' '.$active.'">'.Text::_('COM_PHOCACART_VIDEO').'</a></li>';
+        $tabAnchor = $this->s['c']['class-type'] == 'uikit' ? '#' : '#phvideo';
+		$tabLiO .= '<li class="'.$this->s['c']['nav-item'].' '.$activeTab.'"><a href="'.$tabAnchor.'" data-bs-toggle="tab" class="'.$this->s['c']['nav-link'].' '.$active.'">'.Text::_('COM_PHOCACART_VIDEO').'</a></li>';
 
 		$tabO 	.= '<div class="'.$this->s['c']['tabpane'].' ph-tab-pane '.$active.'" id="phvideo">';
 		$tabO	.= PhocacartRenderFront::displayVideo($x->video);
@@ -687,7 +705,8 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 
 	// SPECIFICATION
 	if (!empty($this->t['specifications'])){
-		$tabLiO .= '<li class="'.$this->s['c']['nav-item'].' '.$activeTab.'"><a href="#phspecification" data-bs-toggle="tab" class="'.$this->s['c']['nav-link'].' '.$active.'">'.Text::_('COM_PHOCACART_SPECIFICATIONS').'</a></li>';
+        $tabAnchor = $this->s['c']['class-type'] == 'uikit' ? '#' : '#phspecification';
+		$tabLiO .= '<li class="'.$this->s['c']['nav-item'].' '.$activeTab.'"><a href="'.$tabAnchor.'" data-bs-toggle="tab" class="'.$this->s['c']['nav-link'].' '.$active.'">'.Text::_('COM_PHOCACART_SPECIFICATIONS').'</a></li>';
 		$tabO 	.= '<div class="'.$this->s['c']['tabpane'].' ph-tab-pane '.$active.'" id="phspecification">';
 
 
@@ -721,7 +740,8 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 
 	// REVIEWS
 	if ($this->t['enable_review'] > 0) {
-		$tabLiO .= '<li class="'.$this->s['c']['nav-item'].' '.$activeTab.'"><a href="#phreview" data-bs-toggle="tab" class="'.$this->s['c']['nav-link'].' '.$active.'">'.Text::_('COM_PHOCACART_REVIEWS').'</a></li>';
+        $tabAnchor = $this->s['c']['class-type'] == 'uikit' ? '#' : '#phreview';
+		$tabLiO .= '<li class="'.$this->s['c']['nav-item'].' '.$activeTab.'"><a href="'.$tabAnchor.'" data-bs-toggle="tab" class="'.$this->s['c']['nav-link'].' '.$active.'">'.Text::_('COM_PHOCACART_REVIEWS').'</a></li>';
 		$tabO 	.= '<div class="'.$this->s['c']['tabpane'].' ph-tab-pane '.$active.'" id="phreview">';
 
 		if (!empty($this->t['reviews'])) {
@@ -841,7 +861,8 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
                 continue;
             }
 
-            $tabLiO .= '<li class="' . $this->s['c']['nav-item'] . ' ' . $activeTab . '"><a href="#phrelated-' . $relatedType->id . '" data-bs-toggle="tab" class="' . $this->s['c']['nav-link'] . ' ' . $active . '">' . Text::_($relatedType->title) . '</a></li>';
+            $tabAnchor = $this->s['c']['class-type'] == 'uikit' ? '#' : '#phrelated-' . $relatedType->id ;
+            $tabLiO .= '<li class="' . $this->s['c']['nav-item'] . ' ' . $activeTab . '"><a href="'. $tabAnchor . '" data-bs-toggle="tab" class="' . $this->s['c']['nav-link'] . ' ' . $active . '">' . Text::_($relatedType->title) . '</a></li>';
 
             $tabO .= '<div class="' . $this->s['c']['tabpane'] . ' ph-tab-pane ' . $active . '" id="phrelated-' . $relatedType->id . '">';
 
@@ -925,7 +946,8 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 
 	// PRICE HISTORY
 	if ($this->t['enable_price_history'] && $this->t['price_history_data']) {
-		$tabLiO .= '<li class="'.$this->s['c']['nav-item'].' '.$activeTab.'"><a href="#phpricehistory" data-bs-toggle="tab" class="'.$this->s['c']['nav-link'].' '.$active.'">'.Text::_('COM_PHOCACART_PRICE_HISTORY').'</a></li>';
+        $tabAnchor = $this->s['c']['class-type'] == 'uikit' ? '#' : '#phpricehistory';
+		$tabLiO .= '<li class="'.$this->s['c']['nav-item'].' '.$activeTab.'"><a href="'.$tabAnchor.'" data-bs-toggle="tab" class="'.$this->s['c']['nav-link'].' '.$active.'">'.Text::_('COM_PHOCACART_PRICE_HISTORY').'</a></li>';
 
 		$tabO 	.= '<div class="'.$this->s['c']['tabpane'].' ph-tab-pane '.$active.'" id="phpricehistory">';
 		$tabO	.= '<div class="'.$this->s['c']['row'].'">';
@@ -949,7 +971,8 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
         $alias = 'field-' . $fieldsGroup->id;
         $title = $fieldsGroup->title ?: Text::_('COM_PHOCACART_PRODUCT_CUSTOM_FIELDS');
 
-        $tabLiO .= '<li class="' . $this->s['c']['nav-item'] . ' ' . $activeTab.'"><a href="#' . $alias . '" data-bs-toggle="tab" class="' . $this->s['c']['nav-link'] . ' ' . $active . '">' . $title . '</a></li>';
+        $tabAnchor = $this->s['c']['class-type'] == 'uikit' ? '#' : '#' . $alias;
+        $tabLiO .= '<li class="' . $this->s['c']['nav-item'] . ' ' . $activeTab.'"><a href="'.$tabAnchor. '" data-bs-toggle="tab" class="' . $this->s['c']['nav-link'] . ' ' . $active . '">' . $title . '</a></li>';
         $tabO 	.= '<div class="' . $this->s['c']['tabpane'] . ' ph-tab-pane ' . $active . '" id="' . $alias . '">';
         $tabO	.= '<div class="' . $this->s['c']['row'] . '">';
         foreach ($fieldsGroup->fields as $field) {
@@ -972,7 +995,8 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 	if (!empty($this->t['event']->onItemInsideTabPanel) && is_array($this->t['event']->onItemInsideTabPanel)) {
 		foreach($this->t['event']->onItemInsideTabPanel as $k => $v) {
 			if (isset($v['title']) && isset($v['alias']) && isset($v['content'])) {
-				$tabLiO .= '<li class="'.$this->s['c']['nav-item'].' '.$activeTab.'"><a href="#'.strip_tags($v['alias']).'" data-bs-toggle="tab" class="'.$this->s['c']['nav-link'].' '.$active.'">'.$v['title'].'</a></li>';
+                $tabAnchor = $this->s['c']['class-type'] == 'uikit' ? '#' : '#'.strip_tags($v['alias']);
+				$tabLiO .= '<li class="'.$this->s['c']['nav-item'].' '.$activeTab.'"><a href="'.$tabAnchor.'" data-bs-toggle="tab" class="'.$this->s['c']['nav-link'].' '.$active.'">'.$v['title'].'</a></li>';
 				$tabO 	.= '<div class="'.$this->s['c']['tabpane'].' ph-tab-pane '.$active.'" id="'.strip_tags($v['alias']).'">';
 				$tabO	.= $v['content'];
 				$tabO	.= '</div>';

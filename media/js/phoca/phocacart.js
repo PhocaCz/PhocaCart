@@ -349,3 +349,127 @@ jQuery(document).ready(function(){
 	})
 	phRenderBillingAndShippingSame();
 })
+
+
+// ------
+// JS Phoca Cart Events
+// ------
+
+function phHandleAddToCartEvent(form) {
+
+    const formData = new FormData(form);
+	const productId = formData.get('id');
+	const quantity = parseInt(formData.get('quantity')) || 1;
+	const basepricenetto = formData.get('basepricenetto') || '';
+	const basepricetax = formData.get('basepricetax') || '';
+	const basepricebrutto = formData.get('basepricebrutto') || '';
+	const sku = formData.get('sku') || '';
+	const ean = formData.get('ean') || '';
+	const title = formData.get('title') || '';
+   
+    document.dispatchEvent(new CustomEvent('PhocaCart.addToCart', {
+		detail: {
+			items: [{
+				id: productId,
+				sku: sku,
+				ean: ean,
+				title: title,
+				basepricenetto: basepricenetto,
+				basepricetax: basepricetax,
+				basepricebrutto: basepricebrutto,
+				quantity: quantity
+			}]
+		}
+    }));
+}
+
+function phHandleAddPaymentEvent(form) {
+
+    const formData = new FormData(form);
+
+	const selectedOption = form.querySelector('input[name="phpaymentopt"]:checked');
+	if (selectedOption) {
+  		const selectedTitle = selectedOption.getAttribute('data-payment-title');
+  		formData.append('paymentTitle', selectedTitle);
+	}
+
+	const id = formData.get('phpaymentopt') || '';
+	const title = formData.get('paymentTitle') || '';
+
+    document.dispatchEvent(new CustomEvent('PhocaCart.addPaymentInfo', {
+		detail: {
+			items: [{
+				id: id,
+				title: title
+			}]
+		}
+    }));
+}
+
+function phHandleAddShippingEvent(form) {
+
+    const formData = new FormData(form);
+
+	const selectedOption = form.querySelector('input[name="phshippingopt"]:checked');
+	if (selectedOption) {
+  		const selectedTitle = selectedOption.getAttribute('data-shipping-title');
+  		formData.append('shippingTitle', selectedTitle);
+	}
+
+	const id = formData.get('phshippingopt') || '';
+	const title = formData.get('shippingTitle') || '';
+
+    document.dispatchEvent(new CustomEvent('PhocaCart.addShippingInfo', {
+		detail: {
+			items: [{
+				id: id,
+				title: title
+			}]
+		}
+    }));
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    
+    document.addEventListener('submit', function(e) {
+
+		const phParams	= Joomla.getOptions('phParamsPC');
+        if (e.target && e.target.matches('form.phItemCartBoxForm')) {
+            e.preventDefault(); 
+
+            phHandleAddToCartEvent(e.target);
+			// If not ajax and not ajax popup is used submit the form
+			// Let some time for browser to send FB request before reloading
+			if (phParams['addToCartMethod'] == 0) {
+            	setTimeout(function() {
+                    e.target.submit();
+                }, 200);
+			}
+        }
+
+		if (e.target && e.target.matches('form.phCheckoutPaymentBoxForm')) {
+            e.preventDefault(); 
+
+            phHandleAddPaymentEvent(e.target);
+			// If not ajax and not ajax popup is used submit the form
+			// Let some time for browser to send FB request before reloading
+			setTimeout(function() {
+				e.target.submit();
+			}, 200);
+			
+        }
+
+		if (e.target && e.target.matches('form.phCheckoutShippingBoxForm')) {
+            e.preventDefault(); 
+
+            phHandleAddShippingEvent(e.target);
+			// If not ajax and not ajax popup is used submit the form
+			// Let some time for browser to send FB request before reloading
+			setTimeout(function() {
+				e.target.submit();
+			}, 200);
+			
+        }
+		
+    }, true);
+});

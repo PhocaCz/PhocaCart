@@ -10,10 +10,12 @@ defined( '_JEXEC' ) or die();
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Factory;
+use Phoca\PhocaCart\MVC\Model\AdminModelTrait;
 jimport( 'joomla.application.component.modellist' );
 
 class PhocaCartCpModelPhocaCartEditProductPriceHistory extends AdminModel
 {
+	use AdminModelTrait;
 	protected	$option 		        = 'com_phocacart';
 	protected 	$text_prefix	        = 'com_phocacart';
 	public      $typeAlias 		        = 'com_phocacart.phocacartpricehistory';

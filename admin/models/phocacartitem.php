@@ -36,10 +36,11 @@ use Phoca\PhocaCart\Event;
 use Phoca\PhocaCart\I18n\I18nAdminModelTrait;
 use Phoca\PhocaCart\I18n\I18nHelper;
 use Phoca\PhocaCart\Product\Bundled;
+use Phoca\PhocaCart\MVC\Model\AdminModelTrait;
 
 class PhocaCartCpModelPhocaCartItem extends AdminModel
 {
-    use I18nAdminModelTrait;
+    use I18nAdminModelTrait, AdminModelTrait;
 
 	protected	$option 		        = 'com_phocacart';
 	protected 	$text_prefix	        = 'com_phocacart';
@@ -85,7 +86,8 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
         'parameters'                => 'batchParameters',
     ];
 
-    public function __construct($config = [], MVCFactoryInterface $factory = null, FormFactoryInterface $formFactory = null)
+   // public function __construct($config = [], MVCFactoryInterface $factory = null, FormFactoryInterface $formFactory = null)
+        public function __construct($config = [], ?MVCFactoryInterface $factory = null, ?FormFactoryInterface $formFactory = null)
     {
         parent::__construct($config, $factory, $formFactory);
 

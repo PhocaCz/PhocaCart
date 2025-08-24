@@ -13,10 +13,12 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\Registry\Registry;
+use Phoca\PhocaCart\MVC\Model\AdminModelTrait;
 jimport('joomla.application.component.modeladmin');
 
 class PhocaCartCpModelPhocacartUser extends AdminModel
 {
+	use AdminModelTrait;
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
 
@@ -157,8 +159,8 @@ class PhocaCartCpModelPhocacartUser extends AdminModel
 
 		$app	= Factory::getApplication();
 		$data['type']		= (int)$type;
-		$data['country']	= PhocacartUtils::getIntFromString($data['country']);
-		$data['region']		= PhocacartUtils::getIntFromString($data['region']);
+		$data['country']	= isset($data['country']) ? PhocacartUtils::getIntFromString($data['country']) : '';
+		$data['region']		= isset($data['region']) ? PhocacartUtils::getIntFromString($data['region']) : '';
 		$row = $this->getTable('PhocacartUser', 'Table');
 
 		if(isset($data['user_id']) && $data['user_id'] > 0) {

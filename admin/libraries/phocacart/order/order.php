@@ -425,19 +425,21 @@ class PhocacartOrder
         $paymentClass = new PhocacartPayment();
         $paymentClass->setType($this->type);
 
-
-
         $dataAddress             = array();
         $dataAddress['bcountry'] = isset($address[0]->country) && (int)$address[0]->country > 0 ? (int)$address[0]->country : 0;
         $dataAddress['bregion']  = isset($address[0]->region) && (int)$address[0]->region > 0 ? (int)$address[0]->region : 0;
         $dataAddress['scountry'] = isset($address[1]->country) && (int)$address[1]->country > 0 ? (int)$address[1]->country : 0;
-        $dataAddress['sregion']  = isset($address[1]->region) && (int)$address[1]->region > 0 ? (int)$address[1]->region : 0;
+        $dataAddress['sregion'] = isset($address[1]->region) && (int)$address[1]->region > 0 ? (int)$address[1]->region : 0;
 
+        $dataAddress['bzip'] = isset($address[0]->zip) && $address[0]->zip != '' ? $address[0]->zip : '';
+        $dataAddress['szip'] = isset($address[1]->zip) && $address[1]->zip != '' ? $address[1]->zip : '';
+
+        $dataAddress['bsch'] = isset($address[0]->ba_sa) ? (int)$address[0]->ba_sa : 0;
+        //$dataAddress['bsch'] = isset($address[1]->bsch) ? (int)$address[1]->bsch : 0;
 
         $country = $shippingClass->getUserCountryShipping($dataAddress);
         $region  = $shippingClass->getUserRegionShipping($dataAddress);
         $zip 	 = $shippingClass->getUserZipShipping($dataAddress);
-
 
         // Check Shipping method
         if ($shippingId > 0) {
@@ -2157,6 +2159,19 @@ class PhocacartOrder
 
         }
 
+        if (empty($d['valid_from'])) {
+            $d['valid_from'] = '0000-00-00';
+        }
+        if (empty($d['valid_to'])) {
+            $d['valid_to'] = '0000-00-00';
+        }
+
+        // Valid to - day including the last second
+        if ($d['valid_to'] == '0000-00-00' || $d['valid_to'] == '0000-00-00 00:00:00') {
+
+        } else {
+            $d['valid_to'] = str_replace('00:00:00', '23:59:59', Factory::getDate($d['valid_to'])->toSql());
+        }
 
         $db->setQuery('SELECT MAX(ordering) FROM #__phocacart_coupons');
         $max           = $db->loadResult();

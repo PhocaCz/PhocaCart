@@ -49,6 +49,7 @@
 				<option value="10">COM_PHOCACART_ATTR_TYPE_TEXTAREA_1024</option>
 				<option value="11">COM_PHOCACART_ATTR_TYPE_TEXTAREA_2048</option>
 				<option value="12">COM_PHOCACART_ATTR_TYPE_TEXT_COLOR_PICKER</option>
+				<option value="13">COM_PHOCACART_ATTR_TYPE_TEXT_SELECT</option>
 				<option value="20">COM_PHOCACART_ATTR_TYPE_GIFT</option>
 			</field>
 		</fieldset>

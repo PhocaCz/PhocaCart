@@ -29,7 +29,8 @@ class PhocaCartCpViewPhocacartShipping extends HtmlView
 		$this->form		= $this->get('Form');
 		$this->item		= $this->get('Item');
 
-		new PhocacartRenderAdminmedia();
+		$media = new PhocacartRenderAdminmedia();
+        Factory::getApplication()->getDocument()->getWebAssetManager()->useScript('webcomponent.field-subform');
 
 		$this->addToolbar();
 		parent::display($tpl);

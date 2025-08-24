@@ -17,10 +17,12 @@ use Joomla\Data\DataObject;
 use Joomla\CMS\Log\Log;
 use Joomla\Database\DatabaseDriver;
 use Joomla\Utilities\ArrayHelper;
+use Phoca\PhocaCart\MVC\Model\AdminModelTrait;
 jimport('joomla.application.component.modeladmin');
 
 class PhocaCartCpModelPhocacartCountry extends AdminModel
 {
+	use AdminModelTrait;
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
 

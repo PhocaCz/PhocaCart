@@ -14,9 +14,11 @@ use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Plugin\PluginHelper;
+use Phoca\PhocaCart\MVC\Model\AdminModelTrait;
 
 class PhocaCartCpModelPhocaCartEditStatus extends AdminModel
 {
+    use AdminModelTrait;
 	protected	$option 		= 'com_phocacart';
     protected   $context        = 'com_phocacart.order.status';
 

@@ -11,6 +11,8 @@ namespace Phoca\PhocaCart\MVC\Model;
 
 defined('_JEXEC') or die;
 
+use Joomla\Event\DispatcherInterface;
+use Joomla\CMS\Factory;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\QueryInterface;
 
@@ -29,5 +31,13 @@ trait AdminModelTrait
         $db = $this->getDatabase();
         $db->setQuery($query);
         return $db->execute();
+    }
+
+    public function getDispatcher()
+    {
+        if (!$this->dispatcher) {
+            return Factory::getContainer()->get(DispatcherInterface::class);
+        }
+        return $this->dispatcher;
     }
 }

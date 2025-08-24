@@ -123,32 +123,32 @@ $price 	= new PhocacartPrice;// Can be used by options
 
 if ($this->t['can_display_price']) {
 
-	$d					= array();
-	$d['s']				= $this->s;
-	$d['type']          = $x->type;// PRODUCTTYPE
-	$d['priceitems']	= $price->getPriceItems($x->price, $x->taxid, $x->taxrate, $x->taxcalculationtype, $x->taxtitle, $x->unit_amount, $x->unit_unit, 1, 1, $x->group_price, $x->taxhide);
-	$price->getPriceItemsChangedByAttributes($d['priceitems'], $this->t['attr_options'], $price, $x);
+	$dP					= array();
+	$dP['s']				= $this->s;
+	$dP['type']          = $x->type;// PRODUCTTYPE
+	$dP['priceitems']	= $price->getPriceItems($x->price, $x->taxid, $x->taxrate, $x->taxcalculationtype, $x->taxtitle, $x->unit_amount, $x->unit_unit, 1, 1, $x->group_price, $x->taxhide);
+	$price->getPriceItemsChangedByAttributes($dP['priceitems'], $this->t['attr_options'], $price, $x);
 
-	$d['priceitemsorig']= array();
+	$dP['priceitemsorig']= array();
 	if ($x->price_original != '' && $x->price_original > 0) {
-		$d['priceitemsorig'] = $price->getPriceItems($x->price_original, $x->taxid, $x->taxrate, $x->taxcalculationtype, '', 0, '', 0, 1, null, $x->taxhide);
+		$dP['priceitemsorig'] = $price->getPriceItems($x->price_original, $x->taxid, $x->taxrate, $x->taxcalculationtype, '', 0, '', 0, 1, null, $x->taxhide);
 	}
-	$d['class']			= 'ph-item-price-box';
-	$d['product_id']	= (int)$x->id;
-	$d['typeview']		= 'ItemQuick';
+	$dP['class']			= 'ph-item-price-box';
+	$dP['product_id']	= (int)$x->id;
+	$dP['typeview']		= 'ItemQuick';
 
 	// Display discount price
 	// Move standard prices to new variable (product price -> product discount)
-	$d['priceitemsdiscount']		= $d['priceitems'];
-	$d['discount'] 					= PhocacartDiscountProduct::getProductDiscountPrice($x->id, $d['priceitemsdiscount']);
+	$dP['priceitemsdiscount']		= $dP['priceitems'];
+	$dP['discount'] 					= PhocacartDiscountProduct::getProductDiscountPrice($x->id, $dP['priceitemsdiscount']);
 
 	// Display cart discount (global discount) in product views - under specific conditions only
 	// Move product discount prices to new variable (product price -> product discount -> product discount cart)
-	$d['priceitemsdiscountcart']	= $d['priceitemsdiscount'];
-	$d['discountcart']				= PhocacartDiscountCart::getCartDiscountPriceForProduct($x->id, $x->catid, $d['priceitemsdiscountcart']);
+	$dP['priceitemsdiscountcart']	= $dP['priceitemsdiscount'];
+	$dP['discountcart']				= PhocacartDiscountCart::getCartDiscountPriceForProduct($x->id, $x->catid, $dP['priceitemsdiscountcart']);
 
-	$d['zero_price']		= 1;// Apply zero price if possible
-	echo$layoutP->render($d);
+	$dP['zero_price']		= 1;// Apply zero price if possible
+	echo$layoutP->render($dP);
 }
 if ( isset($x->description) && $x->description != '') {
     echo '<div class="ph-desc">'. HTMLHelper::_('content.prepare', $x->description). '</div>';
@@ -276,6 +276,12 @@ if ($x->type == 3) {
 	$d['s']			    = $this->s;
 	$d['id']			= (int)$x->id;
 	$d['catid']			= $this->t['catid'];
+    $d['sku']			    = isset($x->sku) ? $x->sku : '';
+    $d['ean']			    = isset($x->ean) ? $x->ean : '';
+    $d['basepricenetto']    = isset($dP['priceitems']['nettocurrency']) ? $dP['priceitems']['nettocurrency'] : '';
+    $d['basepricetax']      = isset($dP['priceitems']['taxcurrency']) ? $dP['priceitems']['taxcurrency'] : '';
+    $d['basepricebrutto']   = isset($dP['priceitems']['bruttocurrency']) ? $dP['priceitems']['bruttocurrency'] : '';
+    $d['title']				= isset($x->title) ? $x->title : '';
 	$d['return']		= $this->t['actionbase64'];
 	$d['addtocart']		= $this->t['item_addtocart'];
 	$d['typeview']		= 'ItemQuick';

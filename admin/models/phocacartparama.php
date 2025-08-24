@@ -14,10 +14,13 @@ use Joomla\CMS\Form\Form;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\Filesystem\Path;
 use Joomla\CMS\Language\Text;
+use Phoca\PhocaCart\MVC\Model\AdminModelTrait;
+
 jimport('joomla.application.component.modeladmin');
 
 class PhocaCartCpModelPhocaCartParamA extends AdminModel
 {
+	use AdminModelTrait;
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
 	protected	$formNameR;

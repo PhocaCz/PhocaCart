@@ -8,15 +8,17 @@
  */
 defined( '_JEXEC' ) or die();
 use Joomla\CMS\MVC\Model\ListModel;
+use Phoca\PhocaCart\MVC\Model\AdminModelTrait;
 jimport( 'joomla.application.component.modellist' );
 
 class PhocaCartCpModelPhocaCartEditProductPriceGroup extends ListModel
 {
+    use AdminModelTrait;
 	protected	$option 		= 'com_phocacart';
-	
-	
+
+
 	public function save($data, $productId) {
-		
+
 		if (!empty($data)) {
 			return PhocacartGroup::storeProductPriceGroupsById($data, $productId);
 		}

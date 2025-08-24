@@ -13,12 +13,14 @@ use Joomla\CMS\Factory;
 use Phoca\PhocaCart\Filesystem\Folder;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\Filesystem\Path;
+use Phoca\PhocaCart\MVC\Model\AdminModelTrait;
 jimport('joomla.application.component.modeladmin');
 jimport('joomla.filesystem.folder');
 jimport('joomla.filesystem.file');
 
 class PhocaCartCpModelPhocaCartManager extends AdminModel
 {
+	use AdminModelTrait;
 	protected $option 			= 'com_phocacart';
 	protected $text_prefix 		= 'com_phocacart';
 

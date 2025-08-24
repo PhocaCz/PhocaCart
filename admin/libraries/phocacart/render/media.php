@@ -77,6 +77,7 @@ class PhocacartRenderMedia
         $this->p['lazy_load_category_items'] = $params->get('lazy_load_category_items', 2);
         $this->p['lazy_load_categories']     = $params->get('lazy_load_categories', 2);
         $this->p['pos_server_print']         = $params->get('pos_server_print', 0);
+        $this->p['add_cart_method']         = $params->get('add_cart_method', 2);
 
         //$this->p['load_min_js'] = $params->get('load_min_js', 1);
         $this->t['min']         = '';// Removed, managed by Joomla debug, $this->p['load_min_js'] == 0 ? '' : '.min';
@@ -148,6 +149,7 @@ class PhocacartRenderMedia
         $oParams['dynamicChangeId']              = (int)$this->p['dynamic_change_id'];
         $oParams['dynamicChangeImage']           = (int)$this->p['dynamic_change_image'];
         $oParams['dynamicChangeUrlAttributes']   = (int)$this->p['dynamic_change_url_attributes'];
+        $oParams['addToCartMethod']              = (int)$this->p['add_cart_method'];
 
         HTMLHelper::_('jquery.framework', false);
 

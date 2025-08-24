@@ -39,7 +39,7 @@ if ($this->a->paymentnotused == 1) {
 	echo '</div>';
 
 
-	echo '<form action="'.$this->t['linkcheckout'].'" method="post" class="'.$this->s['c']['form-horizontal.form-validate'].'" role="form" id="phCheckoutAddress">';
+	echo '<form action="'.$this->t['linkcheckout'].'" method="post" class="'.$this->s['c']['form-horizontal.form-validate'].'" role="form" id="phCheckoutPayment">';
 	echo '<div id="ph-request-message" style="display:none"></div>';
 
 	// Body
@@ -111,7 +111,7 @@ if ($this->a->paymentnotused == 1) {
 	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-checkout-box-header" id="phcheckoutpaymentedit">'.$layoutI->render($d).'<h3>'.$this->t['np'].'. '.Text::_('COM_PHOCACART_PAYMENT_OPTIONS').'</h3></div>';
 	echo '</div>';
 
-	echo '<form action="'.$this->t['linkcheckout'].'" method="post" class="'.$this->s['c']['form-horizontal.form-validate'].'" role="form" id="phCheckoutPayment">';
+	echo '<form action="'.$this->t['linkcheckout'].'" method="post" class="'.$this->s['c']['form-horizontal.form-validate'].' phCheckoutPaymentBoxForm" role="form" id="phCheckoutPayment">';
 	echo '<div id="ph-request-message" style="display:none"></div>';
 
 
@@ -139,7 +139,7 @@ if ($this->a->paymentnotused == 1) {
 		echo '<div class="'.$this->s['c']['col.xs12.sm6.md6'].' ph-payment-title-box">';
 		echo '<div class="'.$this->s['c']['controls'] .'">';
 
-		echo '<label><input type="radio" class="'.$this->s['c']['inputbox.radio'].'" name="phpaymentopt" id="phpaymentopt'.$v->id.'" value="'.$v->id.'" '.$checked.' >';
+		echo '<label><input type="radio" class="'.$this->s['c']['inputbox.radio'].'" name="phpaymentopt" id="phpaymentopt'.$v->id.'" value="'.$v->id.'" data-payment-title="'.htmlspecialchars($v->title).'" '.$checked.' >';
 
 
 		if ($v->image != '') {

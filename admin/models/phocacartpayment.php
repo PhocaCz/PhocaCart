@@ -19,12 +19,13 @@ use Joomla\Registry\Registry;
 use Joomla\CMS\Language\Text;
 use Phoca\PhocaCart\Dispatcher\Dispatcher;
 use Phoca\PhocaCart\I18n\I18nAdminModelTrait;
+use Phoca\PhocaCart\MVC\Model\AdminModelTrait;
 
 jimport('joomla.application.component.modeladmin');
 
 class PhocaCartCpModelPhocacartPayment extends AdminModel
 {
-	use I18nAdminModelTrait;
+	use I18nAdminModelTrait, AdminModelTrait;
 
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
