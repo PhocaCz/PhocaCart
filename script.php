@@ -15,6 +15,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Phoca\PhocaCart\Mail\MailHelper;
+use Phoca\PhocaCart\Mail\MailTemplate;
 
 jimport( 'joomla.filesystem.folder' );
 
@@ -153,6 +154,47 @@ class com_phocacartInstallerScript
 
         $db->setQuery('UPDATE `#__phocacart_order_statuses` SET `email_gift_format` = 1 WHERE `email_gift_format` = 2');
         $db->execute();
+
+        // Check other templates also
+        MailTemplate::checkTemplate(
+            'com_phocacart.watchdog',
+            'COM_PHOCACART_EMAIL_WATCHDOG_SUBJECT',
+            'COM_PHOCACART_EMAIL_WATCHDOG_BODY',
+            ['user_name', 'user_username', 'user_email', 'products', 'product_title', 'product_sku', 'product_link', 'product_url', 'site_name', 'site_link', 'site_url'],
+            'COM_PHOCACART_EMAIL_WATCHDOG_HTMLBODY'
+        );
+
+        MailTemplate::checkTemplate(
+            'com_phocacart.question',
+            'COM_PHOCACART_EMAIL_QUESTION_SUBJECT',
+            'COM_PHOCACART_EMAIL_QUESTION_BODY',
+            ['name', 'email', 'phone', 'product_title', 'product_long_title', 'product_sku', 'product_link', 'product_url', 'category_title', 'category_long_title', 'category_link', 'category_url', 'site_name', 'site_link', 'site_url'],
+            'COM_PHOCACART_EMAIL_QUESTION_HTMLBODY'
+        );
+
+        MailTemplate::checkTemplate(
+            'com_phocacart.question.admin',
+            'COM_PHOCACART_EMAIL_QUESTION_ADMIN_SUBJECT',
+            'COM_PHOCACART_EMAIL_QUESTION_ADMIN_BODY',
+            ['name', 'email', 'phone', 'product_title', 'product_long_title', 'product_sku', 'product_link', 'product_url', 'category_title', 'category_long_title', 'category_link', 'category_url', 'site_name', 'site_link', 'site_url'],
+            'COM_PHOCACART_EMAIL_QUESTION_ADMIN_HTMLBODY'
+        );
+
+        MailTemplate::checkTemplate(
+            'com_phocacart.submit_item',
+            'COM_PHOCACART_EMAIL_SUBMIT_ITEM_SUBJECT',
+            'COM_PHOCACART_EMAIL_SUBMIT_ITEM_BODY',
+            ['user_name', 'user_username', 'user_email', 'products', 'product_title', 'product_sku', 'product_url', 'site_name', 'site_url'],
+            'COM_PHOCACART_EMAIL_SUBMIT_ITEM_HTMLBODY'
+        );
+
+        MailTemplate::checkTemplate(
+            'com_phocacart.submit_item.admin',
+            'COM_PHOCACART_EMAIL_SUBMIT_ITEM_ADMIN_SUBJECT',
+            'COM_PHOCACART_EMAIL_SUBMIT_ITEM_ADMIN_BODY',
+            ['user_name', 'user_username', 'user_email', 'products', 'product_title', 'product_sku', 'product_url', 'site_name', 'site_url'],
+            'COM_PHOCACART_EMAIL_SUBMIT_ITEM_ADMIN_HTMLBODY'
+        );
     }
 
 	function update($parent) {
