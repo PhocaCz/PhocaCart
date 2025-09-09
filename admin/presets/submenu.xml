@@ -1,0 +1,467 @@
+<?xml version="1.0"?>
+<menu
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="urn:joomla.org"
+  xsi:schemaLocation="urn:joomla.org menu.xsd"
+>
+  <menuitem
+    title="COM_PHOCACART"
+    type="heading"
+    icon="phocacart fa-shopping-cart"
+    class="class:phocacart fa-shopping-cart"
+    quicktask="option=com_phocacart&amp;view=phocacartcp"
+    quicktask-title="COM_PHOCACART_CONTROLPANEL"
+    quicktask-icon="phocacart fas fa-layer-group"
+  >
+    <menuitem
+      title="COM_PHOCACART_PRODUCTS"
+      type="heading"
+      quicktask="index.php?option=com_phocacart&amp;view=phocacartitems"
+      quicktask-title="COM_PHOCACART_PRODUCTS"
+      quicktask-icon="list"
+    >
+      <menuitem
+        title="COM_PHOCACART_PRODUCTS"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartitems"
+        quicktask="index.php?option=com_phocacart&amp;task=phocacartitem.add"
+        quicktask-title="COM_PHOCACART_MENU_ADD_NEW_ITEM"
+        quicktask-permission="core.create"
+      />
+
+      <menuitem
+        title="COM_PHOCACART_CATEGORIES"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartcategories"
+        quicktask="index.php?option=com_phocacart&amp;task=phocacartcategory.add"
+        quicktask-title="COM_PHOCACART_MENU_ADD_NEW_ITEM"
+        quicktask-permission="core.create"
+      />
+
+      <menuitem
+        title="COM_PHOCACART_MANUFACTURERS"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartmanufacturers"
+        quicktask="index.php?option=com_phocacart&amp;task=phocacartmanufacturer.add"
+        quicktask-title="COM_PHOCACART_MENU_ADD_NEW_ITEM"
+        quicktask-permission="core.create"
+      />
+
+      <menuitem
+        title="COM_PHOCACART_SPECIFICATIONS"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartspecifications"
+        quicktask="index.php?option=com_phocacart&amp;task=phocacartspecification.add"
+        quicktask-title="COM_PHOCACART_MENU_ADD_NEW_ITEM"
+        quicktask-permission="core.create"
+      />
+    </menuitem>
+
+    <menuitem
+      title="COM_PHOCACART_ORDERS"
+      type="heading"
+      quicktask="index.php?option=com_phocacart&amp;view=phocacartorders"
+      quicktask-title="COM_PHOCACART_ORDERS"
+      quicktask-icon="list"
+    >
+      <menuitem
+        title="COM_PHOCACART_ORDERS"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartorders"
+      />
+
+      <menuitem
+        title="COM_PHOCACART_COUPONS"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartcoupons"
+        quicktask="index.php?option=com_phocacart&amp;task=phocacartcoupon.add"
+        quicktask-title="COM_PHOCACART_MENU_ADD_NEW_ITEM"
+        quicktask-permission="core.create"
+      />
+
+      <menuitem
+        title="COM_PHOCACART_DISCOUNTS"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartdiscounts"
+        quicktask="index.php?option=com_phocacart&amp;task=phocacartdiscount.add"
+        quicktask-title="COM_PHOCACART_MENU_ADD_NEW_ITEM"
+        quicktask-permission="core.create"
+      />
+    </menuitem>
+
+    <menuitem
+      title="COM_PHOCACART_CUSTOMERS"
+      type="heading"
+      quicktask="index.php?option=com_phocacart&amp;view=phocacartusers"
+      quicktask-title="COM_PHOCACART_CUSTOMERS"
+      quicktask-icon="list"
+    >
+      <menuitem
+        title="COM_PHOCACART_CUSTOMERS"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartusers"
+      />
+
+      <menuitem
+        title="COM_PHOCACART_WISH_LISTS"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartwishlists"
+      />
+
+      <menuitem
+        title="COM_PHOCACART_QUESTIONS"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartquestions"
+      />
+
+      <menuitem
+        title="COM_PHOCACART_REVIEWS"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartreviews"
+      />
+
+      <menuitem
+        title="COM_PHOCACART_CUSTOMER_GROUPS"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartgroups"
+      />
+
+      <menuitem
+        title="COM_PHOCACART_FORM_FIELDS"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartformfields"
+      />
+
+      <menuitem
+        title="COM_PHOCACART_REWARD_POINTS"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartrewards"
+      />
+
+      <menuitem
+        title="COM_PHOCACART_SUBMITTED_ITEMS"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartsubmititems"
+      />
+    </menuitem>
+
+    <menuitem
+      title="COM_PHOCACART_MENU_CUSTOMIZATION"
+      type="heading"
+    >
+      <menuitem
+        title="COM_PHOCACART_TAGS"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacarttags"
+        quicktask="index.php?option=com_phocacart&amp;task=phocacarttag.add"
+        quicktask-title="COM_PHOCACART_MENU_ADD_NEW_ITEM"
+        quicktask-permission="core.create"
+      />
+
+      <menuitem
+        title="COM_PHOCACART_PARAMETERS"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartparameters"
+        quicktask="index.php?option=com_phocacart&amp;task=phocacartparameter.add"
+        quicktask-title="COM_PHOCACART_MENU_ADD_NEW_ITEM"
+        quicktask-permission="core.create"
+      />
+
+      <menuitem
+        title="COM_PHOCACART_PARAMETER_VALUES"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartparametervalues"
+        quicktask="index.php?option=com_phocacart&amp;task=phocacartparametervalue.add"
+        quicktask-title="COM_PHOCACART_MENU_ADD_NEW_ITEM"
+        quicktask-permission="core.create"
+      />
+
+      <menuitem
+        title="JGLOBAL_FIELD_GROUPS"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_fields&amp;view=groups&amp;context=com_phocacart.phocacartitem"
+        quicktask="index.php?option=com_fields&amp;context=com_phocacart.phocacartitem&amp;task=group.add"
+        quicktask-title="COM_PHOCACART_MENU_ADD_NEW_ITEM"
+        quicktask-permission="core.create"
+      />
+
+      <menuitem
+        title="JGLOBAL_FIELDS"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_fields&amp;context=com_phocacart.phocacartitem"
+        quicktask="index.php?option=com_fields&amp;context=com_phocacart.phocacartitem&amp;task=field.add"
+        quicktask-title="COM_PHOCACART_MENU_ADD_NEW_ITEM"
+        quicktask-permission="core.create"
+      />
+    </menuitem>
+
+    <menuitem
+      title="COM_PHOCACART_MENU_SETTINGS"
+      type="heading"
+    >
+      <menuitem
+        title="COM_PHOCACART_ORDER_STATUSES"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartstatuses"
+        quicktask="index.php?option=com_phocacart&amp;task=phocacartstatus.add"
+        quicktask-title="COM_PHOCACART_MENU_ADD_NEW_ITEM"
+        quicktask-permission="core.create"
+      />
+
+      <menuitem
+        title="COM_PHOCACART_STOCK_STATUSES"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartstockstatuses"
+        quicktask="index.php?option=com_phocacart&amp;task=phocacartstockstatus.add"
+        quicktask-title="COM_PHOCACART_MENU_ADD_NEW_ITEM"
+        quicktask-permission="core.create"
+      />
+
+      <menuitem
+        title="COM_PHOCACART_SHIPPING"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartshippings"
+        quicktask="index.php?option=com_phocacart&amp;task=phocacartshipping.add"
+        quicktask-title="COM_PHOCACART_MENU_ADD_NEW_ITEM"
+        quicktask-permission="core.create"
+      />
+
+      <menuitem
+        title="COM_PHOCACART_PAYMENT"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartpayments"
+        quicktask="index.php?option=com_phocacart&amp;task=phocacartpayment.add"
+        quicktask-title="COM_PHOCACART_MENU_ADD_NEW_ITEM"
+        quicktask-permission="core.create"
+      />
+
+      <menuitem
+        title="COM_PHOCACART_CONTENT_TYPES"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartcontenttypes"
+        quicktask="index.php?option=com_phocacart&amp;task=phocacartcontenttype.add"
+        quicktask-title="COM_PHOCACART_MENU_ADD_NEW_ITEM"
+        quicktask-permission="core.create"
+      />
+
+      <menuitem
+        title="COM_PHOCACART_MENU_OPTIONS"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_config&amp;view=component&amp;component=com_phocacart"
+      />
+    </menuitem>
+
+    <menuitem
+      title="COM_PHOCACART_MENU_LOCALIZATION"
+      type="heading"
+    >
+      <menuitem
+        title="COM_PHOCACART_COUNTRIES"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartcountries"
+        quicktask="index.php?option=com_phocacart&amp;task=phocacartcountry.add"
+        quicktask-title="COM_PHOCACART_MENU_ADD_NEW_ITEM"
+        quicktask-permission="core.create"
+      />
+
+      <menuitem
+        title="COM_PHOCACART_REGIONS"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartregions"
+        quicktask="index.php?option=com_phocacart&amp;task=phocacartregion.add"
+        quicktask-title="COM_PHOCACART_MENU_ADD_NEW_ITEM"
+        quicktask-permission="core.create"
+      />
+
+      <menuitem
+        title="COM_PHOCACART_ZONES"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartzones"
+        quicktask="index.php?option=com_phocacart&amp;task=phocacartzone.add"
+        quicktask-title="COM_PHOCACART_MENU_ADD_NEW_ITEM"
+        quicktask-permission="core.create"
+      />
+
+      <menuitem
+        title="COM_PHOCACART_CONTENT_TYPES"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartcontenttypes"
+        quicktask="index.php?option=com_phocacart&amp;task=phocacartcontenttype.add"
+        quicktask-title="COM_PHOCACART_MENU_ADD_NEW_ITEM"
+        quicktask-permission="core.create"
+      />
+
+      <menuitem
+        title="COM_PHOCACART_CURRENCIES"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartcurrencies"
+        quicktask="index.php?option=com_phocacart&amp;task=phocacartcurrency.add"
+        quicktask-title="COM_PHOCACART_MENU_ADD_NEW_ITEM"
+        quicktask-permission="core.create"
+      />
+    </menuitem>
+
+    <menuitem
+      title="COM_PHOCACART_MENU_POS"
+      type="heading"
+    >
+      <menuitem
+        title="COM_PHOCACART_VENDORS"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartvendors"
+        quicktask="index.php?option=com_phocacart&amp;task=phocacartvendor.add"
+        quicktask-title="COM_PHOCACART_MENU_ADD_NEW_ITEM"
+        quicktask-permission="core.create"
+      />
+
+      <menuitem
+        title="COM_PHOCACART_SECTIONS"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartsections"
+        quicktask="index.php?option=com_phocacart&amp;task=phocacartsection.add"
+        quicktask-title="COM_PHOCACART_MENU_ADD_NEW_ITEM"
+        quicktask-permission="core.create"
+      />
+
+      <menuitem
+        title="COM_PHOCACART_UNITS"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartunits"
+        quicktask="index.php?option=com_phocacart&amp;task=phocacartunit.add"
+        quicktask-title="COM_PHOCACART_MENU_ADD_NEW_ITEM"
+        quicktask-permission="core.create"
+      />
+    </menuitem>
+
+    <menuitem
+      title="COM_PHOCACART_STATISTICS"
+      type="heading"
+      quicktask="option=com_phocacart&amp;view=phocacartstatistics"
+      quicktask-title="COM_PHOCACART_STATISTICS"
+      quicktask-icon="chart"
+    >
+      <menuitem
+        title="COM_PHOCACART_STATISTICS"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartstatistics"
+      />
+
+      <menuitem
+        title="COM_PHOCACART_REPORTS"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartreports"
+      />
+
+      <menuitem
+        title="COM_PHOCACART_HITS"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacarthits"
+      />
+
+      <menuitem
+        title="COM_PHOCACART_DOWNLOADS"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartdownloads"
+      />
+    </menuitem>
+
+    <menuitem
+      title="COM_PHOCACART_MENU_TOOLS"
+      type="heading"
+    >
+      <menuitem
+        title="COM_PHOCACART_IMPORT"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartimports"
+      />
+
+      <menuitem
+        title="COM_PHOCACART_EXPORT"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartexports"
+      />
+
+      <menuitem
+        title="COM_PHOCACART_BULK_PRICE_EDITOR"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartbulkprices"
+      />
+
+      <menuitem
+        title="COM_PHOCACART_XML_FEEDS"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartfeeds"
+      />
+
+      <menuitem
+        title="COM_PHOCACART_OPENING_TIMES"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacarttimes"
+      />
+
+      <menuitem
+        title="COM_PHOCACART_SYSTEM_LOG"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartlogs"
+      />
+
+      <menuitem
+        title="COM_PHOCACART_EXTENSIONS"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartextensions"
+      />
+
+      <menuitem
+        title="COM_PHOCACART_INFO"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartinfo"
+      />
+    </menuitem>
+  </menuitem>
+</menu>

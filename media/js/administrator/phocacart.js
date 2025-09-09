@@ -422,9 +422,9 @@ jQuery(document).ready(function() {
 	const container = jQuery('.main-nav-container a[href="index.php?option=com_phocacart"] + ul').parents('.main-nav-container');
 	if (container) {
 		const menu = container.children('ul');
-		if (menu) {
-			const submenu = menu.find('a[href="index.php?option=com_phocacart"] + ul');
-			if (submenu) {
+		if (menu.length) {
+			const submenu = menu.find('.item-level-2 a[href="index.php?option=com_phocacart"] + ul');
+			if (submenu.length) {
 				const phSubmenu = submenu.clone();
 				phSubmenu.attr('class', 'nav flex-column main-nav metismenu child-open ph-menu');
 				phSubmenu.find('li').each(function() {
