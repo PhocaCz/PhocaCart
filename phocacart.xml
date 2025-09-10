@@ -2,13 +2,14 @@
 <extension type="component" method="upgrade" version="5.0">
 	<name>com_phocacart</name>
 	<author>Jan Pavelka (www.phoca.cz)</author>
-	<creationDate>10/07/2025</creationDate>
+	<creationDate>10/09/2025</creationDate>
 	<authorEmail></authorEmail>
 	<authorUrl>https://www.phoca.cz</authorUrl>
 	<copyright>Jan Pavelka</copyright>
 	<license>GNU/GPL</license>
-	<version>5.2.0</version>
+	<version>5.2.1</version>
 	<description>COM_PHOCACART_XML_DESCRIPTION</description>
+	<namespace path="src">Phoca\Component\PhocaCart</namespace>
 	<scriptfile>script.php</scriptfile>
 	<projectName>PhocaCart</projectName>
 
@@ -114,6 +115,7 @@
 			<folder>controllers</folder>
 			<folder>install</folder>
 			<folder>update</folder>
+			<folder>presets</folder>
 			<folder>tables</folder>
 			<folder>helpers</folder>
 			<folder>src</folder>

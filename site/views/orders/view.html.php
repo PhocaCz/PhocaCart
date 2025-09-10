@@ -30,7 +30,7 @@ class PhocaCartViewOrders extends HtmlView
 		$model								= $this->getModel();
 		$this->t['orders']					= $model->getOrderList();
 
-		$this->t['token']					            = $app->input->get('o', '', 'string');
+		$this->t['token']					            = $app->getInput()->get('o', '', 'string');
 		$this->t['order_guest_access']		            = $this->p->get( 'order_guest_access', 0 );
         $this->t['display_reward_points_user_orders']	= $this->p->get( 'display_reward_points_user_orders', 0);
 		if ($this->t['order_guest_access'] == 0) {

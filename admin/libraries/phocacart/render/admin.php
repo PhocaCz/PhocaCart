@@ -41,7 +41,7 @@ class PhocacartRenderAdmin
 
 	public static function getLinks() {
 		$app	= Factory::getApplication();
-		$option = $app->input->get('option');
+		$option = $app->getInput()->get('option');
 		$oT		= strtoupper($option);
 
 		$links =  array();

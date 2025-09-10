@@ -5,6 +5,7 @@
 	"license": "GNU/GPL",
 	"projectName": "PhocaCart",
 	"extensionName": "Phoca Cart",
+	"nameSpace": "Phoca\\Component\\PhocaCart",
 	"projectInitials" : "PC",				  
 	"description": "Phoca Cart is e-commerce extension - powerful shopping cart for Joomla! CMS. Phoca Cart is based on Joomla! framework and it is designed by modern responsive Bootstrap library.",
 	"projectUrl": "https://www.phoca.cz/phocacart",

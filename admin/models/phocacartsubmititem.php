@@ -146,7 +146,7 @@ class PhocaCartCpModelPhocaCartSubmititem extends AdminModel
 	function save($data) {
 
 		$app		= Factory::getApplication();
-		$input  	= Factory::getApplication()->input;
+		$input  	= Factory::getApplication()->getInput();
 		$table		= $this->getTable();
 		$pk			= (!empty($data['id'])) ? $data['id'] : (int)$this->getState($this->getName().'.id');
 		$isNew		= true;
@@ -711,7 +711,7 @@ class PhocaCartCpModelPhocaCartSubmititem extends AdminModel
 	protected function generateNewTitle($category_id, $alias, $title) {
 
 		$app 			= Factory::getApplication('administrator');
-		$batchParams 	= $app->input->post->get('batch', array(), 'array');
+		$batchParams 	= $app->getInput()->post->get('batch', array(), 'array');
 
 
 		// Alter the title & alias

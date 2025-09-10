@@ -38,7 +38,7 @@ class PhocaCartCpViewPhocacartShipping extends HtmlView
 
 	protected function addToolbar() {
 		require_once JPATH_COMPONENT.'/helpers/'.$this->t['tasks'].'.php';
-		Factory::getApplication()->input->set('hidemainmenu', true);
+		Factory::getApplication()->getInput()->set('hidemainmenu', true);
 		$user		= Factory::getUser();
 		$isNew		= ($this->item->id == 0);
 		$checkedOut	= !($this->item->checked_out == 0 || $this->item->checked_out == $user->get('id'));

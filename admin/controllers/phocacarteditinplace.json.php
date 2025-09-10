@@ -32,8 +32,8 @@ class PhocaCartCpControllerPhocacartEditinplace extends FormController
 		}
 
 		$app		= Factory::getApplication();
-		$value		= $app->input->get('value', '', 'raw');
-		$id			= $app->input->get('id', '', 'string');
+		$value		= $app->getInput()->get('value', '', 'raw');
+		$id			= $app->getInput()->get('id', '', 'string');
 
 
 

@@ -19,7 +19,7 @@ abstract class PhocacartHelperAssociation
 {
     private static function getJoomlaAssociations($id = 0, $view = null)
     {
-        $input = Factory::getApplication()->input;
+        $input = Factory::getApplication()->getInput();
         $view  = $view === null ? $input->get('view') : $view;
         $id    = empty($id) ? $input->getInt('id') : $id;
 
@@ -78,7 +78,7 @@ abstract class PhocacartHelperAssociation
 
     public static function getI18nAssociations($id = 0, $view = null)
     {
-        $input = Factory::getApplication()->input;
+        $input = Factory::getApplication()->getInput();
         $view   = $view === null ? $input->get('view') : $view;
         $id     = empty($id) ? $input->getInt('id') : $id;
         $languages    = I18nHelper::getI18nLanguages();

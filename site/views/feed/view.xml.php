@@ -25,7 +25,7 @@ class PhocaCartViewFeed extends HtmlView
     function display($tpl = null) {
 
         $app  = Factory::getApplication();
-        $id   = $app->input->get('id', 0, 'int');
+        $id   = $app->getInput()->get('id', 0, 'int');
         $this->t['feed'] = PhocacartFeed::getFeed((int)$id);
 
 

@@ -115,7 +115,7 @@ class PhocaCartViewSubmit extends HtmlView
 				$this->p->set('hidden_field_position', -1);
 			}
 
-			$tmpl = $app->input->get('tmpl', '', 'string');
+			$tmpl = $app->getInput()->get('tmpl', '', 'string');
 
 			if ($tmpl == 'component') {
 
@@ -123,7 +123,7 @@ class PhocaCartViewSubmit extends HtmlView
 
 				$document->addCustomTag("<style type=\"text/css\"> \n"
 					. " #ph-pc-question-box {
-					margin: 20px
+					padding: 1em; margin: 0;
 				} \n"
 					. " </style> \n");
 			}

@@ -81,7 +81,7 @@ class PhocaCartCpModelPhocaCartEditProductPriceHistory extends AdminModel
 	public function save($data/*, $productId*/) {
 
 		$app					= Factory::getApplication();
-		$productId				= $app->input->get('id', 0, 'int');
+		$productId				= $app->getInput()->get('id', 0, 'int');
 
 
 

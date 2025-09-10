@@ -111,7 +111,7 @@ class JFormFieldPhocacartCategory extends FormField
 		$data = $db->loadObjectList();
 
 		// TO DO - check for other views than category edit
-		$view 	= Factory::getApplication()->input->get( 'view' );
+		$view 	= Factory::getApplication()->getInput()->get( 'view' );
 		$catId	= -1;
 		if ($view == 'phocacartcategory') {
 			$id 	= $this->form->getValue('id'); // id of current category

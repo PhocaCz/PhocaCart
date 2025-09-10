@@ -43,7 +43,7 @@ class PhocaCartCpModelPhocaCartParamA extends AdminModel
 	// PhocacartShipping
 	public function getTable($type = 'PhocacartPayment', $prefix = 'Table', $config = array()) {
 		$app	= Factory::getApplication();
-		$type	= $app->input->get( 'type', '', 'int'  );
+		$type	= $app->getInput()->get( 'type', '', 'int'  );
 		if ($type == 2) {
 			$type = 'PhocacartShipping';
 		} else {
@@ -82,7 +82,7 @@ class PhocaCartCpModelPhocaCartParamA extends AdminModel
 		jimport('joomla.filesystem.folder');
 
 		$app	= Factory::getApplication();
-		$type	= $app->input->get( 'type', '', 'int'  );
+		$type	= $app->getInput()->get( 'type', '', 'int'  );
 		if ($type == 2) {
 			$group 	= 'pcs';
 			$folder = 'pcs';
@@ -95,7 +95,7 @@ class PhocaCartCpModelPhocaCartParamA extends AdminModel
 		//$folder		= 'pcp';//$this->getState('item.folder');
 		//$element	= $this->getState('item.element');
 		$app		= Factory::getApplication();
-		$method		= $app->input->get( 'method', '', 'string'  );// get the method, when start or when changed the select box
+		$method		= $app->getInput()->get( 'method', '', 'string'  );// get the method, when start or when changed the select box
 		$element	= $method;
 		$lang		= Factory::getLanguage();
 		$client		= ApplicationHelper::getClientInfo(0);

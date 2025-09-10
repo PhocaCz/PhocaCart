@@ -192,6 +192,7 @@ class PhocacartEmail
 		$subject = html_entity_decode($subject, ENT_QUOTES);
 		$body = html_entity_decode($body, ENT_QUOTES);
 
+
 		$notify = false;
 		// Send email to selected user
 		if ($mailfrom != '' && $send_email_question != '' && $email != '') {

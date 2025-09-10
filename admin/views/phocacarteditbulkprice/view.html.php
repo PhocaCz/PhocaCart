@@ -28,8 +28,8 @@ class PhocaCartCpViewPhocaCartEditBulkprice extends HtmlView
 	function display($tpl = null) {
 
 		$app	= Factory::getApplication();
-		$id		= $app->input->get('id', 0, 'int');
-		$status	= $app->input->get('status', 0, 'int');// 0 inactive - make run, 1 active - make revert
+		$id		= $app->getInput()->get('id', 0, 'int');
+		$status	= $app->getInput()->get('status', 0, 'int');// 0 inactive - make run, 1 active - make revert
 
 
 		Factory::getDocument()->addScriptOptions('phLang', array(

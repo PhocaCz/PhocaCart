@@ -26,8 +26,8 @@ class PhocaCartCpViewPhocaCartItemA extends HtmlView
 		}
 
 		$app		= Factory::getApplication();
-		$search		= $app->input->get('q', '', 'string');
-		$id			= $app->input->get('item_id', '', 'int');
+		$search		= $app->getInput()->get('q', '', 'string');
+		$id			= $app->getInput()->get('item_id', '', 'int');
 
         $search = trim($search);
 

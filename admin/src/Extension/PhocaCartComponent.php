@@ -86,8 +86,8 @@ class PhocaCartComponent extends LegacyComponent implements SchemaorgServiceInte
 
         // Hide wrong information about Phoca Cart categories in custom field list
         $app     = Factory::getApplication();
-        $option  = $app->input->get('option', '', 'string');
-        $context = $app->input->get('context', '', 'string');
+        $option  = $app->getInput()->get('option', '', 'string');
+        $context = $app->getInput()->get('context', '', 'string');
         if ($option == 'com_fields' && $context == 'com_phocacart.phocacartitem') {
             $document = $app->getDocument();
             $document->addCustomTag('<style type="text/css"> table#fieldList tr th[scope=row] div div:nth-child(3) { display:none } </style>');

@@ -28,7 +28,7 @@ class PhocaCartCpViewPhocaCartEditProductPointGroup extends HtmlView
 	function display($tpl = null) {
 
 		$app					= Factory::getApplication();
-		$this->id				= $app->input->get('id', 0, 'int');
+		$this->id				= $app->getInput()->get('id', 0, 'int');
 
 		if ($this->id < 1) {
 			echo '<div class="alert alert-error">';

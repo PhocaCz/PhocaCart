@@ -14,7 +14,7 @@ use Joomla\CMS\Installer\InstallerHelper;
 use Joomla\CMS\Installer\Installer;
 require_once JPATH_COMPONENT.'/controllers/phocacartcommon.php';
 class PhocaCartCpControllerPhocacartExtension extends PhocaCartCpControllerPhocaCartCommon {
-		
+
 	public function refresh() {
 		$app 	= Factory::getApplication('administrator');
 		$type 	= $app->getUserStateFromRequest($this->context.'.filter.category_id', 'filter_category_id', 'modules');
@@ -24,51 +24,51 @@ class PhocaCartCpControllerPhocacartExtension extends PhocaCartCpControllerPhoca
 		$app->enqueueMessage($msg, 'message');
 		$app->redirect('index.php?option=com_phocacart&view=phocacartextensions');
 	}
-	
-	
+
+
 	public function install() {
-		
+
 		if (!Session::checkToken('request')) {
 			$app->enqueueMessage('Invalid Token', 'message');
 			return false;
 		}
-		
+
 		$app = Factory::getApplication('administrator');
 		$msg = '';
-		
+
 		try {
-			
-			$downloadUrl   = $app->input->getBase64('link');
-			
+
+			$downloadUrl   = $app->getInput()->getBase64('link');
+
 			if (!$downloadUrl) {
 				throw new Exception(Text::_('COM_PHOCACART_ERROR_EXTENSION_URL_NOT_FOUND'));
 			}
-			
+
 			$file = InstallerHelper::downloadPackage(base64_decode($downloadUrl));
-			
+
 			if (!$file) {
 				throw new Exception(Text::_('COM_PHOCACART_ERROR_EXTENSION_FILE_NOT_FOUND'));
 			}
-			
+
 			$tmpPath = $app->get('tmp_path');
 			$package = InstallerHelper::unpack($tmpPath . '/' . $file, true);
-			
+
 			if (!$package) {
 				throw new Exception(Text::_('COM_PHOCACART_ERROR_EXTENSION_FILE_NOT_FOUND'));
 			}
-			
+
 			$installer = new Installer;
-			
+
 			if ($installer->install($package['extractdir'])) {
 				$msg = Text::sprintf('COM_PHOCACART_SUCCESS_EXTENSION_INSTALLED', $package['type']);
 				InstallerHelper::cleanupInstall($package['packagefile'], $package['extractdir']);
 			}
 		} catch (RuntimeException $e) {
-			
+
 			$app->enqueueMessage($e->getMessage(), 'message');
 			$app->redirect('index.php?option=com_phocacart&view=phocacartextensions');
 		}
-		
+
 		$app->enqueueMessage($msg, 'message');
 		$app->redirect('index.php?option=com_phocacart&view=phocacartextensions');
 	}

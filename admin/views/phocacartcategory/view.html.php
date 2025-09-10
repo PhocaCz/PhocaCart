@@ -61,7 +61,7 @@ class PhocaCartCpViewPhocacartCategory extends HtmlView
 
 		// ASSOCIATION
 		// If we are forcing a language in modal (used for associations).
-		if ($this->getLayout() === 'modal' && $forcedLanguage = Factory::getApplication()->input->getCmd('forcedLanguage')) {
+		if ($this->getLayout() === 'modal' && $forcedLanguage = Factory::getApplication()->getInput()->getCmd('forcedLanguage')) {
 			// Set the language field to the forcedLanguage and disable changing it.
 			$this->form->setValue('language', null, $forcedLanguage);
 			$this->form->setFieldAttribute('language', 'readonly', 'true');
@@ -82,7 +82,7 @@ class PhocaCartCpViewPhocacartCategory extends HtmlView
 	protected function addToolbar()
 	{
 		require_once JPATH_COMPONENT.'/helpers/'.$this->t['tasks'].'.php';
-		Factory::getApplication()->input->set('hidemainmenu', true);
+		Factory::getApplication()->getInput()->set('hidemainmenu', true);
 		$user		= Factory::getUser();
 		$isNew		= ($this->item->id == 0);
 		$checkedOut	= !($this->item->checked_out == 0 || $this->item->checked_out == $user->get('id'));

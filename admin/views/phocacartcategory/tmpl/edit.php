@@ -15,7 +15,7 @@ use Phoca\PhocaCart\I18n\I18nHelper;
 
 $r          = $this->r;
 $app        = Factory::getApplication();
-$input      = $app->input;
+$input      = $app->getInput();
 $isModal    = $input->get('layout') == 'modal' ? true : false;
 $layout     = $isModal ? 'modal' : 'edit';
 $tmpl       = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? 'component' : '';
@@ -71,7 +71,7 @@ echo $r->endTabs();
 echo '</div>';
 
 echo $r->formInputs($this->t['task']);
-if ($forcedLanguage = Factory::getApplication()->input->getCmd('forcedLanguage')) {
+if ($forcedLanguage = Factory::getApplication()->getInput()->getCmd('forcedLanguage')) {
 	echo '<input type="hidden" name="forcedLanguage" value="' . $forcedLanguage . '" />';
 }
 

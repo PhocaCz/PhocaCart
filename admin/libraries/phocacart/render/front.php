@@ -116,7 +116,7 @@ class PhocacartRenderFront
         $render_canonical_url = $params->get('render_canonical_url', 0);
         $nameInTitle = 1;// TO DO possible parameter Category or Title name
 
-        $viewCurrent = $app->input->get('view');
+        $viewCurrent = $app->getInput()->get('view');
         $viewLink = '';
         if (isset($menu->query['view'])) {
             $viewLink = $menu->query['view'];
@@ -410,7 +410,7 @@ class PhocacartRenderFront
             return '';
         }
 
-        $view = $app->input->get('view', '', 'string');
+        $view = $app->getInput()->get('view', '', 'string');
 
         if (!empty($hideHeader) && $view != '') {
             if (in_array($view, $hideHeader)) {

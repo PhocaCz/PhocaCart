@@ -24,7 +24,7 @@ class PhocaCartCpViewPhocaCartEditStatus extends HtmlView
 	function display($tpl = null) {
 
 		$app				= Factory::getApplication();
-		$this->id			= $app->input->get('id', 0, 'int');
+		$this->id			= $app->getInput()->get('id', 0, 'int');
 
 		$this->t			= PhocacartUtils::setVars('cart');
 		$this->r 			= new PhocacartRenderAdminviews();

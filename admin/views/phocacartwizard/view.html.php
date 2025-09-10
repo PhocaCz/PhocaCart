@@ -21,7 +21,7 @@ class PhocaCartCpViewPhocaCartWizard extends HtmlView
 	function display($tpl = null) {
 
 		$app				    = Factory::getApplication();
-		$this->page		        = $app->input->get('page', 0, 'int');
+		$this->page		        = $app->getInput()->get('page', 0, 'int');
 		$this->t				= PhocacartUtils::setVars('wizard');
 		$this->r				= new PhocacartRenderAdminview();
 		$this->s                = PhocacartRenderStyle::getStyles();

@@ -129,8 +129,8 @@ class PhocacartDownload
 		$app	= Factory::getApplication();
 
 
-		$tokenDownload			= $app->input->post->get('d', '', 'string');
-		$tokenOrder				= $app->input->post->get('o', '', 'string');
+		$tokenDownload			= $app->getInput()->post->get('d', '', 'string');
+		$tokenOrder				= $app->getInput()->post->get('o', '', 'string');
 
 		$pC 					= PhocacartUtils::getComponentParameters();
 		$download_days			= $pC->get( 'download_days', 0 );

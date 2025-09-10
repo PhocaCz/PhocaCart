@@ -47,7 +47,7 @@ class PhocaCartCpControllerAjax extends BaseController
 		}
 		else
 		{
-			$input = Factory::getApplication()->input;
+			$input = Factory::getApplication()->getInput();
 
 			$assocId = $input->getInt('assocId', 0);
 			$view = $input->get('view', '');

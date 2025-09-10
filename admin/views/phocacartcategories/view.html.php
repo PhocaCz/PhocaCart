@@ -56,7 +56,7 @@ class PhocaCartCpViewPhocaCartCategories extends HtmlView
 		if ($this->getLayout() !== 'modal') {
 			$this->addToolbar();
 		} else {
-			if ($forcedLanguage = Factory::getApplication()->input->getCmd('forcedLanguage')) {
+			if ($forcedLanguage = Factory::getApplication()->getInput()->getCmd('forcedLanguage')) {
 				$languageXml = new SimpleXMLElement('<field name="language" type="hidden" default="' . $forcedLanguage . '" />');
 				$this->filterForm->setField($languageXml, 'filter', true);
 				unset($this->activeFilters['language']);

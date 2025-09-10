@@ -18,9 +18,9 @@ class PhocaCartCpViewPhocacartOrderView extends HtmlView
 		$app			= Factory::getApplication();
 		$this->t		= PhocacartUtils::setVars('orderview');
 		$this->r		= new PhocacartRenderAdminview();
-		$id				= $app->input->get('id', 0, 'int');
-		$type			= $app->input->get('type', 0, 'int');
-		$format			= $app->input->get('format', '', 'string');
+		$id				= $app->getInput()->get('id', 0, 'int');
+		$type			= $app->getInput()->get('type', 0, 'int');
+		$format			= $app->getInput()->get('format', '', 'string');
 
 		$order	= new PhocacartOrderRender();
 		$o = $order->render($id, $type, $format);

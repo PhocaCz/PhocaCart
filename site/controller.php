@@ -19,16 +19,16 @@ class PhocaCartController extends BaseController
 
 
 
-		if ( ! Factory::getApplication()->input->get('view') ) {
-			Factory::getApplication()->input->set('view', 'categories' );
+		if ( ! Factory::getApplication()->getInput()->get('view') ) {
+			Factory::getApplication()->getInput()->set('view', 'categories' );
 		}
 
-			if ( ! Factory::getApplication()->input->get('id') ) {
-			Factory::getApplication()->input->set('id', null );
+			if ( ! Factory::getApplication()->getInput()->get('id') ) {
+			Factory::getApplication()->getInput()->set('id', null );
 		}
 
 
-		/*if (Factory::getApplication()->input->get('view') && Factory::getApplication()->input->get('view') == 'feed') {
+		/*if (Factory::getApplication()->getInput()->get('view') && Factory::getApplication()->getInput()->get('view') == 'feed') {
 			// Default view for Feed is XML
 			// Don't forget, this settings needs to have set router.php too - in method PhocacartParseRoute()
 			$this->getView('feed', 'xml');

@@ -32,9 +32,9 @@ class PhocacartCaptchaRecaptcha
 		$app 		= Factory::getApplication();
 		$pC 		= PhocacartUtils::getComponentParameters();
 		$secretKey	= strip_tags(trim($pC->get( 'recaptcha_privatekey', '' )));
-		//$response 	= $app->input->post->get('g-recaptcha-response', '', 'string');
+		//$response 	= $app->getInput()->post->get('g-recaptcha-response', '', 'string');
 		//$response	= $ POST['g-recaptcha-response'];
-		$response 	= $app->input->post->get('g-recaptcha-response', '', 'string');
+		$response 	= $app->getInput()->post->get('g-recaptcha-response', '', 'string');
 		$remoteIp	= $_SERVER['REMOTE_ADDR'];
 		$urlVerify	= 'https://www.google.com/recaptcha/api/siteverify';
 

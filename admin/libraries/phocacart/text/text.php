@@ -27,7 +27,9 @@ class PhocacartText {
 	public static function completeText($body, $replace, $type = 1) {
         $body = (string)$body;
         foreach ($replace as $key => $value) {
-            if ($value) {
+
+            //if ($value) {
+            if (isset($value)) {
                 $body = str_replace('{' . $key .'}', $value, $body);
             }
         }
@@ -267,17 +269,20 @@ class PhocacartText {
 
         if (isset($common->params_shipping)) {
             $paramsShipping = json_decode($common->params_shipping, true);
-            $r['shippingbranchname']    = isset($paramsShipping['name']) ? $paramsShipping['name']: '';
-            $r['shippingbranchcode']    = isset($paramsShipping['branchCode']) ? $paramsShipping['branchCode']: '';
-            $r['shippingbranchid']      = isset($paramsShipping['id']) ? $paramsShipping['id']: '';
-            $r['shippingbranchcountry'] = isset($paramsShipping['country']) ? $paramsShipping['country']: '';
-            $r['shippingbranchcity']    = isset($paramsShipping['city']) ? $paramsShipping['city']: '';
-            $r['shippingbranchstreet']  = isset($paramsShipping['street']) ? $paramsShipping['street']: '';
-            $r['shippingbranchzip']     = isset($paramsShipping['zip']) ? $paramsShipping['zip']: '';
-            $r['shippingbranchurl']     = isset($paramsShipping['url']) ? $paramsShipping['url']: '';
-            $r['shippingbranchthumbnail']   = isset($paramsShipping['thumbnail']) ? $paramsShipping['thumbnail']: '';
-            $r['shippingbranchcurrency']    = isset($paramsShipping['currency']) ? $paramsShipping['currency']: '';
         }
+        // Cannot be inside condition, we need to have empty output when the variable is empty
+        // if this will be inside the condition, the {variable} will stay in text, which is not wanted
+        $r['shippingbranchname']    = isset($paramsShipping['name']) ? $paramsShipping['name']: '';
+        $r['shippingbranchcode']    = isset($paramsShipping['branchCode']) ? $paramsShipping['branchCode']: '';
+        $r['shippingbranchid']      = isset($paramsShipping['id']) ? $paramsShipping['id']: '';
+        $r['shippingbranchcountry'] = isset($paramsShipping['country']) ? $paramsShipping['country']: '';
+        $r['shippingbranchcity']    = isset($paramsShipping['city']) ? $paramsShipping['city']: '';
+        $r['shippingbranchstreet']  = isset($paramsShipping['street']) ? $paramsShipping['street']: '';
+        $r['shippingbranchzip']     = isset($paramsShipping['zip']) ? $paramsShipping['zip']: '';
+        $r['shippingbranchurl']     = isset($paramsShipping['url']) ? $paramsShipping['url']: '';
+        $r['shippingbranchthumbnail']   = isset($paramsShipping['thumbnail']) ? $paramsShipping['thumbnail']: '';
+        $r['shippingbranchcurrency']    = isset($paramsShipping['currency']) ? $paramsShipping['currency']: '';
+
 
 
 		$r['dateshipped'] 			= PhocacartOrderView::getDateShipped($common);

@@ -20,8 +20,8 @@ class PhocaCartCpModelPhocaCartEditTax extends ListModel
 	public function getData() {
 
 		$app	= Factory::getApplication();
-		$id		= $app->input->get('id', 0, 'int');
-		$type	= $app->input->get('type', 0, 'type');// 1 country, 2 region
+		$id		= $app->getInput()->get('id', 0, 'int');
+		$type	= $app->getInput()->get('type', 0, 'type');// 1 country, 2 region
 
 		$db = Factory::getDBO();
 		$query = 'SELECT a.id, a.title, a.code2, a.image';
@@ -41,7 +41,7 @@ class PhocaCartCpModelPhocaCartEditTax extends ListModel
 	public function getCountryTaxData() {
 
 		$app	= Factory::getApplication();
-		$id		= $app->input->get('id', 0, 'int');
+		$id		= $app->getInput()->get('id', 0, 'int');
 
 		if ((int)$id > 0) {
 			return PhocacartTax::getTaxesByCountry($id);
@@ -51,7 +51,7 @@ class PhocaCartCpModelPhocaCartEditTax extends ListModel
 	public function getRegionTaxData() {
 
 		$app	= Factory::getApplication();
-		$id		= $app->input->get('id', 0, 'int');
+		$id		= $app->getInput()->get('id', 0, 'int');
 
 		if ((int)$id > 0) {
 			return PhocacartTax::getTaxesByRegion($id);

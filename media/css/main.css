@@ -2394,7 +2394,8 @@ img.ph-lazyload:not([src]) {
     stroke: #f5f5f5;
 }
 .btn.btn-secondary .pc-si {
-    stroke: #5f5f5f;
+    /*stroke: #5f5f5f;*/
+    stroke: currentColor;
 }
 
 .pc-si-ok-circle {

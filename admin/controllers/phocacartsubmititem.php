@@ -16,7 +16,7 @@ class PhocaCartCpControllerPhocaCartSubmititem extends PhocaCartCpControllerPhoc
 
     function create() {
 		$app	= Factory::getApplication();
-		$cid 	= Factory::getApplication()->input->get( 'cid', array(), '', 'array' );
+		$cid 	= Factory::getApplication()->getInput()->get( 'cid', array(), '', 'array' );
 		ArrayHelper::toInteger($cid);
 
 		if (count( $cid ) < 1) {

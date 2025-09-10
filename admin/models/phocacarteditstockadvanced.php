@@ -60,7 +60,7 @@ class PhocaCartCpModelPhocaCartEditStockAdvanced extends AdminModel
 	public function getItem($pk = null) {
 
 		$app					= Factory::getApplication();
-		$productId				= $app->input->get('id', 0, 'int');
+		$productId				= $app->getInput()->get('id', 0, 'int');
 
 
 
@@ -180,7 +180,7 @@ class PhocaCartCpModelPhocaCartEditStockAdvanced extends AdminModel
 	public function save($data/*, $productId*/) {
 
 		$app					= Factory::getApplication();
-		$productId				= $app->input->get('id', 0, 'int');
+		$productId				= $app->getInput()->get('id', 0, 'int');
 
 
 
@@ -247,7 +247,7 @@ class PhocaCartCpModelPhocaCartEditStockAdvanced extends AdminModel
 	/*public function getData() {
 
 		$app	= Factory::getApplication();
-		$id		= $app->input->get('id', 0, 'int');
+		$id		= $app->getInput()->get('id', 0, 'int');
 
 		$db = Factory::getDBO();
 		$query = 'SELECT a.status_id'
@@ -269,7 +269,7 @@ class PhocaCartCpModelPhocaCartEditStockAdvanced extends AdminModel
 	public function getHistoryData() {
 
 		$app	= Factory::getApplication();
-		$id		= $app->input->get('id', 0, 'int');
+		$id		= $app->getInput()->get('id', 0, 'int');
 
 		if ((int)$id > 0) {
 			$db = Factory::getDBO();

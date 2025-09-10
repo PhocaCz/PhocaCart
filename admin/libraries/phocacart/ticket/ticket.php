@@ -20,9 +20,9 @@ class PhocacartTicket
 
 
 		$app		= Factory::getApplication();
-		$ticketId	= $app->input->get( 'ticketid', 1, 'int' );// if not set, always set it to 1, ticekt 1 is default
-		$unitId		= $app->input->get( 'unitid', 0, 'int' );// if not set, always set it to 1, ticekt 1 is default
-		$sectionId	= $app->input->get( 'sectionid', 0, 'int' );// if not set, always set it to 1, ticekt 1 is default
+		$ticketId	= $app->getInput()->get( 'ticketid', 1, 'int' );// if not set, always set it to 1, ticekt 1 is default
+		$unitId		= $app->getInput()->get( 'unitid', 0, 'int' );// if not set, always set it to 1, ticekt 1 is default
+		$sectionId	= $app->getInput()->get( 'sectionid', 0, 'int' );// if not set, always set it to 1, ticekt 1 is default
 
 
 		$existsSection	= PhocacartSection::existsSection($sectionId);

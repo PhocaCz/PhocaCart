@@ -38,6 +38,9 @@ class PhocacartLog
 			return false;
 		}
 
+		// e.g. paypal can send Latin-1 (ISO-8859-1) - prevent from database error: Incorrect string value "\xE4...\x0A…"
+		$description = self::toUtf8($description);
+
 		// Additional User information
 		$descSuffix     = '';
 		if ($app->isClient('site')){
@@ -103,6 +106,23 @@ class PhocacartLog
 		}
 		return false;
 
+	}
+
+	public static function toUtf8($string) {
+		if (function_exists('mb_detect_encoding') && function_exists('mb_convert_encoding')) {
+			if (!mb_detect_encoding($string, 'UTF-8', true)) {
+				return mb_convert_encoding($string, 'UTF-8', 'ISO-8859-1');
+			}
+			return $string; // already UTF-8
+		} elseif (function_exists('iconv')) {
+			// Fallback: assume input is Latin-1 if not UTF-8
+			if (!preg_match('//u', $string)) { // valid UTF-8 check
+				return iconv('ISO-8859-1', 'UTF-8//IGNORE', $string);
+			}
+			return $string;
+		}
+
+		return $string;
 	}
 }
 ?>

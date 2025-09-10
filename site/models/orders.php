@@ -27,11 +27,11 @@ class PhocaCartModelOrders extends BaseDatabaseModel
 		$paramsC 	= $app->getParams();
 		$defaultP	= (int)$paramsC->get( 'default_pagination', '20' );
 		$this->setState('limit', $app->getUserStateFromRequest('com_phocacart.orders.limit', 'limit', $defaultP, 'int'));
-		$this->setState('limitstart', $app->input->get('limitstart', 0, 'int'));
+		$this->setState('limitstart', $app->getInput()->get('limitstart', 0, 'int'));
 		$this->setState('limitstart', ($this->getState('limit') != 0 ? (floor($this->getState('limitstart') / $this->getState('limit')) * $this->getState('limit')) : 0));
 		$this->setState('filter.language',$app->getLanguageFilter());
-		$this->setState('filter_order', Factory::getApplication()->input->get('filter_order', 'ordering'));
-		$this->setState('filter_order_dir', Factory::getApplication()->input->get('filter_order_Dir', 'ASC'));
+		$this->setState('filter_order', Factory::getApplication()->getInput()->get('filter_order', 'ordering'));
+		$this->setState('filter_order_dir', Factory::getApplication()->getInput()->get('filter_order_Dir', 'ASC'));
 
 	}
 
@@ -64,7 +64,7 @@ class PhocaCartModelOrders extends BaseDatabaseModel
 		$app				= Factory::getApplication();
 		$params 			= $app->getParams();
 		$u					= PhocacartUser::getUser();
-		$token				= $app->input->get('o', '', 'string');
+		$token				= $app->getInput()->get('o', '', 'string');
 		$orderGuestAccess	= $params->get( 'order_guest_access', 0 );
 		if ($orderGuestAccess == 0) {
 			$token = '';

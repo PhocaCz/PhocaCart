@@ -152,8 +152,10 @@ class PhocaCartViewCheckout extends HtmlView
         // Shipping and Payment rules will be checked including rounding
         $this->cart->roundTotalAmount();
 
+
         // Is there even a shipping or payment (or is active based on criterias)
         $total = $this->cart->getTotal();
+
         $sOCh  = array();// Shipping Options Checkout
         // PRODUCTTYPE
         $sOCh['all_digital_products'] = isset($total[0]['countdigitalproducts']) && isset($total[0]['countallproducts']) && (int)$total[0]['countdigitalproducts'] == $total[0]['countallproducts'] ? 1 : 0;
@@ -209,7 +211,7 @@ class PhocaCartViewCheckout extends HtmlView
             // =======
             $this->t['dataaddressoutput'] = array();
 
-            $this->a->addressedit = $app->input->get('addressedit', 0, 'int'); // Edit Address
+            $this->a->addressedit = $app->getInput()->get('addressedit', 0, 'int'); // Edit Address
 
             // GUEST
             if ($this->a->login == 2) {
@@ -279,7 +281,7 @@ class PhocaCartViewCheckout extends HtmlView
             $region                = $shipping->getUserRegionShipping($this->t['dataaddressoutput']);
             $zip 	                = $shipping->getUserZipShipping($this->t['dataaddressoutput']);
             $this->a->shippingadded = 0;
-            $this->a->shippingedit = $app->input->get('shippingedit', 0, 'int'); // Edit Shipping
+            $this->a->shippingedit = $app->getInput()->get('shippingedit', 0, 'int'); // Edit Shipping
             $shippingId            = $this->cart->getShippingId();               // Shipping stored in cart or not?
 
 
@@ -326,6 +328,7 @@ class PhocaCartViewCheckout extends HtmlView
 
                 $this->cart->roundTotalAmount();
                 $total = $this->cart->getTotal();
+
 
                 $this->t['shippingmethods'] = $shipping->getPossibleShippingMethods($total[0]['subtotalnetto'], $total[0]['subtotalbrutto'], $total[0]['quantity'], $country, $region, $zip, $total[0]['weight'], $total[0]['length'], $total[0]['width'], $total[0]['height'], 0, $shippingId);//$shippingId = 0 so all possible shipping methods will be listed
 
@@ -395,7 +398,6 @@ class PhocaCartViewCheckout extends HtmlView
             // PAYMENT (VOUCHER)
             // =================
 
-
             $payment = new PhocacartPayment();
             $country = $payment->getUserCountryPayment($this->t['dataaddressoutput']);
             $region  = $payment->getUserRegionPayment($this->t['dataaddressoutput']);
@@ -407,7 +409,7 @@ class PhocaCartViewCheckout extends HtmlView
             }
 
             $this->a->paymentadded    = 0;
-            $this->a->paymentedit     = $app->input->get('paymentedit', 0, 'int'); // Edit Shipping
+            $this->a->paymentedit     = $app->getInput()->get('paymentedit', 0, 'int'); // Edit Shipping
             $this->t['paymentmethod'] = $this->cart->getPaymentMethod();
             $paymentMethodId            = isset($this->t['paymentmethod']['id']) && (int)$this->t['paymentmethod']['id'] > 0 ? (int)$this->t['paymentmethod']['id']: 0;
 
@@ -456,6 +458,7 @@ class PhocaCartViewCheckout extends HtmlView
 
                 $this->cart->roundTotalAmount();
                 $total = $this->cart->getTotal();
+
 
                 $this->t['paymentmethods'] = $payment->getPossiblePaymentMethods($total[0]['subtotalnetto'], $total[0]['subtotalbrutto'], $country, $region, $shippingId, 0, $paymentMethodId, $currencyId);
 
@@ -538,7 +541,6 @@ class PhocaCartViewCheckout extends HtmlView
         //  Rounding set before checking shipping and payment method
         //	$this->cart->roundTotalAmount();
 
-
         // CART IS EMPTY - MUST BE CHECKED BEFOR CONFIRM
         // Don't allow to add or edit payment or shipping method, don't allow to confirm the order
         if (empty($this->cart->getItems())) {
@@ -600,8 +602,6 @@ class PhocaCartViewCheckout extends HtmlView
 
         // Render the cart (here because it can be changed above - shipping can be added)
         //$total				= $this->cart->getTotal();
-
-
 
 
 

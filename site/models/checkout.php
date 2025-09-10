@@ -127,7 +127,7 @@ class PhocaCartModelCheckout extends FormModel
 
 		$app		= Factory::getApplication();
 		$user 		= PhocacartUser::getUser();
-		$typeView 	= $app->input->get('typeview', '');
+		$typeView 	= $app->getInput()->get('typeview', '');
 
 
 		if ((int)$user->id < 1) {

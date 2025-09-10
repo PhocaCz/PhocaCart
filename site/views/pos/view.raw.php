@@ -45,14 +45,14 @@ class PhocaCartViewPos extends HtmlView
 
 
 		// INPUTS
-		$this->t['id']				= $app->input->get( 'id', 0, 'int' );
-		//$this->t['categoryid']		= $app->input->get( 'id', 0, 'int' );// optional
-		$this->t['limitstart']		= $app->input->get( 'limitstart', 0, 'int' );
-		$this->t['search']			= $app->input->get( 'search', '', 'string' );
-		$this->t['sku']				= $app->input->get( 'sku', '', 'string' );//sku, ean, isbn, jan, ...
-		$this->t['card']			= $app->input->get( 'card', '', 'string' );// loyalty customer card
-		$this->t['page']			= $app->input->get( 'page', 'main.content.products', 'string' );
-		$this->t['category']		= $app->input->get('category', '', 'string');// list of active categories
+		$this->t['id']				= $app->getInput()->get( 'id', 0, 'int' );
+		//$this->t['categoryid']		= $app->getInput()->get( 'id', 0, 'int' );// optional
+		$this->t['limitstart']		= $app->getInput()->get( 'limitstart', 0, 'int' );
+		$this->t['search']			= $app->getInput()->get( 'search', '', 'string' );
+		$this->t['sku']				= $app->getInput()->get( 'sku', '', 'string' );//sku, ean, isbn, jan, ...
+		$this->t['card']			= $app->getInput()->get( 'card', '', 'string' );// loyalty customer card
+		$this->t['page']			= $app->getInput()->get( 'page', 'main.content.products', 'string' );
+		$this->t['category']		= $app->getInput()->get('category', '', 'string');// list of active categories
 
 
 

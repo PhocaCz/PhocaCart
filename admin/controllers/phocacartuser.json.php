@@ -15,7 +15,7 @@ use Joomla\CMS\Factory;
 class PhocaCartCpControllerPhocacartUser extends FormController
 {
 	public function setregion() {
-	
+
 		if (!Session::checkToken('request')) {
 			$response = array(
 				'status' => '0',
@@ -23,16 +23,16 @@ class PhocaCartCpControllerPhocacartUser extends FormController
 			echo json_encode($response);
 			exit;
 		}
-		
+
 		$app	= Factory::getApplication();
-		$id		= $app->input->get('countryid', 0, 'int');
-		
+		$id		= $app->getInput()->get('countryid', 0, 'int');
+
 		//$model = $this->getModel('checkout');
 		//$options = $model->getRegions($id);
 		$options = PhocacartRegion::getRegionsByCountry($id);
 		$o = '';
 		if(!empty($options)) {
-			
+
 			$o .= '<option value="">-&nbsp;'.Text::_('COM_PHOCACART_SELECT_REGION').'&nbsp;-</option>';
 			foreach($options as $k => $v) {
 				$o .= '<option value="'.$v->id.'">'.htmlspecialchars($v->title).'</option>';
@@ -43,7 +43,7 @@ class PhocaCartCpControllerPhocacartUser extends FormController
 				'content' => $o);
 			echo json_encode($response);
 			exit;
-		
+
 	}
 }
 ?>

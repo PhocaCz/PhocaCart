@@ -21,7 +21,7 @@ trait StateControllerTrait
     public function state(): void
     {
         try {
-            $input = Factory::getApplication()->input;
+            $input = Factory::getApplication()->getInput();
             $id    = $input->get('id', null, 'int');
             $state = $input->get('state', null, 'int');
 

@@ -55,7 +55,7 @@ class PhocaCartControllerSubmit extends FormController
 
 		$namespace  		= 'phccrt' . $params->get('session_suffix');
 		$data  				= $this->input->post->get('jform', array(), 'array');
-		$file 				= Factory::getApplication()->input->files->get( 'jform', null, 'raw');
+		$file 				= Factory::getApplication()->getInput()->files->get( 'jform', null, 'raw');
 		$item['privacy']	= $this->input->get( 'privacy', false, 'string'  );
 
 		$data['privacy'] 	= $item['privacy'] ? 1 : 0;

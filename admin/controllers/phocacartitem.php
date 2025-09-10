@@ -29,8 +29,8 @@ class PhocaCartCpControllerPhocaCartItem extends PhocaCartCpControllerPhocaCartC
 		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 		$model	= $this->getModel('phocacartitem', '', array());
 		$app	= Factory::getApplication();
-		$cid 		= Factory::getApplication()->input->get( 'cid', array(),'array' );
-		$idSource 	= Factory::getApplication()->input->get( 'copy_attributes', 0, 'int' );
+		$cid 		= Factory::getApplication()->getInput()->get( 'cid', array(),'array' );
+		$idSource 	= Factory::getApplication()->getInput()->get( 'copy_attributes', 0, 'int' );
 		ArrayHelper::toInteger($cid);
 
 
@@ -45,7 +45,7 @@ class PhocaCartCpControllerPhocaCartItem extends PhocaCartCpControllerPhocaCartC
 
 	function recreate() {
 		$app	= Factory::getApplication();
-		$cid 	= Factory::getApplication()->input->get( 'cid', array(), '', 'array' );
+		$cid 	= Factory::getApplication()->getInput()->get( 'cid', array(), '', 'array' );
 		ArrayHelper::toInteger($cid);
 
 		if (count( $cid ) < 1) {

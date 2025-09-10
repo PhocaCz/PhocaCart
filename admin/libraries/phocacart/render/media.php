@@ -83,8 +83,8 @@ class PhocacartRenderMedia
         $this->t['min']         = '';// Removed, managed by Joomla debug, $this->p['load_min_js'] == 0 ? '' : '.min';
 
 
-        $this->format   = $app->input->get('format', '', 'string');
-        $this->view     = $app->input->get('view', '', 'string');
+        $this->format   = $app->getInput()->get('format', '', 'string');
+        $this->view     = $app->getInput()->get('view', '', 'string');
         $this->document = Factory::getDocument();
 
         if ($this->format == 'raw' || $this->format == 'json') {

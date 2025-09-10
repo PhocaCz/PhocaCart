@@ -30,8 +30,8 @@ class PhocaCartViewDownload extends HtmlView
 		$this->s                            = PhocacartRenderStyle::getStyles();
 		$this->p 							= $app->getParams();
 		$this->u							= PhocacartUser::getUser();
-		$this->t['token_download']			= $app->input->get('d', '', 'string');
-		$this->t['token_order']				= $app->input->get('o', '', 'string');
+		$this->t['token_download']			= $app->getInput()->get('d', '', 'string');
+		$this->t['token_order']				= $app->getInput()->get('o', '', 'string');
 		$this->t['download_guest_access']	= $this->p->get( 'download_guest_access', 0 );
 		if ($this->t['download_guest_access'] == 0) {
 			$this->t['token_download'] = '';

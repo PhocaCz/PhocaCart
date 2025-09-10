@@ -36,9 +36,9 @@ class PhocaCartCpViewPhocaCartImageA extends HtmlView
 		$copypaste_folder			= PhocacartText::filterValue($copypaste_folder, 'folder');
 
 		$app			= Factory::getApplication();
-		$title			= $app->input->get( 'imagetitle', '', 'string'  );
-		$format			= $app->input->get( 'imageformat', '', 'string'  );
-		$image			= $app->input->get( 'image', '', 'base64'  );
+		$title			= $app->getInput()->get( 'imagetitle', '', 'string'  );
+		$format			= $app->getInput()->get( 'imageformat', '', 'string'  );
+		$image			= $app->getInput()->get( 'image', '', 'base64'  );
 
 		$sE = '<span class="ph-result-txt ph-error-txt">';
 		$eE = '</span>';

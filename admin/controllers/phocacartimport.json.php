@@ -31,8 +31,8 @@ class PhocaCartCpControllerPhocaCartImport extends PhocaCartCpControllerPhocaCar
 		$paramsC 	= PhocacartUtils::getComponentParameters();
 		$this->t['import_export_pagination']	= $paramsC->get( 'import_export_pagination', 20 );
 
-		$page		= $app->input->get('p', 0, 'int');
-		$last_page	= $app->input->get('lp', 0, 'int');
+		$page		= $app->getInput()->get('p', 0, 'int');
+		$last_page	= $app->getInput()->get('lp', 0, 'int');
 
 
 		$limitOffset 	= ((int)$page * (int)$this->t['import_export_pagination']) - (int)$this->t['import_export_pagination'];

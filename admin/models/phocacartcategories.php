@@ -58,9 +58,9 @@ class PhocaCartCpModelPhocaCartCategories extends ListModel
 		$app = Factory::getApplication('administrator');
 
 		// ASSOCIATION
-		$forcedLanguage = $app->input->getCmd('forcedLanguage');
+		$forcedLanguage = $app->getInput()->getCmd('forcedLanguage');
 		// Adjust the context to support modal layouts.
-		if ($layout = $app->input->get('layout')) {
+		if ($layout = $app->getInput()->get('layout')) {
 			$this->context .= '.' . $layout;
 		}
 		// Adjust the context to support forced languages.

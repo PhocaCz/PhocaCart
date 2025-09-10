@@ -29,8 +29,8 @@ class PhocacartRoute
 		$app 		= Factory::getApplication();
 		$menu 		= $app->getMenu();
 		$active 	= $menu->getActive();
-		$option		= $app->input->get( 'option', '', 'string' );
-		$view		= $app->input->get( 'view', '', 'string' );
+		$option		= $app->getInput()->get( 'option', '', 'string' );
+		$view		= $app->getInput()->get( 'view', '', 'string' );
 
 		$activeId 	= 0;
 		if (isset($active->id)){
@@ -98,8 +98,8 @@ class PhocacartRoute
 		$app 		= Factory::getApplication();
 		$menu 		= $app->getMenu();
 		$active 	= $menu->getActive();
-		$option		= $app->input->get( 'option', '', 'string' );
-		$view		= $app->input->get( 'view', '', 'string' );
+		$option		= $app->getInput()->get( 'option', '', 'string' );
+		$view		= $app->getInput()->get( 'view', '', 'string' );
 
 		$activeId 	= 0;
 		if (isset($active->id)){
@@ -133,7 +133,7 @@ class PhocacartRoute
 		$app 		= Factory::getApplication();
 		$menu 		= $app->getMenu();
 		$active 	= $menu->getActive();
-		$option		= $app->input->get( 'option', '', 'string' );
+		$option		= $app->getInput()->get( 'option', '', 'string' );
 
 		$activeId 	= 0;
 		if (isset($active->id)){
@@ -178,7 +178,7 @@ class PhocacartRoute
 		$app 		= Factory::getApplication();
 		$menu 		= $app->getMenu();
 		$active 	= $menu->getActive();
-		$option		= $app->input->get( 'option', '', 'string' );
+		$option		= $app->getInput()->get( 'option', '', 'string' );
 
 		$activeId 	= 0;
 		if (isset($active->id)){
@@ -237,8 +237,8 @@ class PhocacartRoute
 		$app 			= Factory::getApplication();
 		$menu 			= $app->getMenu();
 		$active 		= $menu->getActive();
-		$option			= $app->input->get( 'option', '', 'string' );
-		$view 			= $app->input->get( 'view', '', 'string' );
+		$option			= $app->getInput()->get( 'option', '', 'string' );
+		$view 			= $app->getInput()->get( 'view', '', 'string' );
 
 		if ($forceView == 1) {
 			$view = 'item';// We link the view from administration - to preview the product
@@ -469,8 +469,8 @@ class PhocacartRoute
 		$app 			= Factory::getApplication();
 		$menu 			= $app->getMenu();
 		$active 		= $menu->getActive();
-		$option			= $app->input->get( 'option', '', 'string' );
-		$view			= $app->input->get( 'view', '', 'string' );
+		$option			= $app->getInput()->get( 'option', '', 'string' );
+		$view			= $app->getInput()->get( 'view', '', 'string' );
 
 		$activeId 	= 0;
 		if (isset($active->id)){
@@ -611,7 +611,7 @@ class PhocacartRoute
         $notCheckIdArray =  $views['withoutidspec'];
 
 		if(!$items) {
-			$itemId =  $app->input->get('Itemid', 0, 'int');
+			$itemId =  $app->getInput()->get('Itemid', 0, 'int');
 
 			if ($itemId > 0) {
 				$item = new stdClass();
@@ -729,8 +729,8 @@ class PhocacartRoute
 	{
 		$app	= Factory::getApplication();
 
-		return $app->input->get( 'option', '', 'string') == 'com_phocacart'
-			&& $app->input->get( 'view', '', 'string') == 'items';
+		return $app->getInput()->get( 'option', '', 'string') == 'com_phocacart'
+			&& $app->getInput()->get( 'view', '', 'string') == 'items';
 	}
 
 	public static function getJsItemsRoute($activeCategory = 0)
@@ -773,22 +773,22 @@ class PhocacartRoute
 	public static function getIdForItemsRoute()
 	{
 		$app			= Factory::getApplication();
-		$option			= $app->input->get( 'option', '', 'string' );
-		$view			= $app->input->get( 'view', '', 'string' );
+		$option			= $app->getInput()->get( 'option', '', 'string' );
+		$view			= $app->getInput()->get( 'view', '', 'string' );
 
 		$a['id']		= '';
 		$a['alias']		= '';
 		$a['idalias']	= '';
 
 		if ($option == 'com_phocacart' && ($view == 'category' || $view == 'items')) {
-			$a['id']		= $app->input->get( 'id', '', 'int' );
+			$a['id']		= $app->getInput()->get( 'id', '', 'int' );
 			$category 		= PhocacartCategory::getCategoryById($a['id']);
 
 			if (!$category) {
 				$a['alias'] = '';
 				$a['idalias'] = '';
 			} else {
-				$a['idalias'] = $app->input->get('id', '', 'string');
+				$a['idalias'] = $app->getInput()->get('id', '', 'string');
 				$a['alias']   = self::getAliasFromId($a['idalias']);
 				$a['idalias'] = str_replace(':', '-', $a['idalias']);
 				if (isset($category->alias)) {
@@ -798,14 +798,14 @@ class PhocacartRoute
 			}
 
 		} else if ($option == 'com_phocacart' && ($view == 'item')) {
-			$a['id']		= $app->input->get( 'catid', '', 'int' );
+			$a['id']		= $app->getInput()->get( 'catid', '', 'int' );
 			$category 		= PhocacartCategory::getCategoryById($a['id']);
 
 			if (!$category) {
 				$a['alias'] = '';
 				$a['idalias'] = '';
 			} else {
-				$a['idalias']	= $app->input->get( 'catid', '', 'string' );
+				$a['idalias']	= $app->getInput()->get( 'catid', '', 'string' );
 				$a['alias']		= self::getAliasFromId($a['idalias']);
 				$a['idalias']	= str_replace(':', '-', $a['idalias']);
 				if (isset($category->alias)) {
@@ -838,11 +838,11 @@ class PhocacartRoute
 	public static function isFilterActive()
 	{
 		$app			= Factory::getApplication();
-		$option			= $app->input->get( 'option', '', 'string' );
-		$view			= $app->input->get( 'view', '', 'string' );
+		$option			= $app->getInput()->get( 'option', '', 'string' );
+		$view			= $app->getInput()->get( 'view', '', 'string' );
 
 		if ($option == 'com_phocacart' && ($view == 'items')) {
-			$id		= $app->input->get( 'id', '', 'int' ); // ID in items view is category id
+			$id		= $app->getInput()->get( 'id', '', 'int' ); // ID in items view is category id
 			if ((int)$id > 0) {
 				return true; // some filter is active
 			}
@@ -852,7 +852,7 @@ class PhocacartRoute
 
 		if (!empty($p)) {
 			foreach($p as $k => $v) {
-				$value = $app->input->get( $v, '', 'string' );
+				$value = $app->getInput()->get( $v, '', 'string' );
 
 				if ($value != '') {
 					return true; // some filter is active

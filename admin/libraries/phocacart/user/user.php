@@ -64,11 +64,11 @@ class PhocacartUser
 
 				// ======= LOGGED JOOMLA! USER IS ADMINISTRATOR
 				// We want to get information about user's cart in administration
-				$userid    = $app->input->get('userid', 0, 'int');
-				//$vendorid  = $app->input->get('vendorid', 0, 'int');
-				//$ticketid  = $app->input->get('ticketid', 0, 'int');
-				//$unitid    = $app->input->get('unitid', 0, 'int');
-				//$sectionid = $app->input->get('sectionid', 0, 'int');
+				$userid    = $app->getInput()->get('userid', 0, 'int');
+				//$vendorid  = $app->getInput()->get('vendorid', 0, 'int');
+				//$ticketid  = $app->getInput()->get('ticketid', 0, 'int');
+				//$unitid    = $app->getInput()->get('unitid', 0, 'int');
+				//$sectionid = $app->getInput()->get('sectionid', 0, 'int');
 
 				// Test if we ask POS user
 				//$userIdPos = PhocacartPos::getUserIdByVendorAndTicket($vendorid, $ticketid, $unitid, $sectionid);

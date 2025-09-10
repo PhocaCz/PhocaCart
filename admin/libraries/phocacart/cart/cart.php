@@ -98,11 +98,11 @@ class PhocacartCart
 
         // Admin info - Administrator asks for information about user's cart
         if ($app->getName() == 'administrator') {
-            $userid                        = $app->input->get('userid', 0, 'int');
-            $vendorid                  = $app->input->get('vendorid', 0, 'int');
-            $ticketid                  = $app->input->get('ticketid', 0, 'int');
-            $unitid                    = $app->input->get('unitid', 0, 'int');
-            $sectionid                 = $app->input->get('sectionid', 0, 'int');
+            $userid                        = $app->getInput()->get('userid', 0, 'int');
+            $vendorid                  = $app->getInput()->get('vendorid', 0, 'int');
+            $ticketid                  = $app->getInput()->get('ticketid', 0, 'int');
+            $unitid                    = $app->getInput()->get('unitid', 0, 'int');
+            $sectionid                 = $app->getInput()->get('sectionid', 0, 'int');
             $cartDb                    = PhocacartCartDb::getCartDb($userid, $vendorid, $ticketid, $unitid, $sectionid);
             $this->items               = $cartDb['cart'];
             $this->coupon['id']        = $cartDb['coupon'];
@@ -874,7 +874,6 @@ class PhocacartCart
 
     public function roundTotalAmount() {
 
-
         $calc = new PhocacartCartCalculation();
         $calc->setType($this->type);
         $this->shipping['costs'] = isset($this->shipping['costs']) ? $this->shipping['costs'] : 0;
@@ -896,6 +895,8 @@ class PhocacartCart
 
         $calc->roundTotalAmount($this->total[0]);
 
+        // Correct after rounding
+        $calc->correctTotalItems($this->total, $this->shipping['costs'], $this->payment['costs'], $options);
 
         // ROUNDING VS: TRCROUNDING
         //          	NETTO		(Payment,Shipping incl. Tax)	Rounding	Brutto

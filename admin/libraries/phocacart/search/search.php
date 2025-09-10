@@ -50,7 +50,7 @@ class PhocacartSearch
 		$data['s']                  = $s;
 		$data['id'] 			    = 'phSearchBox' . $specificIdSuffix;
 		$data['param'] 			    = 'search';
-		$data['getparams']		    = PhocacartText::filterValue($app->input->get('search', '', 'string'), 'text');
+		$data['getparams']		    = PhocacartText::filterValue($app->getInput()->get('search', '', 'string'), 'text');
 		$data['title']			    = Text::_('COM_PHOCACART_SEARCH');
 		$data['activefilter']	    = PhocacartRoute::isFilterActive();
 		$data['search_options']     = $this->search_options;

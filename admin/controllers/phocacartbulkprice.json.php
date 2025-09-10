@@ -30,8 +30,8 @@ class PhocaCartCpControllerPhocaCartBulkprice extends PhocaCartCpControllerPhoca
 		$continue 	= 0;
 		$pagination = 5;
 
-		$page		= $app->input->get('p', 0, 'int');
-		$id			= $app->input->get('id', 0, 'int');
+		$page		= $app->getInput()->get('p', 0, 'int');
+		$id			= $app->getInput()->get('id', 0, 'int');
 
 		// BULK PRICE
 		$item 							= PhocacartPriceBulkprice::getItem($id);
@@ -174,8 +174,8 @@ class PhocaCartCpControllerPhocaCartBulkprice extends PhocaCartCpControllerPhoca
 		$continue 	= 0;
 		$pagination = 5;
 
-		$page		= $app->input->get('p', 0, 'int');
-		$id			= $app->input->get('id', 0, 'int');
+		$page		= $app->getInput()->get('p', 0, 'int');
+		$id			= $app->getInput()->get('id', 0, 'int');
 
 		// BULK PRICE
 		$item 							= PhocacartPriceBulkprice::getItem($id);

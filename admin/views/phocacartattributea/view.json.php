@@ -27,7 +27,7 @@ class PhocaCartCpViewPhocaCartAttributeA extends HtmlView
 		}
 
 		$app	= Factory::getApplication();
-		$task	= $app->input->get( 'task', '', 'string'  );
+		$task	= $app->getInput()->get( 'task', '', 'string'  );
 
 
 
@@ -51,7 +51,7 @@ class PhocaCartCpViewPhocaCartAttributeA extends HtmlView
 			return;
 		} else if ($task == 'removefolder') {
 
-			$folderA	= $app->input->get( 'folder', '', 'array'  );
+			$folderA	= $app->getInput()->get( 'folder', '', 'array'  );
 
 			$nrDeletedFolders = 0;
 			$errorMsg = '';

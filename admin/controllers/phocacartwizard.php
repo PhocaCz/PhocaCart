@@ -19,9 +19,9 @@ class PhocaCartCpControllerPhocaCartWizard extends PhocaCartCpControllerPhocaCar
 	// 1 ... automatically opened when there are no items set
 	// 2 ... force wizard
 	// 10 ... force wizard page 1 (not the main page)
-	
+
 	public function skipwizard() {
-		
+
 		$app		= Factory::getApplication();
 		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 		PhocacartUtils::setWizard(0);
@@ -32,40 +32,40 @@ class PhocaCartCpControllerPhocaCartWizard extends PhocaCartCpControllerPhocaCar
 	public function enablewizard() {
 		$app		= Factory::getApplication();
 		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
-		PhocacartUtils::setWizard(2);	
+		PhocacartUtils::setWizard(2);
 		$redirect	= 'index.php?option=com_phocacart';
 		$app->redirect($redirect);
 	}
-	
+
 	public function backtowizard() {
-		
+
 		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 		$app		= Factory::getApplication();
-		$taskGroup	= $app->input->get('taskgroup', '');
-		
+		$taskGroup	= $app->getInput()->get('taskgroup', '');
+
 		if ($taskGroup != '') {
 			$this->unlockTable($taskGroup);
 		}
-		
-		PhocacartUtils::setWizard(11);	
+
+		PhocacartUtils::setWizard(11);
 		$redirect	= 'index.php?option=com_phocacart';
 		$app->redirect($redirect);
 	}
-	
+
 	public function unlockTable($taskGroup) {
-		
+
 		$a = str_replace('phocacart', '', $taskGroup);
 		$b = ucfirst($a);
 		$c = 'Phocacart'.strip_tags($b);
-		
+
 		$model 		= $this->getModel($c, 'PhocaCartCpModel');
 		$context 	= 'com_phocacart.edit.'.strip_tags($taskGroup);
 
-		
+
 		$table 		= $model->getTable();
 		$key 		= $table->getKeyName();
 		$recordId 	= $this->input->getInt($key);
-		
+
 
 		// Attempt to check-in the current record.
 		if ($recordId)

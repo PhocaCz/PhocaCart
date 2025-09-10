@@ -38,8 +38,8 @@ class Adminview
 
 		$app				= Factory::getApplication();
 		$version 			= new Version();
-		$this->view			= $app->input->get('view');
-		$this->option		= $app->input->get('option');
+		$this->view			= $app->getInput()->get('view');
+		$this->option		= $app->getInput()->get('option');
 		$this->optionLang = strtoupper($this->option);
 		$this->sidebar 		= Factory::getApplication()->getTemplate(true)->params->get('menu', 1) ? true : false;
 		$this->document	  	= Factory::getDocument();

@@ -47,7 +47,7 @@ class PhocaCartCpViewPhocacartReports extends HtmlView
 
 		$this->params			= PhocacartUtils::getComponentParameters();
 		$app				= Factory::getApplication();
-		$this->t['format']	= $app->input->get('format', '', 'string');
+		$this->t['format']	= $app->getInput()->get('format', '', 'string');
 
 		if (!empty($this->t['date_days'])) {
 			$count	= iterator_count($this->t['date_days']);

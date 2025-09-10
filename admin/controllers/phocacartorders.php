@@ -27,7 +27,7 @@ class PhocaCartCpControllerPhocacartOrders extends PhocaCartCpControllerPhocaCar
 
 
         $app	= Factory::getApplication();
-		$cid 	= Factory::getApplication()->input->get( 'cid', array(), '', 'array' );
+		$cid 	= Factory::getApplication()->getInput()->get( 'cid', array(), '', 'array' );
 
 		$pks   = ArrayHelper::toInteger((array) $cid);
 

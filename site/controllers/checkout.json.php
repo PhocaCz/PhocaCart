@@ -32,7 +32,7 @@ class PhocaCartControllerCheckout extends FormController
         }
 
         $app = Factory::getApplication();
-        $id  = $app->input->get('countryid', 0, 'int');
+        $id  = $app->getInput()->get('countryid', 0, 'int');
 
         //$model = $this->getModel('checkout');
         //$options = $model->getRegions($id);
@@ -84,10 +84,10 @@ class PhocaCartControllerCheckout extends FormController
 
         $app       = Factory::getApplication();
         $s         = PhocacartRenderStyle::getStyles();
-        $attribute = $app->input->get('attribute', '', 'array');
-        $id        = $app->input->get('id', 0, 'int');
-        $class     = $app->input->get('class', '', 'string');
-        $typeView  = $app->input->get('typeview', '', 'string');
+        $attribute = $app->getInput()->get('attribute', '', 'array');
+        $id        = $app->getInput()->get('id', 0, 'int');
+        $class     = $app->getInput()->get('class', '', 'string');
+        $typeView  = $app->getInput()->get('typeview', '', 'string');
 
         $oA = array();
 
@@ -253,10 +253,10 @@ class PhocaCartControllerCheckout extends FormController
 
         $app       = Factory::getApplication();
         $s         = PhocacartRenderStyle::getStyles();
-        $attribute = $app->input->get('attribute', '', 'array');
-        $id        = $app->input->get('id', 0, 'int');
-        $class     = $app->input->get('class', '', 'string');
-        $typeView  = $app->input->get('typeview', '', 'string');
+        $attribute = $app->getInput()->get('attribute', '', 'array');
+        $id        = $app->getInput()->get('id', 0, 'int');
+        $class     = $app->getInput()->get('class', '', 'string');
+        $typeView  = $app->getInput()->get('typeview', '', 'string');
 
         // Sanitanize data and do the same level for all attributes:
         $aA = PhocacartAttribute::sanitizeAttributeArray($attribute);
@@ -341,10 +341,10 @@ class PhocaCartControllerCheckout extends FormController
 
         $app       = Factory::getApplication();
         $s         = PhocacartRenderStyle::getStyles();
-        $attribute = $app->input->get('attribute', '', 'array');
-        $id        = $app->input->get('id', 0, 'int');
-        $class     = $app->input->get('class', '', 'string');
-        $typeView  = $app->input->get('typeview', '', 'string');
+        $attribute = $app->getInput()->get('attribute', '', 'array');
+        $id        = $app->getInput()->get('id', 0, 'int');
+        $class     = $app->getInput()->get('class', '', 'string');
+        $typeView  = $app->getInput()->get('typeview', '', 'string');
 
         // Sanitanize data and do the same level for all attributes:
         $aA = PhocacartAttribute::sanitizeAttributeArray($attribute);
@@ -401,10 +401,10 @@ class PhocaCartControllerCheckout extends FormController
 
         $app       = Factory::getApplication();
         $s         = PhocacartRenderStyle::getStyles();
-        $attribute = $app->input->get('attribute', '', 'array');
-        $id        = $app->input->get('id', 0, 'int');
-        $class     = $app->input->get('class', '', 'string');
-        $typeView  = $app->input->get('typeview', '', 'string');
+        $attribute = $app->getInput()->get('attribute', '', 'array');
+        $id        = $app->getInput()->get('id', 0, 'int');
+        $class     = $app->getInput()->get('class', '', 'string');
+        $typeView  = $app->getInput()->get('typeview', '', 'string');
 
         // Sanitanize data and do the same level for all attributes:
         $aA = PhocacartAttribute::sanitizeAttributeArray($attribute);
@@ -609,14 +609,14 @@ class PhocaCartControllerCheckout extends FormController
 
                 // Get the complete calculation total
                 /*   $shippingEdit	= 0;
-                   $shippingEdit	= $app->input->get('shippingedit', 0, 'int');
+                   $shippingEdit	= $app->getInput()->get('shippingedit', 0, 'int');
                    $shippingId 	= $cart->getShippingId();
                    if (isset($shippingId) && (int)$shippingId > 0 && $shippingEdit == 0) {
                        $cart->addShippingCosts($shippingId);
                    }
                    // PAYMENT
                    $paymentEdit	= 0;
-                   $paymentEdit	= $app->input->get('paymentedit', 0, 'int');
+                   $paymentEdit	= $app->getInput()->get('paymentedit', 0, 'int');
                    $paymentMethod 	= $cart->getPaymentMethod();
                    if (isset($paymentMethod['id']) && (int)$paymentMethod['id'] > 0 && $paymentEdit == 0) {
                        $cart->addPaymentCosts($paymentMethod['id']);

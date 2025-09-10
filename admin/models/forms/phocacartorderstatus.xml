@@ -11,6 +11,8 @@
 
         <field name="tracking_number" type="text" label="COM_PHOCACART_FIELD_TRACKING_NUMBER_LABEL"/>
 
+        <field name="tracking_link_custom" type="text" label="COM_PHOCACART_FIELD_CUSTOM_TRACKING_LINK_LABEL" />
+
         <field name="tracking_date_shipped" type="calendar" translateformat="true" filter="user_utc" label="COM_PHOCACART_FIELD_DATE_SHIPPED_LABEL" />
 
         <field name="id" type="hidden" />
