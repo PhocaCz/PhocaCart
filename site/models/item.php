@@ -396,7 +396,7 @@ class PhocaCartModelItem extends BaseDatabaseModel
 	}
 
 	public function hit($pk = 0) {
-		$input = Factory::getApplication()->input;
+		$input = Factory::getApplication()->getInput();
 		$hitcount = $input->getInt('hitcount', 1);
 
 		if ($hitcount) {

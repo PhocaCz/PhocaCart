@@ -15,5 +15,5 @@ require_once( JPATH_COMPONENT.'/controller.php' );
 require_once( JPATH_COMPONENT.'/helpers/route.php' );
 
 $controller = BaseController::getInstance('PhocaCart');
-$controller->execute(Factory::getApplication()->input->get('task'));
+$controller->execute(Factory::getApplication()->getInput()->get('task'));
 $controller->redirect();

@@ -23,5 +23,5 @@ Text::script('COM_PHOCACART_MENU_BACK');
 Text::script('COM_PHOCACART_MENU_PHOCACART');
 
 $controller	= BaseController::getInstance('phocacartCp');
-$controller->execute(Factory::getApplication()->input->get('task'));
+$controller->execute(Factory::getApplication()->getInput()->get('task'));
 $controller->redirect();

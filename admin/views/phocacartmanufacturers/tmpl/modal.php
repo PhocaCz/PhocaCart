@@ -29,7 +29,7 @@ $user = Factory::getUser();
 $userId = $user->get('id');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn = $this->escape($this->state->get('list.direction'));
-$function  	= $app->input->getCmd('function', 'jSelectPhocacartmanufacturer');
+$function  	= $app->getInput()->getCmd('function', 'jSelectPhocacartmanufacturer');
 $sortFields = $this->getSortFields();
 
 $nrColumns = 6;
@@ -114,7 +114,7 @@ echo $r->endTable();
 
 echo $r->formInputsXML($listOrder, $listDirn, $originalOrders);
 
-if ($forcedLanguage = Factory::getApplication()->input->getCmd('forcedLanguage')) {
+if ($forcedLanguage = Factory::getApplication()->getInput()->getCmd('forcedLanguage')) {
   echo '<input type="hidden" name="forcedLanguage" value="' . $forcedLanguage . '" />';
 }
 

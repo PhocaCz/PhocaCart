@@ -22,8 +22,8 @@ class PhocaCartCpViewPhocaCartEditTax extends HtmlView
 	function display($tpl = null) {
 
 		$app				= Factory::getApplication();
-		$this->id			= $app->input->get('id', 0, 'int');
-		$this->type			= $app->input->get('type', 1, 'int');// 1 country, 2 region
+		$this->id			= $app->getInput()->get('id', 0, 'int');
+		$this->type			= $app->getInput()->get('type', 1, 'int');// 1 country, 2 region
 
 		if ($this->type == 1) {
 			$this->t				= PhocacartUtils::setVars('country');

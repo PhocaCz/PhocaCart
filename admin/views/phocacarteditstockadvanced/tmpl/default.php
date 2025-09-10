@@ -29,7 +29,7 @@ echo '<div class="alert alert-info alert-dismissible fade show" role="alert">'
 	.'</ul><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="'.Text::_('COM_PHOCACART_CLOSE').'"></button></div>';
 
 $app 		= Factory::getApplication();
-$input 		= $app->input;
+$input 		= $app->getInput();
 $class		= $this->t['n'] . 'RenderAdminview';
 $r 			=  new PhocacartRenderAdminview();
 $isModal    = $input->get('layout') == 'modal' ? true : false;

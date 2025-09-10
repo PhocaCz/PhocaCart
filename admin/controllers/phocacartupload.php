@@ -36,13 +36,13 @@ class PhocaCartCpControllerPhocaCartUpload extends PhocaCartCpController
 		$folder_permissions = $paramsC->get( 'folder_permissions', 0755 );
 		//$folder_permissions = octdec((int)$folder_permissions);
 
-		$folderNew		= $app->input->get( 'foldername', '');
-		$folderCheck	= $app->input->get( 'foldername', null, 'raw');
-		$parent			= $app->input->get( 'folderbase', '', 'path' );
-		$tab			= $app->input->get( 'tab', 0, 'string' );
-		$field			= $app->input->get( 'field');
-		$viewBack		= $app->input->get( 'viewback', 'phocacartmanager' );
-		$manager		= $app->input->get( 'manager', 'file', 'string' );
+		$folderNew		= $app->getInput()->get( 'foldername', '');
+		$folderCheck	= $app->getInput()->get( 'foldername', null, 'raw');
+		$parent			= $app->getInput()->get( 'folderbase', '', 'path' );
+		$tab			= $app->getInput()->get( 'tab', 0, 'string' );
+		$field			= $app->getInput()->get( 'field');
+		$viewBack		= $app->getInput()->get( 'viewback', 'phocacartmanager' );
+		$manager		= $app->getInput()->get( 'manager', 'file', 'string' );
 
 
 		$link = '';
@@ -57,7 +57,7 @@ class PhocaCartCpControllerPhocaCartUpload extends PhocaCartCpController
 			exit;
 		}
 
-		Factory::getApplication()->input->set('folder', $parent);
+		Factory::getApplication()->getInput()->set('folder', $parent);
 
 		if (($folderCheck !== null) && ($folderNew !== $folderCheck)) {
             $app->enqueueMessage(Text::_('COM_PHOCACART_WARNING_DIRNAME'), 'error');
@@ -102,7 +102,7 @@ class PhocaCartCpControllerPhocaCartUpload extends PhocaCartCpController
                 $app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_FOLDER_CREATING_EXISTS'), 'error');
 				$app->redirect($link);
 			}
-			//Factory::getApplication()->input->set('folder', ($parent) ? $parent.'/'.$folder : $folder);
+			//Factory::getApplication()->getInput()->set('folder', ($parent) ? $parent.'/'.$folder : $folder);
 		}
 		$app->redirect($link);
 	}

@@ -25,8 +25,8 @@ class PhocaCartCpControllerPhocaCartImport extends PhocaCartCpControllerPhocaCar
 		$user 		= Factory::getUser();
 		$userId		= $user->id;
 		$redirect	= 'index.php?option=com_phocacart&view=phocacartimports';
-		//$file		= Factory::getApplication()->input->files->get( 'Filedata', null, 'raw');
-		$file		= Factory::getApplication()->input->files->get( 'Filedata');
+		//$file		= Factory::getApplication()->getInput()->files->get( 'Filedata', null, 'raw');
+		$file		= Factory::getApplication()->getInput()->files->get( 'Filedata');
 
 		$paramsC 				= PhocacartUtils::getComponentParameters();
 		$fgets_line_length		= $paramsC->get( 'fgets_line_length', 24576 );
@@ -141,8 +141,8 @@ class PhocaCartCpControllerPhocaCartImport extends PhocaCartCpControllerPhocaCar
 		$paramsC 	= PhocacartUtils::getComponentParameters();
 		$this->t['import_export_pagination']	= $paramsC->get( 'import_export_pagination', 20 );
 
-		$page		= $app->input->get('p', 0, 'int');
-		$last_page	= $app->input->get('lp', 0, 'int');
+		$page		= $app->getInput()->get('p', 0, 'int');
+		$last_page	= $app->getInput()->get('lp', 0, 'int');
 
 
 		$limitOffset 	= ((int)$page * (int)$this->t['import_export_pagination']) - (int)$this->t['import_export_pagination'];

@@ -85,23 +85,23 @@ class PhocacartFilter
         $parameters             = PhocacartParameter::getAllParameters();
 
 
-        $option         = $app->input->get('option', '', 'string');
-        $view           = $app->input->get('view', '', 'string');
+        $option         = $app->getInput()->get('option', '', 'string');
+        $view           = $app->getInput()->get('view', '', 'string');
 
         $id = 0;
         if ($option == 'com_phocacart' && ($view == 'item')) {
-            $id         = $app->input->get('catid', '', 'int'); // Category ID (Active Category)
+            $id         = $app->getInput()->get('catid', '', 'int'); // Category ID (Active Category)
         } else if ($option == 'com_phocacart' && ($view == 'items' && $view == 'category')) {
-            $id         = $app->input->get('id', '', 'int'); // Category ID (Active Category)
+            $id         = $app->getInput()->get('id', '', 'int'); // Category ID (Active Category)
         }
-        $c              = $app->input->get('c', '', 'string'); // Category More (All Categories)
-        $tags           = $app->input->get('tag', '', 'string');
-        $labels         = $app->input->get('label', '', 'string');
-        $manufacturers  = $app->input->get($manufacturer_alias, '', 'string');
-        $price_from     = $app->input->get('price_from', '', 'float');
-        $price_to       = $app->input->get('price_to', '', 'float');
-        $a              = $app->input->get('a', '', 'array'); // Attributes
-        $s              = $app->input->get('s', '', 'array'); // Specifications
+        $c              = $app->getInput()->get('c', '', 'string'); // Category More (All Categories)
+        $tags           = $app->getInput()->get('tag', '', 'string');
+        $labels         = $app->getInput()->get('label', '', 'string');
+        $manufacturers  = $app->getInput()->get($manufacturer_alias, '', 'string');
+        $price_from     = $app->getInput()->get('price_from', '', 'float');
+        $price_to       = $app->getInput()->get('price_to', '', 'float');
+        $a              = $app->getInput()->get('a', '', 'array'); // Attributes
+        $s              = $app->getInput()->get('s', '', 'array'); // Specifications
 
 
 
@@ -174,7 +174,7 @@ class PhocacartFilter
         if (!empty($parameters)) {
             foreach ($parameters as $k => $v) {
                 $alias = trim(PhocacartText::filterValue($v->alias, 'alphanumeric'));
-                $parameter = $app->input->get($alias, '', 'string');
+                $parameter = $app->getInput()->get($alias, '', 'string');
 
                 if ($parameter != '') {
                     $pIN = implode(',', array_unique(array_map('intval', explode(',', $parameter))));
@@ -812,13 +812,13 @@ class PhocacartFilter
         $app = Factory::getApplication();
 
         if ($type == 'int') {
-            $paramString = $app->input->get($param, 0, $type);
+            $paramString = $app->getInput()->get($param, 0, $type);
         } else if ($type == 'array') {
 
             $paramE = explode('[', $param);
             if (isset($paramE[0]) && isset($paramE[1])) {
                 $paramE[1] = str_replace(']', '', $paramE[1]);
-                $paramStringE = $app->input->get($param[0], array(), $type);
+                $paramStringE = $app->getInput()->get($param[0], array(), $type);
                 if (isset($paramStringE[$paramE[1]])) {
                     $paramString = $paramStringE[$paramE[1]];
                 } else {
@@ -827,7 +827,7 @@ class PhocacartFilter
             }
 
         } else {
-            $paramString = $app->input->get($param, '', $type);
+            $paramString = $app->getInput()->get($param, '', $type);
         }
 
         $a = explode(',', $paramString);

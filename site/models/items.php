@@ -54,21 +54,21 @@ class PhocaCartModelItems extends BaseDatabaseModel
 		$limit					= PhocacartPagination::getMaximumLimit($app->getUserStateFromRequest('com_phocacart.limit', 'limit', $item_pagination, 'int'));
 
 		$this->setState('limit', $limit);
-		$this->setState('limitstart', $app->input->get('limitstart', 0, 'int'));
+		$this->setState('limitstart', $app->getInput()->get('limitstart', 0, 'int'));
 		$this->setState('limitstart', ($this->getState('limit') != 0 ?  (int)(floor($this->getState('limitstart') / $this->getState('limit')) * $this->getState('limit')) : 0));
 
 		$this->setState('filter.language',$app->getLanguageFilter());
-		$this->setState('filter_order', $app->input->get('filter_order', 'ordering'));
-		$this->setState('filter_order_dir', $app->input->get('filter_order_Dir', 'ASC'));
+		$this->setState('filter_order', $app->getInput()->get('filter_order', 'ordering'));
+		$this->setState('filter_order_dir', $app->getInput()->get('filter_order_Dir', 'ASC'));
 		$this->setState('itemordering', $app->getUserStateFromRequest('com_phocacart.itemordering', 'itemordering', $item_ordering, 'int'));
 		$this->setState('layouttype', $app->getUserStateFromRequest('com_phocacart.layouttype', 'layouttype', $layout_type, 'string'));
 
 		// =FILTER=
-		$this->setState('tag', $app->input->get('tag', '', 'string'));
-		$this->setState('label', $app->input->get('label', '', 'string'));
-		$this->setState('manufacturer', $app->input->get($manufacturer_alias, '', 'string'));
-		$this->setState('price_from', $app->input->get('price_from', '', 'float'));
-		$this->setState('price_to', $app->input->get('price_to', '', 'float'));
+		$this->setState('tag', $app->getInput()->get('tag', '', 'string'));
+		$this->setState('label', $app->getInput()->get('label', '', 'string'));
+		$this->setState('manufacturer', $app->getInput()->get($manufacturer_alias, '', 'string'));
+		$this->setState('price_from', $app->getInput()->get('price_from', '', 'float'));
+		$this->setState('price_to', $app->getInput()->get('price_to', '', 'float'));
 
 		// CATEGORIES
 		// 1) there can be set one category per ID
@@ -78,23 +78,23 @@ class PhocaCartModelItems extends BaseDatabaseModel
 		//    E.g. we want to display only category 1 and 3 in items view and user even set c=1,2,3 in URL - so the 2 will be just ignored
 
 		// 1)
-		$this->setState('id', $app->input->get('id', '', 'int')); // Category ID (Active Category)
+		$this->setState('id', $app->getInput()->get('id', '', 'int')); // Category ID (Active Category)
 
 		// 2) 3)
 		if (!empty($items_view_id_cats)) {
 			$this->setState('c', implode(',', $items_view_id_cats));
 		} else {
-			$this->setState('c', $app->input->get('c', '', 'string')); // Category More (All Categories)
+			$this->setState('c', $app->getInput()->get('c', '', 'string')); // Category More (All Categories)
 		}
 
 
-		$this->setState('a', $app->input->get('a', '', 'array')); // Attributes
-		$this->setState('s', $app->input->get('s', '', 'array')); // Specifications
+		$this->setState('a', $app->getInput()->get('a', '', 'array')); // Attributes
+		$this->setState('s', $app->getInput()->get('s', '', 'array')); // Specifications
 		$parameters = PhocacartParameter::getAllParameters();
 		$this->setState('parameter', $parameters);
 
 		// =SEARCH=
-		$this->setState('search', $app->input->get('search', '', 'string'));
+		$this->setState('search', $app->getInput()->get('search', '', 'string'));
 
 	}
 
@@ -136,7 +136,7 @@ class PhocaCartModelItems extends BaseDatabaseModel
 			if ($this->getState('parameter')) {
 				foreach ($this->getState('parameter') as $k => $v) {
 					$alias = trim(PhocacartText::filterValue($v->alias, 'alphanumeric'));
-					$parameter = $app->input->get($alias, '', 'string');
+					$parameter = $app->getInput()->get($alias, '', 'string');
 					if($parameter != '') {
 						$this->pagination->setAdditionalUrlParam($v->alias, $parameter);
 					}
@@ -348,7 +348,7 @@ class PhocaCartModelItems extends BaseDatabaseModel
 		if ($this->getState('parameter')) {
 			foreach ($this->getState('parameter') as $k => $v) {
 				$alias = trim(PhocacartText::filterValue($v->alias, 'alphanumeric'));
-				$parameter = $app->input->get($alias, '', 'string');
+				$parameter = $app->getInput()->get($alias, '', 'string');
 
 				if($parameter != '') {
 					$s = PhocacartSearch::getSqlParts('int', 'parameter', $parameter, $searchParams, $v->id);

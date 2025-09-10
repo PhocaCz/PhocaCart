@@ -146,9 +146,7 @@ class PhocacartOrder
             $coupon = $couponCart;
         }
 
-
         $cart->roundTotalAmount();
-
         $total = $cart->getTotal();
 
 

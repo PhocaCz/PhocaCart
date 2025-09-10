@@ -15,8 +15,8 @@ defined('_JEXEC') or die;
 
 abstract class File extends \Joomla\Filesystem\File
 {
-    public static function exists($file)
+    public static function exists(string $fileName): bool
     {
-        return is_file(Path::clean($file));
+        return is_file(Path::clean($fileName));
     }
 }

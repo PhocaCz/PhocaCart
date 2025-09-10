@@ -9,7 +9,7 @@
     type="heading"
     icon="phocacart fa-shopping-cart"
     class="class:phocacart fa-shopping-cart"
-    quicktask="option=com_phocacart&amp;view=phocacartcp"
+    quicktask="index.php?option=com_phocacart&amp;view=phocacartcp"
     quicktask-title="COM_PHOCACART_CONTROLPANEL"
     quicktask-icon="phocacart fas fa-layer-group"
   >

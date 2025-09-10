@@ -31,8 +31,8 @@ class JFormFieldPhocacartFile extends FormField
 		$submit_item_upload_image_count = $pC->get('submit_item_upload_image_count', 1);
 
 		$app	= Factory::getApplication();
-		$option = $app->input->get('option');
-		$view 	= $app->input->get('view');
+		$option = $app->getInput()->get('option');
+		$view 	= $app->getInput()->get('view');
 
 		$admin = 0;
 		if (!$app->isClient('site') && $option == 'com_phocacart' && $view == 'phocacartsubmititem') {

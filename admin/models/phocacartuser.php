@@ -149,7 +149,7 @@ class PhocaCartCpModelPhocacartUser extends AdminModel
 
 	protected function getUser() {
 		$app	= Factory::getApplication();
-		$userId = $app->input->get('id', 0, 'int');
+		$userId = $app->getInput()->get('id', 0, 'int');
 		$user 	= Factory::getUser($userId);
 		return $user;
 	}

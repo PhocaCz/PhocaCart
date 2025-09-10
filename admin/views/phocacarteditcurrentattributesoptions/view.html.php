@@ -24,13 +24,13 @@ class PhocaCartCpViewPhocaCartEditCurrentAttributesOptions extends HtmlView
 
 		$db = Factory::getDBO();
 		$app								= Factory::getApplication();
-		$this->p['id']						= $app->input->get('id', 0, 'int');
-		$this->p['cid']						= $app->input->get('cid', '', 'string'); // comma separated categories
-		$this->p['typeview']				= $app->input->get('typeview', 'attribute', 'string');
-		$this->p['parentattributealias']	= $app->input->get('parentattributealias', '', 'string');
-		$this->p['parentattributetitle']	= $app->input->get('parentattributetitle', '', 'string');
-		$this->p['field']					= $app->input->get('field', '', 'string');
-		$this->p['fieldparent']				= $app->input->get('fieldparent', '', 'string');
+		$this->p['id']						= $app->getInput()->get('id', 0, 'int');
+		$this->p['cid']						= $app->getInput()->get('cid', '', 'string'); // comma separated categories
+		$this->p['typeview']				= $app->getInput()->get('typeview', 'attribute', 'string');
+		$this->p['parentattributealias']	= $app->getInput()->get('parentattributealias', '', 'string');
+		$this->p['parentattributetitle']	= $app->getInput()->get('parentattributetitle', '', 'string');
+		$this->p['field']					= $app->getInput()->get('field', '', 'string');
+		$this->p['fieldparent']				= $app->getInput()->get('fieldparent', '', 'string');
 
 		$this->p['parentattributetitle'] = PhocacartText::filterValue($this->p['parentattributetitle'], 'text');
 		$this->p['parentattributealias'] = PhocacartText::filterValue($this->p['parentattributealias'], 'text');

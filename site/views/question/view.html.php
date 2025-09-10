@@ -81,9 +81,9 @@ class PhocaCartViewQuestion extends HtmlView
 		}
 
 
-		$id						= $app->input->get('id', 0, 'int');
-		$catid					= $app->input->get('catid', 0, 'int');
-		$tmpl					= $app->input->get('tmpl', '', 'string');
+		$id						= $app->getInput()->get('id', 0, 'int');
+		$catid					= $app->getInput()->get('catid', 0, 'int');
+		$tmpl					= $app->getInput()->get('tmpl', '', 'string');
 
 		if ($id > 0 && $catid > 0) {
 			//$modelP	= $this->getModel('Item', 'PhocaCartModel');

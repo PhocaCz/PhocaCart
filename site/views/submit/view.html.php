@@ -115,7 +115,7 @@ class PhocaCartViewSubmit extends HtmlView
 				$this->p->set('hidden_field_position', -1);
 			}
 
-			$tmpl = $app->input->get('tmpl', '', 'string');
+			$tmpl = $app->getInput()->get('tmpl', '', 'string');
 
 			if ($tmpl == 'component') {
 

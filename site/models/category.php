@@ -45,11 +45,11 @@ class PhocaCartModelCategory extends BaseDatabaseModel
 		$limit					= PhocacartPagination::getMaximumLimit($app->getUserStateFromRequest('com_phocacart.limit', 'limit', $item_pagination, 'int'));
 
 		$this->setState('limit', $limit);
-		$this->setState('limitstart', $app->input->get('limitstart', 0, 'int'));
+		$this->setState('limitstart', $app->getInput()->get('limitstart', 0, 'int'));
 		$this->setState('limitstart', ($this->getState('limit') != 0 ? (int)(floor($this->getState('limitstart') / $this->getState('limit')) * $this->getState('limit')) : 0));
 		$this->setState('filter.language',$app->getLanguageFilter());
-		$this->setState('filter_order', $app->input->get('filter_order', 'ordering'));
-		$this->setState('filter_order_dir', $app->input->get('filter_order_Dir', 'ASC'));
+		$this->setState('filter_order', $app->getInput()->get('filter_order', 'ordering'));
+		$this->setState('filter_order_dir', $app->getInput()->get('filter_order_Dir', 'ASC'));
 		$this->setState('itemordering', $app->getUserStateFromRequest('com_phocacart.itemordering', 'itemordering', $item_ordering, 'int'));
 		$this->setState('layouttype', $app->getUserStateFromRequest('com_phocacart.layouttype', 'layouttype', $layout_type, 'string'));
 	}
@@ -435,7 +435,7 @@ class PhocaCartModelCategory extends BaseDatabaseModel
 	}
 
 	public function hit($pk = 0) {
-		$input = Factory::getApplication()->input;
+		$input = Factory::getApplication()->getInput();
 		$hitcount = $input->getInt('hitcount', 1);
 
 		if ($hitcount) {

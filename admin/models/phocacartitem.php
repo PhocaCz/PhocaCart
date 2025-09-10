@@ -387,7 +387,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
         }
 
 		$app		= Factory::getApplication();
-		$input  	= Factory::getApplication()->input;
+		$input  	= Factory::getApplication()->getInput();
 
 		$table		= $this->getTable();
 		$pk			= (!empty($data['id'])) ? $data['id'] : (int)$this->getState($this->getName().'.id');
@@ -707,7 +707,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 			}
 		}
 
-        if ($app->input->get('task') == 'editAssociations')
+        if ($app->getInput()->get('task') == 'editAssociations')
 		{
 			return $this->redirectToAssociations($data);
 		}
@@ -916,7 +916,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 		$categoryId	= (int) $value;
 		// Source Category (current category)
         $app 			= Factory::getApplication('administrator');
-        $batchParams 	= $app->input->post->get('batch', array(), 'array');
+        $batchParams 	= $app->getInput()->post->get('batch', array(), 'array');
 
 
         $table	= $this->getTable();
@@ -943,7 +943,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 		}
 
 		// Check that the user has create permission for the component
-		$extension	= Factory::getApplication()->input->get('option');
+		$extension	= Factory::getApplication()->getInput()->get('option');
 		$user		= Factory::getUser();
 		if (!$user->authorise('core.create', $extension)) {
 			$this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));
@@ -1160,7 +1160,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 		}
 
 		// Check that user has create and edit permission for the component
-		$extension	= Factory::getApplication()->input->get('option');
+		$extension	= Factory::getApplication()->getInput()->get('option');
 		$user		= Factory::getUser();
 		if (!$user->authorise('core.create', $extension)) {
 			$this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));
@@ -1440,7 +1440,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
 		// CURRENT CATEGORY
 		$app 			= Factory::getApplication();
-		/*$filter 	= $app->input->post->get('filter', array(), 'array');
+		/*$filter 	= $app->getInput()->post->get('filter', array(), 'array');
 
 		$currentCatid = 0;
 		if (isset($filter['category_id'])) {
@@ -1450,7 +1450,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
         // Add catid to the URL instead of sending in POST
         // administrator/components/com_phocacart/views/phocacartitems/tmpl/default.php 37
 
-		$catid 	= $app->input->get('catid', 0, 'int');
+		$catid 	= $app->getInput()->get('catid', 0, 'int');
 
 		$currentCatid = 0;
 		if ((int)$catid > 0) {

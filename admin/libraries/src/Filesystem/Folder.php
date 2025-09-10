@@ -15,8 +15,8 @@ defined('_JEXEC') or die;
 
 abstract class Folder extends \Joomla\Filesystem\Folder
 {
-    public static function exists($path)
+    public static function exists(string $folderName): bool
     {
-        return is_dir(Path::clean($path));
+        return is_dir(Path::clean($folderName));
     }
 }

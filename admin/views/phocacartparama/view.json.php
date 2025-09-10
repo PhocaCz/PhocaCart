@@ -30,9 +30,9 @@ class PhocaCartCpViewPhocaCartParamA extends HtmlView
 
         //$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
 		$app		= Factory::getApplication();
-		$method		= $app->input->get( 'method', '', 'string'  );
-		$id			= $app->input->get( 'id', '', 'int'  );
-		$type		= $app->input->get( 'type', '', 'int'  ); // 1) payment plugin 2) shipping plugin
+		$method		= $app->getInput()->get( 'method', '', 'string'  );
+		$id			= $app->getInput()->get( 'id', '', 'int'  );
+		$type		= $app->getInput()->get( 'type', '', 'int'  ); // 1) payment plugin 2) shipping plugin
 
 
 		//$method		= PhocacartUtilsSettings::getPaymentMethod((int)$method);

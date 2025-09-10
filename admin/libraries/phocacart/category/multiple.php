@@ -310,7 +310,7 @@ class PhocacartCategoryMultiple
 	public static function setCurrentCategory($items) {
 
 		$app	= Factory::getApplication();
-		$catid	= $app->input->get('catid', 0, 'int');
+		$catid	= $app->getInput()->get('catid', 0, 'int');
 
 		if (!empty($items) && (int)$catid > 0) {
 			foreach ($items as $k => $v) {
@@ -441,10 +441,10 @@ class PhocacartCategoryMultiple
 	public static function getCurrentCategoryId() {
 
 		$app	= Factory::getApplication();
-		$id 	= $app->input->get('id', 0, 'int');
-		$catid 	= $app->input->get('catid', 0, 'int');
-		$view	= $app->input->get('view', '', 'string');
-		$option	= $app->input->get('option', '', 'string');
+		$id 	= $app->getInput()->get('id', 0, 'int');
+		$catid 	= $app->getInput()->get('catid', 0, 'int');
+		$view	= $app->getInput()->get('view', '', 'string');
+		$option	= $app->getInput()->get('option', '', 'string');
 
 		if ($option == 'com_phocacart' && $view == 'category') {
 			return $id;

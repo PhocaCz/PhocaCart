@@ -169,12 +169,12 @@ class PhocaCartCpModelPhocacartOrder extends AdminModel
 		}
 
 		$order	= new PhocacartOrder();
-		$jform 	= $app->input->get('jform', array(), 'array');
-		$pform 	= $app->input->get('pform', array(), 'array');
-		$aform 	= $app->input->get('aform', array(), 'array');
-		$tform 	= $app->input->get('tform', array(), 'array');
-		$dform 	= $app->input->get('dform', array(), 'array');
-		$tcform	= $app->input->get('tcform', array(), 'array');
+		$jform 	= $app->getInput()->get('jform', array(), 'array');
+		$pform 	= $app->getInput()->get('pform', array(), 'array');
+		$aform 	= $app->getInput()->get('aform', array(), 'array');
+		$tform 	= $app->getInput()->get('tform', array(), 'array');
+		$dform 	= $app->getInput()->get('dform', array(), 'array');
+		$tcform	= $app->getInput()->get('tcform', array(), 'array');
 
         $data['billing_address']['ba_sa'] = $data['shipping_address']['ba_sa'];
 

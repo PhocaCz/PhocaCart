@@ -34,7 +34,7 @@ $userId    = $user->get('id');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
 $canOrder  = $user->authorise('core.edit.state', $this->t['o']);
-$function  = $app->input->getCmd('function', 'jSelectPhocacartitem');
+$function  = $app->getInput()->getCmd('function', 'jSelectPhocacartitem');
 $onclick   = $this->escape($function);
 
 if (!empty($editor)) {
@@ -356,7 +356,7 @@ echo $r->endTable();
 echo $r->formInputsXML($listOrder, $listDirn, $originalOrders);
 echo $r->endMainContainer();
 
-echo '<input type="hidden" name="forcedLanguage" value="' . $app->input->get('forcedLanguage', '', 'CMD') . '" />';
+echo '<input type="hidden" name="forcedLanguage" value="' . $app->getInput()->get('forcedLanguage', '', 'CMD') . '" />';
 echo $r->endForm();
 
 

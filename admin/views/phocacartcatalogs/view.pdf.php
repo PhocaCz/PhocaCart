@@ -31,8 +31,8 @@ class PhocaCartCpViewPhocacartCatalogs extends HtmlView
 		$this->state			= $this->get('State');
 		$this->params			= PhocacartUtils::getComponentParameters();
 		$app				= Factory::getApplication();
-		$this->t['format']	= $app->input->get('format', '', 'string');
-		$cid				= $app->input->get('cid', '', 'string');
+		$this->t['format']	= $app->getInput()->get('format', '', 'string');
+		$cid				= $app->getInput()->get('cid', '', 'string');
 
 
 		$cidA = array_map('intval', explode(',', $cid));

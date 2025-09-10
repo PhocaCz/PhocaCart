@@ -89,7 +89,7 @@ echo '<div class="col-xs-12 col-sm-6 col-md-6"></div>';
 
 
 $app 		= Factory::getApplication();
-$input 		= $app->input;
+$input 		= $app->getInput();
 $class		= $this->t['n'] . 'RenderAdminview';
 $r 			=  new PhocacartRenderAdminview();
 $isModal    = $input->get('layout') == 'modal' ? true : false;

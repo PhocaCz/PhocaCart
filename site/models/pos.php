@@ -38,11 +38,11 @@ class PhocaCartModelPos extends BaseDatabaseModel
 		$manufacturer_alias	= $paramsC->get( 'manufacturer_alias', 'manufacturer');
 		$manufacturer_alias = $manufacturer_alias != '' ? trim(PhocacartText::filterValue($manufacturer_alias, 'alphanumeric'))  : 'manufacturer';
 
-		$this->setState('page', $app->input->get('page', 'main.content.products'));
+		$this->setState('page', $app->getInput()->get('page', 'main.content.products'));
 		//$limit					= PhocacartPagination::getMaximumLimit($app->getUserStateFromRequest('com_phocacart.limit', 'limit', $item_pagination, 'int'), 1);
 
 		$toDay = date('Y-m-d');
-		$this->setState('date', $app->input->get('date', $toDay, 'string'));
+		$this->setState('date', $app->getInput()->get('date', $toDay, 'string'));
 
 		$limitId 		= 'com_phocacart.'.$this->getState('page').'.limit';
 		$limitStartId 	= 'com_phocacart.'.$this->getState('page').'.limitstart';
@@ -67,13 +67,13 @@ class PhocaCartModelPos extends BaseDatabaseModel
 
 		$this->setState('limit', $limit);
 
-		$this->setState('limitstart', $app->input->get('limitstart', 0, 'int'));
+		$this->setState('limitstart', $app->getInput()->get('limitstart', 0, 'int'));
 		$this->setState('limitstart', ($this->getState('limit') != 0 ? (floor($this->getState('limitstart') / $this->getState('limit')) * $this->getState('limit')) : 0));
 
 
 		$this->setState('filter.language',$app->getLanguageFilter());
-		$this->setState('filter_order', $app->input->get('filter_order', 'ordering'));
-		$this->setState('filter_order_dir', $app->input->get('filter_order_Dir', 'ASC'));
+		$this->setState('filter_order', $app->getInput()->get('filter_order', 'ordering'));
+		$this->setState('filter_order_dir', $app->getInput()->get('filter_order_Dir', 'ASC'));
 		$this->setState('itemordering', $app->getUserStateFromRequest($orderingId, 'itemordering', $item_ordering, 'int'));
 
 
@@ -82,21 +82,21 @@ class PhocaCartModelPos extends BaseDatabaseModel
 
 
 		// =FILTER=
-		$this->setState('tag', $app->input->get('tag', '', 'string'));
-        $this->setState('label', $app->input->get('label', '', 'string'));
-		$this->setState('manufacturer', $app->input->get($manufacturer_alias, '', 'string'));
-		$this->setState('price_from', $app->input->get('price_from', '', 'float'));
-		$this->setState('price_to', $app->input->get('price_to', '', 'float'));
+		$this->setState('tag', $app->getInput()->get('tag', '', 'string'));
+        $this->setState('label', $app->getInput()->get('label', '', 'string'));
+		$this->setState('manufacturer', $app->getInput()->get($manufacturer_alias, '', 'string'));
+		$this->setState('price_from', $app->getInput()->get('price_from', '', 'float'));
+		$this->setState('price_to', $app->getInput()->get('price_to', '', 'float'));
 		// Javascript update url has problems with "c", so changed to "category"
-		//$this->setState('c', $app->input->get('c', '', 'string')); // Category More (All Categories)
-		$this->setState('c', $app->input->get('category', '', 'string')); // Category More (All Categories)
-		//$this->setState('id', $app->input->get('id', '', 'int')); // Category ID (Active Category) ID IS VARIABLE - different for different pages
-		$this->setState('a', $app->input->get('a', '', 'array')); // Attributes
-		$this->setState('s', $app->input->get('s', '', 'array')); // Specifications
+		//$this->setState('c', $app->getInput()->get('c', '', 'string')); // Category More (All Categories)
+		$this->setState('c', $app->getInput()->get('category', '', 'string')); // Category More (All Categories)
+		//$this->setState('id', $app->getInput()->get('id', '', 'int')); // Category ID (Active Category) ID IS VARIABLE - different for different pages
+		$this->setState('a', $app->getInput()->get('a', '', 'array')); // Attributes
+		$this->setState('s', $app->getInput()->get('s', '', 'array')); // Specifications
 
 
 		// =SEARCH=
-		$this->setState('search', $app->input->get('search', '', 'string'));
+		$this->setState('search', $app->getInput()->get('search', '', 'string'));
 
 
 	}

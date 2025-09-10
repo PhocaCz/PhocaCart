@@ -53,12 +53,12 @@ class PhocacartFileUpload
         $ftp = ClientHelper::setCredentialsFromRequest('ftp');
 
 
-        //$file 			= Factory::getApplication()->input->get( 'file', '', 'files', 'array' );
-        $file = Factory::getApplication()->input->files->get('file', null, 'raw');
-        $chunk = Factory::getApplication()->input->get('chunk', 0, '', 'int');
-        $chunks = Factory::getApplication()->input->get('chunks', 0, '', 'int');
-        $folder = Factory::getApplication()->input->get('folder', '', '', 'path');
-        $manager = Factory::getApplication()->input->get('manager', 'file', '', 'string');
+        //$file 			= Factory::getApplication()->getInput()->get( 'file', '', 'files', 'array' );
+        $file = Factory::getApplication()->getInput()->files->get('file', null, 'raw');
+        $chunk = Factory::getApplication()->getInput()->get('chunk', 0, '', 'int');
+        $chunks = Factory::getApplication()->getInput()->get('chunks', 0, '', 'int');
+        $folder = Factory::getApplication()->getInput()->get('folder', '', '', 'path');
+        $manager = Factory::getApplication()->getInput()->get('manager', 'file', '', 'string');
 
 
         $path = PhocacartPath::getPath($manager);// we use viewback to get right path
@@ -352,19 +352,19 @@ class PhocacartFileUpload
         $app->allowCache(false);
 
 
-        $file = Factory::getApplication()->input->files->get('Filedata', null, 'raw');
+        $file = Factory::getApplication()->getInput()->files->get('Filedata', null, 'raw');
         //$file 			= J R equest::getVar( 'Filedata', '', 'files', 'array' );
-        $folder = Factory::getApplication()->input->get('folder', '', '', 'path');
-        $format = Factory::getApplication()->input->get('format', 'html', '', 'cmd');
-        $return = Factory::getApplication()->input->get('return-url', null, 'post', 'base64');//includes field
-        $viewBack = Factory::getApplication()->input->get('viewback', '', '', '');
-        $manager = Factory::getApplication()->input->get('manager', 'file', '', 'string');
-        $tab = Factory::getApplication()->input->get('tab', '', '', 'string');
-        $field = Factory::getApplication()->input->get('field');
+        $folder = Factory::getApplication()->getInput()->get('folder', '', '', 'path');
+        $format = Factory::getApplication()->getInput()->get('format', 'html', '', 'cmd');
+        $return = Factory::getApplication()->getInput()->get('return-url', null, 'post', 'base64');//includes field
+        $viewBack = Factory::getApplication()->getInput()->get('viewback', '', '', '');
+        $manager = Factory::getApplication()->getInput()->get('manager', 'file', '', 'string');
+        $tab = Factory::getApplication()->getInput()->get('tab', '', '', 'string');
+        $field = Factory::getApplication()->getInput()->get('field');
         $errUploadMsg = '';
         $folderUrl = $folder;
         $tabUrl = '';
-        $component = Factory::getApplication()->input->get('option', '', '', 'string');
+        $component = Factory::getApplication()->getInput()->get('option', '', '', 'string');
 
         $path = PhocacartPath::getPath($manager);// we use viewback to get right path
 

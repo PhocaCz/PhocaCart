@@ -22,8 +22,8 @@ class JFormFieldPhocacartShippingParamsOrderStatus extends FormField
 
 		// AJAX POWERED PARAMETER
 		$app 		= Factory::getApplication();
-		$id 		= (int)$app->input->post->get('id');// Get ID from shipping method
-		$method 	= $app->input->post->get('method');
+		$id 		= (int)$app->getInput()->post->get('id');// Get ID from shipping method
+		$method 	= $app->getInput()->post->get('method');
 
 		$activeMethods = array();
 		if ($id > 0) {

@@ -27,8 +27,8 @@ class PhocaCartCpViewPhocacartCouponView extends HtmlView
 		$app			= Factory::getApplication();
 		$this->t		= PhocacartUtils::setVars('couponview');
 		$this->r		= new PhocacartRenderAdminview();
-		$id				= $app->input->get('id', 0, 'int');
-		$format			= $app->input->get('format', '', 'string');
+		$id				= $app->getInput()->get('id', 0, 'int');
+		$format			= $app->getInput()->get('format', '', 'string');
 
 
 

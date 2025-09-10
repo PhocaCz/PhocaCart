@@ -38,8 +38,8 @@ class PhocaCartControllerResponse extends FormController
 		// NO message here, we have set the message during order and it stays unchanged as it is in session
 		// the message will be deleted after it will be displayed in view
 
-		$type = $app->input->getCmd('type');
-		$mid = $app->input->getInt('mid', 0); // message id - possible different message IDs
+		$type = $app->getInput()->getCmd('type');
+		$mid = $app->getInput()->getInt('mid', 0); // message id - possible different message IDs
 
 		$message = [];
 		Dispatcher::dispatch(new Event\Payment\AfterRecievePayment($mid, $message, [
@@ -60,8 +60,8 @@ class PhocaCartControllerResponse extends FormController
 		$session->set('proceedpayment', array(), 'phocaCart');
 		//JSession::checkToken() or jexit( 'Invalid Token' );
 
-		$type = $app->input->getCmd('type');
-		$mid = $app->input->getInt('mid', 0); // message id - possible different message IDs
+		$type = $app->getInput()->getCmd('type');
+		$mid = $app->getInput()->getInt('mid', 0); // message id - possible different message IDs
 
 		$message	= [];
 		Dispatcher::dispatch(new Event\Payment\AfterCancelPayment($mid,$message, [
@@ -81,8 +81,8 @@ class PhocaCartControllerResponse extends FormController
 	public function paymentnotify()
 	{
 		$app 	= Factory::getApplication();
-		$type = $app->input->getCmd('type');
-		$pid = $app->input->getInt('pid', 0); // payment id
+		$type = $app->getInput()->getCmd('type');
+		$pid = $app->getInput()->getInt('pid', 0); // payment id
 
 		$plugin = PluginHelper::importPlugin('pcp', $type);
 		if ($plugin) {
@@ -103,8 +103,8 @@ class PhocaCartControllerResponse extends FormController
 	public function paymentwebhook()
 	{
 		$app 	= Factory::getApplication();
-		$type = $app->input->getCmd('type');
-		$pid 	= $app->input->getInt('pid', 0); // payment id
+		$type = $app->getInput()->getCmd('type');
+		$pid 	= $app->getInput()->getInt('pid', 0); // payment id
 
 		$plugin = PluginHelper::importPlugin('pcp', $type);
 		if ($plugin) {

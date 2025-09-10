@@ -21,7 +21,7 @@ class PhocaCartCpModelPhocaCartEditCurrentAttributesOptions extends ListModel
 	public function getData() {
 
 		$app	= Factory::getApplication();
-		$id		= $app->input->get('id', 0, 'int');
+		$id		= $app->getInput()->get('id', 0, 'int');
 
 		$db = Factory::getDBO();
 		$query = 'SELECT a.status_id'
@@ -43,7 +43,7 @@ class PhocaCartCpModelPhocaCartEditCurrentAttributesOptions extends ListModel
 	public function getHistoryData() {
 
 		$app	= Factory::getApplication();
-		$id		= $app->input->get('id', 0, 'int');
+		$id		= $app->getInput()->get('id', 0, 'int');
 
 		if ((int)$id > 0) {
 			$db = Factory::getDBO();

@@ -27,7 +27,7 @@ $userId		= $user->get('id');
 $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
 $canOrder	= $user->authorise('core.edit.state', $this->t['o']);
-$function  	= $app->input->getCmd('function', 'jSelectPhocacartcategory');
+$function  	= $app->getInput()->getCmd('function', 'jSelectPhocacartcategory');
 $onclick   	= $this->escape($function);
 
 if (!empty($editor)) {
@@ -183,7 +183,7 @@ echo $r->endTable();
 
 echo $r->formInputsXML($listOrder, $listDirn, $originalOrders);
 
-if ($forcedLanguage = Factory::getApplication()->input->getCmd('forcedLanguage')) {
+if ($forcedLanguage = Factory::getApplication()->getInput()->getCmd('forcedLanguage')) {
   echo '<input type="hidden" name="forcedLanguage" value="' . $forcedLanguage . '" />';
 }
 

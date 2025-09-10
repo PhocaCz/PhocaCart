@@ -22,7 +22,6 @@ class PhocacartCartRendercheckout extends PhocacartCart
 
 
 	public function __construct() {
-
 		$this->setInstance(2);//checkout
 		parent::__construct();
 	}
@@ -43,6 +42,7 @@ class PhocacartCartRendercheckout extends PhocacartCart
 		} else {
 			$url['linkcheckout']	= Route::_(PhocacartRoute::getCheckoutRoute());
 		}
+
 
 
 		if (empty($this->fullitems)) {

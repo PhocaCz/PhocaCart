@@ -186,7 +186,7 @@ class PhocaCartCpModelPhocacartZone extends AdminModel
 			// Plugin parameters are converted to params column in payment table (x001)
 			// Store form parameters of selected method
 			$app		= Factory::getApplication();
-			$dataPh		= $app->input->get('phform', array(), 'array');
+			$dataPh		= $app->getInput()->get('phform', array(), 'array');
 			$registry 	= new Registry($dataPh['params']);
 			//$registry 	= new JRegistry($dataPh);
 			$dataPhNew 	= $registry->toString();

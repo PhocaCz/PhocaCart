@@ -24,7 +24,7 @@ HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 $this->useCoreUI = true;
 
 $app   = Factory::getApplication();
-$input = $app->input;
+$input = $app->getInput();
 $r     = $this->r;
 
 
@@ -406,7 +406,7 @@ echo '</div>';//end span10
 //echo '</div>';//end span2
 echo $r->formInputs($this->t['task']);
 
-if ($forcedLanguage = Factory::getApplication()->input->get('forcedLanguage', '', 'CMD')) {
+if ($forcedLanguage = Factory::getApplication()->getInput()->get('forcedLanguage', '', 'CMD')) {
     echo '<input type="hidden" name="forcedLanguage" value="' . $forcedLanguage . '" />';
 }
 echo $r->endForm();

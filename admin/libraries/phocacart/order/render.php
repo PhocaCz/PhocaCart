@@ -93,8 +93,8 @@ class PhocacartOrderRender
 				// Order status can prevent from displaying some documents (can be set for each order status, parameter: orders_view_diplay
 				// So this rules only applies to frontend orders or order view (and of course then all other rules are applied too, like user or token
 				$app				= Factory::getApplication();
-				$view				= $app->input->get('view', '', 'string');
-				$option				= $app->input->get('option', '', 'string');
+				$view				= $app->getInput()->get('view', '', 'string');
+				$option				= $app->getInput()->get('option', '', 'string');
 
 				$displayInOrderView = true;
 				if ($option == 'com_phocacart' && ($view == 'orders' || $view == 'order')) {

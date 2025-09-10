@@ -15,7 +15,7 @@ class PhocaCartCpControllerPhocacartTag extends PhocaCartCpControllerPhocaCartCo
 
     function countproducts() {
 		$app	= Factory::getApplication();
-		$cid 	= Factory::getApplication()->input->get( 'cid', array(), '', 'array' );
+		$cid 	= Factory::getApplication()->getInput()->get( 'cid', array(), '', 'array' );
 		ArrayHelper::toInteger($cid);
 		$redirect = 'index.php?option=com_phocacart&view=phocacarttags';
 

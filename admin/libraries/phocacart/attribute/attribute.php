@@ -249,7 +249,8 @@ class PhocacartAttribute
             // ADD ATTRIBUTES
             if (!empty($attributesArray)) {
 
-                foreach ($attributesArray as &$attribute) {
+                foreach ($attributesArray as $attribute) {
+                //foreach ($attributesArray as &$attribute) {
                     if (isset($attribute['attribute_template']) && $attribute['attribute_template']) {
                         $template = ContentTypeHelper::getContentTypeParams(ContentTypeHelper::Attribute, (int)$attribute['attribute_template']);
                         $attribute = array_merge($attribute, $template->toArray());

@@ -44,8 +44,8 @@ class PhocaCartViewCategory extends HtmlView
 		$this->s					= PhocacartRenderStyle::getStyles();
 		$uri 						= Uri::getInstance();
 		$model						= $this->getModel();
-		$this->t['categoryid']		= $app->input->get( 'id', 0, 'int' );
-		$this->t['limitstart']		= $app->input->get( 'limitstart', 0, 'int' );
+		$this->t['categoryid']		= $app->getInput()->get( 'id', 0, 'int' );
+		$this->t['limitstart']		= $app->getInput()->get( 'limitstart', 0, 'int' );
 		$this->t['ajax'] 			= 0;
 
 		// PARAMS

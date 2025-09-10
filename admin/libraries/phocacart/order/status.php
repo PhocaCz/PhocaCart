@@ -599,7 +599,7 @@ class PhocacartOrderStatus
             } catch (Exception $e) {
                 echo "Error writing file: " . $tmp_pdf_file;
             }
-            bdump($tmp_pdf_file);
+            b dump($tmp_pdf_file);
             exit;*/
             // END PHOCADEBUG
 

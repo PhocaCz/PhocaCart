@@ -55,7 +55,7 @@ class PhocaCartCpControllerPhocaCartEditStatus extends PhocaCartCpControllerPhoc
 
 	function emptyhistory() {
 		$app	= Factory::getApplication();
-		$jform	= $app->input->get('jform', array(), 'array');
+		$jform	= $app->getInput()->get('jform', array(), 'array');
 
 		if ((int)$jform['id'] > 0) {
 			$model = $this->getModel( 'phocacarteditstatus' );

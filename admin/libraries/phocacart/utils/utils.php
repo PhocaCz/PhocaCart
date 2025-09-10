@@ -10,6 +10,8 @@
  */
 defined( '_JEXEC' ) or die( 'Restricted access' );
 use Joomla\CMS\Factory;
+
+use Joomla\CMS\Uri\Uri;
 use Phoca\PhocaCart\Filesystem\File;
 use Phoca\PhocaCart\Filesystem\Folder;
 use Joomla\CMS\Installer\Installer;
@@ -29,7 +31,7 @@ class PhocacartUtils
 
 		$a              = array();
 		$app            = Factory::getApplication();
-		$a['o']         = htmlspecialchars(strip_tags($app->input->get('option')));
+		$a['o']         = htmlspecialchars(strip_tags($app->getInput()->get('option')));
 		$a['c']         = str_replace('com_', '', $a['o']);
 		$a['n']         = 'Phoca' . str_replace('com_phoca', '', $a['o']);
 		$a['l']         = strtoupper($a['o']);
@@ -480,7 +482,7 @@ class PhocacartUtils
 	public static function getComponentParameters() {
 
 		$app    = Factory::getApplication();
-		$option = $app->input->get('option');
+		$option = $app->getInput()->get('option');
 		$client = $app->isClient('administrator') ? 'A' : 'S';
 		return PhocacartUtilsOptions::getOptions('PC', $client, $option);
 	}
@@ -602,8 +604,8 @@ class PhocacartUtils
 
 		if ($viewToCheck != '') {
 			$app    = Factory::getApplication();
-			$view   = $app->input->get('view', '');
-			$option = $app->input->get('option', '');
+			$view   = $app->getInput()->get('view', '');
+			$option = $app->getInput()->get('option', '');
 
 			if ($option == 'com_phocacart' && $view == $viewToCheck) {
 				return true;
@@ -616,8 +618,8 @@ class PhocacartUtils
 
 		if ($viewToCheck != '') {
 			$app    = Factory::getApplication();
-			$view   = $app->input->get('typeview', '');
-			$option = $app->input->get('option', '');
+			$view   = $app->getInput()->get('typeview', '');
+			$option = $app->getInput()->get('option', '');
 
 			if ($option == 'com_phocacart' && $view == $viewToCheck) {
 				return true;
@@ -630,9 +632,9 @@ class PhocacartUtils
 
 		if ($controllerToCheck != '') {
 			$app = Factory::getApplication();
-			//$task 		= $app->input->get('task','', 'raw');
-			$controller = $app->input->get('controller', '');// Set in POS controllers
-			$option     = $app->input->get('option', '');
+			//$task 		= $app->getInput()->get('task','', 'raw');
+			$controller = $app->getInput()->get('controller', '');// Set in POS controllers
+			$option     = $app->getInput()->get('option', '');
 
 			//$taskA		= explode('.', $task);
 
@@ -791,6 +793,17 @@ class PhocacartUtils
 			if (!isset($barCodeA['num_rows']) || !isset($barCodeA['num_cols']) || !isset($barCodeA['bcode'])) {
 				return '';
 			}
+
+            /*
+            $app     = Factory::getApplication();
+            $tmpPath = $app->get('tmp_path');   // absolute
+            $relative = str_replace(JPATH_ROOT, '', $tmpPath);  // gives "/tmp"
+            $fileRel      = Uri::root(false) . ltrim($relative, '/') . '/qr.png';
+
+            $fileAbs = $tmpPath . '/qr.png';
+            File::write($fileAbs, $barCodeObj->getBarcodePngData(2,2));
+            return '<img src="'.$fileRel.'">';
+            */
 
 			// Be aware some clients do not support base64 image or SVG image so let the image be in PDF document and not in email body
 			//return '<img src="data:image/png;base64,'. base64_encode($barCodeObj->getBarcodePngData(2,2)).'">';

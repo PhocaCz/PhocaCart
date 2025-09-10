@@ -29,9 +29,9 @@ class PhocaCartCpViewPhocaCartThumbA extends HtmlView
 		}
 
 		$app		= Factory::getApplication();
-		$fileName	= $app->input->get( 'filename', '', 'string'  );
+		$fileName	= $app->getInput()->get( 'filename', '', 'string'  );
 		$fileName	= rawUrlDecode($fileName);
-		$manager	= $app->input->get( 'manager', '', 'string'  );
+		$manager	= $app->getInput()->get( 'manager', '', 'string'  );
 		$path		= PhocacartPath::getPath($manager);
 		$absPath	= $path['orig_abs_ds'] . $fileName;
 
@@ -122,12 +122,12 @@ class PhocaCartCpViewPhocaCartThumbA extends HtmlView
 		$params			= &$app->getParams();
 
 
-		$ratingVote 	= $app->input->get( 'ratingVote', 0, 'post', 'int'  );
-		$ratingId 		= $app->input->get( 'ratingId', 0, 'post', 'int'  );// ID of File
-		$format 		= $app->input->get( 'format', '', 'post', 'string'  );
-		$task 			= $app->input->get( 'task', '', 'get', 'string'  );
-		$view 			= $app->input->get( 'view', '', 'get', 'string'  );
-		$small			= $app->input->get( 'small', 1, 'get', 'string'  );//small or large rating icons
+		$ratingVote 	= $app->getInput()->get( 'ratingVote', 0, 'post', 'int'  );
+		$ratingId 		= $app->getInput()->get( 'ratingId', 0, 'post', 'int'  );// ID of File
+		$format 		= $app->getInput()->get( 'format', '', 'post', 'string'  );
+		$task 			= $app->getInput()->get( 'task', '', 'get', 'string'  );
+		$view 			= $app->getInput()->get( 'view', '', 'get', 'string'  );
+		$small			= $app->getInput()->get( 'small', 1, 'get', 'string'  );//small or large rating icons
 
 		$paramsC 		= ComponentHelper::getParams('com_phocadownload');
 		$param['displayratingfile'] = $paramsC->get( 'display_rating_file', 0 );

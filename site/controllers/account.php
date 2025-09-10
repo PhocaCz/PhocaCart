@@ -28,8 +28,8 @@ class PhocaCartControllerAccount extends FormController
 		$userId	= (int) $user->get('id');
 
 		// Get the user data.
-		$data 		= $app->input->post->get('jform', array(), 'array');
-		$returnUrl 	= $app->input->post->get('return', '', 'string');
+		$data 		= $app->getInput()->post->get('jform', array(), 'array');
+		$returnUrl 	= $app->getInput()->post->get('return', '', 'string');
 
 
 		$lang = Factory::getLanguage();

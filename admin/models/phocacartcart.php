@@ -20,11 +20,11 @@ class PhocaCartCpModelPhocacartCart extends ListModel
 	public function getData() {
 
 		$app			= Factory::getApplication();
-		$userid			= $app->input->get('userid', 0, 'int');
-		$vendorid		= $app->input->get('vendorid', 0, 'int');
-		$ticketid		= $app->input->get('ticketid', 0, 'int');
-		$unitid			= $app->input->get('unitid', 0, 'int');
-		$sectionid		= $app->input->get('sectionid', 0, 'int');
+		$userid			= $app->getInput()->get('userid', 0, 'int');
+		$vendorid		= $app->getInput()->get('vendorid', 0, 'int');
+		$ticketid		= $app->getInput()->get('ticketid', 0, 'int');
+		$unitid			= $app->getInput()->get('unitid', 0, 'int');
+		$sectionid		= $app->getInput()->get('sectionid', 0, 'int');
 
 
 		if ((int)$userid > 0) {

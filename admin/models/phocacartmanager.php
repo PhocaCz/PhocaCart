@@ -55,9 +55,9 @@ class PhocaCartCpModelPhocaCartManager extends AdminModel
 
 			// Folder = false - is not set, there is a way for session
 			// Folder = '' - empty/root - is not set but means a root - no way for session
-			$folder		= $app->input->get( 'folder', false, 'path' );
-			$upload		= $app->input->get( 'upload', '', 'int' );
-			$manager	= $app->input->get( 'manager', '', 'path' );
+			$folder		= $app->getInput()->get( 'folder', false, 'path' );
+			$upload		= $app->getInput()->get( 'upload', '', 'int' );
+			$manager	= $app->getInput()->get( 'manager', '', 'path' );
 
 
 

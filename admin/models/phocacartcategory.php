@@ -176,7 +176,7 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 	public function save($data) {
 		$i18nData = $this->prepareI18nData($data);
 		$app		= Factory::getApplication();
-		$input  	= Factory::getApplication()->input;
+		$input  	= Factory::getApplication()->getInput();
 		//$dispatcher = JDispatcher::getInstance();
 		$table		= $this->getTable();
 
@@ -398,7 +398,7 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
             }
         }
 
-        if ($app->input->get('task') == 'editAssociations')
+        if ($app->getInput()->get('task') == 'editAssociations')
 		{
 			return $this->redirectToAssociations($data);
 		}
@@ -552,7 +552,7 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 		}
 
 		// Check that the user has create permission for the component
-		$extension	= Factory::getApplication()->input->get('option');
+		$extension	= Factory::getApplication()->getInput()->get('option');
 		$user		= Factory::getUser();
 		if (!$user->authorise('core.create', $extension)) {
 			$this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));
@@ -656,7 +656,7 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 		}
 
 		// Check that user has create and edit permission for the component
-		$extension	= Factory::getApplication()->input->get('option');
+		$extension	= Factory::getApplication()->getInput()->get('option');
 		$user		= Factory::getUser();
 		if (!$user->authorise('core.create', $extension)) {
 			$this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));

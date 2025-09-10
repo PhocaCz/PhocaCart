@@ -17,18 +17,18 @@ class PhocaCartCpControllerPhocaCartEditProductPointGroup extends PhocaCartCpCon
 		$model = parent::getModel($name, $prefix, array('ignore_request' => true));
 		return $model;
 	}
-	
+
 	function save() {
-	
+
 		if (!Session::checkToken('request')) {
 			$app->enqueueMessage('Invalid Token', 'message');
 			return false;
 		}
-		
+
 		$app					= Factory::getApplication();
-		$jform					= $app->input->get('jform', array(), 'array');
-		$id						= $app->input->get('id', 0, 'int');
-		
+		$jform					= $app->getInput()->get('jform', array(), 'array');
+		$id						= $app->getInput()->get('id', 0, 'int');
+
 
 		if (!empty($jform)) {
 			$model = $this->getModel( 'phocacarteditproductpointgroup' );
@@ -41,11 +41,11 @@ class PhocaCartCpControllerPhocaCartEditProductPointGroup extends PhocaCartCpCon
 			}
 			$app->redirect('index.php?option=com_phocacart&view=phocacarteditproductpointgroup&tmpl=component&id='.(int)$id);
 		} else {
-		
+
 			$app->enqueueMessage(Text::_('COM_PHOCACART_NO_ITEM_FOUND'), 'error');
 			$app->redirect('index.php?option=com_phocacart&view=phocacarteditproductpointgroup&tmpl=component');
 		}
 	}
-	
+
 }
 ?>

@@ -32,7 +32,7 @@ class PhocacartRenderAdminmedia
 		$version 			= new Version();
 		$this->compatible 	= $version->isCompatible('4.0.0-alpha');
 		$this->document		= Factory::getDocument();
-		$this->view			= $app->input->get('view');
+		$this->view			= $app->getInput()->get('view');
 		$this->option 		= 'com_phocacart';
 		$paramsC 			= PhocacartUtils::getComponentParameters();
 		$wa 				= $app->getDocument()->getWebAssetManager();

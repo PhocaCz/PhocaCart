@@ -24,7 +24,7 @@ trait FeaturedControllerTrait
     public function featured(): void
     {
         try {
-            $input = Factory::getApplication()->input;
+            $input = Factory::getApplication()->getInput();
             $user   = Factory::getApplication()->getIdentity();
             $id    = $input->get('id', null, 'int');
             $state = $input->get('state', null, 'int');

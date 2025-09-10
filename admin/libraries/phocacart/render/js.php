@@ -277,8 +277,8 @@ final class PhocacartRenderJs
 
         // We need to refresh comparison site when AJAX used for removing or adding products to comparison list
         $app 	= Factory::getApplication();
-        $view 	= $app->input->get('view', '');
-        $option = $app->input->get('option', '');
+        $view 	= $app->getInput()->get('view', '');
+        $option = $app->getInput()->get('option', '');
         $cView	= $option == 'com_phocacart' && $view == 'comparison' ? 1 : 0;
 
         if ($add_compare_method == 0) {
@@ -347,8 +347,8 @@ final class PhocacartRenderJs
 
         // We need to refresh comparison site when AJAX used for removing or adding products to comparison list
         $app 	= Factory::getApplication();
-        $view 	= $app->input->get('view', '');
-        $option = $app->input->get('option', '');
+        $view 	= $app->getInput()->get('view', '');
+        $option = $app->getInput()->get('option', '');
         $cView	= $option == 'com_phocacart' && $view == 'comparison' ? 1 : 0;
 
         if ($add_compare_method == 0) {
@@ -417,8 +417,8 @@ final class PhocacartRenderJs
 
         // We need to refresh wishlist site when AJAX used for removing or adding products to wishlist list
         $app 	= Factory::getApplication();
-        $view 	= $app->input->get('view', '');
-        $option = $app->input->get('option', '');
+        $view 	= $app->getInput()->get('view', '');
+        $option = $app->getInput()->get('option', '');
         $wView	= $option == 'com_phocacart' && $view == 'wishlist' ? 1 : 0;
 
         if ($add_wishlist_method == 0) {
@@ -486,8 +486,8 @@ final class PhocacartRenderJs
 
         // We need to refresh wishlist site when AJAX used for removing or adding products to wishlist list
         $app = Factory::getApplication();
-        $view = $app->input->get('view', '');
-        $option = $app->input->get('option', '');
+        $view = $app->getInput()->get('view', '');
+        $option = $app->getInput()->get('option', '');
         $wView	= $option == 'com_phocacart' && $view == 'wishlist' ? 1 : 0;
 
         if ($add_wishlist_method == 0) {
