@@ -215,6 +215,19 @@
             </fieldset>
         </fields>
 
+        <fields name="related">
+            <fieldset name="basic">
+                <field name="_related" type="list" class="form-select-color-state" filter="unset" label="COM_PHOCACART_BATCH_RELATED">
+                    <option value="">COM_PHOCACART_BATCH_NOCHANGE</option>
+                    <option value="1">COM_PHOCACART_BATCH_CHANGE</option>
+                </field>
+            </fieldset>
+
+            <fieldset name="params" addfieldpath="/administrator/components/com_phocacart/models/fields">
+                <field name="_related_heading" type="note" showon="_related:1" class="bg-primary text-white p-2 fw-bold w-100" description="COM_PHOCACART_BATCH_RELATED_HEADING" />
+            </fieldset>
+        </fields>
+
         <fields name="com_fields">
             <fieldset name="basic">
                 <field name="_custom_fields" type="list" class="form-select-color-state" filter="unset" label="COM_PHOCACART_BATCH_CUSTOM_FIELDS">

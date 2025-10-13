@@ -10,7 +10,11 @@
  */
 defined('_JEXEC') or die();
 use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\Language\Text;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Utilities\ArrayHelper;
+use Phoca\PhocaCart\Container\Container;
 use Phoca\PhocaCart\ContentType\ContentTypeHelper;
 use Phoca\PhocaCart\I18n\I18nHelper;
 
@@ -19,7 +23,7 @@ class PhocacartRelated
 	public static function storeRelatedItemsById($relatedString, $productId)
     {
     	if ((int)$productId > 0) {
-			$db =Factory::getDBO();
+            $db = Container::getDbo();
 			$query = ' DELETE '
 					.' FROM #__phocacart_product_related'
 					. ' WHERE product_a = '. (int)$productId;
@@ -50,8 +54,7 @@ class PhocacartRelated
 
     public static function copyRelatedItems(int $sourceProductId, int $destProductId): void
     {
-        /** @var DatabaseInterface $db */
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        $db = Container::getDbo();
         $query = 'INSERT INTO #__phocacart_product_related(related_type, product_a, product_b)'
             . 'SELECT related_type, ' . $destProductId . ', product_b FROM #__phocacart_product_related WHERE product_a = ' . $sourceProductId;
         $db->setQuery($query);
@@ -64,8 +67,7 @@ class PhocacartRelated
             return;
         }
 
-        /** @var DatabaseInterface $db */
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        $db = Container::getDbo();
 
         $query = 'DELETE FROM #__phocacart_product_related WHERE product_a = '. $productId;
         $db->setQuery($query);
@@ -85,6 +87,54 @@ class PhocacartRelated
             $db->setQuery($query);
             $db->execute();
         }
+    }
+
+    public static function addRelatedItems(int $productId, int $relatedType, array $related): void
+    {
+        if (!$productId) {
+            return;
+        }
+
+        if (!$related) {
+            return;
+        }
+        ArrayHelper::toInteger($related);
+        $related = array_unique($related, SORT_REGULAR);
+
+        $db = Container::getDbo();
+
+        $newRelated = $db->setQuery('SELECT product_b AS id, related_type FROM #__phocacart_product_related WHERE product_a = ' . $productId . ' ORDER BY ordering')->loadAssocList('product_b');
+        foreach ($related as $relatedItem) {
+            if (array_key_exists($relatedItem, $newRelated)) {
+                $newRelated[$relatedItem]['related_type'] = $relatedType;
+            } else {
+                $newRelated[] = ['id' => $relatedItem, 'related_type' => $relatedType];
+            }
+        }
+
+        self::storeRelatedItems($productId, $newRelated);
+    }
+
+    public static function removeRelatedItems(int $productId, int $relatedType, array $related): void
+    {
+        if (!$productId) {
+            return;
+        }
+
+        if (!$related) {
+            return;
+        }
+        ArrayHelper::toInteger($related);
+
+        $db = Container::getDbo();
+
+        $related = array_unique($related, SORT_REGULAR);
+
+        $query = 'DELETE FROM #__phocacart_product_related WHERE product_a = ' . $productId .
+            ' AND related_type = ' . $relatedType .
+            ' AND product_b IN (' . implode(',', $related) . ')';
+        $db->setQuery($query);
+        $db->execute();
     }
 
 	/*
@@ -276,4 +326,47 @@ class PhocacartRelated
 		}
 		return true;
 	}
+
+    public static function prepareBatchForm(Form $form)
+    {
+        $relatedTypes = ContentTypeHelper::getContentTypes(ContentTypeHelper::ProductRelated);
+
+        if (!$relatedTypes) {
+            return true;
+        }
+
+        // Creating the dom
+        $xml        = new \DOMDocument('1.0', 'UTF-8');
+        $fieldsNode = $xml->appendChild(new \DOMElement('form'))->appendChild(new \DOMElement('fields'));
+        $fieldsNode->setAttribute('name', 'batch');
+        $fieldsNode = $fieldsNode->appendChild(new \DOMElement('fields'));
+        $fieldsNode->setAttribute('name', 'related');
+        $fieldset = $fieldsNode->appendChild(new \DOMElement('fieldset'));
+        $fieldset->setAttribute('name', 'params');
+
+        foreach ($relatedTypes as $relatedType) {
+            try {
+                $node = $fieldset->appendChild(new \DOMElement('field'));
+                $node->setAttribute('name', 'add_' . $relatedType->id);
+                $node->setAttribute('type', 'PhocaCartItem');
+                $node->setAttribute('label', Text::sprintf('COM_PHOCACART_BATCH_RELATED_ADD', Text::_($relatedType->title)));
+                $node->setAttribute('showon', '_related:1');
+                $node->setAttribute('multiple', 'true');
+
+                $node = $fieldset->appendChild(new \DOMElement('field'));
+                $node->setAttribute('name', 'remove_' . $relatedType->id);
+                $node->setAttribute('type', 'PhocaCartItem');
+                $node->setAttribute('label', Text::sprintf('COM_PHOCACART_BATCH_RELATED_REMOVE', Text::_($relatedType->title)));
+                $node->setAttribute('showon', '_related:1');
+                $node->setAttribute('multiple', 'true');
+            }
+            catch (\Exception $e) {
+                Factory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+            }
+        }
+
+        $form->load($xml->saveXML());
+
+        return true;
+    }
 }

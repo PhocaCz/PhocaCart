@@ -362,6 +362,7 @@ class PhocaCartCpModelPhocaCartItems extends ListModel
 
         PhocacartFields::prepareBatchForm('com_phocacart.phocacartitem', $form);
         PhocacartParameter::prepareBatchForm($form);
+        PhocacartRelated::prepareBatchForm($form);
 
         Dispatcher::dispatch(new Event\Feed\BatchForm('com_phocacart.phocacartitem', $form));
 
