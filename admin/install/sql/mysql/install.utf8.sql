@@ -379,7 +379,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_specifications` (
   `title` varchar(255) NOT NULL DEFAULT '',
   `alias` varchar(255) NOT NULL DEFAULT '',
   `value` text,
-  `alias_value` varchar(255) NOT NULL DEFAULT '',
+  `alias_value` text,
 
   `image` varchar(255) NOT NULL DEFAULT '',
   `image_medium` varchar(255) NOT NULL DEFAULT '',
@@ -1455,7 +1455,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_logs` (
   `title` varchar(255) NOT NULL DEFAULT '',
   `alias` varchar(255) NOT NULL DEFAULT '',
   `ip` varchar(46) NOT NULL default '',
-  `incoming_page` varchar(255) NOT NULL,
+  `incoming_page` text,
   `description` text,
   `published` tinyint(1) NOT NULL DEFAULT '0',
   `checked_out` int unsigned,

@@ -84,6 +84,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
         'pcf'                       => 'batchFeedOptions',
         'com_fields'                => 'batchCustomFields',
         'parameters'                => 'batchParameters',
+        'related'                   => 'batchRelated',
     ];
 
    // public function __construct($config = [], MVCFactoryInterface $factory = null, FormFactoryInterface $formFactory = null)
@@ -2334,5 +2335,53 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
         return true;
     }
+
+    protected function batchRelated($newValues, $pks, $contexts): bool
+    {
+        $this->initBatch();
+
+        foreach ($pks as $pk) {
+            if ($this->user->authorise('core.edit', $contexts[$pk])) {
+                $this->table->reset();
+                $this->table->load($pk);
+
+                $event = new BeforeBatchEvent(
+                    $this->event_before_batch,
+                    ['src' => $this->table, 'type' => 'related']
+                );
+                $this->dispatchEvent($event);
+
+                // Check the row.
+                if (!$this->table->check()) {
+                    $this->setError($this->table->getError());
+
+                    return false;
+                }
+
+                foreach ($newValues as $name => $relatedProducts) {
+                    if ($name == '_related') {
+                        continue;
+                    }
+
+                    list($operation, $relatedType) = explode('_', $name);
+                    if ($operation == 'add') {
+                        PhocacartRelated::addRelatedItems($pk, $relatedType, $relatedProducts);
+                    } else {
+                        PhocacartRelated::removeRelatedItems($pk, $relatedType, $relatedProducts);
+                    }
+                }
+            } else {
+                $this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+
+                return false;
+            }
+        }
+
+        // Clean the cache
+        $this->cleanCache();
+
+        return true;
+    }
+
 }
 

@@ -44,12 +44,12 @@
 		<description><![CDATA[ Phoca Cart is e-commerce extension - powerful shopping cart for Joomla! CMS. Phoca Cart is based on Joomla! framework and it is designed by modern responsive Bootstrap library. ]]></description>
 		<element>com_phocacart</element>
 		<type>component</type>
-		<version>5.2.1</version>
-		<infourl title="Phoca Cart 5.2.1">http://www.phoca.cz/version/index.php?phocacart=5.2.1</infourl>
+		<version>5.2.2</version>
+		<infourl title="Phoca Cart 5.2.2">http://www.phoca.cz/version/index.php?phocacart=5.2.2</infourl>
 		<downloads>
-			<downloadurl type="full" format="zip">https://github.com/PhocaCz/PhocaCart/releases/download/5.2.1/com_phocacart_v5.2.1.zip</downloadurl>
+			<downloadurl type="full" format="zip">https://github.com/PhocaCz/PhocaCart/releases/download/5.2.2/com_phocacart_v5.2.2.zip</downloadurl>
 		</downloads>
-		<sha512>12458f952815e76a13709406a718531c0b0dace6f97242270a468f165d738133be63fe935a9c46665fe1ae67b7945c53fed166908b8c76f14d68795d3ae44089</sha512>
+		<sha512>1b4e15c00f4f9615f369cc58ea315f3cb0d22367c6508e1b651ec174b72fb650bb8fe27f44b08f4a5e865e5ff402c29cc25b0b1229d85ee3c0b4e75f66cbf10a</sha512>
 		<tags>
 			<tag>stable</tag>
 		</tags>
