@@ -44,7 +44,6 @@ class PhocacartCartRendercheckout extends PhocacartCart
 		}
 
 
-
 		if (empty($this->fullitems)) {
 			$this->fullitems = $this->getFullItems();// get them from parent
 

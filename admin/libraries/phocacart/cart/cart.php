@@ -875,7 +875,6 @@ class PhocacartCart
     public function roundTotalAmount() {
 
         $calc = new PhocacartCartCalculation();
-
         $calc->setType($this->type);
         $this->shipping['costs'] = isset($this->shipping['costs']) ? $this->shipping['costs'] : 0;
         $this->payment['costs']  = isset($this->payment['costs']) ? $this->payment['costs'] : 0;
@@ -895,6 +894,7 @@ class PhocacartCart
         // 4) ROUND TOTAL AMOUNT IF ASKED (e.g. 95.67 => 96)
 
         $calc->roundTotalAmount($this->total[0]);
+
         // Correct after rounding
         $calc->correctTotalItems($this->total, $this->shipping['costs'], $this->payment['costs'], $options);
 

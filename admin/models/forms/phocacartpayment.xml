@@ -14,16 +14,16 @@
 
 		<fieldset name="general" label="COM_PHOCACART_GENERAL_OPTIONS">
 
-			<field name="code" type="text" label="COM_PHOCACART_FIELD_SHIPPING_CODE_LABEL" description="COM_PHOCACART_FIELD_SHIPPING_CODE_DESC" />
+			<field name="code" type="text" label="COM_PHOCACART_FIELD_PAYMENT_CODE_LABEL" description="COM_PHOCACART_FIELD_PAYMENT_CODE_DESC" />
 
 			<field name="calculation_type" type="list" default="0" label="COM_PHOCACART_FIELD_CALCULATION_TYPE_LABEL" description="COM_PHOCACART_FIELD_CALCULATION_TYPE_DESC">
 				<option value="1">COM_PHOCACART_PERCENTAGE</option>
 				<option	value="0">COM_PHOCACART_FIXED_AMOUNT</option>
 			</field>
 
-			<field name="cost" type="text" label="COM_PHOCACART_FIELD_COST_LABEL" description="COM_PHOCACART_FIELD_SHIPPING_COST_DESC" />
+			<field name="cost" type="text" label="COM_PHOCACART_FIELD_COST_LABEL" description="COM_PHOCACART_FIELD_PAYMENT_COST_DESC" />
 
-			<field name="cost_additional" type="text" label="COM_PHOCACART_FIELD_ADDITIONAL_COSTS_SHIPPING_METHOD_LABEL" description="COM_PHOCACART_FIELD_ADDITIONAL_COSTS_SHIPPING_METHOD_DESC" />
+			<field name="cost_additional" type="text" label="COM_PHOCACART_FIELD_ADDITIONAL_COSTS_PAYMENT_METHOD_LABEL" description="COM_PHOCACART_FIELD_ADDITIONAL_COSTS_PAYMENT_METHOD_DESC" />
 
 			<field name="tax_id" type="phocatax" label="COM_PHOCACART_FIELD_TAX_LABEL" description="COM_PHOCACART_FIELD_TAX_DESC" />
 

@@ -861,6 +861,8 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
                 continue;
             }
 
+
+
             $tabAnchor = $this->s['c']['class-type'] == 'uikit' ? '#' : '#phrelated-' . $relatedType->id ;
             $tabLiO .= '<li class="' . $this->s['c']['nav-item'] . ' ' . $activeTab . '"><a href="'. $tabAnchor . '" data-bs-toggle="tab" class="' . $this->s['c']['nav-link'] . ' ' . $active . '">' . Text::_($relatedType->title) . '</a></li>';
 
@@ -869,7 +871,10 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
             $tabO .= '<div class="' . $this->s['c']['row'] . '">';
             foreach ($related as $k => $v) {
 
-
+                // This should not happen but if the product is the same like related, don't display it.
+                if (isset($x->id) && isset($v->id) && (int)$x->id == (int)$v->id) {
+                    continue;
+                }
                 $tabO .= '<div class="' . $this->s['c']['row-item'] . ' ' . $this->s['c']['col.xs12.sm3.md3'] . '">';
                 $tabO .= '<div class="ph-item-box grid ph-item-thumbnail-related">';
 

@@ -69,7 +69,7 @@ if ($readonly || $disabled) {
 
 $attr2  = '';
 $attr2 .= !empty($class) ? ' class="' . $class . '"' : '';
-$attr2 .= ' placeholder="' . $this->escape($hint ?: Text::_('JGLOBAL_TYPE_OR_SELECT_SOME_TAGS')) . '" ';
+$attr2 .= ' placeholder="' . $this->escape($hint ?: Text::_('COM_PHOCACART_TYPE_OR_SELECT_SOME_PRODUCTS')) . '" ';
 $attr2 .= $dataAttribute;
 
 $attr2 .= ' remote-search';

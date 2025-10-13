@@ -319,4 +319,11 @@
     .plupload_filelist li {
         background: transparent;
     }
+
+    .input-group-text.bg-light {
+        background-color: #333 !important;
+    }
+    .btn-outline-info {
+        background-color: #999;
+    }
 }

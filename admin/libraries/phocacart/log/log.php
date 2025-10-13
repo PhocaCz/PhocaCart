@@ -63,6 +63,8 @@ class PhocacartLog
 			$db				= Factory::getDBO();
 			$ip 			= $_SERVER["REMOTE_ADDR"];
 			$incoming_page	= htmlspecialchars($uri->toString());
+			$incoming_page  = substr($incoming_page, 0, 2048);
+
 			$userid			= 0;
 			if (isset($user->id) && (int)$user->id > 0) {
 				$userid = $user->id;

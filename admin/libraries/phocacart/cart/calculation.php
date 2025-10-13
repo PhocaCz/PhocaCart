@@ -1662,7 +1662,6 @@ class PhocacartCartCalculation
 
 
             if (!($price->roundPrice($diff) > -0.01 && $price->roundPrice($diff) < 0.01)) {
-
                 $total['rounding'] += $diff;
                 //if ($tax_calculation_sales == 2) {
                     // The start value rounding can be set by rounding coupon or discount amount, so in case of brutto method, this needs to be included
@@ -1672,7 +1671,6 @@ class PhocacartCartCalculation
             }
 
             $total['brutto'] = $price->roundPrice($brutto);
-
             //$total['taxrecapitulation']['brutto']			= $price->roundPrice($brutto);
 
             $bruttoTax = round($total['brutto_tax'], (int)$rounding_calculation_total, $rounding_calculation);
@@ -1690,10 +1688,6 @@ class PhocacartCartCalculation
             }
             $total['brutto_tax']                  = $price->roundPrice($bruttoTax);
             $total['taxrecapitulation']['brutto'] = $price->roundPrice($bruttoTax);
-
-        } else {
-            // even if not round the calculation or total ammount there can be a difference in calculation
-
 
         }
 
@@ -2151,7 +2145,6 @@ class PhocacartCartCalculation
                 }
             }
         }
-
     }
 
 
