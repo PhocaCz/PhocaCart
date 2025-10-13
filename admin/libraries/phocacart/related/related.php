@@ -79,6 +79,10 @@ class PhocacartRelated
             $related = array_values($related);
             $related = array_unique($related, SORT_REGULAR);
             foreach ($related as $index => $relatedItem) {
+                if ($relatedItem['id'] == $productId) {
+                    continue;
+                }
+
                 $values[] = '(' . $productId . ', ' . $relatedItem['id'] . ', ' . $relatedItem['related_type'] . ', ' . $index . ')';
             }
 
@@ -103,8 +107,12 @@ class PhocacartRelated
 
         $db = Container::getDbo();
 
-        $newRelated = $db->setQuery('SELECT product_b AS id, related_type FROM #__phocacart_product_related WHERE product_a = ' . $productId . ' ORDER BY ordering')->loadAssocList('product_b');
+        $newRelated = $db->setQuery('SELECT product_b AS id, related_type FROM #__phocacart_product_related WHERE product_a = ' . $productId . ' ORDER BY ordering')->loadAssocList('id');
         foreach ($related as $relatedItem) {
+            if ($relatedItem == $productId) {
+                continue;
+            }
+
             if (array_key_exists($relatedItem, $newRelated)) {
                 $newRelated[$relatedItem]['related_type'] = $relatedType;
             } else {
