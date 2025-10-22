@@ -38,7 +38,7 @@ class PhocacartRoute
 		}
 
 		$itemId 	= 0;
-		if ((int)$activeId > 0 &&$option == 'com_phocacart' && $view == 'category') {
+		if ((int)$activeId > 0 && $option == 'com_phocacart' && $view == 'category') {
 			// 2) if there are two menu links, try to select the one active
 			$itemId = $activeId;
 		}
