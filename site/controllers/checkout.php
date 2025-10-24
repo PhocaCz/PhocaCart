@@ -478,7 +478,7 @@ class PhocaCartControllerCheckout extends FormController
         if (!empty($item['phpaymentopt']) && isset($item['phpaymentopt'][0]) && (int)$item['phpaymentopt'][0] > 0) {
 
             $idPayment = (int)$item['phpaymentopt'][0];
-            $paymentParams = isset($item['phpaymentmethodfield'][$idPayment]) ? $item['phshippingmethodfield'][$idPayment] : [];
+            $paymentParams = isset($item['phpaymentmethodfield'][$idPayment]) ? $item['phpaymentmethodfield'][$idPayment] : [];
 
             // Coupon
             if ($item['phcoupon'] === -1) {
