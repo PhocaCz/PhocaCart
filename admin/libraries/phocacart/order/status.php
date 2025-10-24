@@ -686,7 +686,7 @@ class PhocacartOrderStatus
                 $notifyUser = !!$status['email_customer'];
             }
         } else {
-            $notifyUser = !!$notifyUser; // a tady to dostává nesmyslně false
+            $notifyUser = !!$notifyUser;
         }
 
         if ($notifyOthers === 99) {
