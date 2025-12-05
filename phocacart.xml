@@ -136,8 +136,8 @@
 		<languages folder="admin/language">
 			<language tag="en-GB">en-GB/en-GB.com_phocacart.ini</language>
 			<language tag="en-GB">en-GB/en-GB.com_phocacart.sys.ini</language>
-			<language tag="fa-IR" client="site">fa-IR/fa-IR.com_phocacart.ini</language>
-			<language tag="fa-IR" client="site">fa-IR/fa-IR.com_phocacart.sys.ini</language>
+			<language tag="fa-IR">fa-IR/fa-IR.com_phocacart.ini</language>
+			<language tag="fa-IR">fa-IR/fa-IR.com_phocacart.sys.ini</language>
 		</languages>
 	</administration>
 		<api>
@@ -153,3 +153,4 @@
 		<server type="extension" name="COM_PHOCACART" priority="1"><![CDATA[https://raw.githubusercontent.com/PhocaCz/PhocaCart/master/manifest.xml]]></server>
 	</updateservers>
 </extension>
+
