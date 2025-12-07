@@ -43,7 +43,7 @@ class OrdersController extends BaseApiController
   {
     $app = Factory::getApplication();
 
-    /*if ($sku = $app->input->getCmd('gtin')) {
+    /*if ($sku = $app->getInput()->getCmd('gtin')) {
       $app->setUserState('com_phocacart.phocacartitems.filter.gtin', $sku);
     }*/
 

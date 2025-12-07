@@ -7,6 +7,8 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('JPATH_BASE') or die;
+
+use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -23,7 +25,10 @@ class JFormFieldPhocaHeadExpert extends FormField
 		$tc = 'phocacart';
 		$ts = 'media/com_'.$tc.'/css/administrator/';
 		$ti = 'media/com_'.$tc.'/images/administrator/';
-		HTMLHelper::stylesheet( $ts.'/'.$tc.'options.css' );
+		$app = Factory::getApplication();
+		$wa  = $app->getDocument()->getWebAssetManager();
+		$wa->registerAndUseStyle('com_phocacart.phocacartoptions', $ts.'/'.$tc.'options.css', array('version' => 'auto'));
+		//HTMLHelper::stylesheet( $ts.'/'.$tc.'options.css' );
 		echo '<div style="clear:both;"></div>';
 		$phocaImage	= ( (string)$this->element['phocaimage'] ? $this->element['phocaimage'] : '' );
 		$image 		= '';

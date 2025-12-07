@@ -44,7 +44,8 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 		'category_type'             => 'batchCategoryType',
 	];
 
-	public function __construct($config = [], \Joomla\CMS\MVC\Factory\MVCFactoryInterface $factory = null, \Joomla\CMS\Form\FormFactoryInterface $formFactory = null)
+
+	public function __construct($config = [], ?\Joomla\CMS\MVC\Factory\MVCFactoryInterface $factory = null, ?\Joomla\CMS\Form\FormFactoryInterface $formFactory = null)
 	{
 		parent::__construct($config, $factory, $formFactory);
 

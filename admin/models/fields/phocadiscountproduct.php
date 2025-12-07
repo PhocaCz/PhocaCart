@@ -72,7 +72,9 @@ class JFormFieldPhocaDiscountProduct extends FormField
 		$s[] = 'jQuery(document).ready(function() {';
 		$s[] = '   phSearchItemsMultiple("#'.$this->id.'", "'.$url.'", '.(int)$id.', true, ",");';
 		$s[] = '});';
-    	$document->addScriptDeclaration(implode("\n", $s));
+    	//$document->addScriptDeclaration(implode("\n", $s));
+		$wa  = $app->getDocument()->getWebAssetManager();
+		$wa->addInlineScript(implode("\n", $s));
 
 		$html[] = '<div>';
 		$html[] = '<input type="hidden" style="width: 100%" id="'.$this->id.'" name="'.$this->name.'" value="'. $value.'"' .' '.$attr.' />';

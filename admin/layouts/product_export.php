@@ -275,8 +275,7 @@ unset($a);
 // Header
 if (!empty($d['productcolumns'])){
 	foreach($d['productcolumns'] as $k => $v) {
-		//$iCN[] = Text::_($v[0]);
-		$iCN[] = $v[0];
+		$iCN[] = Text::_($v[0]);
 		$iCV[] = Text::_($v[1]);
 
 	}

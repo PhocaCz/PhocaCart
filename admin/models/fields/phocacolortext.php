@@ -26,8 +26,12 @@ class JFormFieldPhocaColorText extends FormField
 
 		$document		= Factory::getDocument();
 
-		HTMLHelper::stylesheet( 'media/com_phocacart/js/jcp/picker.css' );
-		$document->addScript(Uri::root(true).'/media/com_phocacart/js/jcp/picker.js');
+		//HTMLHelper::stylesheet( 'media/com_phocacart/js/jcp/picker.css' );
+		//$document->addScript(Uri::root(true).'/media/com_phocacart/js/jcp/picker.js');
+		$app = Factory::getApplication();
+		$wa  = $app->getDocument()->getWebAssetManager();
+		$wa->registerAndUseStyle('com_phocacart.picker', 'media/com_phocacart/js/jcp/picker.css', array('version' => 'auto'));
+		$wa->registerAndUseScript('com_phocadownload.picker.js', 'media/com_phocacart/js/jcp/picker.js', ['version' => 'auto']);
 
 		$onchange 		= (string) $this->element['onchange'];
 		$size     		= ($v = $this->element['size']) ? ' size="' . $v . '"' : '';
