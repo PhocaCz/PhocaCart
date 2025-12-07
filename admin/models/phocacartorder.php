@@ -437,6 +437,13 @@ class PhocaCartCpModelPhocacartOrder extends AdminModel
 			$row->region = 0;
 		}
 
+        if ($row->country) {
+            $row->country = (int)$row->country;
+        }
+        if ($row->region) {
+            $row->region = (int)$row->region;
+        }
+
 		if (!$row->store()) {
 			throw new Exception($row->getError());
 		}

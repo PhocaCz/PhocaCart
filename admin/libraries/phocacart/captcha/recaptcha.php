@@ -23,8 +23,11 @@ class PhocacartCaptchaRecaptcha
 		if ($lang != '') {
 		    $lang = '?hl='.$lang;
         }
+        $app = Factory::getApplication();
+        $wa  = $app->getDocument()->getWebAssetManager();
+        $wa->registerAndUseScript('com_phocacart.recaptcha.api.js', 'https://www.google.com/recaptcha/api.js'.$lang, ['version' => 'auto']);
+		//$document->addScript('https://www.google.com/recaptcha/api.js'.$lang);
 
-		$document->addScript('https://www.google.com/recaptcha/api.js'.$lang);
 		return '<div class="g-recaptcha" data-sitekey="'.$siteKey.'"></div>';
 	}
 	public static function isValid() {

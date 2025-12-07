@@ -35,6 +35,7 @@ class PhocacartFileUploadmultiple
 		$paramsC 		= PhocacartUtils::getComponentParameters();
 		$chunkMethod 	= $paramsC->get( 'multiple_upload_chunk', 0 );
 		$uploadMethod 	= $paramsC->get( 'multiple_upload_method', 4 );
+		$wa  			= $app->getDocument()->getWebAssetManager();
 
 		//JHtml::_('behavior.framework', true);// Load it here to be sure, it is loaded before jquery
 		HTMLHelper::_('jquery.framework', false);// Load it here because of own nonConflict method (nonconflict is set below)
@@ -48,7 +49,8 @@ class PhocacartFileUploadmultiple
 			//$document->addScript(Uri::root(true).'/media/com_phocacart/js/plupload/plupload.browserplus.js');
 		}*/
 
-		$document->addScript(Uri::root(true).'/media/com_phocacart/js/plupload/plupload.js');
+		//$document->addScript(Uri::root(true).'/media/com_phocacart/js/plupload/plupload.js');
+		$wa->registerAndUseScript('com_phocacart.plupload.js', 'media/com_phocacart/js/plupload/plupload.js', ['version' => 'auto']);
 		/*if ($uploadMethod == 2) {
 			$document->addScript(Uri::root(true).'/media/com_phocacart/js/plupload/plupload.gears.js');
 		}
@@ -65,10 +67,13 @@ class PhocacartFileUploadmultiple
 			$document->addScript(Uri::root(true).'/media/com_phocacart/js/plupload/plupload.html4.js');
 		}*/
 		if ($uploadMethod == 4) {
-			$document->addScript(Uri::root(true).'/media/com_phocacart/js/plupload/plupload.html5.js');
+			//$document->addScript(Uri::root(true).'/media/com_phocacart/js/plupload/plupload.html5.js');
+			$wa->registerAndUseScript('com_phocacart.plupload.html5.js', 'media/com_phocacart/js/plupload/plupload.html5.js', ['version' => 'auto']);
 		}
-		$document->addScript(Uri::root(true).'/media/com_phocacart/js/plupload/jquery.plupload.queue/jquery.plupload.queue.js');
-		HTMLHelper::stylesheet( 'media/com_phocacart/js/plupload/jquery.plupload.queue/css/jquery.plupload.queue.css' );
+		$wa->registerAndUseStyle('com_phocacart.jquery.plupload.queue', 'media/com_phocacart/js/plupload/jquery.plupload.queue/css/jquery.plupload.queue.css', array('version' => 'auto'));
+		$wa->registerAndUseScript('com_phocacart.jquery.plupload.queue.js', 'media/com_phocacart/js/plupload/jquery.plupload.queue/jquery.plupload.queue.js', ['version' => 'auto']);
+		//$document->addScript(Uri::root(true).'/media/com_phocacart/js/plupload/jquery.plupload.queue/jquery.plupload.queue.js');
+		//HTMLHelper::stylesheet( 'media/com_phocacart/js/plupload/jquery.plupload.queue/css/jquery.plupload.queue.css' );
 	}
 
 	static public function getMultipleUploadSizeFormat($size) {
@@ -241,7 +246,10 @@ class PhocacartFileUploadmultiple
 
 		$js.='});'."\n";// End $(function()
 
-		$document->addScriptDeclaration($js);
+		//$document->addScriptDeclaration($js);
+		$app = Factory::getApplication();
+		$wa  = $app->getDocument()->getWebAssetManager();
+		$wa->addInlineScript($js);
 	}
 
 	public function getMultipleUploadHTML($width = '', $height = '330', $mootools = 1) {

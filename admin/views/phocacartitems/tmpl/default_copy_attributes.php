@@ -35,7 +35,10 @@ jQuery(document).ready(function() {
 	
 });';
 $document = Factory::getDocument();
-$document->addScriptDeclaration(implode("\n", $s));
+//$document->addScriptDeclaration(implode("\n", $s));
+$app = Factory::getApplication();
+$wa  = $app->getDocument()->getWebAssetManager();
+$wa->addInlineScript(implode("\n", $s));
 ?>
 <div id="collapseModalCA" role="dialog" tabindex="-1" class="joomla-modal modal fade">
 	<div class="modal-dialog modal-lg">

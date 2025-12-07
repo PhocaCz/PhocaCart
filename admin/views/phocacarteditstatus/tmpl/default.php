@@ -31,6 +31,7 @@ if (!empty($this->itemhistory)) {
             </thead>
             <tbody>
             <?php foreach($this->itemhistory as $history) { ?>
+
                 <tr class="ph-order-status-edit-item">
                     <td><?php echo HTMLHelper::date($history->date, Text::_('DATE_FORMAT_LC5')); ?></td>
                     <td><?php echo PhocacartUtilsSettings::getOrderStatusBadge($history->statustitle, $history->status_params); ?></td>

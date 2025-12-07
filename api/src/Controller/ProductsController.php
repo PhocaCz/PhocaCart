@@ -54,15 +54,15 @@ class ProductsController extends BaseApiController
     {
         $app = Factory::getApplication();
 
-        if ($lang = $app->input->getCmd('language')) {
+        if ($lang = $app->getInput()->getCmd('language')) {
             $app->setUserState('com_phocacart.phocacartitems.filter.language', $lang);
         }
 
-        if ($sku = $app->input->getCmd('sku')) {
+        if ($sku = $app->getInput()->getCmd('sku')) {
             $app->setUserState('com_phocacart.phocacartitems.filter.sku', $sku);
         }
 
-        if ($gtin = $app->input->getCmd('gtin')) {
+        if ($gtin = $app->getInput()->getCmd('gtin')) {
             $app->setUserState('com_phocacart.phocacartitems.filter.gtin', $gtin);
         }
 

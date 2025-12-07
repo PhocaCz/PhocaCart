@@ -27,7 +27,10 @@ $js .= '   });' . "\n";
 $js .= '});' . "\n";
 $js .= ' ' . "\n";
 $document = Factory::getDocument();
-$document->addScriptDeclaration($js);
+//$document->addScriptDeclaration($js);
+$app = Factory::getApplication();
+$wa  = $app->getDocument()->getWebAssetManager();
+$wa->addInlineScript($js);
 
 if (isset($d['activefilter']) && $d['activefilter']) {
     $checkedFilter = 'checked';

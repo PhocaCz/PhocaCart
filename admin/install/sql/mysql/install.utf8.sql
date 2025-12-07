@@ -379,7 +379,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_specifications` (
   `title` varchar(255) NOT NULL DEFAULT '',
   `alias` varchar(255) NOT NULL DEFAULT '',
   `value` text,
-  `alias_value` text,
+  `alias_value` varchar(255) NOT NULL DEFAULT '',
 
   `image` varchar(255) NOT NULL DEFAULT '',
   `image_medium` varchar(255) NOT NULL DEFAULT '',

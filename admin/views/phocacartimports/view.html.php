@@ -7,6 +7,8 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined( '_JEXEC' ) or die();
+
+use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Toolbar\ToolbarHelper;
@@ -46,7 +48,10 @@ class PhocaCartCpViewPhocaCartImports extends HtmlView
 
 
 		$media = new PhocacartRenderAdminmedia();
-		HTMLHelper::stylesheet( $this->t['bootstrap'] . 'css/bootstrap.glyphicons-icons-only.min.css' );
+		$app = Factory::getApplication();
+		$wa  = $app->getDocument()->getWebAssetManager();
+		$wa->registerAndUseStyle('com_phocacart.glyphicons-icons-only', $this->t['bootstrap'] . 'css/bootstrap.glyphicons-icons-only.min.css', array('version' => 'auto'));
+		//HTMLHelper::stylesheet( $this->t['bootstrap'] . 'css/bootstrap.glyphicons-icons-only.min.css' );
 
 		HTMLHelper::_('jquery.framework', false);
 		PhocacartRenderAdminjs::renderOverlayOnSubmit('phFormUpload');

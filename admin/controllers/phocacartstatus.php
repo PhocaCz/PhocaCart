@@ -53,7 +53,7 @@ class PhocaCartCpControllerPhocaCartStatus extends PhocaCartCpControllerPhocaCar
             return;
         }
 
-        $language = $this->app->input->getCmd('language');
+        $language = $this->app->getInput()->getCmd('language');
         if (!$language) {
             $language = ComponentHelper::getParams('com_languages')->get('site');
         }

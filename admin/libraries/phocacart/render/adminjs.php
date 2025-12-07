@@ -133,7 +133,10 @@ final class PhocacartRenderAdminjs
 		$s[] = '   })';
 		$s[] = '})';
 
-		$document->addScriptDeclaration(implode("\n", $s));
+		//$document->addScriptDeclaration(implode("\n", $s));
+		$app = Factory::getApplication();
+		$wa  = $app->getDocument()->getWebAssetManager();
+		$wa->addInlineScript(implode("\n", $s));
 	}
 
 	public static function renderOverlay(){
@@ -209,7 +212,10 @@ final class PhocacartRenderAdminjs
 		$s[] = '	jQuery(\'#'.$formId.'\').on(\'submit\',{a1: '.(int)$count.'}, phImportAllItems);';
 		$s[] = '})';
 
-		$document->addScriptDeclaration(implode("\n", $s));
+		//$document->addScriptDeclaration(implode("\n", $s));
+		$app = Factory::getApplication();
+		$wa  = $app->getDocument()->getWebAssetManager();
+		$wa->addInlineScript(implode("\n", $s));
 
 	}
 

@@ -102,6 +102,8 @@ class PhocacartSpecification
 					// When no value, then no alias
 					if ($specification['alias_value']) {
 						$specification['alias_value'] = PhocacartUtils::getAliasName($specification['alias_value']);
+						$specification['alias_value'] = trim($specification['alias_value']);
+						$specification['alias_value'] = substr($specification['alias_value'], 0, 255);
 					}
 
 					$specification = PhocacartUtils::arrayDefValues($specification, [

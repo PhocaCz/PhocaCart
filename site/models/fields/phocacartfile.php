@@ -22,15 +22,20 @@ class JFormFieldPhocacartFile extends FormField
 	{
 
 		$document = Factory::getDocument();
-		$document->addScript(Uri::root(true) . '/media/com_phocacart/js/tower/tower-file-input.min.js');
-		HTMLHelper::stylesheet('media/com_phocacart/js/tower/tower-file-input.min.css');
+
+        $app = Factory::getApplication();
+		$wa  = $app->getDocument()->getWebAssetManager();
+		$wa->registerAndUseStyle('com_phocacart.tower-file-input', $this->t['bootstrap'] . 'media/com_phocacart/js/tower/tower-file-input.min.js', array('version' => 'auto'));
+        $wa->registerAndUseScript('com_phocacart.tower-file-input.js', 'media/com_phocacart/js/tower/tower-file-input.min.js', ['version' => 'auto']);
+
+		//$document->addScript(Uri::root(true) . '/media/com_phocacart/js/tower/tower-file-input.min.js');
+		//HTMLHelper::stylesheet('media/com_phocacart/js/tower/tower-file-input.min.css');
 
 		$pC = PhocacartUtils::getComponentParameters();
 		$s = PhocacartRenderStyle::getStyles();
 		$submit_item_upload_image_maxsize = $pC->get('submit_item_upload_image_maxsize', 512000);
 		$submit_item_upload_image_count = $pC->get('submit_item_upload_image_count', 1);
 
-		$app	= Factory::getApplication();
 		$option = $app->getInput()->get('option');
 		$view 	= $app->getInput()->get('view');
 

@@ -101,7 +101,10 @@ class JFormFieldPhocaPluginMethod extends FormField
 			$s[] 	= '})';
 			$s[] 	= ' ';
 		}
-		$document->addScriptDeclaration(implode("\n", $s));
+		//$document->addScriptDeclaration(implode("\n", $s));
+		$app = Factory::getApplication();
+		$wa  = $app->getDocument()->getWebAssetManager();
+		$wa->addInlineScript(implode("\n", $s));
 
 		if ($plugintype == 2) {
 			$methods = PhocacartShipping::getShippingPluginMethods();

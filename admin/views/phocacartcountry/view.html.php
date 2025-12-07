@@ -33,7 +33,10 @@ class PhocaCartCpViewPhocacartCountry extends HtmlView
 		$this->item		= $this->get('Item');
 
 		$media = new PhocacartRenderAdminmedia();
-		HTMLHelper::stylesheet( $this->t['bootstrap'] . 'css/bootstrap.glyphicons-icons-only.min.css' );
+		$app = Factory::getApplication();
+		$wa  = $app->getDocument()->getWebAssetManager();
+		$wa->registerAndUseStyle('com_phocacart.glyphicons-icons-only', $this->t['bootstrap'] . 'css/bootstrap.glyphicons-icons-only.min.css', array('version' => 'auto'));
+		//HTMLHelper::stylesheet( $this->t['bootstrap'] . 'css/bootstrap.glyphicons-icons-only.min.css' );
 
 		$this->addToolbar();
 		parent::display($tpl);

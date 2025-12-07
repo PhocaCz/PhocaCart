@@ -151,7 +151,10 @@ class PhocacartTime
 			foreach($days as $k => $v) {
 
 				// 1. Test CLOSING DAYS (3)
-				if ($v['type'] == 3 && $v['date'] != '' && $v['date'] != '0000-00-00 00:00:00' && strtotime($currentDate) ==  strtotime($v['date'])) {
+                $dbDate = Factory::getDate($v['date'], 'UTC');
+                $dbDate->setTimezone(new DateTimeZone($config->get('offset')));
+                $dbDateFormat	= $dbDate->format('Y-m-d', true, false);
+				if ($v['type'] == 3 && $v['date'] != '' && $v['date'] != '0000-00-00 00:00:00' && strtotime($currentDate) ==  strtotime($dbDateFormat)) {
 					if ($renderMessage) {$app->enqueueMessage($msg, $msgType);}
 					return $orderAllowed;
 				} else if ($v['type'] == 3 && $v['day'] > -1 && (int)$currentDay == (int)$v['day']) {
