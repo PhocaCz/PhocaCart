@@ -32,6 +32,12 @@
     --ph-icon-new: #337ab7;
 }
 
+[data-bs-theme="dark"] {
+        --ph-grey-bg: #3e3e3e;
+        --ph-white-bg: #3e3e3e;
+        --ph-grey-border: #9e9e9e;
+}
+
 .ph-top {
     margin-bottom: 1em;
 }
