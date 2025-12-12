@@ -2713,6 +2713,13 @@ ul.ph-filter-module-category-tree {
     margin-bottom: 0.25em;
 }
 
+.ph-filter-box-horizontal.ph-filter-label-box {
+    display: flex;
+    align-items: center;
+}
+.ph-filter-box-horizontal.ph-filter-label-box .ph-filter-label {
+    margin-right: 1em;
+}
 
 
 

@@ -67,6 +67,7 @@ class PhocacartFilter
     public $check_available_products    = 1;
     public $remove_parameters_cat		= 0;
     public $load_component_media		= 1;
+    public $filter_label_horizontal_layout = 0;
 
     public $ignore_zero_price = 0;
 
