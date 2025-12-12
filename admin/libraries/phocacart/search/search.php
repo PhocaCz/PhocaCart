@@ -66,15 +66,19 @@ class PhocacartSearch
         $dataAP['f']    = $f;
         $dataAP['id']   = 'phSearchActiveTags'. $specificIdSuffix;;
 
-         // AJAX WILL BE BASED ON CLASS NOT ON ID (because of more possible instances)
+        // AJAX WILL BE BASED ON CLASS NOT ON ID (because of more possible instances)
+        // Display only if not ajax - the base html loading and in case the search filter is not used only for active parameters
         if ($this->ajax == 0) {
             $o[] = '<div class="' . $data['s']['c']['row'] . '">';
             $o[] = '<div class="' . $data['s']['c']['col.xs12.sm12.md12'] . '">';
-            $o[] = '<div id="' . $data['id'] . '" class="phSearchBox '.$data['id'].'">';
-            $o[] = $layout->render($data);
+
+            if ($this->display_active_parameters != 2) {
+                $o[] = '<div id="' . $data['id'] . '" class="phSearchBox ' . $data['id'] . '">';
+                $o[] = $layout->render($data);
+            }
         }
 
-        if ($this->display_active_parameters) {
+        if ($this->display_active_parameters > 0) {
             if ($this->ajax == 0) {
                 $o[] = '<div id="' . $dataAP['id'] . '" class="phSearchActiveTags '.$dataAP['id'].'">';
             }
@@ -89,7 +93,9 @@ class PhocacartSearch
         if ($this->ajax == 0) {
             $o[] = '</div>';
             $o[] = '</div>';
-            $o[] = '</div>';
+            if ($this->display_active_parameters != 2 ) {
+                $o[] = '</div>';
+            }
         }
 
 		$o2 = implode("\n", $o);

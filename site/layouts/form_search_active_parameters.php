@@ -29,9 +29,15 @@ if (!empty($d['f'])) {
                 $priceTo    = $v['to'] !== '' ? $price->getPriceFormat($v['to']) : '';
 
                 $title = Text::_('COM_PHOCACART_PRICE') . ': ' . $priceFrom . ' - ' . $priceTo;
+                $title = trim($title);
+
+                $onclick = ' onclick="event.preventDefault(); phClearField(\'#phPriceFromTopricefrom\'); phClearField(\'#phPriceFromTopriceto\'); phChangeFilter(\'price_from\', \'\', 0, \'text\',1, 1, 2); phChangeFilter(\'price_to\', \'\', 0, \'text\',1, 0, 2);"';
 
                 echo '<span class="' . $d['s']['c']['label.label-info'] . ' ph-label-close">';
-                echo '<a href="#" onclick="event.preventDefault(); phClearField(\'#phPriceFromTopricefrom\'); phClearField(\'#phPriceFromTopriceto\'); phChangeFilter(\'price_from\', \'\', 0, \'text\',1, 1, 2); phChangeFilter(\'price_to\', \'\', 0, \'text\',1, 0, 2);">' . $title . PhocacartRenderIcon::icon($d['s']['i']['remove-circle'] . ' ph-label-close-remove', '', '', ' ').'</a>';
+
+                echo '<a class="btn ph-label-close-title" href="#"'.$onclick.'>' . $title .'</a>';
+                echo '<a class="btn ph-label-close-icon" href="#"'.$onclick.'>' . PhocacartRenderIcon::icon($d['s']['i']['remove-circle'] . ' ph-label-close-remove', '', '', '') .'</a>';
+
                 echo '</span>';
 
                 $filterItems = 1;
@@ -67,6 +73,7 @@ if (!empty($d['f'])) {
 
                             }
                             $title = $titlePrefix . ': ' . $title;
+                            $title = trim($title);
 
                         }
 
@@ -76,9 +83,11 @@ if (!empty($d['f'])) {
                             $alias = $v2['alias_value'];
                         }
 
+                        $onclick = ' onclick="event.preventDefault(); phChangeFilter(\'' . $v2['parameteralias'] . '\', \'' . $alias . '\', this, \'checked\',0, 0, 2);"';
 
                         echo '<span class="' . $d['s']['c']['label.label-info'] . ' ph-label-close">';
-                        echo '<a href="#" onclick="event.preventDefault(); phChangeFilter(\'' . $v2['parameteralias'] . '\', \'' . $alias . '\', this, \'checked\',0, 0, 2);">' . $title .PhocacartRenderIcon::icon($d['s']['i']['remove-circle'] . ' ph-label-close-remove', '', '', ' ').'</a>';
+                        echo '<a class="btn ph-label-close-title" href="#"'.$onclick.'>' . $title .'</a>';
+                        echo '<a class="btn ph-label-close-icon" href="#"'.$onclick.'>' . PhocacartRenderIcon::icon($d['s']['i']['remove-circle'] . ' ph-label-close-remove', '', '', '') .'</a>';
                         echo '</span>';
 
                         $filterItems = 1;
@@ -91,8 +100,11 @@ if (!empty($d['f'])) {
 
 if ($filterItems == 1) {
 
+    $onclick = ' onclick="startFullOverlay(1)"';
+
     echo '<span class="' . $d['s']['c']['label.label-danger'] . ' ph-label-close">';
-    echo '<a onclick="startFullOverlay(1)" href="' . Route::_($clearFilterLink) . '">' . Text::_('COM_PHOCACART_CLEAR_ALL'). PhocacartRenderIcon::icon($d['s']['i']['remove-circle'] . ' ph-label-close-remove', '', '', ' ').'</a>';
+    echo '<a class="btn ph-label-close-title" href="' . Route::_($clearFilterLink) . '"'.$onclick.'>' . Text::_('COM_PHOCACART_CLEAR_ALL').'</a>';
+    echo '<a class="btn ph-label-close-icon" href="' . Route::_($clearFilterLink) . '"'.$onclick.'>' . PhocacartRenderIcon::icon($d['s']['i']['remove-circle'] . ' ph-label-close-remove', '', '', '').'</a>';
     echo '</span>';
 
 }

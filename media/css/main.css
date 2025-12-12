@@ -2245,26 +2245,35 @@ img.ph-lazyload:not([src]) {
     border-radius: 2px;
 }
 
+
+.ph-label-close .btn {
+    padding: 0;
+    line-height: 1;
+}
+
+span.badge.ph-label-close,
 .ph-label-close {
+    display: inline-flex;
+    align-items: center;
     margin: 2px;
-    padding: 0.5em 0.3em;
 }
+
 .ph-label-close a {
-    font-weight: bold;
-    color: #fff;
-}
-.ph-label-close a:hover {
-    color: #fff;
+    color: currentColor;
     text-decoration: none;
 }
-
-.ph-label-close a .ph-label-close-remove {
-    vertical-align: bottom;
-    top: 0;
+.ph-label-close a:hover {
+    color: currentColor;
+    text-decoration: none;
 }
-
+.ph-label-close a .ph-label-close-remove,
 .ph-label-close a .ph-label-close-remove::before {
-    color: #fff;
+    color: currentColor;
+    fill: currentColor;
+    stroke: currentColor;
+}
+.ph-label-close .ph-label-close-icon {
+    margin-left: 0.5em;
 }
 
 .ph-image-box-content-item {
@@ -2391,14 +2400,20 @@ img.ph-lazyload:not([src]) {
     height: 1.5em;
     fill: currentColor;
     margin: 0;
-    stroke: #5f5f5f;
+    stroke: currentColor;
 }
 /* Icons inside button */
 .btn .pc-si {
-    margin-right: 0.3em;
-    margin-top: -0.2em;
-    stroke: #f5f5f5;
+   /* margin-right: 0.3em;
+    margin-top: -0.2em;*/
+    stroke: currentColor;
 }
+.btn:has(> svg.pc-si) {
+    display: inline-flex;
+    align-items: center;
+    column-gap: 0.5em;
+}
+
 .btn.btn-secondary .pc-si {
     /*stroke: #5f5f5f;*/
     stroke: currentColor;
