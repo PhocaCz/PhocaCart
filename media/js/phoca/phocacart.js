@@ -122,7 +122,7 @@ function phUpdatePageAndParts(url, source) {
 
 	}
 
-	if (typeof phParamsS != 'undefined' && phVars['mod_phocacart_search'] == 1 && phParamsS['displayActiveParameters'] == 1) {
+	if (typeof phParamsS != 'undefined' && phVars['mod_phocacart_search'] == 1 && parseInt(phParamsS['displayActiveParameters']) > 0) {
 		// Update filter only when source comes from filter
 		phRenderPagePart({}, 'phSearchActiveTags', urlSearchModule);// AJAX update search module
 	}
