@@ -135,7 +135,7 @@ class PhocacartCompare
 			$columns .= ', a.id as id, a.price, a.image, a.type,'
 			.' GROUP_CONCAT(DISTINCT c.id) as catid, COUNT(pc.category_id) AS count_categories, a.catid AS preferred_catid,'
 			.' a.length, a.width, a.height, a.weight, a.volume, a.unit_amount, a.unit_unit, a.price_original,'
-			.' a.stock, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.availability,'
+			.' a.stock, a.min_quantity, a.min_multiple_quantity, a.max_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.availability,'
 			.' a.gift_types,'
 			//.' m.title as manufacturer_title,'
 			. I18nHelper::sqlCoalesce(['title'], 'm', 'manufacturer_', '', '', ',')
@@ -147,7 +147,7 @@ class PhocacartCompare
 
 			$groupsFull		= 'a.id, a.title, a.alias, a.description, a.price, a.image, a.type,'
 			.' a.length, a.width, a.height, a.weight, a.volume,'
-			.' a.stock, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.availability,'
+			.' a.stock, a.min_quantity, a.min_multiple_quantity, a.max_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.availability,'
 			.' a.gift_types,'
 			.' m.title,'
 			.' ppg.price, pptg.points_received';

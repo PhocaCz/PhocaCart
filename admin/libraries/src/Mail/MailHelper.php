@@ -32,7 +32,7 @@ defined('_JEXEC') or die;
 
 abstract class MailHelper
 {
-    private static function link(string $url, bool $xhtml = false, bool $absolute = true): string
+    public static function link(string $url, bool $xhtml = false, bool $absolute = true): string
     {
         $link = Route::link('site', $url, $xhtml, Route::TLS_IGNORE, $absolute);
         if ($absolute) {

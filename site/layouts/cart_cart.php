@@ -14,6 +14,7 @@ use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Router\Route;
 
 $layoutI	= new FileLayout('image', null, array('component' => 'com_phocacart'));
+$layoutSC	= new FileLayout('subscription_cart', null, array('component' => 'com_phocacart'));
 
 $d 		= $displayData;
 $price	= new PhocacartPrice();
@@ -177,6 +178,13 @@ if (!empty($d['fullitems'])) {
 			echo $v['title'];
 		} else {
 			echo '<a href="'.Route::_($link).'">'.$v['title'].'</a>';
+		}
+
+		if (isset($v['subscription_scenario']) && !empty($v['subscription_scenario'])) {
+			$dSC      = [];
+			$dSC['s'] = $d['s'];
+			$dSC['scenario'] = $v['subscription_scenario'];
+			echo $layoutSC->render($dSC);
 		}
 
 		echo '</div>';

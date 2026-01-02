@@ -84,18 +84,30 @@ if ($d['t']['display_webp_images'] == 1) {
 
 } else {
 
-    if ($d['t']['lazy_load_category_items'] == 1) {
+    if(isset($d['image']['image']->original) && strtolower(pathinfo($d['image']['image']->original, PATHINFO_EXTENSION)) == 'svg') {
+        // SVG Support
+        $src = PhocacartUtils::getSvgOriginalInsteadThumb($src);
+        $dataImg = PhocacartUtils::getSvgOriginalInsteadThumb($dataImg);
 
-        echo '<img src="'.$srcPlaceHolder.'" data-src="'. $src.'" alt="'.$altValue.'" class="'.$class.'" '.$d['image']['style'].' data-image="'. $dataImg.'" />';
-
-    } else {
 
         echo '<img src="'. $src.'" alt="'.$altValue.'" class="'.$class.'" '.$d['image']['style'].' data-image="'. $dataImg.'"'.$attributeLazyLoad.' />';
 
-        // Switch
-        if (isset($d['image']['second']->rel) && $d['image']['second']->rel != '') {
-            $switchImg      = Uri::base(true).'/'.$d['image']['second']->rel; // switch
-            echo '<span class="phIRBox"><img src="'. $switchImg.'" alt="'.$altValue.'" class="'.$classSwitch.'" '. $d['image']['style'].' /></span>';
+    } else {
+
+        if ($d['t']['lazy_load_category_items'] == 1) {
+
+            echo '<img src="'.$srcPlaceHolder.'" data-src="'. $src.'" alt="'.$altValue.'" class="'.$class.'" '.$d['image']['style'].' data-image="'. $dataImg.'" />';
+
+        } else {
+
+            echo '<img src="'. $src.'" alt="'.$altValue.'" class="'.$class.'" '.$d['image']['style'].' data-image="'. $dataImg.'"'.$attributeLazyLoad.' />';
+
+            // Switch
+            if (isset($d['image']['second']->rel) && $d['image']['second']->rel != '') {
+                $switchImg      = Uri::base(true).'/'.$d['image']['second']->rel; // switch
+                echo '<span class="phIRBox"><img src="'. $switchImg.'" alt="'.$altValue.'" class="'.$classSwitch.'" '. $d['image']['style'].' /></span>';
+            }
+
         }
 
     }

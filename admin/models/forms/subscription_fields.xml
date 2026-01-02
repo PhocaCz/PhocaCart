@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fieldset name="subscription" label="COM_PHOCACART_FIELDSET_SUBSCRIPTION">
+
+
+        <field
+            name="subscription_period"
+            type="number"
+            label="COM_PHOCACART_FIELD_SUBSCRIPTION_PERIOD"
+            description="COM_PHOCACART_FIELD_SUBSCRIPTION_PERIOD_DESC"
+            min="0"
+            filter="raw"
+            default="0"
+        />
+
+        <field
+            name="subscription_unit"
+            type="list"
+            label="COM_PHOCACART_FIELD_SUBSCRIPTION_UNIT"
+            description="COM_PHOCACART_FIELD_SUBSCRIPTION_UNIT_DESC" default="3">
+            <option value="1">COM_PHOCACART_OPTION_DAY</option>
+            <option value="2">COM_PHOCACART_OPTION_WEEK</option>
+            <option value="3">COM_PHOCACART_OPTION_MONTH</option>
+            <option value="4">COM_PHOCACART_OPTION_YEAR</option>
+        </field>
+
+        <field
+            name="subscription_signup_fee"
+            type="number"
+            label="COM_PHOCACART_FIELD_SIGNUP_FEE"
+            description="COM_PHOCACART_FIELD_SIGNUP_FEE_DESC"
+            step="0.01"
+            min="0"
+            filter="raw"
+        />
+
+        <field
+            name="subscription_renewal_discount"
+            type="number"
+            label="COM_PHOCACART_FIELD_RENEWAL_DISCOUNT"
+            description="COM_PHOCACART_FIELD_RENEWAL_DISCOUNT_DESC"
+            step="0.01"
+            min="0"
+            filter="raw"
+        />
+
+        <field
+            name="subscription_renewal_discount_calculation_type"
+            type="list"
+            label="COM_PHOCACART_FIELD_DISCOUNT_TYPE"
+            description="COM_PHOCACART_FIELD_DISCOUNT_TYPE_DESC"
+            default="0"
+
+        >
+            <option value="0">COM_PHOCACART_OPTION_FIXED_AMOUNT</option>
+            <option value="1">COM_PHOCACART_OPTION_PERCENTAGE</option>
+        </field>
+
+        <field
+            name="subscription_usergroup_add"
+            type="usergrouplist"
+            label="COM_PHOCACART_FIELD_USERGROUP_ADD"
+            description="COM_PHOCACART_FIELD_USERGROUP_ADD_DESC"
+            multiple="true"
+            layout="joomla.form.field.list-fancy-select"
+            checksuperusergroup="0"
+            default="0"
+
+        />
+
+        <field
+            name="subscription_usergroup_remove"
+            type="usergrouplist"
+            label="COM_PHOCACART_FIELD_USERGROUP_REMOVE"
+            description="COM_PHOCACART_FIELD_USERGROUP_REMOVE_DESC"
+            multiple="true"
+            layout="joomla.form.field.list-fancy-select"
+            checksuperusergroup="0"
+            default="0"
+
+        />
+
+
+
+        <!--<field
+            name="subscription_trial_enabled"
+            type="radio"
+            label="COM_PHOCACART_FIELD_TRIAL_ENABLED"
+            description="COM_PHOCACART_FIELD_TRIAL_ENABLED_DESC"
+            class="btn-group"
+            default="0"
+
+        >
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+
+        <field
+            name="subscription_trial_period"
+            type="number"
+            label="COM_PHOCACART_FIELD_TRIAL_PERIOD"
+            description="COM_PHOCACART_FIELD_TRIAL_PERIOD_DESC"
+            min="0"
+            filter="raw"
+            default="0"
+        />
+
+        <field
+            name="subscription_trial_unit"
+            type="list"
+            label="COM_PHOCACART_FIELD_TRIAL_UNIT"
+            description="COM_PHOCACART_FIELD_TRIAL_UNIT_DESC"
+
+        >
+            <option value="1">COM_PHOCACART_OPTION_DAY</option>
+            <option value="2">COM_PHOCACART_OPTION_WEEK</option>
+            <option value="3">COM_PHOCACART_OPTION_MONTH</option>
+        </field>-->
+
+        <field
+            name="subscription_grace_period_days"
+            type="number"
+            label="COM_PHOCACART_FIELD_GRACE_PERIOD"
+            description="COM_PHOCACART_FIELD_GRACE_PERIOD_DESC"
+            default="0"
+            min="0"
+            max="365"
+            filter="raw"
+        />
+    </fieldset>
+</form>

@@ -45,7 +45,7 @@ class PhocacartStock
 		return $data;
 	}
 
-	public static function getStockStatus($stockCount, $minQuantity, $minMultipleQuantity, $stockStatusIdA, $stockStatusIdN) {
+	public static function getStockStatus($stockCount, $minQuantity, $minMultipleQuantity, $stockStatusIdA, $stockStatusIdN, $maxQuantity = 0) {
 
 		// A > 0 OR Not checking
 		// N = 0
@@ -152,6 +152,11 @@ class PhocacartStock
 		$stock['min_quantity'] = false;
 		if ($minQuantity > 0) {
 			$stock['min_quantity'] = $minQuantity;
+		}
+
+        $stock['max_quantity'] = false;
+		if ($maxQuantity > 0) {
+			$stock['max_quantity'] = $maxQuantity;
 		}
 
 		$stock['min_multiple_quantity'] = false;
@@ -440,7 +445,7 @@ class PhocacartStock
 
 
 		// Get all stock status information: count, status, image, ...
-		$stockStatus		= PhocacartStock::getStockStatus((int)$stock, (int)$item->min_quantity, (int)$item->min_multiple_quantity, (int)$item->stockstatus_a_id,  (int)$item->stockstatus_n_id);
+		$stockStatus		= PhocacartStock::getStockStatus((int)$stock, (int)$item->min_quantity, (int)$item->min_multiple_quantity, (int)$item->stockstatus_a_id,  (int)$item->stockstatus_n_id, (int)$item->max_quantity);
 
 		return $stock;
 	}

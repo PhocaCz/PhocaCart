@@ -38,6 +38,10 @@ if ($this->a->confirm == 1) {
 			echo '</div>';
 		}
 
+	} else if ($this->t['maxqtyvalid'] == 0) {
+		echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-row" >';
+		echo $layoutAl->render(array('type' => 'error', 'text' => Text::_('COM_PHOCACART_MAXIMUM_ORDER_QUANTITY_OF_ONE_OR_MORE_PRODUCTS_NOT_MET_UPDATE_QUANTITY_BEFORE_ORDERING')));
+		echo '</div>';
 	} else {
 		// Header
 		echo '<div class="ph-checkout-confirm-box-row">';

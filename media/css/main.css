@@ -149,6 +149,12 @@
     text-decoration: none;
 }
 
+.ph-category-price-box .ph-potentional-subscription-period,
+.ph-category-price-box .ph-active-subscription-period,
+.ph-item-price-box .ph-potentional-subscription-period,
+.ph-item-price-box .ph-active-subscription-period,
+.ph-category-price-box .ph-subscription-period,
+.ph-item-price-box .ph-subscription-period,
 .ph-item-reward-box .ph-reward,
 .ph-category-price-box .ph-price-brutto,
 .ph-category-price-box .ph-price-netto,
@@ -180,6 +186,12 @@
     float: right;
 }
 
+.ph-category-price-box .ph-potentional-subscription-period-header,
+.ph-item-price-box .ph-potentional-subscription-period-header,
+.ph-category-price-box .ph-active-subscription-period-header,
+.ph-item-price-box .ph-active-subscription-period-header,
+.ph-category-price-box .ph-subscription-period-header,
+.ph-item-price-box .ph-subscription-period-header,
 .ph-item-reward-box .ph-reward-txt,
 .ph-category-price-box .ph-price-txt,
 .ph-category-price-box .ph-tax-txt,
@@ -205,6 +217,7 @@
     float: left;
     clear: both;
 }
+
 
 .ph-item-box.list .ph-item {
     width: 100%;
@@ -2737,4 +2750,90 @@ ul.ph-filter-module-category-tree {
 }
 
 
+/* Subscripton */
+.ph-price-subscription-base-price,
+.ph-price-subscription-signup-fee,
+.ph-price-subscription-renewal-discount{
+    color: var(--ph-grey);
+}
 
+
+.ph-status-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.2;
+  border-radius: 999px;
+  white-space: nowrap;
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.ph-status-label-status-active {
+  background-color: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.ph-status-label-status-future {
+  background-color: #dbeafe;
+  color: #1e40af;
+  border: 1px solid #bfdbfe;
+}
+
+.ph-status-label-status-expired {
+  background-color: #f3f4f6;
+  color: #6b7280;
+  border: 1px solid #e5e7eb;
+}
+
+.ph-status-label-status-on-hold {
+  background-color: #ffedd5;
+  color: #9a3412;
+  border: 1px solid #fed7aa;
+}
+
+.ph-status-label-status-pending {
+  background-color: #fef9c3;
+  color: #854d0e;
+  border: 1px solid #fef08a;
+}
+
+.ph-status-label-status-failed {
+  background-color: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.ph-status-label-status-in-trial {
+  background-color: #f3e8ff;
+  color: #6b21a8;
+  border: 1px solid #e9d5ff;
+}
+
+.ph-status-label-status-card-expired {
+  background-color: #fff1f2;
+  color: #be123c;
+  border: 1px solid #fda4af;
+}
+
+.ph-status-label-status-canceled {
+  background-color: #e5e7eb;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+
+[data-bs-theme="dark"] {
+    .ph-qr-code {
+        background: #fff;
+        padding: 0.5em;
+        display: inline-block;
+    }
+    .ph-qr-code {
+        display: inline-block;
+    }
+}

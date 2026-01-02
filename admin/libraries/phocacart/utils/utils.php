@@ -807,7 +807,7 @@ class PhocacartUtils
 
 			// Be aware some clients do not support base64 image or SVG image so let the image be in PDF document and not in email body
 			//return '<img src="data:image/png;base64,'. base64_encode($barCodeObj->getBarcodePngData(2,2)).'">';
-			return $barCodeObj->getBarcodeSVGcode();
+			return '<span class="ph-qr-code">' . $barCodeObj->getBarcodeSVGcode() . '</span>';
 		}
 
 		return '';
@@ -834,5 +834,16 @@ class PhocacartUtils
 		}
 		return $img;
 	}
+
+    public static function getSvgOriginalInsteadThumb($image) {
+
+
+         if(isset($image) && strtolower(pathinfo($image, PATHINFO_EXTENSION)) == 'svg') {
+             $search = ['thumbs/phoca_thumb_m_', 'thumbs/phoca_thumb_l_', 'thumbs/phoca_thumb_s_'];
+             $image = str_replace($search, '', $image);
+         }
+
+         return $image;
+    }
 }
 

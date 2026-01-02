@@ -252,11 +252,11 @@ class PhocacartWishlist
 
             $columns .= I18nHelper::sqlCoalesce(['title', 'alias'], 'c', 'cat', 'groupconcatdistinct');
 			$columns .= ', a.price, a.image,'
-			            .' a.stock, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.availability,'
+			            .' a.stock, a.min_quantity, a.min_multiple_quantity, a.max_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.availability,'
 			            .' MIN(ppg.price) as group_price, MAX(pptg.points_received) as group_points_received';
 
             $groupsFull		= 'a.id, a.title, a.alias, a.description, a.price, a.image,'
-			                .' a.stock, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.availability,'
+			                .' a.stock, a.min_quantity, a.min_multiple_quantity, a.max_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.availability,'
 			                .' ppg.price, pptg.points_received';
 			$groupsFast		= 'a.id';
 			$groups			= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;

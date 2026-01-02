@@ -2217,6 +2217,34 @@ a[target=_blank]::before {
 	display: flex;
 }
 
+.ph-price-box {
+	display: flex;
+	justify-content: space-between;
+	width: 50%;
+}
+
+.ph-price-box .ph-price-txt {
+	font-weight: bold;
+}
+
+.ph-price-box .ph-price {
+	text-align: right;
+}
+
+.ph-pro-box {
+	border-radius: 3px;
+	background: #f5f5f5;
+	padding: 2em;
+}
+
+.ph-pro-label {
+	background: #dc3650;
+	color: #fff;
+	font-weight: bold;
+	border-radius: 3px;
+	padding: 0.15em 0.5em;
+}
+
 /* Hide objects in edit - administration - Product edit example */
 
 /* Entire tab *//*

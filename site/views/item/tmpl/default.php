@@ -95,6 +95,7 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 		$dP['class']			= 'ph-item-price-box';
 		$dP['product_id']	= (int)$x->id;
 		$dP['typeview']		= 'Item';
+		$dP['subscription_scenario'] = isset($x->subscription_scenario) ? $x->subscription_scenario : null;
 
 		// Display discount price
 		// Move standard prices to new variable (product price -> product discount)
@@ -368,6 +369,14 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 			$dPOQ['s']					= $this->s;
 			$dPOQ['text']				= Text::_('COM_PHOCACART_MINIMUM_MULTIPLE_ORDER_QUANTITY');
 			$dPOQ['status']				= $this->t['stock_status']['min_multiple_quantity'];
+			echo $layoutPOQ->render($dPOQ);
+		}
+
+        if($this->t['stock_status']['max_quantity']) {
+			$dPOQ						= array();
+			$dPOQ['s']					= $this->s;
+			$dPOQ['text']				= Text::_('COM_PHOCACART_MAXIMUM_ORDER_QUANTITY');
+			$dPOQ['status']				= $this->t['stock_status']['max_quantity'];
 			echo $layoutPOQ->render($dPOQ);
 		}
 	}

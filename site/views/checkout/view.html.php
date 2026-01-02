@@ -611,6 +611,7 @@ class PhocaCartViewCheckout extends HtmlView
 
         $this->t['stockvalid']          = $this->cart->getStockValid();
         $this->t['minqtyvalid']         = $this->cart->getMinimumQuantityValid();
+        $this->t['maxqtyvalid']         = $this->cart->getMaximumQuantityValid();
         $this->t['minmultipleqtyvalid'] = $this->cart->getMinimumMultipleQuantityValid();
 
         $media->loadSpec();

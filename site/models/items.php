@@ -15,6 +15,7 @@ use Phoca\PhocaCart\Constants\ProductType;
 use Phoca\PhocaCart\Dispatcher\Dispatcher;
 use Phoca\PhocaCart\Event;
 use Phoca\PhocaCart\I18n\I18nHelper;
+//use PhocacartCalculation;
 
 defined('_JEXEC') or die();
 
@@ -175,6 +176,13 @@ class PhocaCartModelItems extends BaseDatabaseModel
 		if (empty($this->item)) {
 			$query			= $this->getItemListQuery( );
 			$this->item		= $this->_getList( $query ,$this->getState('limitstart'), $this->getState('limit'));
+
+			if (!empty($this->item)) {
+				foreach ($this->item as $v) {
+					PhocacartCalculation::changePrice($v);
+				}
+			}
+
 		}
 		return $this->item;
 	}
@@ -465,10 +473,11 @@ class PhocaCartModelItems extends BaseDatabaseModel
 			$columns = [
 				'a.id', 'a.image', 'a.unit_amount', 'a.unit_unit',
 				'a.sku', 'a.ean', 'a.upc', 'a.type', 'a.points_received', 'a.price_original',
-				'a.stock', 'a.stock_calculation', 'a.min_quantity', 'a.min_multiple_quantity',
+				'a.stock', 'a.stock_calculation', 'a.min_quantity', 'a.min_multiple_quantity', 'a.max_quantity',
 				'a.stockstatus_a_id', 'a.stockstatus_n_id','a.date', 'a.sales', 'a.featured',
-				'a.external_id', 'a.unit_amount', 'a.unit_unit', 'a.external_link', 'a.external_text', 'a.price', 'a.gift_types'
-			];
+				'a.external_id', 'a.unit_amount', 'a.unit_unit', 'a.external_link', 'a.external_text', 'a.price', 'a.gift_types',
+				'a.subscription_period', 'a.subscription_unit', 'a.subscription_signup_fee', 'a.subscription_renewal_discount', 'a.subscription_renewal_discount_calculation_type', 'a.subscription_grace_period_days'
+            ];
 
 			$this->dispatchItemsLayout($ordering, $columns);
 			$this->dispatchLoadColumns($columns);

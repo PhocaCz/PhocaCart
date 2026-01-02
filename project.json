@@ -301,6 +301,12 @@
 				"title": "COM_PHOCACART_BULK_PRICE_EDITOR"
 			},
 			"45": {
+				"image": "class:calendar",
+				"view": "phocacartsubscriptions",
+				"link": "option=com_phocacart&amp;view=phocacartsubscriptions",
+				"title": "COM_PHOCACART_SUBSCRIPTIONS"
+			},
+			"46": {
 				"image": "class:info",
 				"view": "phocacartinfo",
 				"link": "option=com_phocacart&amp;view=phocacartinfo",

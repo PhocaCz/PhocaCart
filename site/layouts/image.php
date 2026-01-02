@@ -50,22 +50,53 @@ if ($d['t']['display_webp_images'] == 1) {
 
 } else {
 
-    //list($width, $height) = getimagesize(JPATH_BASE . str_replace(Joomla\CMS\Uri\Uri::base(true), '', $d['src']));
-    echo '<img';
-    echo isset($d['src']) ? ' src="'.$d['src'].'"' : ' src=""';
-    echo isset($d['alt-value']) ? ' alt="'.$d['alt-value'].'"' : ' alt=""';
-    echo isset($d['class']) && $d['class'] != '' ? ' class="'.$d['class'].'"' : '';
-    echo isset($d['style']) && $d['style'] != '' ? ' style="'.$d['style'].'"' : '';
-    echo isset($d['width']) && $d['width'] != '' ? ' width="'.$d['width'].'"' : '';
-    echo isset($d['height']) && $d['height'] != '' ? ' height="'.$d['height'].'"' : '';
-    echo isset($d['data-image']) && $d['data-image'] != '' ? ' data-image="'.$d['data-image'].'"' : '';
+    if(isset($d['src']) && strtolower(pathinfo($d['src'], PATHINFO_EXTENSION)) == 'svg') {
+        // SVG Support
+        if (isset($d['src'])) {
+            $d['src'] = PhocacartUtils::getSvgOriginalInsteadThumb($d['src']);
+        }
 
-    echo isset($d['data-image-small']) && $d['data-image-small'] != '' ? ' data-image-small="'.$d['data-image-small'].'"' : '';
-    echo isset($d['data-image-medium']) && $d['data-image-medium'] != '' ? ' data-image-medium="'.$d['data-image-medium'].'"' : '';
-    echo isset($d['data-image-large']) && $d['data-image-large'] != '' ? ' data-image-large="'.$d['data-image-large'].'"' : '';
-    echo isset($d['data-image-original']) && $d['data-image-original'] != '' ? ' data-image-original="'.$d['data-image-original'].'"' : '';
-    echo isset($d['data-image-meta']) && $d['data-image-meta'] != '' ? ' data-image-meta="'.$d['data-image-meta'].'"' : '';
-    echo isset($d['s']['a']['lazyload']) && $d['s']['a']['lazyload'] != '' ? $d['s']['a']['lazyload'] : '';
-    echo '/>';
+        if (isset($d['data-image'])) {
+            $d['data-image'] = PhocacartUtils::getSvgOriginalInsteadThumb($d['data-image']);
+        }
+
+        echo '<img';
+        echo isset($d['src']) ? ' src="' . $d['src'] . '"' : ' src=""';
+        echo isset($d['alt-value']) ? ' alt="' . $d['alt-value'] . '"' : ' alt=""';
+        echo isset($d['class']) && $d['class'] != '' ? ' class="' . $d['class'] . '"' : '';
+        echo isset($d['style']) && $d['style'] != '' ? ' style="' . $d['style'] . '"' : '';
+        echo isset($d['width']) && $d['width'] != '' ? ' width="' . $d['width'] . '"' : '';
+        echo isset($d['height']) && $d['height'] != '' ? ' height="' . $d['height'] . '"' : '';
+        echo isset($d['data-image']) && $d['data-image'] != '' ? ' data-image="' . $d['data-image'] . '"' : '';
+
+        echo isset($d['data-image-small']) && $d['data-image-small'] != '' ? ' data-image-small="' . $d['data-image-small'] . '"' : '';
+        echo isset($d['data-image-medium']) && $d['data-image-medium'] != '' ? ' data-image-medium="' . $d['data-image-medium'] . '"' : '';
+        echo isset($d['data-image-large']) && $d['data-image-large'] != '' ? ' data-image-large="' . $d['data-image-large'] . '"' : '';
+        echo isset($d['data-image-original']) && $d['data-image-original'] != '' ? ' data-image-original="' . $d['data-image-original'] . '"' : '';
+        echo isset($d['data-image-meta']) && $d['data-image-meta'] != '' ? ' data-image-meta="' . $d['data-image-meta'] . '"' : '';
+        echo isset($d['s']['a']['lazyload']) && $d['s']['a']['lazyload'] != '' ? $d['s']['a']['lazyload'] : '';
+        echo '/>';
+
+    } else {
+
+
+        //list($width, $height) = getimagesize(JPATH_BASE . str_replace(Joomla\CMS\Uri\Uri::base(true), '', $d['src']));
+        echo '<img';
+        echo isset($d['src']) ? ' src="' . $d['src'] . '"' : ' src=""';
+        echo isset($d['alt-value']) ? ' alt="' . $d['alt-value'] . '"' : ' alt=""';
+        echo isset($d['class']) && $d['class'] != '' ? ' class="' . $d['class'] . '"' : '';
+        echo isset($d['style']) && $d['style'] != '' ? ' style="' . $d['style'] . '"' : '';
+        echo isset($d['width']) && $d['width'] != '' ? ' width="' . $d['width'] . '"' : '';
+        echo isset($d['height']) && $d['height'] != '' ? ' height="' . $d['height'] . '"' : '';
+        echo isset($d['data-image']) && $d['data-image'] != '' ? ' data-image="' . $d['data-image'] . '"' : '';
+
+        echo isset($d['data-image-small']) && $d['data-image-small'] != '' ? ' data-image-small="' . $d['data-image-small'] . '"' : '';
+        echo isset($d['data-image-medium']) && $d['data-image-medium'] != '' ? ' data-image-medium="' . $d['data-image-medium'] . '"' : '';
+        echo isset($d['data-image-large']) && $d['data-image-large'] != '' ? ' data-image-large="' . $d['data-image-large'] . '"' : '';
+        echo isset($d['data-image-original']) && $d['data-image-original'] != '' ? ' data-image-original="' . $d['data-image-original'] . '"' : '';
+        echo isset($d['data-image-meta']) && $d['data-image-meta'] != '' ? ' data-image-meta="' . $d['data-image-meta'] . '"' : '';
+        echo isset($d['s']['a']['lazyload']) && $d['s']['a']['lazyload'] != '' ? $d['s']['a']['lazyload'] : '';
+        echo '/>';
+    }
 }
 ?>

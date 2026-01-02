@@ -189,6 +189,8 @@ $a[] = array('stockstatus_n_id', 'COM_PHOCACART_FIELD_STOCK_STATUS_B_LABEL');
 $a[] = array('min_quantity', 'COM_PHOCACART_FIELD_MIN_ORDER_QUANTITY_LABEL');
 $a[] = array('min_multiple_quantity', 'COM_PHOCACART_FIELD_MIN_MULTIPLE_ORDER_QUANTITY_LABEL');
 $a[] = array('min_quantity_calculation', 'COM_PHOCACART_FIELD_MINIMUM_QUANTITY_CALCULATION_LABEL');
+$a[] = array('max_quantity', 'COM_PHOCACART_FIELD_MAX_ORDER_QUANTITY_LABEL');
+$a[] = array('max_quantity_calculation', 'COM_PHOCACART_FIELD_MAXIMUM_QUANTITY_CALCULATION_LABEL');
 
 $a[] = array('delivery_date', 'COM_PHOCACART_FIELD_PRODUCT_DELIVERY_DATE_LABEL');//-
 

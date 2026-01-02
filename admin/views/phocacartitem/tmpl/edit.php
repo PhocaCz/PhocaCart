@@ -98,6 +98,7 @@ $tabs['reward']         = Text::_($this->t['l'] . '_REWARD_POINTS');
 $tabs['publishing']     = Text::_($this->t['l'] . '_PUBLISHING_OPTIONS');
 $tabs['feed']           = Text::_($this->t['l'] . '_FEED_OPTIONS');
 $tabs['metadata']       = Text::_($this->t['l'] . '_METADATA_OPTIONS');
+$tabs['subscription']   = Text::_('COM_PHOCACART_FIELDSET_SUBSCRIPTION');
 $tabs['aidata']       = Text::_($this->t['l'] . '_AI_TASKS');
 //$tabs['fields']       = T ext::_($this->t['l'] . '_FIELDS');
 if (!$isModal && $assoc) {
@@ -146,6 +147,7 @@ echo '<div class="ph-admin-additional-box">';
 if ($this->item->image != '') {
     $pathImage = PhocacartPath::getPath('productimage');
     $image     = PhocacartImage::getThumbnailName($pathImage, $this->item->image, 'small');
+    $image->rel = PhocacartUtils::getSvgOriginalInsteadThumb($image->rel);//SVG support
     echo '<div class="ph-admin-additional-box-img-box"><img src="' . Uri::root() . $image->rel . '" alt="" /></div><hr />';
 }
 
@@ -269,7 +271,7 @@ echo $r->modalWindowDynamic($idMd, $textButton, $w, $h, false);
 
 echo '</div>';
 
-$formArray = array('stock', 'stock_calculation', 'min_quantity', 'min_multiple_quantity', 'min_quantity_calculation', 'stockstatus_a_id', 'stockstatus_n_id', 'delivery_date');
+$formArray = array('stock', 'stock_calculation', 'min_quantity', 'min_multiple_quantity', 'min_quantity_calculation', 'max_quantity', 'max_quantity_calculation', 'stockstatus_a_id', 'stockstatus_n_id', 'delivery_date');
 echo $r->group($this->form, $formArray);
 echo $r->endTab();
 
@@ -358,6 +360,35 @@ echo $r->startTab('metadata', $tabs['metadata']);
 echo $this->loadTemplate('metadata');
 echo $r->endTab();
 
+
+echo $r->startTab('subscription', $tabs['subscription']);
+// Render the subscription fieldset
+$subscriptionFieldset = $this->form->getFieldset('subscription');
+
+if (!empty($subscriptionFieldset)) {
+    // We can use the generic render or custom loop.
+    // Phoca Cart usually uses $r->group explicitly or loops.
+    // Let's use the loop style from 'publishing' tab for consistency.
+    foreach ($subscriptionFieldset as $field) {
+        $description = Text::_($field->description);
+        $descriptionOutput = '';
+        if ($description != '') {
+            $descriptionOutput = '<div role="tooltip">'.$description.'</div>';
+        }
+
+        echo '<div class="control-group ph-par-'.$field->fieldname.'">';
+        if (!$field->hidden) {
+             echo '<div class="control-label">' . $field->label . $descriptionOutput . '</div>';
+        }
+        echo '<div class="controls">';
+        echo $field->input;
+        echo '</div></div>';
+    }
+} else {
+    echo '<div class="ph-pro-box">'.Text::_('COM_PHOCACART_ADVANCED_FEATURE_PRO'). '</div>';
+}
+echo $r->endTab();
+
 echo $r->startTab('aidata', $tabs['aidata']);
 echo $this->loadTemplate('aidata');
 echo $r->endTab();
@@ -382,6 +413,7 @@ $ignoreField[] = 'metadata';
 $ignoreField[] = 'publish';
 $ignoreField[] = 'item_associations';
 $ignoreField[] = 'items_parameter';
+$ignoreField[] = 'subscription';
 $currentFields = $this->form->getFieldsets();
 if (!empty($currentFields)) {
     foreach ($currentFields as $k => $v) {

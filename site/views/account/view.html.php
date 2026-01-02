@@ -11,12 +11,16 @@ defined('_JEXEC') or die();
 use Joomla\CMS\Helper\AuthenticationHelper;
 use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Helper\TagsHelper;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\Registry\Registry;
+
 jimport( 'joomla.application.component.view');
 
 class PhocaCartViewAccount extends HtmlView
@@ -118,6 +122,16 @@ class PhocaCartViewAccount extends HtmlView
 			$this->t['rewardpointstotal'] = $reward->getTotalPointsByUserId((int)$this->u->id);
 
 
+			// SUBSCRIPTIONS
+			$this->t['subscriptions'] = PhocacartSubscription::getSubscriptions((int)$this->u->id);
+            $this->t['subscription_description_account_view'] = '';
+            // Get plugin parameters
+            $plugin = PluginHelper::getPlugin('system', 'phocacartsubscription');
+            if ($plugin && isset($plugin->params)) {
+                $params = new Registry($plugin->params);
+                $this->t['subscription_description_account_view'] = $params->get('subscription_description_account_view', '');
+                $this->t['subscription_description_account_view'] = HTMLHelper::_('content.prepare', $this->t['subscription_description_account_view']);
+            }
 		}
 
 		$media = PhocacartRenderMedia::getInstance('main');

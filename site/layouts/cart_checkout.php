@@ -16,6 +16,7 @@ use Joomla\CMS\Router\Route;
 
 $layoutI	= new FileLayout('image', null, array('component' => 'com_phocacart'));
 $layoutAl 	= new FileLayout('alert', null, array('component' => 'com_phocacart'));
+$layoutSC	= new FileLayout('subscription_cart', null, array('component' => 'com_phocacart'));
 
 $app 		= Factory::getApplication();
 $d 			= $displayData;
@@ -55,6 +56,10 @@ if (!empty($d['fullitemsgroup'][0])) {
 
 		if (isset($v['minmultipleqtyvalid']) && $v['minmultipleqtyvalid'] == 0) {
 			echo $layoutAl->render(array('type' => 'error', 'text' => Text::_('COM_PHOCACART_MINIMUM_MULTIPLE_ORDER_QUANTITY_FOR_PRODUCT'). ' '.$v['title']. ' '.Text::_('COM_PHOCACART_IS').': '.$v['minmultipleqty']. $msgSuffix ));
+		}
+
+		if (isset($v['maxqtyvalid']) && $v['maxqtyvalid'] == 0) {
+			echo $layoutAl->render(array('type' => 'error', 'text' => Text::_('COM_PHOCACART_MAXIMUM_ORDER_QUANTITY_FOR_PRODUCT'). ' '.$v['title']. ' '.Text::_('COM_PHOCACART_IS').': '.$v['maxqty']. $msgSuffix));
 		}
 	}
 }
@@ -183,6 +188,15 @@ if (!empty($d['fullitems'][1])) {
 		echo '<div class="'.$r.$cV.' ph-checkout-cart-row-item">';
 		echo '<div class="'.$cI.$cVRow.' ph-checkout-cart-image ph-row-image" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_IMAGE')).'">'.$imageOutput.'</div>';
 		echo '<div class="'.$cP.$cVRow.' ph-checkout-cart-title" data-pc-label="'.htmlspecialchars(Text::_('COM_PHOCACART_PRODUCT')).'"><a href="'.Route::_($link).'">'.$v['title'].'</a>';
+
+
+		if (isset($v['subscription_scenario']) && !empty($v['subscription_scenario'])) {
+			$dSC      = [];
+			$dSC['s'] = $d['s'];
+			$dSC['scenario'] = $v['subscription_scenario'];
+			echo $layoutSC->render($dSC);
+		}
+
 		echo '</div>';
 
 
@@ -415,6 +429,16 @@ if (!empty($d['fullitems'][1])) {
 			echo '<div class="'.$r.' ph-checkout-cart-row-min-multiple-quantity">';
 			echo '<div class="'.$cA.'">';
 			echo $layoutAl->render(array('type' => 'error', 'text' => Text::_('COM_PHOCACART_MINIMUM_MULTIPLE_ORDER_QUANTITY_FOR_PRODUCT').': '.$v['minmultipleqty'], 'class' => 'ph-alert-small'));
+			echo '</div>';
+			echo '</div>'. "\n"; // end row
+		}
+
+		// B) MAXIMUM QUANTITY - PRODUCT VARIATIONS - EACH PRODUCT VARIATION
+		// see cart/calculation class - it is explained why a) method is not used
+		if ($v['maxqtyvalid'] == 0 && ($v['maxqtycalculation'] == 1 || $v['maxqtycalculation'] == 2)) {
+			echo '<div class="'.$r.' ph-checkout-cart-row-min-quantity">';
+			echo '<div class="'.$cA.'">';
+			echo $layoutAl->render(array('type' => 'error', 'text' => Text::_('COM_PHOCACART_MAXIMUM_ORDER_QUANTITY_FOR_THIS_PRODUCT_IS').': '.$v['maxqty'], 'class' => 'ph-alert-small'));
 			echo '</div>';
 			echo '</div>'. "\n"; // end row
 		}

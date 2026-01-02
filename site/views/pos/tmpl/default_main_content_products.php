@@ -153,6 +153,14 @@ if (!empty($this->items)) {
 				$dPOQ['status']				= $stockStatus['min_multiple_quantity'];
 				$dSO .= $layoutPOQ->render($dPOQ);
 			}
+
+			if($stockStatus['max_quantity']) {
+				$dPOQ						= array();
+				$dPOQ['s']					= $this->s;
+				$dPOQ['text']				= Text::_('COM_PHOCACART_MAXIMUM_ORDER_QUANTITY');
+				$dPOQ['status']				= $stockStatus['max_quantity'];
+				$dSO .= $layoutPOQ->render($dPOQ);
+			}
 		}
 		// END STOCK ================================================
 

@@ -428,11 +428,11 @@ class PhocaCartModelPos extends BaseDatabaseModel
 						.' GROUP_CONCAT(DISTINCT c.alias) AS catalias, a.catid AS preferred_catid, a.price, MIN(ppg.price) as group_price,'
 						.' MAX(pptg.points_received) as group_points_received, a.points_received, a.price_original,'
 						.' t.id as taxid, t.tax_rate as taxrate, t.calculation_type as taxcalculationtype, t.title as taxtitle, t.tax_hide as taxhide,'
-						.' a.stock, a.stock_calculation, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id,'
+						.' a.stock, a.stock_calculation, a.min_quantity, a.min_multiple_quantity, a.max_quantity, a.stockstatus_a_id, a.stockstatus_n_id,'
 						.' a.date, a.sales, a.featured, a.external_id, a.unit_amount, a.unit_unit, a.external_link, a.external_text,'. $selImages
 						.' AVG(r.rating) AS rating, at.required AS attribute_required';
 
-			$groupsFull	= 'a.id, a.title, a.image, a.alias, a.description, a.type, a.price, a.points_received, a.price_original, a.stock, a.stock_calculation, a.min_quantity, a.min_multiple_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.date, a.sales, a.featured, a.external_id, a.unit_amount, a.unit_unit, a.external_link, a.external_text, t.id, t.tax_rate, t.calculation_type, t.tax_hide, t.title, at.required';
+			$groupsFull	= 'a.id, a.title, a.image, a.alias, a.description, a.type, a.price, a.points_received, a.price_original, a.stock, a.stock_calculation, a.min_quantity, a.min_multiple_quantity, a.max_quantity, a.stockstatus_a_id, a.stockstatus_n_id, a.date, a.sales, a.featured, a.external_id, a.unit_amount, a.unit_unit, a.external_link, a.external_text, t.id, t.tax_rate, t.calculation_type, t.tax_hide, t.title, at.required';
 			$groupsFast	= 'a.id';
 			$groups		= PhocacartUtilsSettings::isFullGroupBy() ? $groupsFull : $groupsFast;
 

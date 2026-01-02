@@ -21,6 +21,7 @@ class MailTemplate extends JoomlaMailTemplate
 {
     public function __construct(string $templateId, ?string $language = null, ?Mail $mailer = null)
     {
+
         if ($language === null) {
             $language = Factory::getApplication()->getLanguage()->getTag();
         }
@@ -30,7 +31,7 @@ class MailTemplate extends JoomlaMailTemplate
         parent::__construct($templateId, $language, $mailer);
     }
 
-    private function loadMailLanguage(string $lang): void
+    public function loadMailLanguage(string $lang): void
     {
         /* TODO bypass Joomla Issue https://github.com/joomla/joomla-cms/issues/39228 */
         $language = Factory::getApplication()->getLanguage();

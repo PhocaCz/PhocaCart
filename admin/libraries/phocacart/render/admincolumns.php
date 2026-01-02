@@ -453,6 +453,16 @@ class PhocacartRenderAdmincolumns
         ], $options);
     }
 
+    public function max_quantityHeader(&$options)
+    {
+        return $this->renderHeaderColumn([
+            'class'  => 'ph-max-quantity',
+            'title'  => 'COM_PHOCACART_FIELD_MAX_ORDER_QUANTITY_LABEL',
+            'tool'   => 'searchtools.sort',
+            'column' => 'a.max_quantity'
+        ], $options);
+    }
+
     public function min_multiple_quantityHeader(&$options)
     {
         return $this->renderHeaderColumn([
@@ -738,6 +748,11 @@ class PhocacartRenderAdmincolumns
         return $this->commonColumn($item, $options);
     }
 
+    public function max_quantity($item, &$options)
+    {
+        return $this->commonColumn($item, $options);
+    }
+
     public function min_multiple_quantity($item, &$options)
     {
         return $this->commonColumn($item, $options);
@@ -934,7 +949,12 @@ class PhocacartRenderAdmincolumns
     {
         $thumbnail = PhocacartFileThumbnail::getThumbnailName(PhocacartText::filterValue($item['value'], 'text'), 'small', 'productimage');
         $img = '';
+
+        $thumbnail->rel = PhocacartUtils::getSvgOriginalInsteadThumb($thumbnail->rel);// SVG image
+        $thumbnail->abs = PhocacartUtils::getSvgOriginalInsteadThumb($thumbnail->abs);// SVG image
+
         if (File::exists($thumbnail->abs)) {
+
             $img = '<img src="' . Uri::root() . $thumbnail->rel . '?imagesid=' . md5(uniqid(time())) . '" />';
         }
 
@@ -1178,6 +1198,7 @@ external_text
 external_link2
 external_text2
 min_quantity
+max_quantity
 min_multiple_quantity
 unit_amount
 unit_unit

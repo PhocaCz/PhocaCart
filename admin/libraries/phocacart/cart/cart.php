@@ -49,6 +49,7 @@ class PhocacartCart
 
     protected $stock = array();
     protected $minqty = array();
+    protected $maxqty = [];
     protected $minmultipleqty = array();
     protected $pos = false;
     protected $type = array(0, 1);// 0 all, 1 online shop, 2 pos (category type, payment method type, shipping method type)
@@ -700,7 +701,7 @@ class PhocacartCart
                 // --------------------
                 // 1) Basic Calculation
                 // --------------------
-                $calc->calculateBasicProducts($this->fullitems[1], $this->fullitemsgroup[1], $this->total[1], $this->stock, $this->minqty, $this->minmultipleqty, $this->items);
+                $calc->calculateBasicProducts($this->fullitems[1], $this->fullitemsgroup[1], $this->total[1], $this->stock, $this->minqty, $this->minmultipleqty, $this->items, $this->maxqty);
 
                 $options = PhocaCartUtils::getComponentParameters();
                 if ($options->get('checkout_separate_by_owner')) {
@@ -1060,6 +1061,10 @@ class PhocacartCart
 
     public function getMinimumQuantityValid() {
         return $this->minqty['valid'];
+    }
+
+    public function getMaximumQuantityValid() {
+        return $this->maxqty['valid'];
     }
 
     public function getMinimumMultipleQuantityValid() {

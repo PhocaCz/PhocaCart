@@ -65,6 +65,8 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
         'min_quantity'              => 'batchMinQuantity',
         'min_multiple_quantity'     => 'batchMinMultipleQuantity',
         'min_quantity_calculation'  => 'batchMinQuantityCalculation',
+        'max_quantity'              => 'batchMaxQuantity',
+        'max_quantity_calculation'  => 'batchMaxQuantityCalculation',
         'stockstatus_a_id'          => 'batchStockStatusA',
         'stockstatus_n_id'          => 'batchStockStatusN',
         'delivery_date'             => 'batchDeliveryDate',
@@ -137,6 +139,10 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 	{
 		$form = $this->loadForm('com_phocacart.phocacartitem', 'phocacartitem', array('control' => 'jform', 'load_data' => $loadData));
         $form = $this->prepareI18nForm($form);
+
+        // Load subscription fields
+        $form->loadFile('administrator/components/com_phocacart/models/forms/subscription_fields.xml', false);
+
 
         $attributeTemplates = ContentTypeHelper::getContentTypes(ContentTypeHelper::Attribute);
         foreach ($attributeTemplates as $attributeTemplate) {
@@ -330,10 +336,35 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 		$table->stock					= PhocacartUtils::getIntFromString($table->stock);
 		$table->min_quantity			= PhocacartUtils::getIntFromString($table->min_quantity);
 		$table->min_multiple_quantity	= PhocacartUtils::getIntFromString($table->min_multiple_quantity);
+        $table->max_quantity			= PhocacartUtils::getIntFromString($table->max_quantity);
 		$table->download_hits			= PhocacartUtils::getIntFromString($table->download_hits);
 		$table->points_received			= PhocacartUtils::getIntFromString($table->points_received);
 		$table->points_needed			= PhocacartUtils::getIntFromString($table->points_needed);
 		$table->unit_amount				= PhocacartUtils::getNullFromEmpty($table->unit_amount);
+
+        // Subscription Fields - Integers
+        $table->subscription_period             = (int)$table->subscription_period;
+        $table->subscription_trial_period       = (int)$table->subscription_trial_period;
+        $table->subscription_grace_period_days  = (int)$table->subscription_grace_period_days;
+        $table->subscription_unit               = (int)$table->subscription_unit;
+        $table->subscription_trial_unit         = (int)$table->subscription_trial_unit;
+
+        // Subscription Fields - Decimals (Prices)
+        $table->subscription_signup_fee         = PhocacartUtils::replaceCommaWithPoint($table->subscription_signup_fee);
+        $table->subscription_signup_fee         = PhocacartText::filterValue($table->subscription_signup_fee, 'float');
+
+        $table->subscription_renewal_discount   = PhocacartUtils::replaceCommaWithPoint($table->subscription_renewal_discount);
+        $table->subscription_renewal_discount   = PhocacartText::filterValue($table->subscription_renewal_discount, 'float');
+
+        // Handle Nulls for 0 values if needed (optional based on preference, but safe for DB)
+        if ($table->subscription_unit === 0) $table->subscription_unit = null;
+        if ($table->subscription_trial_unit === 0) $table->subscription_trial_unit = null;
+        if ($table->subscription_period === 0) $table->subscription_period = null;
+
+        // Enum fields - set to null if empty (discount type is still enum)
+        if (empty($table->subscription_renewal_discount_calculation_type)) {
+            $table->subscription_renewal_discount_calculation_type = null;
+        }
 
 		if ($table->delivery_date == '0' || $table->delivery_date == '') {
 			$table->delivery_date = '0000-00-00 00:00:00';
@@ -366,6 +397,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
 	public function validate($form, $data, $group = null)
 	{
+
 		// only date fields are defined as datetime in DB - causing issues with format in API, need to convert them to date only
 		if (isset($data['date']) && is_string($data['date']) && $data['date']) {
 			$data['date'] = (new Joomla\CMS\Date\Date($data['date']))->format(Text::_('DATE_FORMAT_FILTER_DATE'));
@@ -377,6 +409,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 	}
 
 	function save($data) {
+
         $i18nData   = $this->prepareI18nData($data);
 
         if ($data['catid_multiple']) {
@@ -385,6 +418,78 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
                 $categories = array_merge($categories, $cats);
             }
             $data['catid_multiple'] = $categories;
+        }
+
+        // Convert subscription usergroups array to string
+        if (isset($data['subscription_usergroup_add']) && is_array($data['subscription_usergroup_add'])) {
+            $data['subscription_usergroup_add'] = implode(',', $data['subscription_usergroup_add']);
+        } else {
+            $data['subscription_usergroup_add'] = '';
+        }
+        if (isset($data['subscription_usergroup_remove']) && is_array($data['subscription_usergroup_remove'])) {
+            $data['subscription_usergroup_remove'] = implode(',', $data['subscription_usergroup_remove']);
+        } else {
+            $data['subscription_usergroup_remove'] = '';
+        }
+
+        // Ensure subscription fields have defaults
+        $defaultSubs = [
+            'subscription_period' => 0,
+            'subscription_unit' => '',
+            'subscription_signup_fee' => 0,
+            'subscription_renewal_discount' => 0,
+            'subscription_renewal_discount_calculation_type' => 'fixed',
+            'subscription_trial_enabled' => 0,
+            'subscription_trial_period' => 0,
+            'subscription_trial_unit' => 1,
+            'subscription_grace_period_days' => 0
+        ];
+
+
+        foreach ($defaultSubs as $key => $val) {
+            if (!isset($data[$key])) {
+                $data[$key] = $val;
+            }
+        }
+
+        // Explicitly handle Subscription Fields to ensure they are passed to bind()
+        // Handle Map legacy string values if XML cache is stale (day -> 1)
+        $unitMap = ['day' => 1, 'week' => 2, 'month' => 3, 'year' => 4];
+
+        if (isset($data['subscription_unit'])) {
+            if (isset($unitMap[$data['subscription_unit']])) {
+                $data['subscription_unit'] = $unitMap[$data['subscription_unit']];
+            } else {
+                 $data['subscription_unit'] = (int)$data['subscription_unit'];
+            }
+            if ($data['subscription_unit'] === 0) $data['subscription_unit'] = ''; // Let Table handle null/default
+        }
+
+         if (isset($data['subscription_trial_unit'])) {
+            if (isset($unitMap[$data['subscription_trial_unit']])) {
+                $data['subscription_trial_unit'] = $unitMap[$data['subscription_trial_unit']];
+            } else {
+                 $data['subscription_trial_unit'] = (int)$data['subscription_trial_unit'];
+            }
+            if ($data['subscription_trial_unit'] === 0) $data['subscription_trial_unit'] = '';
+        }
+
+        if (isset($data['subscription_period'])) {
+            $data['subscription_period'] = (int)$data['subscription_period'];
+            // Keep zero value; do not convert to empty string
+        }
+
+        if (isset($data['subscription_trial_period'])) {
+            $data['subscription_trial_period'] = (int)$data['subscription_trial_period'];
+            // Keep zero value; do not convert to empty string
+        }
+
+        // Prices
+        if (isset($data['subscription_signup_fee'])) {
+             $data['subscription_signup_fee'] = PhocacartUtils::replaceCommaWithPoint($data['subscription_signup_fee']);
+        }
+        if (isset($data['subscription_renewal_discount'])) {
+             $data['subscription_renewal_discount'] = PhocacartUtils::replaceCommaWithPoint($data['subscription_renewal_discount']);
         }
 
 		$app		= Factory::getApplication();
@@ -1959,6 +2064,17 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
     {
         return $this->batchDBField('min_quantity_calculation', (int)$value, $pks, $contexts);
     }
+
+    protected function batchMaxQuantity($value, $pks, $contexts): bool
+    {
+        return $this->batchDBField('max_quantity', (int)$value, $pks, $contexts);
+    }
+
+    protected function batchMaxQuantityCalculation($value, $pks, $contexts): bool
+    {
+        return $this->batchDBField('max_quantity_calculation', (int)$value, $pks, $contexts);
+    }
+
 
     protected function batchStockStatusA($value, $pks, $contexts): bool
     {

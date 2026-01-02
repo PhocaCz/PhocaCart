@@ -38,7 +38,7 @@ class PhocacartCartCalculation
     // ==============
     // BASIC PRODUCT
     // ==============
-    public function calculateBasicProducts(&$fullItems, &$fullItemsGroup, &$total, &$stock, &$minqty, &$minmultipleqty, $items) {
+    public function calculateBasicProducts(&$fullItems, &$fullItemsGroup, &$total, &$stock, &$minqty, &$minmultipleqty, $items, &$maxqty) {
 
         $app             = Factory::getApplication();
         $paramsC         = PhocacartUtils::getComponentParameters();
@@ -134,8 +134,10 @@ class PhocacartCartCalculation
             $fullItems[$k]['stockvalid']          = 1; // variable to inform if stock validity is ok
             $fullItems[$k]['stockcalculation']    = 0;
             $fullItems[$k]['minqty']              = 0; // database value set in product settings
+            $fullItems[$k]['maxqty']              = 0; // database value set in product settings
             $fullItems[$k]['minmultipleqty']      = 0;
             $fullItems[$k]['minqtyvalid']         = 1; // variable to inform if minimum order is ok
+            $fullItems[$k]['maxqtyvalid']         = 1; // variable to inform if maximum order is ok
             $fullItems[$k]['minmultipleqtyvalid'] = 1;
 
             // DISCOUNTS (Product, Cart, Voucher) / Fixed amount / Percentage
@@ -210,6 +212,10 @@ class PhocacartCartCalculation
                 }
 
 
+                if (isset($itemD->subscription_scenario)) {
+                    $fullItems[$k]['subscription_scenario'] = $itemD->subscription_scenario;
+                }
+
                 $fullItems[$k]['default_price'] = $itemD->price;
 
                 $fullItems[$k]['price']             = $price->getPriceItem($itemD->price, $itemD->group_price, 0);
@@ -231,6 +237,9 @@ class PhocacartCartCalculation
                 $fullItems[$k]['minmultipleqty']    = $itemD->min_multiple_quantity;
                 $fullItems[$k]['minqtycalculation'] = $itemD->min_quantity_calculation;
 
+                $fullItems[$k]['maxqty']            = $itemD->max_quantity;
+                $fullItems[$k]['maxqtycalculation'] = $itemD->max_quantity_calculation;
+
                 $fullItems[$k]['default_points_received'] = $itemD->points_received;
                 $pointsN                                  = PhocacartReward::getPoints($itemD->points_needed, 'needed');
                 $pointsR                                  = PhocacartReward::getPoints($itemD->points_received, 'received', $itemD->group_points_received);
@@ -239,10 +248,13 @@ class PhocacartCartCalculation
 
                 // Group
                 $fullItemsGroup[$itemId]['minqty']              = $itemD->min_quantity;
+                $fullItemsGroup[$itemId]['maxqty']              = $itemD->max_quantity;
                 $fullItemsGroup[$itemId]['minmultipleqty']      = $itemD->min_multiple_quantity;
                 $fullItemsGroup[$itemId]['title']               = $itemD->title;
                 $fullItemsGroup[$itemId]['minqtyvalid']         = 1;
+                $fullItemsGroup[$itemId]['maxqtyvalid']         = 1;
                 $fullItemsGroup[$itemId]['minmultipleqtyvalid'] = 1;
+
 
 
                 $priceI = $price->getPriceItems($itemD->price, $itemD->taxid, $itemD->taxrate, $itemD->taxcalculationtype, $itemD->taxtitle, 0, '', 0, 1, $itemD->group_price, $itemD->taxhide);
@@ -327,6 +339,9 @@ class PhocacartCartCalculation
                     $total['countpriceondemandproducts']++;
                 } else if ($itemD->type == 4) {
                     // Gift Vouchers are even digital products
+                    $total['countdigitalproducts']++;
+                } else if ($itemD->type == 6) {
+                    // Subscriptions are even digital products
                     $total['countdigitalproducts']++;
                 }
 
@@ -538,6 +553,38 @@ class PhocacartCartCalculation
                         // Set it back because we are in foreach
                         $minmultipleqty['valid']                        = 1;
                         $fullItemsGroup[$itemId]['minmultipleqtyvalid'] = 1;
+                    }
+                }
+
+                // ==============================
+                // MAXIMUM ORDER AMOUNT
+                // ==============================
+                // THERE CAN BE THREE METHODS HOW TO COUNT MINIMUM ORDER AMOUNT
+                // a) every product is unique (Product A - Option A, Product A - Option B are two different products)
+                // b) there are product groups (Product A- Option A, Product A - Option B is still one product - product A)
+                // c) advanced stock management - in this case it is the same like a)
+
+                if ($fullItems[$k]['maxqtycalculation'] == 1 || $fullItems[$k]['maxqtycalculation'] == 2) {
+                    // a)
+                    // MAX QUANTITY - FOR ITEM - PRODUCT VARIATION - each product variation
+                    if ((int)$fullItems[$k]['quantity'] > (int)$fullItems[$k]['maxqty']) {
+                        $maxqty['valid']              = 0;
+                        $fullItems[$k]['maxqtyvalid'] = 0;
+                    }
+                } else {
+
+                    // b)
+                    // MAX QUANTITY - FOR GROUP (Group is the same product but with different options values) - MAIN PRODUCT
+                    if (empty($fullItemsGroup[$itemId]['maxqty'])) {
+                        $maxqty['valid']                        = 1;
+                        $fullItemsGroup[$itemId]['maxqtyvalid'] = 1;
+                    } else if ((int)$fullItemsGroup[$itemId]['quantity'] > (int)$fullItemsGroup[$itemId]['maxqty']) {
+                        $maxqty['valid']                        = 0;
+                        $fullItemsGroup[$itemId]['maxqtyvalid'] = 0;
+                    } else {
+                        // Set it back because we are in foreach
+                        $maxqty['valid']                        = 1;
+                        $fullItemsGroup[$itemId]['maxqtyvalid'] = 1;
                     }
                 }
 

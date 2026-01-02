@@ -21,6 +21,11 @@ class JFormFieldPhocacartOrderstatus extends ListField
 
 	protected function getOptions()
 	{
+        // This form field is even used in plugins, so load the lang
+        $lang 		= Factory::getLanguage();
+        $lang->load('com_phocacart');
+        $lang->load('com_phocacart.sys');
+
         $db = Factory::getDBO();
 
 		$query = 'SELECT a.title AS text, a.id AS value'
@@ -35,10 +40,14 @@ class JFormFieldPhocacartOrderstatus extends ListField
         }
 
         if ($this->multiple) {
-            $options = array_merge([
-                (object)['value' => 0, 'text' => Text::_('COM_PHOCACART_NONE')],
-                (object)['value' => -1, 'text' => Text::_('COM_PHOCACART_ALL')],
-            ], $options);
+           if($this->layout == "joomla.form.field.list-fancy-select"){
+               // no additional values
+            } else {
+                $options = array_merge([
+                    (object)['value' => 0, 'text' => Text::_('COM_PHOCACART_NONE')],
+                    (object)['value' => -1, 'text' => Text::_('COM_PHOCACART_ALL')],
+                ], $options);
+            }
         } else {
             $type = $this->element['typemethod'] ?? 0;
             if ($type == 1) {
