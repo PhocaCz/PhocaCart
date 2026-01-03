@@ -300,6 +300,8 @@ class PhocacartSubscription
             'total_price' => $totalPrice,
             'start_date' => $now->toSql(),
             'end_date' => $now->toSql(),
+            'start_date_default' => $now->toSql(),// not manipulated by options
+            'end_date_default' => $now->toSql(),// not manipulated by options
             'type' => 'new',
             'period' => 0,
             'unit' => 0
@@ -313,6 +315,7 @@ class PhocacartSubscription
             $scenario['signup_fee'] = $signupFee;
             $scenario['total_price'] = $scenario['base_price'] + $signupFee;
             $scenario['end_date'] = self::calculateEndDate($now, (int)$item->subscription_period, (string)$item->subscription_unit)->toSql();
+            $scenario['end_date_default'] = $scenario['end_date'];
             $scenario['period'] = $item->subscription_period;
             $scenario['unit'] = $item->subscription_unit;
 
@@ -349,10 +352,14 @@ class PhocacartSubscription
                 // APPEND: Start from existing end date
                 $scenario['start_date'] = $existing->start_date; // Keep original start
                 $scenario['end_date'] = self::calculateEndDate($endDate, (int)$item->subscription_period, (string)$item->subscription_unit)->toSql();
+                $scenario['start_date_default'] = $existing->start_date;
+                $scenario['end_date_default'] =  $existing->end_date;
             } else {
                 // FROM NOW: Overwrite current period
                 $scenario['start_date'] = $now->toSql();
                 $scenario['end_date'] = self::calculateEndDate($now, (int)$item->subscription_period, (string)$item->subscription_unit)->toSql();
+                $scenario['start_date_default'] = $scenario['start_date'];
+                $scenario['end_date_default'] = $scenario['end_date'];
             }
 
             $scenario['period'] = $item->subscription_period;
@@ -381,6 +388,8 @@ class PhocacartSubscription
         // Expired always starts NOW
         $scenario['start_date'] = $now->toSql();
         $scenario['end_date'] = self::calculateEndDate($now, (int)$item->subscription_period, (string)$item->subscription_unit)->toSql();
+        $scenario['start_date_default'] = $scenario['start_date'];
+        $scenario['end_date_default'] = $scenario['end_date'];
 
         $scenario['period'] = $item->subscription_period;
         $scenario['unit'] = $item->subscription_unit;

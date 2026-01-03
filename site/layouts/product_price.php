@@ -112,9 +112,9 @@ if (isset($d['discount']) && $d['discount']) {
         if (isset($scenario['renewal_discount']) && $scenario['renewal_discount'] > 0) {
             if (isset($scenario['start_date']) && $scenario['start_date'] != '' && isset($scenario['end_date']) && $scenario['end_date'] != '')  {
                 if ($subscription_current_display_period_price == 1) {
-                    $dateFrom             = new Date($scenario['start_date']);
+                    $dateFrom             = new Date($scenario['start_date_default']);
                     $dateFromFormat       = $dateFrom->format(Text::_('DATE_FORMAT_LC4'));
-                    $dateTo               = new Date($scenario['end_date']);
+                    $dateTo               = new Date($scenario['end_date_default']);
                     $dateToFormat         = $dateTo->format(Text::_('DATE_FORMAT_LC4'));
                     $subscriptionDateInfo .= '<div class="ph-active-subscription-period-header">' . Text::_('PLG_SYSTEM_PHOCACARTSUBSCRIPTION_YOUR_ACTIVE_SUBSCRIPTION_PERIOD') . ': </div>';
                     $subscriptionDateInfo .= '<div class="ph-active-subscription-period">' . $dateFromFormat . ' - ' . $dateToFormat . '</div>';

@@ -263,8 +263,10 @@ class PhocacartOrderStatus
         }
 
         if (!JoomlaMailHelper::isEmailAddress($recipient) && !JoomlaMailHelper::isEmailAddress($recipientOthers)) {
-            PhocacartLog::add(2, 'Sending email - ERROR', $order->id, Text::_('COM_PHOCACART_ERROR'). ' (Incorrect recipient email)');
-            return -1;
+            //PhocacartLog::add(2, 'Sending email - ERROR', $order->id, Text::_('COM_PHOCACART_ERROR'). ' (Incorrect recipient email)');
+            //return -1;
+            PhocacartLog::add(1, 'Sending email - Info', $order->id, Text::_('COM_PHOCACART_INFO'). ' (No recipient, no recipient others, no email sent)');
+            return 0;
         }
 
         // ------------------------
@@ -347,6 +349,10 @@ class PhocacartOrderStatus
                 $mailer->addAttachment($attachmentName, $attachmentContent);
             }
 
+
+            if (!$status['email_attachments']) {
+                $status['email_attachments'] = '';
+            }
             MailHelper::addAttachments($mailer, json_decode($status['email_attachments'], true));
 
             $mailer->addRecipient($recipient);
@@ -356,7 +362,6 @@ class PhocacartOrderStatus
                     if ($app->isClient('administrator')) {
                         $app->enqueueMessage(Text::_('COM_PHOCACART_EMAIL_CUSTOMER_SENT'));
                     }
-
                     $notificationResult = 1;
                 } else {
                     PhocacartLog::add(2, 'Sending email - ERROR', $order->id, Text::_('COM_PHOCACART_ERROR'). ' (Error when sending email using mailer)');
