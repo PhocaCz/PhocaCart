@@ -271,6 +271,7 @@ class PhocacartSubscription
         $db->setQuery($query);
         $existing = $db->loadObject();
 
+
         $now = new Date();
 
         // Get renewal mode from plugin params
@@ -330,6 +331,7 @@ class PhocacartSubscription
         // Is currently active (by status behavior AND time)
         $isActive = ($props['behavior'] === \PhocacartSubscription::BEHAVIOR_ACTIVE && $endDate > $now);
 
+
         // Calculate Renewal Discount
         $discount = 0.0;
         if ((float)$item->subscription_renewal_discount > 0) {
@@ -369,6 +371,26 @@ class PhocacartSubscription
         }
 
         // Scenario 3: Expired Renewal
+
+        // If the subscription was manually set to expired (3) OR any other inactive status (4, 6, 8, 9)
+        // we should use the date from history as end date e.g. for calculation of grace period
+        if ($props['behavior'] === self::BEHAVIOR_INACTIVE) {
+            $query = $db->getQuery(true)
+                ->select($db->quoteName('event_date'))
+                ->from($db->quoteName('#__phocacart_subscription_history'))
+                ->where($db->quoteName('subscription_id') . ' = ' . (int)$existing->id)
+                ->where($db->quoteName('status_to') . ' = ' . (int)$existing->status)
+                ->order($db->quoteName('id') . ' DESC')
+                ->setLimit(1);
+
+            $db->setQuery($query);
+            $historyDate = $db->loadResult();
+
+            if ($historyDate) {
+                $endDate = new Date($historyDate);
+                $manualDateFound = true;
+            }
+        }
         $gracePeriodDays = (int)($item->subscription_grace_period_days ?? 0);
         $graceEnd = clone $endDate;
         if ($gracePeriodDays > 0) {
@@ -377,7 +399,12 @@ class PhocacartSubscription
 
         // Charge signup fee if outside grace period AND plugin is configured to charge it
         $chargeSignupFeeGlobally = (int)$params->get('charge_expired_signup_fee', 1);
-        $chargeSignupFee = ($now > $graceEnd && $chargeSignupFeeGlobally === 1);
+        $chargeSignupFee = ($now->getTimestamp() > $graceEnd->getTimestamp() && $chargeSignupFeeGlobally === 1);
+
+        // If manual date was found (meaning manual expiration or similar) and we are out of grace period, remove discount
+        if (isset($manualDateFound) && $manualDateFound && $now->getTimestamp() > $graceEnd->getTimestamp()) {
+            $discount = 0.0;
+        }
 
         $scenario = $defaults;
         $scenario['type'] = 'renewal_expired';
@@ -393,7 +420,6 @@ class PhocacartSubscription
 
         $scenario['period'] = $item->subscription_period;
         $scenario['unit'] = $item->subscription_unit;
-
         return $scenario;
     }
 

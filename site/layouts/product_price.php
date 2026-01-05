@@ -109,6 +109,8 @@ if (isset($d['discount']) && $d['discount']) {
 
         }
 
+
+        // We can even work with $scenario['type'] = "new" | "renewal_expired", ...
         if (isset($scenario['renewal_discount']) && $scenario['renewal_discount'] > 0) {
             if (isset($scenario['start_date']) && $scenario['start_date'] != '' && isset($scenario['end_date']) && $scenario['end_date'] != '')  {
                 if ($subscription_current_display_period_price == 1) {
