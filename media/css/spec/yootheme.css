@@ -198,3 +198,9 @@ img {
 .pc-modal .uk-modal-dialog.uk-width-auto .uk-modal-body iframe {
     height: 65vh;
 }
+
+.uk-button:has(> svg.pc-si) {
+    display: inline-flex;
+    align-items: center;
+    column-gap: 0.5em;
+}

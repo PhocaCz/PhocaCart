@@ -32,7 +32,7 @@ class PhocaCartModelPos extends BaseDatabaseModel
 		$app				= Factory::getApplication();
 		$config 			= Factory::getConfig();
 		$paramsC 			= $app->getParams();
-		$item_pagination	= $paramsC->get( 'pos_pagination_default', 24 );
+		$item_pagination	= (int)$paramsC->get( 'pos_pagination_default', 24 );
 		$item_ordering		= $paramsC->get( 'pos_ordering', 1 );
 
 		$manufacturer_alias	= $paramsC->get( 'manufacturer_alias', 'manufacturer');

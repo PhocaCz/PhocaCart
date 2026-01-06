@@ -36,7 +36,7 @@ class PhocaCartModelCategory extends BaseDatabaseModel
 
 		$app					= Factory::getApplication();
 		$paramsC 				= $app->getParams();
-		$item_pagination		= $paramsC->get( 'item_pagination_default', '20' );
+		$item_pagination		= (int)$paramsC->get( 'item_pagination_default', '20' );
 		$item_ordering			= $paramsC->get( 'item_ordering', 1 );
 		$layout_type			= $paramsC->get( 'layout_type', 'grid' );
 
