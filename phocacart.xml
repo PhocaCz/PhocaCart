@@ -106,7 +106,6 @@
 				<menu img="class:sections" alt="COM_PHOCACART_SECTIONS" view="phocacartsections" link="option=com_phocacart&amp;view=phocacartsections">COM_PHOCACART_SECTIONS</menu>
 				<menu img="class:units" alt="COM_PHOCACART_UNITS" view="phocacartunits" link="option=com_phocacart&amp;view=phocacartunits">COM_PHOCACART_UNITS</menu>
 				<menu img="class:bulkprices" alt="COM_PHOCACART_BULK_PRICE_EDITOR" view="phocacartbulkprices" link="option=com_phocacart&amp;view=phocacartbulkprices">COM_PHOCACART_BULK_PRICE_EDITOR</menu>
-				<menu img="class:calendar" alt="COM_PHOCACART_SUBSCRIPTIONS" view="phocacartsubscriptions" link="option=com_phocacart&amp;view=phocacartsubscriptions">COM_PHOCACART_SUBSCRIPTIONS</menu>
 				<menu img="class:info" alt="COM_PHOCACART_INFO" view="phocacartinfo" link="option=com_phocacart&amp;view=phocacartinfo">COM_PHOCACART_INFO</menu>
 			</submenu>
 
