@@ -363,7 +363,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
         // Enum fields - set to null if empty (discount type is still enum)
         if (empty($table->subscription_renewal_discount_calculation_type)) {
-            $table->subscription_renewal_discount_calculation_type = null;
+            $table->subscription_renewal_discount_calculation_type = 0;
         }
 
 		if ($table->delivery_date == '0' || $table->delivery_date == '') {
@@ -435,10 +435,10 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
         // Ensure subscription fields have defaults
         $defaultSubs = [
             'subscription_period' => 0,
-            'subscription_unit' => '',
+            'subscription_unit' => 3,
             'subscription_signup_fee' => 0,
             'subscription_renewal_discount' => 0,
-            'subscription_renewal_discount_calculation_type' => 'fixed',
+            'subscription_renewal_discount_calculation_type' => 0,
             'subscription_trial_enabled' => 0,
             'subscription_trial_period' => 0,
             'subscription_trial_unit' => 1,
