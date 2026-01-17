@@ -630,6 +630,8 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 		// Joomla Core Trigger the onContentBeforeSave event.
 		PluginHelper::importPlugin($this->events_map['save']);
 		$result = Dispatcher::dispatchBeforeSave($this->event_before_save, $this->option . '.' . $this->name, $table, $isNew, $data);
+        // Use standard triggerEvent to allow system plugins to catch it easily with standard arguments
+		// $result = Factory::getApplication()->triggerEvent('onContentBeforeSave', [$this->option . '.' . $this->name, &$table, $isNew, $data]);
 		if (in_array(false, $result, true)) {
 			$this->setError($table->getError());
 			return false;
@@ -670,7 +672,27 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 			}
 
 
-			PhocacartFileAdditional::storeProductFilesByProductId((int)$table->getId(), $data['additional_download_files']);
+			PhocacartFileAdditional::storeProductFilesByProductId((int)$table->getId(), $data['additional_download_files'] ?? []);
+
+			// Support data injected by Plugin via Table object
+			if (isset($table->additional_images)) {
+				$data['additional_images'] = $table->additional_images;
+			}
+			if (!isset($data['additional_images'])) {
+				$data['additional_images'] = [];
+			}
+
+            // Fix Paths: Replace 'temp_XXX/' with 'ID/' if present
+            if ((int)$table->getId() > 0 && !empty($data['additional_images'])) {
+                 $id = (int)$table->getId();
+                 foreach ($data['additional_images'] as &$imgData) {
+                     if (isset($imgData['image'])) {
+                         $imgData['image'] = PhocacartImage::replaceTempToIdPath($imgData['image'], $id);
+                     }
+                 }
+                 unset($imgData);
+            }
+
 			PhocacartImageAdditional::storeImagesByProductId((int)$table->getId(), $data['additional_images']);
 			PhocacartAttribute::storeAttributesById((int)$table->getId(), $data['attributes']);
 			PhocacartSpecification::storeSpecificationsById((int)$table->getId(), $data['specifications']);
@@ -736,8 +758,10 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
         // Phoca Cart Trigger the after save event.
 		Dispatcher::dispatch(new Event\Admin\Item\AfterSave($this->option.'.'.$this->name, $table, $isNew, $data));
 
-        // Joomla Core Trigger the onContentAfterSave event. CUSTOM FIELDS
+		// Joomla Core Trigger the onContentAfterSave event. CUSTOM FIELDS
 		Dispatcher::dispatchAfterSave($this->event_after_save, $this->option . '.' . $this->name, $table, $isNew, $data);
+        // Use standard triggerEvent
+		// Factory::getApplication()->triggerEvent('onContentAfterSave', [$this->option . '.' . $this->name, $table, $isNew, $data]);
 
 		$pkName = $table->getKeyName();
 		if (isset($table->$pkName)) {
@@ -1179,6 +1203,18 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
 
 			// Store other new information
 			PhocacartUtilsBatchhelper::storeProductItems($pk, (int)$newId, $batchParams, $params);
+
+            // Trigger events so plugins can handle the copy (e.g. copying images)
+            $isNew = true;
+            $batchData = $batchParams;
+            $batchData['id'] = $newId;
+            $batchData['id_source'] = $pk; // Pass source ID for reference
+            $batchData['is_batch_copy'] = true;
+
+            ///error_log('[PhocaCartImage] Dispatching batch events for New ID: ' . $newId . ' from Old ID: ' . $pk);
+
+            Dispatcher::dispatch(new Event\Admin\Item\AfterSave($this->option.'.'.$this->name, $table, $isNew, $batchData));
+            Dispatcher::dispatchAfterSave($this->event_after_save, $this->option . '.' . $this->name, $table, $isNew, $batchData);
 			$dataCat[]		= (int)$categoryId;// categoryId - the category where we want to copy the products
 
 

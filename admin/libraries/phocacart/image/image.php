@@ -454,6 +454,14 @@ class PhocacartImage
 
         return '';
     }
+
+    public static function replaceTempToIdPath($path, $typeId) {
+        if ((int)$typeId > 0 && !empty($path)) {
+            // Replace e.g. temp_123abc/image.jpg with 5/image.jpg
+            return preg_replace('#^temp_[^/]+/#', (int)$typeId . '/', $path);
+        }
+        return $path;
+    }
 }
 
 ?>

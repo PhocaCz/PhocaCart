@@ -208,7 +208,10 @@ echo $r->startTab('image', $tabs['image']);
 
 $formArray = array('image');
 echo $r->group($this->form, $formArray);
-echo '<h3>' . Text::_($this->t['l'] . '_ADDITIONAL_IMAGES') . '</h3>';
+
+
+echo '<h3 class="ph-header-additional-images">' . Text::_($this->t['l'] . '_ADDITIONAL_IMAGES') . '</h3>';
+
 
 $formArray = array('additional_images');// , 'download_hits' - it is counted in orders
 echo $r->group($this->form, $formArray);

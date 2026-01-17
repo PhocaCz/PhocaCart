@@ -141,7 +141,7 @@ abstract class I18nHelper
                 if (!$fields['alias'] && array_key_exists('title', $fields) && $fields['title']) {
                     $fields['alias'] = $fields['title'];
                 }
-                $fields['alias'] = ApplicationHelper::stringURLSafe($fields['alias']);
+                $fields['alias'] = ApplicationHelper::stringURLSafe((string)$fields['alias']);
             }
 
             // Specifications has alias also for value

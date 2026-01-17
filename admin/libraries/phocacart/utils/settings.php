@@ -510,5 +510,15 @@ class PhocacartUtilsSettings
         return 365;
     }
 
+    public static function getImageExtensions($format = 1) {
+        $extensions = ['gif', 'jpg', 'png', 'jpeg', 'webp'];
+
+        if ($format == 2) {
+            return $extensions;
+        }
+
+        return implode(',', $extensions);
+    }
+
 }
 
