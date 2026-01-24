@@ -15,6 +15,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Phoca\PhocaCart\Dispatcher\Dispatcher;
 use Phoca\PhocaCart\Event;
+use Phoca\PhocaCart\Event\Invoice\GetElectronicInvoiceIcons;
 
 $d = new PhocacartPrice();
 $d->setCurrency(1, 6);
@@ -232,6 +233,19 @@ if (is_array($this->items)) {
             $view      .= ' <a href="' . $linkDelNoteView  . $formatPDF . '" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" ' . $linkOrderViewHandler . '>' . PhocacartRenderIcon::icon($this->s['i']['barcode'] . '  ph-icon-warning', 'title="' . Text::_('COM_PHOCACART_VIEW_DELIVERY_NOTE') . '"', '', '', 'fa5') . '<br /><span class="ph-icon-warning-txt">' . Text::_('COM_PHOCACART_PDF') . '</span></a>';
 
             $view .= '</div>';
+        }
+
+        if (!empty($item->invoice_number)) {
+            $eInvoiceResults = Dispatcher::dispatch(new GetElectronicInvoiceIcons((int)$item->id, ['order' => $item]));
+            if (!empty($eInvoiceResults)) {
+                $view .= '<div class="ph-action-row ph-action-row-e-invoice">';
+                foreach ($eInvoiceResults as $eInvoiceResult) {
+                    if (is_array($eInvoiceResult) && !empty($eInvoiceResult['icon'])) {
+                        $view .= $eInvoiceResult['icon'];
+                    }
+                }
+                $view .= '</div>';
+            }
         }
         echo $r->td($view, "small");
 

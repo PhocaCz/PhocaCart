@@ -106,8 +106,11 @@ class PhocacartText {
 		$price->setCurrency($common->currency_id, $orderId);
 		$totalBrutto	= $order->getItemTotal($orderId, 0, 'brutto');
 
+
 		$download_guest_access = $pC->get('download_guest_access', 0);
-        $pdf_invoice_qr_code = PhocacartText::removeQrCodeVariables($pC->get('pdf_invoice_qr_code', ''), '{invoiceqr}');
+
+        $pdf_invoice_qr_code = ($common->currency_pdf_invoice_qr_code ?? '') !== '' ? $common->currency_pdf_invoice_qr_code : $pC->get('pdf_invoice_qr_code', '');
+        $pdf_invoice_qr_code = PhocacartText::removeQrCodeVariables($pdf_invoice_qr_code, '{invoiceqr}');
 
         $email_downloadlink_description = isset($status['email_downloadlink_description']) && $status['email_downloadlink_description'] != '' ? $status['email_downloadlink_description'] : '';
 
@@ -338,8 +341,6 @@ class PhocacartText {
             $r['totaltopaycurrency']              = $r['totaltopay'];
         }
 
-
-
         $r['paymenttitle'] 		    = PhocacartOrderView::getPaymentTitle($common);
         $r['paymentdescriptioninfo'] 		= PhocacartOrderView::getPaymentDescriptionInfo($common);
 		$dateO 						= PhocacartDate::splitDate($common->date);
@@ -351,9 +352,10 @@ class PhocacartText {
 		$r['ordernumbertxt']		= Text::_('COM_PHOCACART_ORDER_NR');
 
 
-		$r['bankaccountnumber']		= $pC->get( 'bank_account_number', '' );
-		$r['iban']					= $pC->get( 'iban', '' );
-		$r['bicswift']				= $pC->get( 'bic_swift', '' );
+        $r['bankaccountnumber'] = ($common->currency_bank_account_number ?? '') !== '' ? $common->currency_bank_account_number : $pC->get( 'bank_account_number', '' );
+        $r['iban']              = ($common->currency_iban ?? '') !== '' ? $common->currency_iban : $pC->get( 'iban', '' );
+        $r['bicswift']          = ($common->currency_bic_swift ?? '') !== '' ? $common->currency_bic_swift : $pC->get( 'bic_swift', '' );
+
 
         $r['openingtimesinfo']      = PhocacartTime::getOpeningTimesMessage();
 

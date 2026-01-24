@@ -27,6 +27,7 @@ echo $r->startForm($this->t['o'], $this->t['task'], $this->item->id, 'adminForm'
 echo '<div class="col-xs-12 col-sm-12 col-md-12 form-horizontal">';
 $tabs = array (
 'general' 		=> Text::_($this->t['l'].'_GENERAL_OPTIONS'),
+'bank' 	=> Text::_($this->t['l'].'_BANK_OPTIONS'),
 'publishing' 	=> Text::_($this->t['l'].'_PUBLISHING_OPTIONS'));
 echo $r->navigation($tabs);
 
@@ -58,11 +59,38 @@ $formArray = array ('code', 'exchange_rate', 'price_format', 'price_currency_sym
 echo $r->group($this->form, $formArray);
 echo $r->endTab();
 
-echo $r->startTab('publishing', $tabs['publishing']);
-foreach($this->form->getFieldset('publish') as $field) {
+echo $r->startTab('bank', $tabs['bank']);
+foreach($this->form->getFieldset('bank') as $field) {
+
+	$description = Text::_($field->description);
+    $descriptionOutput = '';
+    if ($description != '') {
+        $descriptionOutput = '<div role="tooltip">'.$description.'</div>';
+    }
+
 	echo '<div class="control-group">';
 	if (!$field->hidden) {
-		echo '<div class="control-label">'.$field->label.'</div>';
+		echo '<div class="control-label">'.$field->label. $descriptionOutput .'</div>';
+	}
+	echo '<div class="controls">';
+	echo $field->input;
+	echo '</div></div>';
+}
+echo $r->endTab();
+
+
+echo $r->startTab('publishing', $tabs['publishing']);
+foreach($this->form->getFieldset('publish') as $field) {
+
+	$description = Text::_($field->description);
+    $descriptionOutput = '';
+    if ($description != '') {
+        $descriptionOutput = '<div role="tooltip">'.$description.'</div>';
+    }
+
+	echo '<div class="control-group">';
+	if (!$field->hidden) {
+		echo '<div class="control-label">'.$field->label. $descriptionOutput .'</div>';
 	}
 	echo '<div class="controls">';
 	echo $field->input;

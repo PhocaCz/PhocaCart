@@ -2245,6 +2245,21 @@ a[target=_blank]::before {
 	padding: 0.15em 0.5em;
 }
 
+ph-action-row-e-invoice {
+	display: flex;
+
+}
+.btn.ph-e-invoice-btn {
+	display: flex;
+	align-items: center;
+	justify-content: space-evenly;
+	width: 100%;
+	max-width: 9em;
+	font-size: small;
+	margin-top: 2px;
+	margin-bottom: 2px;
+}
+
 /* Hide objects in edit - administration - Product edit example */
 
 /* Entire tab *//*

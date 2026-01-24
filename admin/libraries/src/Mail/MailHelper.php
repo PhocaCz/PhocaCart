@@ -603,7 +603,8 @@ abstract class MailHelper
         $displayData['total'] = $orderView->getItemTotal($order->id, 1);
         $displayData['taxrecapitulation'] = $orderView->getItemTaxRecapitulation($order->id);
         $displayData['preparereplace'] = \PhocacartText::prepareReplaceText($orderView, $order->id, $displayData['order'], $displayData['bas']);
-        $displayData['qrcode'] = \PhocacartText::completeText(\PhocacartText::removeQrCodeVariables($displayData['params']->get( 'pdf_invoice_qr_code', '' )), $displayData['preparereplace'], 1);
+        $pdf_invoice_qr_code = ($displayData['order']->currency_pdf_invoice_qr_code ?? '') !== '' ? $displayData['order']->currency_pdf_invoice_qr_code : $displayData['params']->get( 'pdf_invoice_qr_code', '' );
+        $displayData['qrcode'] = \PhocacartText::completeText(\PhocacartText::removeQrCodeVariables($pdf_invoice_qr_code), $displayData['preparereplace'], 1);
 
         $mailData['HAS_DOWNLOADS'] = false;
 

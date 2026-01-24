@@ -10,6 +10,8 @@ defined('_JEXEC') or die();
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\Router\Route;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event\Invoice\GetElectronicInvoiceIcons;
 
 $layoutAl 	= new FileLayout('alert', null, array('component' => 'com_phocacart'));
 
@@ -117,6 +119,18 @@ if ((int)$this->u->id > 0 || $this->t['token'] != '') {
 				$view .= ' <a href="'.$linkInvoiceView.$formatPDF.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.Text::_('COM_PHOCACART_VIEW_INVOICE').'" class="'.$this->s['i']['invoice'].' icon-ph-invoice ph-icon-danger"></span><br /><span class="ph-icon-danger-txt">PDF</span></a>';
 				$view .= ' <a href="'.$linkDelNoteView.$formatPDF.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.Text::_('COM_PHOCACART_VIEW_DELIVERY_NOTE').'" class="'.$this->s['i']['del-note'].' icon-ph-del-note ph-icon-warning"></span><br /><span class="ph-icon-warning-txt">PDF</span></a>';*/
 
+			}
+
+			if ($v->invoice_number != '') {
+				$eInvoiceResults = Dispatcher::dispatch(new GetElectronicInvoiceIcons((int)$v->id, ['order' => $v]));
+				if (!empty($eInvoiceResults)) {
+					$view .= '<br />';
+					foreach ($eInvoiceResults as $eInvoiceResult) {
+						if (is_array($eInvoiceResult) && !empty($eInvoiceResult['icon'])) {
+							$view .= ' ' . $eInvoiceResult['icon'];
+						}
+					}
+				}
 			}
 
 			echo $view;

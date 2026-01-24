@@ -57,7 +57,8 @@ $store_info_footer_pos					= $d['params']->get( 'store_info_footer_pos', '' );
 // Used in Phoca PDF Phocacart plugin because of converting the TCPDF QR code into html
 //$pdf_invoice_qr_code					= PhocacartText::removeVariable($d['params']->get( 'pdf_invoice_qr_code', '' ), '{invoiceqr}');
 $pdf_invoice_signature_image			= $d['params']->get( 'pdf_invoice_signature_image', '' );
-$pdf_invoice_qr_information				= $d['params']->get( 'pdf_invoice_qr_information', '' );
+//$pdf_invoice_qr_information				= $d['params']->get( 'pdf_invoice_qr_information', '' );
+$pdf_invoice_qr_information             = ($d['common']->currency_pdf_invoice_qr_information ?? '') !== '' ? $d['common']->currency_pdf_invoice_qr_information : $d['params']->get('pdf_invoice_qr_information', '');
 $invoice_global_top_desc				= $d['params']->get( 'invoice_global_top_desc', 0 );// Article ID
 $invoice_global_middle_desc				= $d['params']->get( 'invoice_global_middle_desc', 0 );
 $invoice_global_bottom_desc				= $d['params']->get( 'invoice_global_bottom_desc', 0 );

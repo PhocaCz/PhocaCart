@@ -958,7 +958,6 @@ class PhocacartOrder
                     foreach ($total[0]['tax'] as $k => $v) {
 
                         if (isset($v['taxid']) && $v['taxid'] > 0) {
-
                             $v['taxcalc']      = (int)$d['tax_calculation'];
                             $displayPriceItems = PhocaCartPrice::displayPriceItems($v, 'order');
                             $published = 0;

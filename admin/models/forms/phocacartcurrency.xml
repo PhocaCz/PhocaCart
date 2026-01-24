@@ -35,8 +35,14 @@
 
 	</fieldset>
 
+	<fieldset name="bank" label="COM_PHOCACART_GROUP_LABEL_BANK_OPTIONS" >
+	<field name="bank_account_number" default="" size="18" type="text" label="COM_PHOCACART_FIELD_BANK_ACCOUNT_NUMBER_LABEL" description="COM_PHOCACART_FIELD_BANK_ACCOUNT_NUMBER_DESC"/>
+<field name="iban" default="" size="18" type="text" label="COM_PHOCACART_FIELD_IBAN_LABEL" description="COM_PHOCACART_FIELD_IBAN_DESC"/>
+<field name="bic_swift" default="" size="18" type="text" label="COM_PHOCACART_FIELD_BIC_SWIFT_LABEL" description="COM_PHOCACART_FIELD_BIC_SWIFT_DESC"/>
+<field name="pdf_invoice_qr_information" default="" type="textarea" label="COM_PHOCACART_FIELD_PDF_INVOICE_QR_INFORMATION_LABEL" description="COM_PHOCACART_FIELD_PDF_INVOICE_QR_INFORMATION_DESC"/>
+<field name="pdf_invoice_qr_code" default="" type="textarea" label="COM_PHOCACART_FIELD_PDF_INVOICE_QR_CODE_LABEL" description="COM_PHOCACART_FIELD_PDF_INVOICE_QR_CODE_DESC"/>
 
-
+	</fieldset>
 
 	<fieldset name="publish" label="COM_PHOCACART_GROUP_LABEL_PUBLISHING_DETAILS" >
 
