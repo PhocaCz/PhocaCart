@@ -68,7 +68,7 @@
 		<downloads>
 			<downloadurl type="full" format="zip">https://github.com/PhocaCz/PhocaCart/releases/download/6.1.0Beta7/com_phocacart_v6.1.0Beta7.zip</downloadurl>
 		</downloads>
-		<sha512>aa96c4e3f627bd68339cfeb4e8529fdaf81ecc01bba5b50db22b9d058cf32dc5add5f599e429757aab3cd0970c7c5c86da8f208650e7ede868398de9b1e3e92b</sha512>
+		<sha512>8324c4d1965011eb58f2ed07bae875a032a53d8f5aec633cf9bae791799f8cdecbd9dc359226a3f622431caba139e9e773cf34d8cca46c02a4dd45bb274adb8f</sha512>
 		<tags>
 			<tag>stable</tag>
 		</tags>

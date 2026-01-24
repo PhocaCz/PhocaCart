@@ -52,6 +52,7 @@ class PhocaCartViewOrder extends HtmlView
 
 		if ($pos == 1 && $type == 4) {
 
+			// PRINT SERVER PRINT
 			if ($print_server == 1 && ($pos_server_print == 2 || $pos_server_print == 3)) {
 
 				try{
@@ -63,12 +64,13 @@ class PhocaCartViewOrder extends HtmlView
 					echo '<div class="ph-result-txt ph-error-txt">'.Text::_('COM_PHOCACART_ERROR'). ": ". $e->getMessage(). '</div>';
 				}
 			} else {
-				$o = str_replace("\n", '', $o);
-				echo '<div class="phPrintInBox">'.$o.'</div>';
+				// RECEIPT IN HTML
+				$o = str_replace("\n", '', $o); // produce html output in PRE and CODE tag without new rows ("\n");
+				echo '<div class="phPrintInBox">'.$o.'</div>';// --> components\com_phocacart\views\pos\tmpl\default_main_content_order.php
 			}
 
 		} else {
-			echo '<div class="phPrintInBox">'.$o.'</div>';
+			echo '<div class="phPrintInBox">'.$o.'</div>';// --> components\com_phocacart\views\pos\tmpl\default_main_content_order.php
 		}
 	}
 
