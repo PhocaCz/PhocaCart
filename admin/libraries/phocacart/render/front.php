@@ -741,7 +741,13 @@ class PhocacartRenderFront
                 }
             }
 
-            $o = $a->introtext . $a->fulltext;
+            $o = '';
+            if (isset($a->introtext) && $a->introtext != '') {
+                $o .= $a->introtext ;
+            }
+            if (isset($a->fulltext) && $a->fulltext != '') {
+                $o .= $a->fulltext ;
+            }
 
             // Disable emailclock for PDF | MAIL
             if ($format == 'pdf' || $format == 'mail') {

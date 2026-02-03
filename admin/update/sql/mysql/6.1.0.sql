@@ -154,5 +154,5 @@ ALTER TABLE `#__phocacart_order_products` MODIFY `default_price` DECIMAL(15, 4) 
 ALTER TABLE `#__phocacart_currencies` ADD `bank_account_number` varchar(100) NOT NULL DEFAULT '';
 ALTER TABLE `#__phocacart_currencies` ADD `iban` varchar(50) NOT NULL DEFAULT '';
 ALTER TABLE `#__phocacart_currencies` ADD `bic_swift` varchar(50) NOT NULL DEFAULT '';
-ALTER TABLE `#__phocacart_currencies` ADD `pdf_invoice_qr_information` text NOT NULL;
-ALTER TABLE `#__phocacart_currencies` ADD `pdf_invoice_qr_code` text NOT NULL;
+ALTER TABLE `#__phocacart_currencies` ADD `pdf_invoice_qr_information` text;
+ALTER TABLE `#__phocacart_currencies` ADD `pdf_invoice_qr_code` text;
