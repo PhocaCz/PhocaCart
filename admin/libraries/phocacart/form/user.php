@@ -271,6 +271,7 @@ abstract class PhocacartFormUser
 
 			$fields				= array();
 			$fields['xml'] 		= implode( "", $o );
+
 			$fields['array']	= $f;
 
 

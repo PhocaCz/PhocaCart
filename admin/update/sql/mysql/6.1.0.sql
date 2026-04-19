@@ -148,6 +148,11 @@ INSERT IGNORE INTO `#__mail_templates` (`template_id`, `extension`, `language`, 
     ('com_phocacart.subscription.status_changed', 'com_phocacart', '', 'COM_PHOCACART_MAIL_SUBSCRIPTION_STATUS_CHANGED_SUBJECT', 'COM_PHOCACART_MAIL_SUBSCRIPTION_STATUS_CHANGED_BODY', 'COM_PHOCACART_MAIL_SUBSCRIPTION_STATUS_CHANGED_HTMLBODY', '', '{"tags":["user_name","user_username","user_email","product_name","product_title","product_sku","product_link","start_date","end_date","subscription_status","renewal_count","site_name","site_link","site_url","account_url","html.document","text.document"]}');
 
 
+-- 6.1.0 Cancellation email templates
+INSERT IGNORE INTO `#__mail_templates` (`template_id`, `extension`, `language`, `subject`, `body`, `htmlbody`, `attachments`, `params`) VALUES
+    ('com_phocacart.order_cancellation', 'com_phocacart', '', 'COM_PHOCACART_CANCELLATION_MAIL_CUSTOMER_SUBJECT', 'COM_PHOCACART_CANCELLATION_MAIL_CUSTOMER_BODY', 'COM_PHOCACART_CANCELLATION_MAIL_CUSTOMER_HTMLBODY', '', '{"tags":["ordernumber","orderdate","customer_name","customer_email","withdrawal_date","site_name","site_url","html.document","text.document"]}');
+INSERT IGNORE INTO `#__mail_templates` (`template_id`, `extension`, `language`, `subject`, `body`, `htmlbody`, `attachments`, `params`) VALUES
+    ('com_phocacart.order_cancellation_admin', 'com_phocacart', '', 'COM_PHOCACART_CANCELLATION_MAIL_ADMIN_SUBJECT', 'COM_PHOCACART_CANCELLATION_MAIL_ADMIN_BODY', 'COM_PHOCACART_CANCELLATION_MAIL_ADMIN_HTMLBODY', '', '{"tags":["ordernumber","orderdate","customer_name","customer_email","withdrawal_date","site_name","site_url","html.document","text.document"]}');
 
 ALTER TABLE `#__phocacart_order_products` MODIFY `default_price` DECIMAL(15, 4) NOT NULL DEFAULT '0';
 

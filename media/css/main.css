@@ -854,6 +854,13 @@ table.ph-comparison-table tr td.ph-middle {
     display: none;
 }
 
+[data-bs-theme="dark"] {
+    #phOverlay,
+    #phOverlayDiv {
+        background-color: #000;
+    }
+}
+
 /* Icons Hot, New, Featured */
 /*
 .ph-corner-icon-wrapper {
@@ -2827,6 +2834,13 @@ ul.ph-filter-module-category-tree {
 }
 
 
+.pc-cancellation-action-box {
+    border-radius: 1em;
+    padding: 0.5em;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    background: var(--ph-grey-bg);
+}
 
 [data-bs-theme="dark"] {
     .ph-qr-code {

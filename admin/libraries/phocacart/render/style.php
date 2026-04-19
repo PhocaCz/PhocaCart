@@ -182,6 +182,7 @@ class PhocacartRenderStyle
         $s['c']['label.label-success'] = 'badge bg-success';
         $s['c']['label.label-danger']  = 'badge bg-danger';
         $s['c']['label.label-info']    = 'badge bg-info';
+        $s['c']['label.label-warning']    = 'badge bg-warning';
 
         $s['c']['modal-common-close'] = '';// In BS attribute will be used, not class $s['a']['data-bs-dismiss-modal']
         $s['c']['modal-btn-close']    = 'btn-close';
@@ -373,6 +374,7 @@ class PhocacartRenderStyle
                 $s['c']['label.label-success'] = 'uk-label uk-label-success';
                 $s['c']['label.label-danger']  = 'uk-label uk-label-danger';
                 $s['c']['label.label-info']    = 'uk-label uk-label-default';
+                $s['c']['label.label-warning']    = 'uk-label uk-label-warning';
 
 
                 $s['c']['modal-common-close'] = 'uk-modal-close';        // CLOSE MODAL without close icon

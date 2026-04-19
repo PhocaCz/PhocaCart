@@ -75,15 +75,22 @@ function phEditInPlaceMsg(msg, type) {
 
 function phEditInPlacePasteAndMark(element, json) {
 
+    const htmlTag = document.documentElement;
+    const isDark = htmlTag.getAttribute('data-bs-theme') === 'dark' ||
+                   htmlTag.getAttribute('data-color-scheme') === 'dark';
+    let successColor = '#D4E9E6';
+    if (isDark) {
+        successColor = '#2f5b55';
+    }
     /* combined input means title and alias (both editable) or date and dateformat (only date editable) */
-        if (json.idcombined && json.resultcombined) {
+    if (json.idcombined && json.resultcombined) {
         var combinedElement = "#" + phEscapeColon(json.idcombined);
         jQuery(combinedElement).html(json.resultcombined);
-        phChangeBackground(combinedElement, 700, "#D4E9E6");
+        phChangeBackground(combinedElement, 700, successColor);
     }
 
     var currentElement = "#" + phEscapeColon(element);
-    phChangeBackground(currentElement, 700, "#D4E9E6" );
+    phChangeBackground(currentElement, 700, successColor );
 }
 
 

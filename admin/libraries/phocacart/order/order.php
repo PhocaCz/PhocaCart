@@ -3342,4 +3342,22 @@ class PhocacartOrder
         return $attributes;
 	}
 
+    public static function getOrderStatusHistoryDate($orderId, $statusId) {
+        if ((int)$orderId <= 0 || (int)$statusId <= 0) {
+            return false;
+        }
+
+        $db = Factory::getDbo();
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('date'))
+            ->from($db->quoteName('#__phocacart_order_history'))
+            ->where($db->quoteName('order_id') . ' = ' . (int)$orderId)
+            ->where($db->quoteName('order_status_id') . ' = ' . (int)$statusId)
+            ->order($db->quoteName('date') . ' ASC');
+
+        $db->setQuery($query, 0, 1);
+        $date = $db->loadResult();
+
+        return $date ?: false;
+    }
 }
