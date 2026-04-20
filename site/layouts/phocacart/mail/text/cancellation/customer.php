@@ -11,7 +11,7 @@ use Joomla\CMS\Language\Text;
 
 defined('_JEXEC') or die();
 ?>
-Withdrawal confirmation: <?= $displayData['mailData']['ordernumber'] ?>
+<?= Text::sprintf('COM_PHOCACART_CANCELLATION_CUSTOMER_NOTICE_TITLE', $displayData['mailData']['ordernumber']) ?>
 <?= Text::_('COM_PHOCACART_CANCELLATION_CUSTOMER_NOTICE_TEXT') ?>
 
 <?= Text::_('COM_PHOCACART_CANCELLATION_ORDER_NUMBER') ?>:	<?= $displayData['mailData']['ordernumber'] ?>

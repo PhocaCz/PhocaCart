@@ -20,7 +20,7 @@ $styles = $displayData['styles'];
             <table width="100%" cellpadding="0" cellspacing="0" border="0">
                 <tr>
                     <td style="<?= $styles['fs-xlarge'] ?> padding-bottom: 12px;">
-                        <strong>Withdrawal confirmation: <?= $displayData['mailData']['ordernumber'] ?></strong>
+                        <strong><?= Text::sprintf('COM_PHOCACART_CANCELLATION_CUSTOMER_NOTICE_TITLE', $displayData['mailData']['ordernumber']) ?></strong>
                     </td>
                 </tr>
                 <tr>
