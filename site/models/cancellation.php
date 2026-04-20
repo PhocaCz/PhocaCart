@@ -108,7 +108,7 @@ class PhocaCartModelCancellation extends BaseDatabaseModel
             if (!empty($orderUsers)) {
                 foreach ($orderUsers as $ou) {
                     $type = (int) ($ou['type'] ?? 0);
-                    
+
                     // We only care about name and email for the withdrawal notice.
                     // Prefer Billing address (Type 0) for these details.
                     if ($type === 0 || empty($order->cancellation->email)) {
@@ -250,6 +250,10 @@ class PhocaCartModelCancellation extends BaseDatabaseModel
             // notifyUser and notifyOthers are 0 because we send custom withdrawal emails below.
             $notified = \PhocacartOrderStatus::changeStatus($orderId, $resultStatus, $token, 0, 0);
 
+
+            // User will be always notified:
+            $notified = 1;
+
             // 3. Add history record
             $historyComment = Text::_('COM_PHOCACART_CANCELLATION_BY_USER_WITHIN_PERIOD');
             \PhocacartOrderStatus::setHistory($orderId, $resultStatus, $notified, $historyComment);
@@ -282,12 +286,12 @@ class PhocaCartModelCancellation extends BaseDatabaseModel
         $orderNumber = PhocacartOrder::getOrderNumber($order->id, $order->date, $order->order_number);
         $orderDate   = HTMLHelper::date($order->date, Text::_('DATE_FORMAT_LC2'));
         $now         = HTMLHelper::date('now', Text::_('DATE_FORMAT_LC2'));
-        
+
         $firstName   = $order->cancellation->name_first ?? '';
         $lastName    = $order->cancellation->name_last ?? '';
         $custName    = htmlspecialchars(trim($firstName . ' ' . $lastName), ENT_QUOTES, 'UTF-8');
         $custEmail   = htmlspecialchars($order->cancellation->email ?? '', ENT_QUOTES, 'UTF-8');
-        
+
         $userLang    = $order->user_lang ?? $app->getLanguage()->getTag();
         $defaultLang = $order->default_lang ?? $app->getLanguage()->getTag();
 
