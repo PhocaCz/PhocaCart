@@ -128,7 +128,7 @@ class PhocaCartViewCheckout extends HtmlView
 
         $this->t['enable_captcha_checkout'] = PhocacartCaptcha::enableCaptchaCheckout();
 
-        $scrollTo = 'phCheckoutCartBox';// = '';
+        $scrollTo = '';
 
 
         // Not ready yet
@@ -596,7 +596,7 @@ class PhocaCartViewCheckout extends HtmlView
             // last view - in fact phcheckoutconfirmedit
             PhocacartRenderJs::renderJsScrollTo($scrollTo, 1);
         } else {
-            PhocacartRenderJs::renderJsScrollTo('phCheckoutCartBox', 2);// = ''
+            PhocacartRenderJs::renderJsScrollTo('', 2);
         }
 
 

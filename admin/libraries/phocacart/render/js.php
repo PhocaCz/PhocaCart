@@ -433,8 +433,7 @@ final class PhocacartRenderJs
 
         if ($add_wishlist_method > 0) {
             //$urlAjax = Uri::base(true) . '/index.php?option=com_phocacart&task=wishlist.add&format=json&' . Session::getFormToken() . '=1&wishlistview=' . (int)$wView;
-            //$urlAjax = ('index.php?option=com_phocacart&task=wishlist.add&format=json&' . Session::getFormToken() . '=1&wishlistview=' . (int)$wView);
-            $urlAjax = Route::_('index.php?option=com_phocacart&task=wishlist.add&format=json&' . Session::getFormToken() . '=1&wishlistview=' . (int)$wView);
+            $urlAjax = ('index.php?option=com_phocacart&task=wishlist.add&format=json&' . Session::getFormToken() . '=1&wishlistview=' . (int)$wView);
             $s = array();
             $s[] = 'function phItemWishListBoxFormAjax(phItemId) {';
             $s[] = '	var phUrl 	= "' . $urlAjax . '";';

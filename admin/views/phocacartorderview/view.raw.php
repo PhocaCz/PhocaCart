@@ -53,7 +53,6 @@ class PhocaCartCpViewPhocacartOrderView extends HtmlView
             'common' => $common,
             'bas' => $orderView->getItemBaS($id, 1),
             'products' => $orderView->getItemProducts($id),
-            'discounts' => $orderView->getItemProductDiscounts($id, 0),
             'total' => $orderView->getItemTotal($id, 1),
             'taxrecapitulation' => $orderView->getItemTaxRecapitulation($id),
             'price' => $price,
@@ -77,15 +76,14 @@ class PhocaCartCpViewPhocacartOrderView extends HtmlView
 
         if ($output && !empty($output['content'])) {
             $filename = $output['filename'] ?? 'invoice.xml';
+            $contentType = $output['contentType'] ?? 'application/xml';
 
-            header('Content-Type: application/xml; charset=utf-8');
-            header('Content-Disposition: attachment; filename="' . $filename . '"');
-            header('Content-Length: ' . strlen($output['content']));
-            header('Pragma: no-cache');
-            header('Expires: 0');
+            $app->setHeader('Content-Type', $contentType . '; charset=UTF-8');
+            $app->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"');
+            $app->setHeader('Cache-Control', 'no-cache, must-revalidate');
+            $app->setHeader('Pragma', 'public');
 
             echo $output['content'];
-            exit;
         } else {
             echo Text::_('COM_PHOCACART_ERROR_NO_ORDER_FOUND');
         }

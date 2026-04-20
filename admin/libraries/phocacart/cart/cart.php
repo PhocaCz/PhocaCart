@@ -94,7 +94,6 @@ class PhocacartCart
         $this->payment['params_payment']    = array();
         $this->stock['valid']              = 1;// check stock - products, attributes (no matter if stock checking is disabled or enabled)
         $this->minqty['valid']             = 1;// check minimum order quantity
-        $this->maxqty['valid']             = 1;// check maximum order quantity
         $this->minmultipleqty['valid']     = 1;// check minimum multiple order quantity
 
 

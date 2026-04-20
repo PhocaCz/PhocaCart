@@ -27,6 +27,7 @@ class PhocaCartCpViewPhocaCartCp extends HtmlView
 	protected $s;
 
 	function display($tpl = null) {
+
 		$this->t	= PhocacartUtils::setVars();
 		$this->s    = PhocacartRenderStyle::getStyles();
 		$this->r	= new PhocacartRenderAdminview();
@@ -178,6 +179,7 @@ class PhocaCartCpViewPhocaCartCp extends HtmlView
 			$autoOpenModal = 1;
 			$linkWizard = Route::_( 'index.php?option=com_phocacart&view=phocacartwizard&tmpl=component&page=1', false );
 		}
+
 
 		$customFooter = '<form action="'.Route::_('index.php?option=com_phocacart').'" method="post" style="display: inline;">'
 		.' <input type="hidden" name="task" value="phocacartwizard.skipwizard">'
