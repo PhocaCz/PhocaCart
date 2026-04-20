@@ -741,7 +741,13 @@ class PhocacartRenderFront
                 }
             }
 
-            $o = $a->introtext . $a->fulltext;
+            $o = '';
+            if (isset($a->introtext) && $a->introtext != '') {
+                $o .= $a->introtext ;
+            }
+            if (isset($a->fulltext) && $a->fulltext != '') {
+                $o .= $a->fulltext ;
+            }
 
             // Disable emailclock for PDF | MAIL
             if ($format == 'pdf' || $format == 'mail') {
@@ -775,6 +781,44 @@ class PhocacartRenderFront
 
 
         // If no text is set by article and there is default value
+        if ($o == '' && $default != '') {
+            return $default;
+        }
+        return $o;
+    }
+
+    public static function renderArticleTitle($id, $default = '')
+    {
+        $o = '';
+        if ((int)$id > 0) {
+            $db = Factory::getDBO();
+            $query = $db->getQuery(true)
+                    ->select($db->quoteName('a.title'))
+                    ->from($db->quoteName('#__content', 'a'))
+                    ->where($db->quoteName('a.id') . ' = ' . (int)$id);
+
+            $db->setQuery((string)$query);
+            $o = $db->loadResult();
+
+            if (Associations::isEnabled()) {
+                $associations = Associations::getAssociations('com_content', '#__content', 'com_content.item', $id);
+                $lang = Factory::getLanguage();
+                $language = $lang->getTag();
+                if (isset($language) && $language != '*' && $language != '') {
+                    foreach ($associations as $tag => $association) {
+                        if ($language == $tag && isset($association->id)) {
+                            $query = $db->getQuery(true)
+                                ->select($db->quoteName('a.title'))
+                                ->from($db->quoteName('#__content', 'a'))
+                                ->where($db->quoteName('a.id') . ' = ' . (int)$association->id);
+                            $db->setQuery((string)$query);
+                            $o = $db->loadResult();
+                        }
+                    }
+                }
+            }
+        }
+
         if ($o == '' && $default != '') {
             return $default;
         }

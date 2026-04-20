@@ -408,6 +408,35 @@ class PhocacartRoute
 		return self::_buildLink($link, $needles, [$lang]);
 	}
 
+	/**
+	 * Returns the URL for the EU Right of Withdrawal (cancellation) view for a specific order.
+	 *
+	 * @param   int     $orderId  The order ID.
+	 * @param   string  $token    Optional guest order token (o parameter).
+	 * @param   string  $lang     Language tag for SEF routing.
+	 *
+	 * @return  string  The routed URL.
+	 *
+	 * @since   6.1.0
+	 */
+	public static function getCancellationRoute(int $orderId, string $token = '', string $lang = ''): string
+	{
+		$needles = [
+			'cancellation' => '',
+			'orders'       => '',
+			'items'        => '',
+			'categories'   => '',
+		];
+
+		$link = 'index.php?option=com_phocacart&view=cancellation&id=' . $orderId;
+
+		if ($token !== '') {
+			$link .= '&o=' . rawurlencode($token);
+		}
+
+		return self::_buildLink($link, $needles, [$lang]);
+	}
+
 	public static function getTermsRoute($id = 0, $catid = 0, $suffix = '', string $lang = '')
 	{
 		$needles = array(
