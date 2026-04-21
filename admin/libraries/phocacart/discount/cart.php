@@ -427,8 +427,8 @@ class PhocacartDiscountCart
 			//$priceItems['bruttotxt'] 	= $discount['title'];
 			//$priceItems['nettotxt'] 	= $discount['title'];
 
-            $priceItems['bruttotxt'] = $discount['title'] != '' ? $discount['title'] . ' ' . Text::_('COM_PHOCACART_EXCL_TAX_SUFFIX') : Text::_('COM_PHOCACART_DISCOUNT'). ' ' . Text::_('COM_PHOCACART_EXCL_TAX_SUFFIX');
-            $priceItems['nettotxt']  = $discount['title'] != '' ? $discount['title'] . ' ' . Text::_('COM_PHOCACART_INCL_TAX_SUFFIX') : Text::_('COM_PHOCACART_DISCOUNT'). ' ' . Text::_('COM_PHOCACART_INCL_TAX_SUFFIX');
+            $priceItems['bruttotxt'] = $discount['title'] != '' ? $discount['title'] . ' ' . Text::_('COM_PHOCACART_INCL_TAX_SUFFIX') : Text::_('COM_PHOCACART_DISCOUNT'). ' ' . Text::_('COM_PHOCACART_INCL_TAX_SUFFIX');
+            $priceItems['nettotxt']  = $discount['title'] != '' ? $discount['title'] . ' ' . Text::_('COM_PHOCACART_EXCL_TAX_SUFFIX') : Text::_('COM_PHOCACART_DISCOUNT'). ' ' . Text::_('COM_PHOCACART_EXCL_TAX_SUFFIX');
             if ($tax_calculation == 0) {
                 $priceItems['bruttotxt'] = $discount['title'] != '' ? $discount['title'] : Text::_('COM_PHOCACART_DISCOUNT');
                 $priceItems['nettotxt']  = $discount['title'] != '' ? $discount['title'] : Text::_('COM_PHOCACART_DISCOUNT');

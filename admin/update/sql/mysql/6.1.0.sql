@@ -154,7 +154,8 @@ INSERT IGNORE INTO `#__mail_templates` (`template_id`, `extension`, `language`, 
 INSERT IGNORE INTO `#__mail_templates` (`template_id`, `extension`, `language`, `subject`, `body`, `htmlbody`, `attachments`, `params`) VALUES
     ('com_phocacart.order_cancellation_admin', 'com_phocacart', '', 'COM_PHOCACART_CANCELLATION_MAIL_ADMIN_SUBJECT', 'COM_PHOCACART_CANCELLATION_MAIL_ADMIN_BODY', 'COM_PHOCACART_CANCELLATION_MAIL_ADMIN_HTMLBODY', '', '{"tags":["ordernumber","orderdate","customer_name","customer_email","withdrawal_date","site_name","site_url","html.document","text.document"]}');
 
-ALTER TABLE `#__phocacart_order_products` MODIFY `default_price` DECIMAL(15, 4) NOT NULL DEFAULT '0';
+--ALTER TABLE `#__phocacart_order_products` MODIFY `default_price` DECIMAL( 15, 4 ) NOT NULL DEFAULT '0';
+ALTER TABLE `#__phocacart_order_products` MODIFY `default_price` decimal(15,4) NOT NULL DEFAULT '0.0000';
 
 ALTER TABLE `#__phocacart_currencies` ADD `bank_account_number` varchar(100) NOT NULL DEFAULT '';
 ALTER TABLE `#__phocacart_currencies` ADD `iban` varchar(50) NOT NULL DEFAULT '';
