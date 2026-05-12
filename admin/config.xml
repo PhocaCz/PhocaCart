@@ -1437,12 +1437,12 @@
         <option value="2">COM_PHOCACART_YES_ROOT</option>
         <option value="0">COM_PHOCACART_NO</option>
       </field>
-      <field name="watermark_position_x" type="list" default="center" label="COM_PHOCACART_FIELD_X-POSITION_OF_WATERMARK_LABEL" description="COM_PHOCACART_FIELD_X-POSITION_OF_WATERMARK_DESC">
+      <field name="watermark_position_x" type="list" default="center" label="COM_PHOCACART_FIELD_X_POSITION_OF_WATERMARK_LABEL" description="COM_PHOCACART_FIELD_X_POSITION_OF_WATERMARK_DESC">
         <option value="left">COM_PHOCACART_LEFT</option>
         <option value="center">COM_PHOCACART_CENTER</option>
         <option value="right">COM_PHOCACART_RIGHT</option>
       </field>
-      <field name="watermark_position_y" type="list" default="middle" label="COM_PHOCACART_FIELD_Y-POSITION_OF_WATERMARK_LABEL" description="COM_PHOCACART_FIELD_Y-POSITION_OF_WATERMARK_DESC">
+      <field name="watermark_position_y" type="list" default="middle" label="COM_PHOCACART_FIELD_Y_POSITION_OF_WATERMARK_LABEL" description="COM_PHOCACART_FIELD_Y_POSITION_OF_WATERMARK_DESC">
         <option value="top">COM_PHOCACART_TOP</option>
         <option value="middle">COM_PHOCACART_MIDDLE</option>
         <option value="bottom">COM_PHOCACART_BOTTOM</option>
@@ -1854,12 +1854,13 @@
     </fieldset>
 
 
-    <fieldset name="store" label="COM_PHOCACART_CONFIG_HEAD_STORE_LABEL">
+    <fieldset name="store" label="COM_PHOCACART_CONFIG_HEAD_STORE_LABEL" addruleprefix="Phoca\Component\PhocaCart\Administrator\Rule">
 
 
       <field name="store_title" type="text" default="" label="COM_PHOCACART_FIELD_STORE_TITLE_LABEL" description="COM_PHOCACART_FIELD_STORE_TITLE_DESC" filter="string"/>
 
-      <field name="store_logo" type="media" default="" directoryimg="1" label="COM_PHOCACART_FIELD_STORE_LOGO_LABEL" description="COM_PHOCACART_FIELD_STORE_LOGO_DESC"/>
+      <!--<field name="store_logo" type="media" default="" directoryimg="1" label="COM_PHOCACART_FIELD_STORE_LOGO_LABEL" description="COM_PHOCACART_FIELD_STORE_LOGO_DESC" /> -->
+      <field name="store_logo" type="media" default="" directoryimg="1" validate="medianospace" addruleprefix="Phocacart\Component\Phocacart\Administrator\Rule" message="COM_PHOCACART_ERROR_STORE_LOGO_NO_SPACES" label="COM_PHOCACART_FIELD_STORE_LOGO_LABEL" description="COM_PHOCACART_FIELD_STORE_LOGO_DESC"/>
 
 
       <field name="store_info" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control" label="COM_PHOCACART_FIELD_STORE_INFORMATION_LABEL"
@@ -2436,13 +2437,20 @@
 
       <field name="session_suffix" default="" type="text" label="COM_PHOCACART_FIELD_SESSION_SUFFIX_LABEL" description="COM_PHOCACART_FIELD_SESSION_SUFFIX_DESC"/>
 
-      <field name="recaptcha_sitekey" type="text" default="" label="COM_PHOCACART_FIELD_RECAPTCHA_SITEKEY_LABEL" description="COM_PHOCACART_FIELD_RECAPTCHA_SITEKEY_DESC"/>
+      <field name="captcha_type" type="list" class="form-select" default="1"
+             label="COM_PHOCACART_FIELD_CAPTCHA_TYPE_LABEL"
+             description="COM_PHOCACART_FIELD_CAPTCHA_TYPE_DESC">
+        <option value="1">COM_PHOCACART_CAPTCHA_TYPE_RECAPTCHA</option>
+        <option value="2">COM_PHOCACART_CAPTCHA_TYPE_POW</option>
+      </field>
 
-      <field name="recaptcha_privatekey" type="text" default="" label="COM_PHOCACART_FIELD_RECAPTCHA_PRIVATEKEY_LABEL" description="COM_PHOCACART_FIELD_RECAPTCHA_PRIVATEKEY_DESC"/>
+      <field name="recaptcha_sitekey" type="text" default="" showon="captcha_type:1" label="COM_PHOCACART_FIELD_RECAPTCHA_SITEKEY_LABEL" description="COM_PHOCACART_FIELD_RECAPTCHA_SITEKEY_DESC"/>
 
-      <field name="recaptcha_lang" type="text" default="" label="COM_PHOCACART_FIELD_RECAPTCHA_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_RECAPTCHA_LANGUAGE_DESC"/>
+      <field name="recaptcha_privatekey" type="text" default="" showon="captcha_type:1" label="COM_PHOCACART_FIELD_RECAPTCHA_PRIVATEKEY_LABEL" description="COM_PHOCACART_FIELD_RECAPTCHA_PRIVATEKEY_DESC"/>
 
-      <field name="recaptcha_request_method" type="list" class="form-select" default="2" label="COM_PHOCACART_FIELD_RECAPTCHA_REQUEST_METHOD_LABEL"
+      <field name="recaptcha_lang" type="text" default="" showon="captcha_type:1" label="COM_PHOCACART_FIELD_RECAPTCHA_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_RECAPTCHA_LANGUAGE_DESC"/>
+
+      <field name="recaptcha_request_method" type="list" class="form-select" default="2" showon="captcha_type:1" label="COM_PHOCACART_FIELD_RECAPTCHA_REQUEST_METHOD_LABEL"
              description="COM_PHOCACART_FIELD_RECAPTCHA_REQUEST_METHOD_DESC">
         <option value="1">file_get_contents</option>
         <option value="2">cUrl</option>

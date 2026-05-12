@@ -2842,6 +2842,11 @@ ul.ph-filter-module-category-tree {
     background: var(--ph-grey-bg);
 }
 
+.ph-category-item-body {
+    padding: 0;
+    margin: 0;
+}
+
 [data-bs-theme="dark"] {
     .ph-qr-code {
         background: #fff;

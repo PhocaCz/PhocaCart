@@ -197,7 +197,7 @@ class PhocacartOrder
        $pos			            = PhocacartPos::isPosView();
         $enable_captcha_checkout    = PhocacartCaptcha::enableCaptchaCheckout();
         if ($enable_captcha_checkout && !$pos) {
-            if (!PhocacartCaptchaRecaptcha::isValid()) {
+            if (!PhocacartCaptcha::isValid()) {
                 if ($order_language == 0) {
                     $pLang->setLanguageBack($defaultLang);
                 }

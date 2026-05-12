@@ -26,21 +26,13 @@ class JFormRulePhocacartCaptcha extends FormRule
 		$namespace = 'phccrt'.$params->get('session_suffix');
 
 		// Possible parameters in Options for different captchas
-		$captchaId = 1;
+		if (!PhocacartCaptcha::isValid()) {
 
-		switch($captchaId) {
-			case 1:
-			default:
-				if (!PhocacartCaptchaRecaptcha::isValid()) {
-
-					// What happens when the CAPTCHA was entered incorrectly
-					$app->enqueueMessage(Text::_('COM_PHOCACART_WRONG_CAPTCHA' ), 'warning');
-					return false;
-				}
-
-				return true;
-			break;
+			// What happens when the CAPTCHA was entered incorrectly
+			$app->enqueueMessage(Text::_('COM_PHOCACART_WRONG_CAPTCHA' ), 'warning');
+			return false;
 		}
-		return false;
+
+		return true;
 	}
 }

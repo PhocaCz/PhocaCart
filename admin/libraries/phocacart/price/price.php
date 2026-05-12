@@ -172,7 +172,7 @@ class PhocacartPrice
         }
 
 
-        $price = number_format((double)$price, $this->price_decimals, $this->price_dec_symbol, $this->price_thousands_sep);
+        $price = number_format((float)$price, $this->price_decimals, $this->price_dec_symbol, $this->price_thousands_sep);
 
         switch ($this->price_format) {
             case 1:
@@ -267,7 +267,7 @@ class PhocacartPrice
             $priceThousandsSep = $specPriceThousandsSep;
         }
 
-        $price = number_format((double)$price, $priceDecimals, $priceDecSymbol, $priceThousandsSep);
+        $price = number_format((float)$price, $priceDecimals, $priceDecSymbol, $priceThousandsSep);
 
         $o = '';
         if ($negative) {
@@ -302,9 +302,9 @@ class PhocacartPrice
             }
         } else { // IS USED FOR PERCENTAGE in CALCUTATION: ... VAT(10%) --> 10,00 %
             if ($taxCalculationType == 2) { // FIX
-                $tax = number_format((double)$tax, $this->price_decimals, $this->price_dec_symbol, $this->price_thousands_sep);
+                $tax = number_format((float)$tax, $this->price_decimals, $this->price_dec_symbol, $this->price_thousands_sep);
             } else { // Percentage
-                $tax = number_format((double)$tax, $this->price_decimals, $this->price_dec_symbol, $this->price_thousands_sep) . ' %';
+                $tax = number_format((float)$tax, $this->price_decimals, $this->price_dec_symbol, $this->price_thousands_sep) . ' %';
             }
         }
 
