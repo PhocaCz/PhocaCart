@@ -16,7 +16,7 @@ class JFormFieldPhocacaptcha extends FormField
 	protected $type 		= 'phocacaptcha';
 
 	protected function getInput() {
-		return PhocacartCaptchaRecaptcha::render();
+		return PhocacartCaptcha::render();
 	}
 }
 

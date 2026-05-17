@@ -58,6 +58,8 @@ class PhocacartAccessRights
 
         // 3) Based on customer group
         // If user is inside at least on customer group which allows displaying the price, the price can be displayed for him
+
+
         if ($display_price == 3) {
             $userGroups = PhocacartGroup::getGroupsById($this->user->id, 1, 2);
             if (!empty($userGroups)) {

@@ -166,6 +166,7 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 			$dP['class']		= 'ph-category-price-box';// Cannot be dynamic as can change per ajax - this can cause jumping of boxes
 			$dP['product_id']	= (int)$v->id;
 			$dP['typeview']		= 'Category';
+			$dP['subscription_scenario'] = isset($v->subscription_scenario) ? $v->subscription_scenario : null;
 
 
 			// Display discount price
@@ -250,11 +251,20 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 				$dSO .= $layoutPOQ->render($dPOQ);
 			}
 
+
 			if($stockStatus['min_multiple_quantity']) {
 				$dPOQ						= array();
 				$dPOQ['s']	                = $this->s;
 				$dPOQ['text']				= Text::_('COM_PHOCACART_MINIMUM_MULTIPLE_ORDER_QUANTITY');
 				$dPOQ['status']				= $stockStatus['min_multiple_quantity'];
+				$dSO .= $layoutPOQ->render($dPOQ);
+			}
+
+            if($stockStatus['max_quantity']) {
+				$dPOQ						= array();
+				$dPOQ['s']	                = $this->s;
+				$dPOQ['text']				= Text::_('COM_PHOCACART_MAXIMUM_ORDER_QUANTITY');
+				$dPOQ['status']				= $stockStatus['max_quantity'];
 				$dSO .= $layoutPOQ->render($dPOQ);
 			}
 		}
@@ -504,7 +514,7 @@ if (!empty($this->items) && $this->t['pluginlayout']) {
 
 		// TAGS
 		$dL['tags'] =  '';
-		$tagsOutput = PhocacartTag::getTagsRendered((int)$v->id, $this->t['category_display_tags'], ', ');
+		$tagsOutput = PhocacartTag::getTagsRendered((int)$v->id, $this->t['category_display_tags'], $this->t['tag_separator']);
 		if ($tagsOutput != '') {
 			$dL['tags'] .= $tagsOutput;
 		}

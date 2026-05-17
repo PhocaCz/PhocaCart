@@ -78,7 +78,7 @@ class PhocaCartViewWishList extends HtmlView
 					}
 				}*/
 
-				$stockStatus = PhocacartStock::getStockStatus((int)$v['stock'], (int)$v['min_quantity'], (int)$v['min_multiple_quantity'], (int)$v['stockstatus_a_id'],  (int)$v['stockstatus_n_id']);
+				$stockStatus = PhocacartStock::getStockStatus((int)$v['stock'], (int)$v['min_quantity'], (int)$v['min_multiple_quantity'], (int)$v['stockstatus_a_id'],  (int)$v['stockstatus_n_id'], (int)$v['max_quantity']);
 				$this->t['items'][$k]['stock'] = PhocacartStock::getStockStatusOutput($stockStatus);
 				if ($this->t['items'][$k]['stock'] != '') {
 					$this->t['value']['stock'] = 1;

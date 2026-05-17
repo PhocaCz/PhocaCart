@@ -97,7 +97,7 @@ class PhocaCartViewItem extends HtmlView
 		$this->t['display_webp_images']			= $this->p->get( 'display_webp_images', 0 );
 		$this->t['item_display_labels']			= $this->p->get( 'item_display_labels', 2 );
 		$this->t['item_display_tags']			= $this->p->get( 'item_display_tags', 1 );
-
+		$this->t['tag_separator']		    = $this->p->get( 'tag_separator', ' ' );
 
 		// Rights or catalogue options --------------------------------
 		$rights								= new PhocacartAccessRights();
@@ -134,7 +134,7 @@ class PhocaCartViewItem extends HtmlView
 			//$this->t['rel_products']		= PhocacartRelated::getRelatedItemsById((int)$id, 0, 1);
 			$this->t['tags_output']			= PhocacartTag::getTagsRendered((int)$id, $this->t['item_display_tags']);
 			$this->t['taglabels_output']	= PhocacartTag::getTagsRendered((int)$id, $this->t['item_display_labels']);
-			$this->t['stock_status']		= PhocacartStock::getStockStatus((int)$this->item[0]->stock, (int)$this->item[0]->min_quantity, (int)$this->item[0]->min_multiple_quantity, (int)$this->item[0]->stockstatus_a_id,  (int)$this->item[0]->stockstatus_n_id);
+			$this->t['stock_status']		= PhocacartStock::getStockStatus((int)$this->item[0]->stock, (int)$this->item[0]->min_quantity, (int)$this->item[0]->min_multiple_quantity, (int)$this->item[0]->stockstatus_a_id,  (int)$this->item[0]->stockstatus_n_id, (int)$this->item[0]->max_quantity);
 			$this->t['stock_status_output'] = PhocacartStock::getStockStatusOutput($this->t['stock_status']);
 			$this->t['attr_options']		= $this->t['hide_attributes_item'] == 0 ? PhocacartAttribute::getAttributesAndOptions((int)$id) : array();
 			$this->t['specifications']		= PhocacartSpecification::getSpecificationGroupsAndSpecifications((int)$id);

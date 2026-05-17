@@ -173,6 +173,15 @@
                 <option value="2">COM_PHOCACART_ADVANCED_STOCK_MANAGEMENT</option>
             </field>
 
+            <field name="max_quantity" type="number" showon="_stock_options:1" label="COM_PHOCACART_FIELD_MAX_ORDER_QUANTITY_LABEL" />
+
+            <field name="max_quantity_calculation" type="list" showon="_stock_options:1" label="COM_PHOCACART_FIELD_MAXIMUM_QUANTITY_CALCULATION_LABEL">
+                <option value="">COM_PHOCACART_BATCH_NOCHANGE</option>
+                <option value="0">COM_PHOCACART_MAIN_PRODUCT</option>
+                <option value="1">COM_PHOCACART_PRODUCT_VARIATIONS_ATTRIBUTES</option>
+                <option value="2">COM_PHOCACART_ADVANCED_STOCK_MANAGEMENT</option>
+            </field>
+
             <field name="stockstatus_a_id" type="phocastockstatus" manager="a" showon="_stock_options:1" label="COM_PHOCACART_FIELD_STOCK_STATUS_A_LABEL" />
 
             <field name="stockstatus_n_id" type="phocastockstatus" manager="n" showon="_stock_options:1" label="COM_PHOCACART_FIELD_STOCK_STATUS_B_LABEL" />

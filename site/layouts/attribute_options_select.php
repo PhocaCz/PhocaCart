@@ -32,6 +32,8 @@ $attr[]				= 'data-type-icon="'. $iconType.'"';// Which icons are used on the si
 $attr[]				= 'data-required="'.$d['required']['required'].'"';
 $attr[]				= 'data-alias="'.htmlspecialchars($v->alias).'"';
 
+// Display attribute title
+//echo '<div>'.$v->title.'</div>';
 
 echo '<div id="phItemBoxAttribute'.$attributeIdName.'">';
 echo '<select '.implode(' ', $attr).'>';

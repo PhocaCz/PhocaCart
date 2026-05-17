@@ -18,10 +18,10 @@ class JFormRulePhocaCartMaxlength extends FormRule
 
 	public function test(SimpleXMLElement $element, $value, $group = null, Joomla\Registry\Registry $input = null, Joomla\CMS\Form\Form $form = null)
 	{
-		
+
         if (isset($element['maxlength'])) {
                 $maxLength = (int)$element['maxlength'];
-                $stringLength = (int)StringHelper::strlen($value);
+                $stringLength = (int)StringHelper::strlen((string)$value);
 
                 if ($stringLength > $maxLength) {
 

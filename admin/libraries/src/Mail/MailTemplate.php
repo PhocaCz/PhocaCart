@@ -19,8 +19,11 @@ defined('_JEXEC') or die;
 
 class MailTemplate extends JoomlaMailTemplate
 {
+    public bool $hasQRCode = false;
+
     public function __construct(string $templateId, ?string $language = null, ?Mail $mailer = null)
     {
+
         if ($language === null) {
             $language = Factory::getApplication()->getLanguage()->getTag();
         }
@@ -30,7 +33,7 @@ class MailTemplate extends JoomlaMailTemplate
         parent::__construct($templateId, $language, $mailer);
     }
 
-    private function loadMailLanguage(string $lang): void
+    public function loadMailLanguage(string $lang): void
     {
         /* TODO bypass Joomla Issue https://github.com/joomla/joomla-cms/issues/39228 */
         $language = Factory::getApplication()->getLanguage();
@@ -43,6 +46,7 @@ class MailTemplate extends JoomlaMailTemplate
 
     protected function replaceTags($text, $tags, $isHtml = false)
     {
+
         foreach ($tags as $key => $value) {
             if (!$value) {
                 $pregKey = preg_quote(strtoupper('IF ' . $key), '/');
@@ -64,18 +68,55 @@ class MailTemplate extends JoomlaMailTemplate
            return strtoupper($matches[0]);
         }, $text);
 
-        return parent::replaceTags($text, $tags, $isHtml);
+        $result = parent::replaceTags($text, $tags, $isHtml);
+
+        // QR CODE IMAGE IN EMAIL CODE NEEDS TO BE SENT AS ATTACHMENT TO BE DISPLAYED
+        // SEE: administrator/components/com_phocacart/libraries/src/Mail/MailHelper.php
+        // method: renderOrderBody
+
+        // Joomla - libraries/src/Mail/MailTemplate.php (method: send()) row:
+        // $htmlBody  = $useLayout ? Text::_($mail->htmlbody) : $this->replaceTags(Text::_($mail->htmlbody), $this->data, true);
+        // This is why we ommit using isHtml to only search HTML versions (when some options set, we don't get the isHtml)
+        if (!$this->hasQRCode && isset($this->data['qrcode']) && str_contains($result, 'cid:qrcode')) {
+            $this->hasQRCode = true;// Don't repeat adding QR code attachment
+
+            $inlineImageContent = [
+            'content' => \PhocacartUtils::getQrImage($this->data['qrcode'], 3),
+            'mimetype' => 'image/png',
+            'filename' => 'qrcode.png'
+            ];
+            $this->addInlineImageContent($inlineImageContent, 'qrcode');
+        }
+        return $result;
+        //return parent::replaceTags($text, $tags, $isHtml);
     }
 
     public function addTemplateData($data, $plain = false)
     {
         if (isset($data['attachments']) && is_array($data['attachments'])) {
             foreach ($data['attachments'] as $id => $file) {
-                $this->addInlineImage($file, $id);
+
+                if (is_array($file)) {
+                    $this->addInlineImageContent($file, $id);
+                } else {
+                    $this->addInlineImage($file, $id);
+                }
             }
         }
 
         parent::addTemplateData($data, $plain);
+    }
+
+
+    public function addInlineImageContent(array $image, string $cid): void
+    {
+        if (isset($image['content']) && isset($image['mimetype']) && isset($image['filename'])) {
+
+            $this->mailer->addStringEmbeddedImage($image['content'], $cid, $image['filename'], 'base64', $image['mimetype'], 'inline');
+            $this->addLayoutTemplateData(['inline.' . $cid => $cid]);
+
+        }
+
     }
 
     public function addInlineImage(?string $imageFile, string $name): void

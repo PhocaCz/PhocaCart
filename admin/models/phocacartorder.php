@@ -246,13 +246,13 @@ class PhocaCartCpModelPhocacartOrder extends AdminModel
 
 
 
-		$currentStatus 	= 0;
-		$newStatus 		= $data['status_id'];
+		$statusOld 	= 0;
+		$statusNew 		= $data['status_id'];
 		if ($pk > 0) {
 			$table->load($pk);
 
 			if (isset($table->status_id) && (int)$table->status_id > 0) {
-				$currentStatus = (int)$table->status_id;
+				$statusOld = (int)$table->status_id;
 			}
 			$isNew = false;
 		} else {
@@ -295,7 +295,7 @@ class PhocaCartCpModelPhocacartOrder extends AdminModel
 
 		// Change status only if it really changed when editing
 
-		if ((int)$currentStatus == (int)$newStatus) {
+		if ((int)$statusOld == (int)$statusNew) {
 			// Status still the same, don't send email, don't change history
 		} else {
 

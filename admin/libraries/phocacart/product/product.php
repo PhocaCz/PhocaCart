@@ -23,6 +23,7 @@ use Phoca\PhocaCart\Constants\GroupType;
 use Phoca\PhocaCart\Dispatcher\Dispatcher;
 use Phoca\PhocaCart\Event;
 use Phoca\PhocaCart\I18n\I18nHelper;
+//use PhocacartCalculation;
 
 class PhocacartProduct
 {
@@ -63,14 +64,33 @@ class PhocacartProduct
             'i.id', 'i.metadata',
             'i.type', 'i.image', 'i.weight', 'i.height', 'i.width', 'i.length', 'i.min_multiple_quantity', 'i.min_quantity_calculation', 'i.volume',
             'i.price', 'i.price_original', 'i.stockstatus_a_id', 'i.stockstatus_n_id', 'i.stock_calculation',
-            'i.min_quantity', 'i.min_multiple_quantity', 'i.stock', 'i.sales', 'i.featured', 'i.external_id', 'i.unit_amount', 'i.unit_unit',
+            'i.min_quantity', 'i.min_multiple_quantity', 'i.max_quantity', 'i.max_quantity_calculation', 'i.stock', 'i.sales', 'i.featured', 'i.external_id', 'i.unit_amount', 'i.unit_unit',
             'i.video', 'i.external_link', 'i.external_text', 'i.external_link2', 'i.external_text2', 'i.public_download_file', 'i.public_download_text',
             'i.public_play_file', 'i.public_play_text', 'i.sku', 'i.upc', 'i.ean', 'i.jan', 'i.isbn', 'i.mpn', 'i.serial_number',
             'i.points_needed', 'i.points_received', 'i.download_file', 'i.download_token', 'i.download_folder', 'i.download_days',
             'i.date', 'i.date_update', 'i.delivery_date', 'i.gift_types', 'i.owner_id',
             'pc.ordering', 'c.id AS catid', 'i.condition', 'i.language',
-            'm.id as manufacturerid',
+            'm.id as manufacturerid'
         ];
+
+        $columnsSubscription = [
+            'i.subscription_period',
+            'i.subscription_unit',
+            'i.subscription_signup_fee',
+            'i.subscription_renewal_discount',
+            'i.subscription_renewal_discount_calculation_type',
+            'i.subscription_usergroup_add',
+            'i.subscription_usergroup_remove',
+            'i.subscription_trial_enabled',
+            'i.subscription_trial_period',
+            'i.subscription_trial_unit',
+            'i.subscription_grace_period_days',
+            'i.subscription_max_renewals'
+        ];
+
+        //if ($productType == 6) {
+            $columns = array_merge($columns, $columnsSubscription);
+        //}
 
        /* if (I18nHelper::useI18n()) {
             $columns = array_merge($columns, [
@@ -212,6 +232,9 @@ class PhocacartProduct
                 $product->taxregionid  = 0;
                 $product->taxpluginid  = 0;
             }
+
+            // Change Price (Event)
+            PhocacartCalculation::changePrice($product);
         }
 
         return $product;
@@ -673,7 +696,8 @@ class PhocacartProduct
 			}
 		}
 
-        $baseColumns = array('a.id', 'a.image', 'a.video', 'a.sku', 'a.ean', 'a.stockstatus_a_id', 'a.stockstatus_n_id', 'a.min_quantity', 'a.min_multiple_quantity', 'a.stock', 'a.unit_amount', 'a.unit_unit', 'a.price', 'a.price_original', 'a.date', 'a.date_update', 'a.sales', 'a.featured', 'a.external_id', 'a.condition', 'a.points_received', 'a.points_needed', 'a.delivery_date', 'a.type', 'a.type_feed', 'a.type_category_feed', 'a.params_feed', 'a.gift_types');
+        $baseColumns = array('a.id', 'a.image', 'a.video', 'a.sku', 'a.ean', 'a.stockstatus_a_id', 'a.stockstatus_n_id', 'a.min_quantity', 'a.min_multiple_quantity', 'a.max_quantity', 'a.stock', 'a.unit_amount', 'a.unit_unit', 'a.price', 'a.price_original', 'a.date', 'a.date_update', 'a.sales', 'a.featured', 'a.external_id', 'a.condition', 'a.points_received', 'a.points_needed', 'a.delivery_date', 'a.type', 'a.type_feed', 'a.type_category_feed', 'a.params_feed', 'a.gift_types',
+            'a.subscription_period', 'a.subscription_unit', 'a.subscription_signup_fee', 'a.subscription_renewal_discount', 'a.subscription_renewal_discount_calculation_type', 'a.subscription_grace_period_days');
 
 
        /* if (I18nHelper::isI18n()) {
@@ -801,6 +825,12 @@ class PhocacartProduct
             $products = $db->loadColumn();
         } else {
             $products = $db->loadObjectList();
+        }
+
+        if (!empty($products)) {
+            foreach ($products as $k => $v) {
+                PhocacartCalculation::changePrice($v);
+            }
         }
 
         return $products;
@@ -1311,8 +1341,10 @@ class PhocacartProduct
         if(isset($table->manufacturer_id) && $table->manufacturer_id == '') {$table->manufacturer_id = 0;}
         if(isset($table->type) && $table->type == '') {$table->type = 0;}
         if(isset($table->min_quantity) && $table->min_quantity == '') {$table->min_quantity = 0;}
+        if(isset($table->max_quantity) && $table->max_quantity == '') {$table->max_quantity = 0;}
         if(isset($table->min_multiple_quantity) && $table->min_multiple_quantity == '') {$table->min_multiple_quantity = 0;}
         if(isset($table->min_quantity_calculation) && $table->min_quantity_calculation == '') {$table->min_quantity_calculation = 0;}
+        if(isset($table->max_quantity_calculation) && $table->max_quantity_calculation == '') {$table->max_quantity_calculation = 0;}
         if(isset($table->condition) && $table->condition == '') {$table->condition = 0;}
         if(isset($table->points_received) && $table->points_received == '') {$table->points_received = 0;}
         if(isset($table->points_needed) && $table->points_needed == '') {$table->points_needed = 0;}

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fields name="filter">
+        <field name="search" type="text" label="COM_PHOCACART_FILTER_SEARCH_DESC" hint="JSEARCH_FILTER" />
+        <field name="status" type="list" onchange="this.form.submit();">
+            <option value="">COM_PHOCACART_SELECT_STATUS</option>
+            <option value="1">COM_PHOCACART_SUBSCRIPTION_STATUS_ACTIVE</option>
+            <option value="2">COM_PHOCACART_SUBSCRIPTION_STATUS_FUTURE</option>
+            <option value="3">COM_PHOCACART_SUBSCRIPTION_STATUS_EXPIRED</option>
+            <option value="4">COM_PHOCACART_SUBSCRIPTION_STATUS_ON_HOLD</option>
+            <option value="5">COM_PHOCACART_SUBSCRIPTION_STATUS_PENDING</option>
+            <option value="6">COM_PHOCACART_SUBSCRIPTION_STATUS_FAILED</option>
+            <option value="7">COM_PHOCACART_SUBSCRIPTION_STATUS_IN_TRIAL</option>
+            <option value="8">COM_PHOCACART_SUBSCRIPTION_STATUS_CARD_EXPIRED</option>
+            <option value="9">COM_PHOCACART_SUBSCRIPTION_STATUS_CANCELED</option>
+        </field>
+    </fields>
+    <fields name="list">
+        <field name="fullordering" type="list" class="form-select" onchange="this.form.submit();" default="a.id DESC">
+            <option value="">JGLOBAL_SORT_BY</option>
+            <option value="a.id ASC">JGRID_HEADING_ID_ASC</option>
+            <option value="a.id DESC">JGRID_HEADING_ID_DESC</option>
+            <option value="u.name ASC">COM_PHOCACART_USER_ASC</option>
+            <option value="u.name DESC">COM_PHOCACART_USER_DESC</option>
+            <option value="p.title ASC">COM_PHOCACART_PRODUCT_ASC</option>
+            <option value="p.title DESC">COM_PHOCACART_PRODUCT_DESC</option>
+            <option value="a.status ASC">COM_PHOCACART_STATUS_ASC</option>
+            <option value="a.status DESC">COM_PHOCACART_STATUS_DESC</option>
+            <option value="a.start_date ASC">COM_PHOCACART_START_DATE_ASC</option>
+            <option value="a.start_date DESC">COM_PHOCACART_START_DATE_DESC</option>
+            <option value="a.end_date ASC">COM_PHOCACART_END_DATE_ASC</option>
+            <option value="a.end_date DESC">COM_PHOCACART_END_DATE_DESC</option>
+        </field>
+        <field name="limit" type="limitbox" onchange="this.form.submit();" />
+    </fields>
+</form>

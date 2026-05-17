@@ -37,7 +37,7 @@ echo '<div class="'.PhocacartRenderFront::completeClass(array($s['c']['thumbnail
 echo '<div class="ph-item-content '.$d['lt'].'">';
 
 
-echo '<div class="'.$s['c']['cat_item_grid'].' ph-category-action-box-icons '.$d['lt'].'">';
+echo '<div class="'.$s['c']['cat_item_grid'].' ph-category-item-image ph-category-action-box-icons '.$d['lt'].'">';
 // :L: IMAGE
 echo '<a href="'.$d['link'].'">';
 if (!empty($d['layout']['dI'])) { echo $layoutI->render($d['layout']['dI']);}
@@ -51,10 +51,12 @@ if ($t['fade_in_action_icons'] == 0 && $t['display_action_icons'] == 1) {
     echo $d['icon']['addtocart'];
 }
 echo '</div>';// end category_action_box_icons
-echo '</div>';// end category_action_icons
+echo '</div>';// end category_action_icons ph-category-item-image
 
 
 echo '<div class="ph-cb"></div>';
+
+echo '<div class="ph-category-item-body">';
 
 // CAPTION, DESCRIPTION BOX
 echo $d['product_header'];
@@ -66,7 +68,7 @@ if (!empty($d['review'])) { echo $d['review'];}
 if (!empty($d['description'])) { echo $d['description'];}
 
 // TAGS
-if (!empty($d['tags'])) { echo '<div class="ph-tag-box">'  . '<span class="ph-tag-box-header">'.Text::_('COM_PHOCACART_TAGS'). '</span>: ' .  $d['tags'] . '</div>';}
+if (!empty($d['tags'])) { echo '<div class="ph-tag-box">'  . '<span class="ph-tag-box-header">'.Text::_('COM_PHOCACART_TAGS'). ': </span>' .  $d['tags'] . '</div>';}
 // MANUFACTURER
 if (!empty($d['manufacturer'])) { echo '<div class="ph-manufacturer-box">'  . '<span class="ph-manufacturer-box-header">'.Text::_('COM_PHOCACART_MANUFACTURER'). '</span>: ' .  $d['manufacturer'] . '</div>';}
 
@@ -100,6 +102,7 @@ if (!empty($d['layout']['dA'])) { echo $layoutA->render($d['layout']['dA']);} el
 // :L: ASK A QUESTION
 if (!empty($d['layout']['dQ'])) { echo $layoutQ->render($d['layout']['dQ']);}
 
+echo '</div>'; // end ph-category-item-body
 
 // End Form
 if (!empty($d['layout']['dF'])) { echo $layoutPFE->render();}

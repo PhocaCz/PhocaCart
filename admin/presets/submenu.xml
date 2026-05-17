@@ -94,6 +94,16 @@
         quicktask-title="COM_PHOCACART_MENU_ADD_NEW_ITEM"
         quicktask-permission="core.create"
       />
+
+      <menuitem
+        title="COM_PHOCACART_SUBSCRIPTIONS"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartsubscriptions"
+        quicktask="index.php?option=com_phocacart&amp;task=phocacartsubscription.add"
+        quicktask-title="COM_PHOCACART_MENU_ADD_NEW_ITEM"
+        quicktask-permission="core.create"
+      />
     </menuitem>
 
     <menuitem

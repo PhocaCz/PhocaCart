@@ -93,7 +93,7 @@ class PhocaCartControllerResponse extends FormController
 			$uri	= Uri::getInstance();
 			Log::add('Payment method: '."Invalid HTTP request method. Type: " . $type . " Uri: " . $uri->toString(), 'com_phocacart');
 			header('Allow: POST', true, 405);
-      throw new Exception("Invalid HTTP request method.");
+            throw new Exception("Invalid HTTP request method.");
 		}
 
 		exit;

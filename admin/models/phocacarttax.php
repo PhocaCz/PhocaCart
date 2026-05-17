@@ -29,7 +29,7 @@ class PhocaCartCpModelPhocacartTax extends AdminModel
 	protected	$option 		= 'com_phocacart';
 	protected 	$text_prefix	= 'com_phocacart';
 
-	public function __construct($config = [], MVCFactoryInterface $factory = null, FormFactoryInterface $formFactory = null)
+	public function __construct($config = [], ?MVCFactoryInterface $factory = null, ?FormFactoryInterface $formFactory = null)
 	{
 		parent::__construct($config, $factory, $formFactory);
 

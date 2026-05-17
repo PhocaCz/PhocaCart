@@ -109,27 +109,48 @@ class PhocacartGroup
 					}
 				} else if ($returnArray == 2) {
 					$items = $db->loadAssocList();
+
 					if (empty($items)) {
-						$items[0]['id'] 	        	= 1;
-						$items[0]['title'] 	        	= 'COM_PHOCACART_DEFAULT';
-						$items[0]['alias']      		= 'com-phocacart-default';
-						$items[0]['type'] 	       	 	= 1;
-                        $items[0]['display_price'] 		= 1;
-						$items[0]['display_addtocart'] 	= 1;
-						$items[0]['display_attributes'] = 1;
-                        $items[0]['published'] 	    	= 1;
+						// We didn't find the user assigned to any group, so as default he/she is a part of DEFAULT GROUP
+						// But even default group has own options which can be changed so we need to load the options stored for this group
+						$query = 'SELECT a.id, a.title, a.alias, a.type, a.published, a.display_price, a.display_addtocart, a.display_attributes'
+						.' FROM #__phocacart_groups AS a ORDER BY a.id';
+						$db->setQuery($query);
+						$defaultGroupDefaultOptions = $db->loadAssocList();// e.g. default group cannot see price or add to cart, so we need to reflect it
+						if(!empty($defaultGroupDefaultOptions)) {
+							$items = $defaultGroupDefaultOptions;
+						} else {
+							$items[0]['id'] 	        	= 1;
+							$items[0]['title'] 	        	= 'COM_PHOCACART_DEFAULT';
+							$items[0]['alias']      		= 'com-phocacart-default';
+							$items[0]['type'] 	       	 	= 1;
+							$items[0]['display_price'] 		= 1;
+							$items[0]['display_addtocart'] 	= 1;
+							$items[0]['display_attributes'] = 1;
+							$items[0]['published'] 	    	= 1;
+						}
 					}
 				} else {
 					$items = $db->loadObjectList();
 					if (empty($items)) {
-						$items[0]->id 		        	= 1;
-						$items[0]->title 	        	= 'COM_PHOCACART_DEFAULT';
-						$items[0]->alias 	        	= 'com-phocacart-default';
-						$items[0]->type 	        	= 1;
-                        $items[0]->display_price 		= 1;
-						$items[0]->display_addtocart 	= 1;
-						$items[0]->display_attributes 	= 1;
-                        $items[0]->published 	    	= 1;
+						// We didn't find the user assigned to any group, so as default he/she is a part of DEFAULT GROUP
+						// But even default group has own options which can be changed so we need to load the options stored for this group
+						$query = 'SELECT a.id, a.title, a.alias, a.type, a.published, a.display_price, a.display_addtocart, a.display_attributes'
+						.' FROM #__phocacart_groups AS a ORDER BY a.id';
+						$db->setQuery($query);
+						$defaultGroupDefaultOptions = $db->loadObjectList();
+						if(!empty($defaultGroupDefaultOptions)) {
+							$items = $defaultGroupDefaultOptions;// e.g. default group cannot see price or add to cart, so we need to reflect it
+						} else {
+							$items[0]->id                 = 1;
+							$items[0]->title              = 'COM_PHOCACART_DEFAULT';
+							$items[0]->alias              = 'com-phocacart-default';
+							$items[0]->type               = 1;
+							$items[0]->display_price      = 1;
+							$items[0]->display_addtocart  = 1;
+							$items[0]->display_attributes = 1;
+							$items[0]->published          = 1;
+						}
 					}
 				}
 

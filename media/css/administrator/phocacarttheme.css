@@ -676,6 +676,10 @@ a.ph-submenu:before {
 	color: #ff9326;
     content: "\13c72";/*menu*/
 }
+.nav a.ph-submenu.ph-submenu-subscriptions:before {
+	color: #B8860B;
+    content: "\13c0f";/*calendar*/
+}
 .nav a.ph-submenu.ph-submenu-bulkprices:before {
 	color: #f310de;
     content: "\13c20";/*click*/

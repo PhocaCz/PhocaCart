@@ -79,6 +79,13 @@
             <option value="2">COM_PHOCACART_ADVANCED_STOCK_MANAGEMENT</option>
         </field>
 
+        <field name="max_quantity" type="text" label="COM_PHOCACART_FIELD_MAX_ORDER_QUANTITY_LABEL" description="COM_PHOCACART_FIELD_MAX_ORDER_QUANTITY_DESC"/>
+        <field name="max_quantity_calculation" default="0" type="list" label="COM_PHOCACART_FIELD_MAXIMUM_QUANTITY_CALCULATION_LABEL" description="COM_PHOCACART_FIELD_MAXIMUM_QUANTITY_CALCULATION_DESC">
+            <option value="0">COM_PHOCACART_MAIN_PRODUCT</option>
+            <option value="1">COM_PHOCACART_PRODUCT_VARIATIONS_ATTRIBUTES</option>
+            <option value="2">COM_PHOCACART_ADVANCED_STOCK_MANAGEMENT</option>
+        </field>
+
         <field name="stockstatus_a_id" type="phocastockstatus" manager="a" label="COM_PHOCACART_FIELD_STOCK_STATUS_A_LABEL" description="COM_PHOCACART_FIELD_STOCK_STATUS_A_DESC" default="2"/>
         <field name="stockstatus_n_id" type="phocastockstatus" manager="n" label="COM_PHOCACART_FIELD_STOCK_STATUS_B_LABEL" description="COM_PHOCACART_FIELD_STOCK_STATUS_B_DESC" default="1"/>
 
@@ -197,6 +204,7 @@
             <option value="3">COM_PHOCACART_PRICE_ON_DEMAND_PRODUCT</option>
 			      <option value="4">COM_PHOCACART_GIFT_VOUCHER</option>
             <option value="5">COM_PHOCACART_BUNDLE</option>
+            <option value="6">COM_PHOCACART_SUBSCRIPTION</option>
         </field>
 
         <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_LANGUAGE_DESC">

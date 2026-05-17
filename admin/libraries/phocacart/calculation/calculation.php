@@ -9,9 +9,15 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event;
 
 class PhocacartCalculation
 {
+
+	public static function changePrice(&$product) {
+		Dispatcher::dispatch(new Event\Calculation\CalculationPrice('com_phocacart.calculation', $product));
+	}
 
 	public static function calculateDiscountPercentage($discount, $quantity, &$priceItems, &$total, $taxKey = '') {
 

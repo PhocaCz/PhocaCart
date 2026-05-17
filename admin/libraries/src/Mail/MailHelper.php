@@ -32,7 +32,7 @@ defined('_JEXEC') or die;
 
 abstract class MailHelper
 {
-    private static function link(string $url, bool $xhtml = false, bool $absolute = true): string
+    public static function link(string $url, bool $xhtml = false, bool $absolute = true): string
     {
         $link = Route::link('site', $url, $xhtml, Route::TLS_IGNORE, $absolute);
         if ($absolute) {
@@ -89,7 +89,8 @@ abstract class MailHelper
 
         $mailData['name_others']  = '';
         $mailData['sitename']     = Factory::getApplication()->getConfig()->get('sitename');
-        $mailData['status_title'] = Text::_($status['title']);
+        //$mailData['status_title'] = Text::_($status['title']);
+        $mailData['status_title'] = Text::_($status['title_not_translated']);
         $mailData['text_nr'] = Text::_('COM_PHOCACART_ORDER_NR');
         $mailData['text_changed_to'] = Text::_('COM_PHOCACART_ORDER_STATUS_CHANGED_TO');
 
@@ -569,6 +570,7 @@ abstract class MailHelper
             $mailData[$format . '.' . $name] = $block;
         }
 
+
         if (isset($mailData['attachments'])) {
             $mailData['attachments'] = array_merge($mailData['attachments'], $data['attachments']);
         } else {
@@ -581,6 +583,7 @@ abstract class MailHelper
     public static function renderOrderBody(object $order, string $format, EmailDocumentType $documentType, array &$mailData): string
     {
         $orderView = new \PhocacartOrderView();
+
 
         $displayData = [];
         $displayData['params'] = \PhocacartUtils::getComponentParameters();
@@ -600,9 +603,32 @@ abstract class MailHelper
         $displayData['total'] = $orderView->getItemTotal($order->id, 1);
         $displayData['taxrecapitulation'] = $orderView->getItemTaxRecapitulation($order->id);
         $displayData['preparereplace'] = \PhocacartText::prepareReplaceText($orderView, $order->id, $displayData['order'], $displayData['bas']);
-        $displayData['qrcode'] = \PhocacartText::completeText($displayData['params']->get( 'pdf_invoice_qr_code', '' ), $displayData['preparereplace'], 1);
+        $pdf_invoice_qr_code = ($displayData['order']->currency_pdf_invoice_qr_code ?? '') !== '' ? $displayData['order']->currency_pdf_invoice_qr_code : $displayData['params']->get( 'pdf_invoice_qr_code', '' );
+        $displayData['qrcode'] = \PhocacartText::completeText(\PhocacartText::removeQrCodeVariables($pdf_invoice_qr_code), $displayData['preparereplace'], 1);
 
         $mailData['HAS_DOWNLOADS'] = false;
+
+        // QR CODE IMAGE IN EMAIL CODE NEEDS TO BE SENT AS ATTACHMENT TO BE DISPLAYED
+        // In this place we can add QR code image as attachment to the HTML mail but this will be added always
+        // We want to add it only in case the email includes QR code (Invoice QR Code) somewhere
+        // This we can detect in administrator/components/com_phocacart/libraries/src/Mail/MailTemplate.php
+        // in method: replaceTags, because this function is called by $mailer->send() we have last chance to add the attachment to the email there
+        // so it will be added there
+        /* $mailData['attachments']['qrcode'] = [
+        'content' => \PhocacartUtils::getQrImage($displayData['qrcode'], 3),
+        'mimetype' => 'image/png',
+        'filename' => 'qrcode.png'
+        ];*/
+
+        // And we need to add data there:
+        $mailData['qrcode'] = $displayData['qrcode'];// to add it to replaceTags - to create the image
+        $mailData['invoiceqr'] = '<div class="ph__qrcode"><img src="cid:qrcode" alt="QR" style="max-width: 200px; max-height: 200px" /></div>';// To convert QR code in mail content
+        $displayData['preparereplace']['invoiceqr'] = '<div class="ph__qrcode"><img src="cid:qrcode" alt="QR" style="max-width: 200px; max-height: 200px" /></div>';// To convert QR code in content inside e.g. {html.content}
+
+        $mailData['paymentdescriptioninfo'] = str_replace('{invoiceqr}', '<div class="ph__qrcode"><img src="cid:qrcode" alt="QR" style="max-width: 200px; max-height: 200px" /></div>', $mailData['paymentdescriptioninfo']);
+        $displayData['preparereplace']['paymentdescriptioninfo'] = str_replace('{invoiceqr}', '<div class="ph__qrcode"><img src="cid:qrcode" alt="QR" style="max-width: 200px; max-height: 200px" /></div>', $displayData['preparereplace']['paymentdescriptioninfo']);
+        $mailData['shippingdescriptioninfo'] = str_replace('{invoiceqr}', '<div class="ph__qrcode"><img src="cid:qrcode" alt="QR" style="max-width: 200px; max-height: 200px" /></div>', $mailData['shippingdescriptioninfo']);
+        $displayData['preparereplace']['shippingdescriptioninfo'] = str_replace('{invoiceqr}', '<div class="ph__qrcode"><img src="cid:qrcode" alt="QR" style="max-width: 200px; max-height: 200px" /></div>', $displayData['preparereplace']['shippingdescriptioninfo']);
 
         return self::renderBody('order', $format, $displayData, $mailData);
     }

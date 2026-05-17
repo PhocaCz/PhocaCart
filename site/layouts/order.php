@@ -55,9 +55,10 @@ $store_info_pos							= $d['params']->get( 'store_info_pos', '' );
 $store_info_footer_pos					= $d['params']->get( 'store_info_footer_pos', '' );
 
 // Used in Phoca PDF Phocacart plugin because of converting the TCPDF QR code into html
-//$pdf_invoice_qr_code					= $d['params']->get( 'pdf_invoice_qr_code', '' );
+//$pdf_invoice_qr_code					= PhocacartText::removeVariable($d['params']->get( 'pdf_invoice_qr_code', '' ), '{invoiceqr}');
 $pdf_invoice_signature_image			= $d['params']->get( 'pdf_invoice_signature_image', '' );
-$pdf_invoice_qr_information				= $d['params']->get( 'pdf_invoice_qr_information', '' );
+//$pdf_invoice_qr_information				= $d['params']->get( 'pdf_invoice_qr_information', '' );
+$pdf_invoice_qr_information             = ($d['common']->currency_pdf_invoice_qr_information ?? '') !== '' ? $d['common']->currency_pdf_invoice_qr_information : $d['params']->get('pdf_invoice_qr_information', '');
 $invoice_global_top_desc				= $d['params']->get( 'invoice_global_top_desc', 0 );// Article ID
 $invoice_global_middle_desc				= $d['params']->get( 'invoice_global_middle_desc', 0 );
 $invoice_global_bottom_desc				= $d['params']->get( 'invoice_global_bottom_desc', 0 );
@@ -561,6 +562,7 @@ if ($d['type'] == 2) {
 
         if ($d['qrcode'] != '' && $d['format'] == 'pdf') {
             $invoiceTopDescArticle = str_replace('{invoiceqr}', '{phocapdfqrcode|' . urlencode($d['qrcode']) . '}', $invoiceTopDescArticle);
+            $d['preparereplace']['invoiceqr'] = '{phocapdfqrcode|' . urlencode($d['qrcode']) . '}'; // in case {invoiceqr} will be insed other variables like {paymentdescriptioninfo}
         }
 
 		$invoiceTopDescArticle 	= PhocacartText::completeText($invoiceTopDescArticle, $d['preparereplace'], 1);
@@ -579,6 +581,7 @@ if ($d['type'] == 2) {
 
         if ($d['qrcode'] != '' && $d['format'] == 'pdf') {
             $orderTopDescArticle = str_replace('{invoiceqr}', '{phocapdfqrcode|' . urlencode($d['qrcode']) . '}', $orderTopDescArticle);
+            $d['preparereplace']['invoiceqr'] = '{phocapdfqrcode|' . urlencode($d['qrcode']) . '}'; // in case {invoiceqr} will be insed other variables like {paymentdescriptioninfo}
         }
 
 		$orderTopDescArticle 	= PhocacartText::completeText($orderTopDescArticle, $d['preparereplace'], 1);
@@ -596,6 +599,7 @@ if ($d['type'] == 2) {
 
         if ($d['qrcode'] != '' && $d['format'] == 'pdf') {
             $dnTopDescArticle = str_replace('{invoiceqr}', '{phocapdfqrcode|' . urlencode($d['qrcode']) . '}', $dnTopDescArticle);
+            $d['preparereplace']['invoiceqr'] = '{phocapdfqrcode|' . urlencode($d['qrcode']) . '}'; // in case {invoiceqr} will be insed other variables like {paymentdescriptioninfo}
         }
 
 		$dnTopDescArticle 	= PhocacartText::completeText($dnTopDescArticle, $d['preparereplace'], 1);
@@ -986,6 +990,7 @@ if ($d['type'] == 2) {
 
         if ($d['qrcode'] != '' && $d['format'] == 'pdf') {
             $invoiceMiddleDescArticle = str_replace('{invoiceqr}', '{phocapdfqrcode|' . urlencode($d['qrcode']) . '}', $invoiceMiddleDescArticle);
+            $d['preparereplace']['invoiceqr'] = '{phocapdfqrcode|' . urlencode($d['qrcode']) . '}'; // in case {invoiceqr} will be insed other variables like {paymentdescriptioninfo}
         }
 
 		$invoiceMiddleDescArticle 	= PhocacartText::completeText($invoiceMiddleDescArticle, $d['preparereplace'], 1);
@@ -1003,6 +1008,7 @@ if ($d['type'] == 2) {
 
         if ($d['qrcode'] != '' && $d['format'] == 'pdf') {
             $orderMiddleDescArticle = str_replace('{invoiceqr}', '{phocapdfqrcode|' . urlencode($d['qrcode']) . '}', $orderMiddleDescArticle);
+            $d['preparereplace']['invoiceqr'] = '{phocapdfqrcode|' . urlencode($d['qrcode']) . '}'; // in case {invoiceqr} will be insed other variables like {paymentdescriptioninfo}
         }
 
         $orderMiddleDescArticle 	= PhocacartText::completeText($orderMiddleDescArticle, $d['preparereplace'], 1);
@@ -1020,6 +1026,7 @@ if ($d['type'] == 2) {
 
         if ($d['qrcode'] != '' && $d['format'] == 'pdf') {
             $dnMiddleDescArticle = str_replace('{invoiceqr}', '{phocapdfqrcode|' . urlencode($d['qrcode']) . '}', $dnMiddleDescArticle);
+            $d['preparereplace']['invoiceqr'] = '{phocapdfqrcode|' . urlencode($d['qrcode']) . '}'; // in case {invoiceqr} will be insed other variables like {paymentdescriptioninfo}
         }
 
 		$dnMiddleDescArticle 	= PhocacartText::completeText($dnMiddleDescArticle, $d['preparereplace'], 1);
@@ -1222,13 +1229,14 @@ if ($d['type'] == 2) {
 	} else if ((int)$invoice_global_bottom_desc > 0) {
 		$invoiceBottomDescArticle = PhocacartRenderFront::renderArticle((int)$invoice_global_bottom_desc, $d['format']);
 	}
-
 	if ($invoiceBottomDescArticle != '') {
 		$o[] = '<div '.$hrSmall.'>&nbsp;</div>';
+
 		$invoiceBottomDescArticle 	= PhocacartPdf::skipStartAndLastTag($invoiceBottomDescArticle, 'p');
 
         if ($d['qrcode'] != '' && $d['format'] == 'pdf') {
             $invoiceBottomDescArticle = str_replace('{invoiceqr}', '{phocapdfqrcode|' . urlencode($d['qrcode']) . '}', $invoiceBottomDescArticle);
+            $d['preparereplace']['invoiceqr'] = '{phocapdfqrcode|' . urlencode($d['qrcode']) . '}'; // in case {invoiceqr} will be insed other variables like {paymentdescriptioninfo}
         }
 
         $invoiceBottomDescArticle 	= PhocacartText::completeText($invoiceBottomDescArticle, $d['preparereplace'], 1);
@@ -1246,6 +1254,7 @@ if ($d['type'] == 2) {
 
         if ($d['qrcode'] != '' && $d['format'] == 'pdf') {
             $orderBottomDescArticle = str_replace('{invoiceqr}', '{phocapdfqrcode|' . urlencode($d['qrcode']) . '}', $orderBottomDescArticle);
+            $d['preparereplace']['invoiceqr'] = '{phocapdfqrcode|' . urlencode($d['qrcode']) . '}'; // in case {invoiceqr} will be insed other variables like {paymentdescriptioninfo}
         }
 		$orderBottomDescArticle 	= PhocacartText::completeText($orderBottomDescArticle, $d['preparereplace'], 1);
 		//$orderBottomDescArticle 	= PhocacartText::completeTextFormFields($orderBottomDescArticle, $d['bas']['b'], 1);
@@ -1264,6 +1273,7 @@ if ($d['type'] == 2) {
 
         if ($d['qrcode'] != '' && $d['format'] == 'pdf') {
             $dnBottomDescArticle = str_replace('{invoiceqr}', '{phocapdfqrcode|' . urlencode($d['qrcode']) . '}', $dnBottomDescArticle);
+            $d['preparereplace']['invoiceqr'] = '{phocapdfqrcode|' . urlencode($d['qrcode']) . '}'; // in case {invoiceqr} will be insed other variables like {paymentdescriptioninfo}
         }
 
 		$dnBottomDescArticle 	= PhocacartText::completeText($dnBottomDescArticle, $d['preparereplace'], 1);

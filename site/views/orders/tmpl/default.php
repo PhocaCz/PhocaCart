@@ -10,6 +10,8 @@ defined('_JEXEC') or die();
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\Router\Route;
+use Phoca\PhocaCart\Dispatcher\Dispatcher;
+use Phoca\PhocaCart\Event\Invoice\GetElectronicInvoiceIcons;
 
 $layoutAl 	= new FileLayout('alert', null, array('component' => 'com_phocacart'));
 
@@ -118,6 +120,95 @@ if ((int)$this->u->id > 0 || $this->t['token'] != '') {
 				$view .= ' <a href="'.$linkDelNoteView.$formatPDF.'" class="btn btn-transparent btn-small btn-xs ph-btn" role="button" '.$linkOrderViewHandler.'><span title="'.Text::_('COM_PHOCACART_VIEW_DELIVERY_NOTE').'" class="'.$this->s['i']['del-note'].' icon-ph-del-note ph-icon-warning"></span><br /><span class="ph-icon-warning-txt">PDF</span></a>';*/
 
 			}
+
+			if ($v->invoice_number != '') {
+				$eInvoiceResults = Dispatcher::dispatch(new GetElectronicInvoiceIcons((int)$v->id, ['order' => $v]));
+				if (!empty($eInvoiceResults)) {
+					$view .= '<br />';
+					foreach ($eInvoiceResults as $eInvoiceResult) {
+						if (is_array($eInvoiceResult) && !empty($eInvoiceResult['icon'])) {
+							$view .= ' ' . $eInvoiceResult['icon'];
+						}
+					}
+				}
+			}
+
+			// --- EU Right of Withdrawal button ---
+			$cancelEnable = (int) $this->p->get('cancellation_enable', 0);
+			if ($cancelEnable) {
+				$cancelDeadlineDays   = max(14, (int) $this->p->get('cancellation_deadline_days', 14));
+				$cancelDeadlineStatus = (int) $this->p->get('cancellation_deadline_status', 0);
+				$cancelStartStatus    = $this->p->get('cancellation_start_status', []);
+				$cancelResultStatus   = (int) $this->p->get('cancellation_result_status', 0);
+				$cancelExcludeVat    = (int) $this->p->get('cancellation_exclude_vat', 1);
+
+				$cancelEligible = true;
+
+				// Already withdrawn?
+				if ($cancelResultStatus > 0 && (int) $v->status_id === $cancelResultStatus) {
+					$cancelEligible = false;
+				}
+
+				// Status filter
+				if ($cancelEligible && !empty($cancelStartStatus)) {
+					if (is_string($cancelStartStatus)) {
+						$allowedIds = array_filter(array_map('intval', explode(',', $cancelStartStatus)));
+					} else {
+						$allowedIds = array_filter(array_map('intval', (array) $cancelStartStatus));
+					}
+					if (!empty($allowedIds) && !in_array(-1, $allowedIds, true) && !in_array((int) $v->status_id, $allowedIds, true)) {
+						$cancelEligible = false;
+					}
+				}
+
+				// VAT / B2B exclusion
+				if ($cancelEligible && $cancelExcludeVat) {
+                    $hasVat = false;
+                    $orderUsers = PhocacartOrder::getOrderUser($v->id);
+                    if (!empty($orderUsers)) {
+                        foreach ($orderUsers as $ou) {
+                            if (!empty($ou['vat_1']) || !empty($ou['vat_2'])) {
+                                $hasVat = true;
+                                break;
+                            }
+                        }
+                    }
+                    if ($hasVat) {
+                        $cancelEligible = false;
+                    }
+                }
+
+				// Deadline check
+				if ($cancelEligible) {
+					$orderTimestamp = strtotime($v->date);
+
+					// Override start date if a specific status is set in configuration
+					if ($cancelDeadlineStatus > 0) {
+						$statusDate = PhocacartOrder::getOrderStatusHistoryDate($v->id, $cancelDeadlineStatus);
+						if ($statusDate) {
+							$orderTimestamp = strtotime($statusDate);
+						}
+					}
+
+					$deadline       = $orderTimestamp + ($cancelDeadlineDays * 86400);
+					if (time() > $deadline) {
+						$cancelEligible = false;
+					}
+				}
+
+				if ($cancelEligible) {
+                    $view .= '<div class="pc-cancellation-action-box">';
+					$cancelUrl  = PhocacartRoute::getCancellationRoute((int) $v->id, $this->t['token']);
+					$view .= ' <a href="' . htmlspecialchars($cancelUrl, ENT_QUOTES, 'UTF-8') . '" class="' . $this->s['c']['btn.btn-secondary.btn-sm'] . ' ph-btn ph-orders-btn ph-cancellation-btn" role="button" title="' . Text::_('COM_PHOCACART_CANCELLATION_WITHDRAW_ORDER') . '">' . PhocacartRenderIcon::icon($this->s['i']['remove'] . ' ph-icon-cancel', 'title="' . Text::_('COM_PHOCACART_CANCELLATION_WITHDRAW_ORDER') . '"') . Text::_('COM_PHOCACART_CANCELLATION_WITHDRAW_ORDER') .'</a>';
+
+					$daysRemaining = (int) ceil(($deadline - time()) / 86400);
+					if ($daysRemaining > 0) {
+						$view .= ' <span class="' . $this->s['c']['label.label-warning'] . ' pc-cancellation-badge" title="' . Text::_('COM_PHOCACART_CANCELLATION_RIGHT_OF_WITHDRAWAL') . '">' . sprintf(Text::_('COM_PHOCACART_CANCELLATION_DEADLINE_DAYS_REMAINING'), $daysRemaining) . '</span>';
+					}
+                    $view .= '</div>';
+				}
+			}
+			// --- end EU Right of Withdrawal button ---
 
 			echo $view;
 

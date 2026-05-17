@@ -8,6 +8,7 @@
 		<action name="core.edit" title="JACTION_EDIT" />
 		<action name="core.edit.state" title="JACTION_EDITSTATE" />
 
+		<!-- Problem in Joomla com_config with post_max_size, uncomment for managing rights and increase post_max_size limit
 		<action name="phocacart.products" title="COM_PHOCACART_JACTION_PRODUCTS" />
 		<action name="phocacart.categories" title="COM_PHOCACART_JACTION_CATEGORIES" />
 		<action name="phocacart.specifications" title="COM_PHOCACART_JACTION_SPECIFICATIONS" />
@@ -46,7 +47,7 @@
 		<action name="phocacart.extensions" title="COM_PHOCACART_JACTION_EXTENSIONS" />
 		<action name="phocacart.vendors" title="COM_PHOCACART_JACTION_VENDORS" />
 		<action name="phocacart.sections" title="COM_PHOCACART_JACTION_SECTIONS" />
-		<action name="phocacart.bulkprices" title="COM_PHOCACART_JACTION_BULKPRICES" />
+		<action name="phocacart.bulkprices" title="COM_PHOCACART_JACTION_BULKPRICES" />-->
 	</section>
 
 	<section name="fieldgroup">

@@ -9,6 +9,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die();
+
+use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Factory;
@@ -44,7 +46,8 @@ final class PhocacartRenderJs
 
         if ($add_cart_method > 0) {
 
-            $urlAjax = Uri::base(true) . '/index.php?option=com_phocacart&task=' . $task . '&format=json&' . Session::getFormToken() . '=1&checkoutview=' . (int)$cView;
+            //$urlAjax = Uri::base(true) . '/index.php?option=com_phocacart&task=' . $task . '&format=json&' . Session::getFormToken() . '=1&checkoutview=' . (int)$cView;
+            $urlAjax = Route::_('index.php?option=com_phocacart&task=' . $task . '&format=json&' . Session::getFormToken() . '=1&checkoutview=' . (int)$cView);
 
 
             $s = array();
@@ -185,7 +188,8 @@ final class PhocacartRenderJs
             $isPOS = true;
         }
 
-        $urlAjax = Uri::base(true) . '/index.php?option=com_phocacart&task=' . $task . '&format=json&' . Session::getFormToken() . '=1&checkoutview=' . (int)$cView;
+        //$urlAjax = Uri::base(true) . '/index.php?option=com_phocacart&task=' . $task . '&format=json&' . Session::getFormToken() . '=1&checkoutview=' . (int)$cView;
+        $urlAjax = Route::_('index.php?option=com_phocacart&task=' . $task . '&format=json&' . Session::getFormToken() . '=1&checkoutview=' . (int)$cView);
 
         $s = array();
         $s[] = 'function phDoSubmitFormUpdateCart(sFormData) {';
@@ -287,7 +291,8 @@ final class PhocacartRenderJs
 
         if ($add_compare_method > 0) {
 
-        	$urlAjax = Uri::base(true) . '/index.php?option=com_phocacart&task=comparison.add&format=json&' . Session::getFormToken() . '=1&comparisonview=' . (int)$cView;
+        	//$urlAjax = Uri::base(true) . '/index.php?option=com_phocacart&task=comparison.add&format=json&' . Session::getFormToken() . '=1&comparisonview=' . (int)$cView;
+            $urlAjax = Route::_('index.php?option=com_phocacart&task=comparison.add&format=json&' . Session::getFormToken() . '=1&comparisonview=' . (int)$cView);
 
             $s = array();
             $s[] = 'function phItemCompareBoxFormAjax(phItemId) {';
@@ -356,7 +361,8 @@ final class PhocacartRenderJs
         }
 
         if ($add_compare_method > 0) {
-            $urlAjax = Uri::base(true) . '/index.php?option=com_phocacart&task=comparison.remove&format=json&' . Session::getFormToken() . '=1&comparisonview=' . (int)$cView;
+            //$urlAjax = Uri::base(true) . '/index.php?option=com_phocacart&task=comparison.remove&format=json&' . Session::getFormToken() . '=1&comparisonview=' . (int)$cView;
+            $urlAjax = Route::_( 'index.php?option=com_phocacart&task=comparison.remove&format=json&' . Session::getFormToken() . '=1&comparisonview=' . (int)$cView);
 
             $s = array();
             $s[] = ' ';
@@ -426,7 +432,9 @@ final class PhocacartRenderJs
         }
 
         if ($add_wishlist_method > 0) {
-            $urlAjax = Uri::base(true) . '/index.php?option=com_phocacart&task=wishlist.add&format=json&' . Session::getFormToken() . '=1&wishlistview=' . (int)$wView;
+            //$urlAjax = Uri::base(true) . '/index.php?option=com_phocacart&task=wishlist.add&format=json&' . Session::getFormToken() . '=1&wishlistview=' . (int)$wView;
+            //$urlAjax = ('index.php?option=com_phocacart&task=wishlist.add&format=json&' . Session::getFormToken() . '=1&wishlistview=' . (int)$wView);
+            $urlAjax = Route::_('index.php?option=com_phocacart&task=wishlist.add&format=json&' . Session::getFormToken() . '=1&wishlistview=' . (int)$wView);
             $s = array();
             $s[] = 'function phItemWishListBoxFormAjax(phItemId) {';
             $s[] = '	var phUrl 	= "' . $urlAjax . '";';
@@ -496,7 +504,8 @@ final class PhocacartRenderJs
 
         if ($add_wishlist_method > 0) {
 
-            $urlAjax = Uri::base(true) . '/index.php?option=com_phocacart&task=wishlist.remove&format=json&' . Session::getFormToken() . '=1&wishlistview=' . (int)$wView;
+            //$urlAjax = Uri::base(true) . '/index.php?option=com_phocacart&task=wishlist.remove&format=json&' . Session::getFormToken() . '=1&wishlistview=' . (int)$wView;
+            $urlAjax = Route::_('index.php?option=com_phocacart&task=wishlist.remove&format=json&' . Session::getFormToken() . '=1&wishlistview=' . (int)$wView);
             $s = array();
             $s[] = ' ';
             $s[] = 'function phItemRemoveWishListFormAjax(phItemId) {';
@@ -565,7 +574,8 @@ final class PhocacartRenderJs
         // We need to refresh comparison site when AJAX used for removing or adding products to comparison list
 
 
-        $urlAjax = Uri::base(true) . '/index.php?option=com_phocacart&view=item&format=json&tmpl=component&' . Session::getFormToken() . '=1';
+        //$urlAjax = Uri::base(true) . '/index.php?test=tes&option=com_phocacart&view=item&format=json&tmpl=component&' . Session::getFormToken() . '=1';
+        $urlAjax = Route::_('index.php?test=tes&option=com_phocacart&view=item&format=json&tmpl=component&' . Session::getFormToken() . '=1');
 
         $s = array();
         $s[] = 'function phItemQuickViewBoxFormAjax(phItemId) {';

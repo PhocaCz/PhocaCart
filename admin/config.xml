@@ -874,6 +874,7 @@
         <option value="ph-form-placeholder">COM_PHOCACART_PLACEHOLDER</option>
       </field>
 
+      <field name="tag_separator" default=" " size="10" type="text"  filter="safehtml" label="COM_PHOCACART_FIELD_TAG_SEPARATOR_LABEL" description="COM_PHOCACART_FIELD_TAG_SEPARATOR_DESC"/>
 
       <field name="phocahead8" type="phocahead" default="COM_PHOCACART_AJAX_OPTIONS_LABEL" label="" description=""/>
 
@@ -1436,12 +1437,12 @@
         <option value="2">COM_PHOCACART_YES_ROOT</option>
         <option value="0">COM_PHOCACART_NO</option>
       </field>
-      <field name="watermark_position_x" type="list" default="center" label="COM_PHOCACART_FIELD_X-POSITION_OF_WATERMARK_LABEL" description="COM_PHOCACART_FIELD_X-POSITION_OF_WATERMARK_DESC">
+      <field name="watermark_position_x" type="list" default="center" label="COM_PHOCACART_FIELD_X_POSITION_OF_WATERMARK_LABEL" description="COM_PHOCACART_FIELD_X_POSITION_OF_WATERMARK_DESC">
         <option value="left">COM_PHOCACART_LEFT</option>
         <option value="center">COM_PHOCACART_CENTER</option>
         <option value="right">COM_PHOCACART_RIGHT</option>
       </field>
-      <field name="watermark_position_y" type="list" default="middle" label="COM_PHOCACART_FIELD_Y-POSITION_OF_WATERMARK_LABEL" description="COM_PHOCACART_FIELD_Y-POSITION_OF_WATERMARK_DESC">
+      <field name="watermark_position_y" type="list" default="middle" label="COM_PHOCACART_FIELD_Y_POSITION_OF_WATERMARK_LABEL" description="COM_PHOCACART_FIELD_Y_POSITION_OF_WATERMARK_DESC">
         <option value="top">COM_PHOCACART_TOP</option>
         <option value="middle">COM_PHOCACART_MIDDLE</option>
         <option value="bottom">COM_PHOCACART_BOTTOM</option>
@@ -1853,12 +1854,13 @@
     </fieldset>
 
 
-    <fieldset name="store" label="COM_PHOCACART_CONFIG_HEAD_STORE_LABEL">
+    <fieldset name="store" label="COM_PHOCACART_CONFIG_HEAD_STORE_LABEL" addruleprefix="Phoca\Component\PhocaCart\Administrator\Rule">
 
 
       <field name="store_title" type="text" default="" label="COM_PHOCACART_FIELD_STORE_TITLE_LABEL" description="COM_PHOCACART_FIELD_STORE_TITLE_DESC" filter="string"/>
 
-      <field name="store_logo" type="media" default="" directoryimg="1" label="COM_PHOCACART_FIELD_STORE_LOGO_LABEL" description="COM_PHOCACART_FIELD_STORE_LOGO_DESC"/>
+      <!--<field name="store_logo" type="media" default="" directoryimg="1" label="COM_PHOCACART_FIELD_STORE_LOGO_LABEL" description="COM_PHOCACART_FIELD_STORE_LOGO_DESC" /> -->
+      <field name="store_logo" type="media" default="" directoryimg="1" validate="medianospace" addruleprefix="Phocacart\Component\Phocacart\Administrator\Rule" message="COM_PHOCACART_ERROR_STORE_LOGO_NO_SPACES" label="COM_PHOCACART_FIELD_STORE_LOGO_LABEL" description="COM_PHOCACART_FIELD_STORE_LOGO_DESC"/>
 
 
       <field name="store_info" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control" label="COM_PHOCACART_FIELD_STORE_INFORMATION_LABEL"
@@ -2435,13 +2437,20 @@
 
       <field name="session_suffix" default="" type="text" label="COM_PHOCACART_FIELD_SESSION_SUFFIX_LABEL" description="COM_PHOCACART_FIELD_SESSION_SUFFIX_DESC"/>
 
-      <field name="recaptcha_sitekey" type="text" default="" label="COM_PHOCACART_FIELD_RECAPTCHA_SITEKEY_LABEL" description="COM_PHOCACART_FIELD_RECAPTCHA_SITEKEY_DESC"/>
+      <field name="captcha_type" type="list" class="form-select" default="1"
+             label="COM_PHOCACART_FIELD_CAPTCHA_TYPE_LABEL"
+             description="COM_PHOCACART_FIELD_CAPTCHA_TYPE_DESC">
+        <option value="1">COM_PHOCACART_CAPTCHA_TYPE_RECAPTCHA</option>
+        <option value="2">COM_PHOCACART_CAPTCHA_TYPE_POW</option>
+      </field>
 
-      <field name="recaptcha_privatekey" type="text" default="" label="COM_PHOCACART_FIELD_RECAPTCHA_PRIVATEKEY_LABEL" description="COM_PHOCACART_FIELD_RECAPTCHA_PRIVATEKEY_DESC"/>
+      <field name="recaptcha_sitekey" type="text" default="" showon="captcha_type:1" label="COM_PHOCACART_FIELD_RECAPTCHA_SITEKEY_LABEL" description="COM_PHOCACART_FIELD_RECAPTCHA_SITEKEY_DESC"/>
 
-      <field name="recaptcha_lang" type="text" default="" label="COM_PHOCACART_FIELD_RECAPTCHA_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_RECAPTCHA_LANGUAGE_DESC"/>
+      <field name="recaptcha_privatekey" type="text" default="" showon="captcha_type:1" label="COM_PHOCACART_FIELD_RECAPTCHA_PRIVATEKEY_LABEL" description="COM_PHOCACART_FIELD_RECAPTCHA_PRIVATEKEY_DESC"/>
 
-      <field name="recaptcha_request_method" type="list" class="form-select" default="2" label="COM_PHOCACART_FIELD_RECAPTCHA_REQUEST_METHOD_LABEL"
+      <field name="recaptcha_lang" type="text" default="" showon="captcha_type:1" label="COM_PHOCACART_FIELD_RECAPTCHA_LANGUAGE_LABEL" description="COM_PHOCACART_FIELD_RECAPTCHA_LANGUAGE_DESC"/>
+
+      <field name="recaptcha_request_method" type="list" class="form-select" default="2" showon="captcha_type:1" label="COM_PHOCACART_FIELD_RECAPTCHA_REQUEST_METHOD_LABEL"
              description="COM_PHOCACART_FIELD_RECAPTCHA_REQUEST_METHOD_DESC">
         <option value="1">file_get_contents</option>
         <option value="2">cUrl</option>
@@ -2514,6 +2523,48 @@
       <field name="ai_premade_question_metadesc" type="text" default="Create a very short description of the product based on the following information" label="COM_PHOCACART_AI_PRE_MADE_QUESTION_METADESC_LABEL" description="COM_PHOCACART_AI_PRE_MADE_QUESTION_METADESC_DESC" filter="safehtml" />
 
       <field name="ai_parameters_metadesc" type="textarea" default="{&quot;max_tokens&quot;: 50, &quot;temperature&quot;: 0.5}" label="COM_PHOCACART_AI_PARAMETERS_METADESC_LABEL" description="COM_PHOCACART_AI_PARAMETERS_METADESC_DESC" filter="raw" />
+    </fieldset>
+
+    <fieldset name="cancellation" label="COM_PHOCACART_CONFIG_HEAD_CANCELLATION_LABEL">
+
+      <field name="phocahead_cancellation" type="phocahead" default="COM_PHOCACART_CONFIG_CANCELLATION_OPTIONS_LABEL" label="" description=""/>
+
+      <field name="cancellation_enable" type="radio" layout="joomla.form.field.radio.switcher" default="0"
+             label="COM_PHOCACART_FIELD_CANCELLATION_ENABLE_LABEL"
+             description="COM_PHOCACART_FIELD_CANCELLATION_ENABLE_DESC">
+        <option value="0">COM_PHOCACART_NO</option>
+        <option value="1">COM_PHOCACART_YES</option>
+      </field>
+
+      <field name="cancellation_deadline_days" type="number" default="14" min="14" max="365"
+             label="COM_PHOCACART_FIELD_CANCELLATION_DEADLINE_DAYS_LABEL"
+             description="COM_PHOCACART_FIELD_CANCELLATION_DEADLINE_DAYS_DESC"/>
+
+      <field name="cancellation_description_article" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control" label="COM_PHOCACART_FIELD_CANCELLATION_DESCRIPTION_ARTICLE_LABEL" description="COM_PHOCACART_FIELD_CANCELLATION_DESCRIPTION_ARTICLE_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
+
+      <field name="cancellation_start_status" type="PhocacartOrderstatus" default="" multiple="true" class="multiple"
+             label="COM_PHOCACART_FIELD_CANCELLATION_START_STATUS_LABEL"
+             description="COM_PHOCACART_FIELD_CANCELLATION_START_STATUS_DESC"/>
+
+      <field name="cancellation_result_status" type="PhocacartOrderstatus" default="3" typemethod="2"
+             label="COM_PHOCACART_FIELD_CANCELLATION_RESULT_STATUS_LABEL"
+             description="COM_PHOCACART_FIELD_CANCELLATION_RESULT_STATUS_DESC"/>
+
+      <field name="cancellation_deadline_status" type="PhocacartOrderstatus" default="1" typemethod="2"
+             label="COM_PHOCACART_FIELD_CANCELLATION_DEADLINE_STATUS_LABEL"
+             description="COM_PHOCACART_FIELD_CANCELLATION_DEADLINE_STATUS_DESC"/>
+
+      <field name="cancellation_exclude_vat" type="radio" layout="joomla.form.field.radio.switcher" default="1"
+             label="COM_PHOCACART_FIELD_CANCELLATION_EXCLUDE_VAT_LABEL"
+             description="COM_PHOCACART_FIELD_CANCELLATION_EXCLUDE_VAT_DESC">
+        <option value="0">COM_PHOCACART_NO</option>
+        <option value="1">COM_PHOCACART_YES</option>
+      </field>
+
+      <field name="cancellation_admin_email" type="text" default="" size="60"
+             label="COM_PHOCACART_FIELD_CANCELLATION_ADMIN_EMAIL_LABEL"
+             description="COM_PHOCACART_FIELD_CANCELLATION_ADMIN_EMAIL_DESC"/>
+
     </fieldset>
 
     <fieldset name="advanced_permissions" description="JCONFIG_PERMISSIONS_DESC" label="JCONFIG_PERMISSIONS_LABEL">

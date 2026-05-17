@@ -81,6 +81,10 @@
         color: #fff;
     }
 
+    #phAdminEdit .subform-repeatable-group .form-control {
+        background: #000;
+    }
+
     #phAdminEdit .subform-repeatable-group .subform-repeatable-group {
         background-color: #1f3047;
         color: #fff;
@@ -325,5 +329,10 @@
     }
     .btn-outline-info {
         background-color: #999;
+    }
+
+    .ph-pro-box {
+        color: #fff;
+        background: #333;
     }
 }

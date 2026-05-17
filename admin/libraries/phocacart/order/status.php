@@ -11,6 +11,7 @@
 defined('_JEXEC') or die();
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Mail\MailHelper as JoomlaMailHelper;
 use Joomla\CMS\Layout\FileLayout;
@@ -42,6 +43,7 @@ class PhocacartOrderStatus
             self::$statuses = $db->loadAssocList('id');
 
             foreach (self::$statuses as &$status) {
+                $status['title_not_translated'] = $status['title'];
                 $status['title'] = Text::_($status['title']);
                 if ($status['published']) {
                     self::$options[] = (object) [
@@ -263,8 +265,10 @@ class PhocacartOrderStatus
         }
 
         if (!JoomlaMailHelper::isEmailAddress($recipient) && !JoomlaMailHelper::isEmailAddress($recipientOthers)) {
-            PhocacartLog::add(2, 'Sending email - ERROR', $order->id, Text::_('COM_PHOCACART_ERROR'). ' (Incorrect recipient email)');
-            return -1;
+            //PhocacartLog::add(2, 'Sending email - ERROR', $order->id, Text::_('COM_PHOCACART_ERROR'). ' (Incorrect recipient email)');
+            //return -1;
+            PhocacartLog::add(1, 'Sending email - Info', $order->id, Text::_('COM_PHOCACART_INFO'). ' (No recipient, no recipient others, no email sent)');
+            return 0;
         }
 
         // ------------------------
@@ -279,8 +283,11 @@ class PhocacartOrderStatus
 
         $orderNumber = PhocacartOrder::getOrderNumber($order->id, $order->date, $order->order_number);
 
-        // All - users or others get the documents in user language - to save the memory when creating e.g. PDF documents. Even it is better that others see
+        // Customers and Others get different language versions when multilanguage is used and langauge are different
+        // In other case, only one instance is maded to save the memoery when creating documents
         // which language version the customer got
+
+        // [1] CUSTOMER DATA in customer language
         $pLang->setLanguage($order->user_lang);
         try {
             $mailData = MailHelper::prepareOrderMailData($orderView, $order, $addresses, $status);
@@ -341,13 +348,19 @@ class PhocacartOrderStatus
         if (JoomlaMailHelper::isEmailAddress($recipient)) {
             $mailer = new MailTemplate('com_phocacart.order_status.' . $status['id'], $order->user_lang);
             $mailData['document'] = $document;
+
             $mailer->addTemplateData($mailData);
 
             if ($attachmentContent) {
                 $mailer->addAttachment($attachmentName, $attachmentContent);
             }
 
+
+            if (!$status['email_attachments']) {
+                $status['email_attachments'] = '';
+            }
             MailHelper::addAttachments($mailer, json_decode($status['email_attachments'], true));
+
 
             $mailer->addRecipient($recipient);
             try {
@@ -356,7 +369,6 @@ class PhocacartOrderStatus
                     if ($app->isClient('administrator')) {
                         $app->enqueueMessage(Text::_('COM_PHOCACART_EMAIL_CUSTOMER_SENT'));
                     }
-
                     $notificationResult = 1;
                 } else {
                     PhocacartLog::add(2, 'Sending email - ERROR', $order->id, Text::_('COM_PHOCACART_ERROR'). ' (Error when sending email using mailer)');
@@ -366,6 +378,71 @@ class PhocacartOrderStatus
                 $notificationResult = -1;
                 PhocacartLog::add(2, 'Sending email - ERROR', $order->id, Text::_('COM_PHOCACART_ERROR'). ' ('.Text::_($exception->errorMessage()).')');
                 Factory::getApplication()->enqueueMessage(Text::_($exception->errorMessage()), 'warning');
+            }
+        }
+
+        // [2] OTHERS Data in default language
+        if(Multilanguage::isEnabled() && $order->user_lang != $order->default_lang) {
+
+            $pLang->setLanguage($order->default_lang);
+
+            //$lang      = Factory::getApplication()->getLanguage();
+            $container = Factory::getContainer();
+            $newLang   = $container->get(Joomla\CMS\Language\LanguageFactoryInterface::class)->createLanguage($order->default_lang, false);
+            $container->set('language', $newLang);
+            $newLang->load('com_phocacart', JPATH_BASE, $order->default_lang, true);
+            try {
+                $mailData = MailHelper::prepareOrderMailData($orderView, $order, $addresses, $status);
+                $mailData['email']       = $recipient;
+                $mailData['emailothers'] = $recipientOthers;
+
+                $document    = '';
+                $orderRender = new PhocacartOrderRender();
+
+                switch ($documentType) {
+                    case EmailDocumentType::Order:
+                    default: // Render order as default. If user doesn't want to have odred in email, he can remove it from mail template
+                        $documentNumber  = $orderNumber;
+                        $attachmentName  = strip_tags(Text::_('COM_PHOCACART_ORDER') . '_' . $documentNumber) . '.pdf';
+                        $attachmentTitle = Text::_('COM_PHOCACART_ORDER_NR') . '_' . $documentNumber;
+
+                    break;
+                    case EmailDocumentType::Invoice:
+                        $documentNumber  = PhocacartOrder::getInvoiceNumber($order->id, $order->date, $order->invoice_number);
+                        $attachmentName  = strip_tags(Text::_('COM_PHOCACART_INVOICE') . '_' . $documentNumber) . '.pdf';
+                        $attachmentTitle = Text::_('COM_PHOCACART_INVOICE_NR') . '_' . $documentNumber;
+
+                        if (!$documentNumber) {
+                            PhocacartLog::add(3, 'Status changed - sending email: The invoice should have been attached to the email, but it does not exist yet. Check order status settings and billing settings.', $order->id, 'Order ID: ' . $order->id . ', Status ID: ' . $status['id']);
+                        }
+
+                    break;
+                    case EmailDocumentType::DeliveryNote:
+                        $documentNumber  = $orderNumber;
+                        $attachmentName  = strip_tags(Text::_('COM_PHOCACART_DELIVERY_NOTE') . '_' . $documentNumber) . '.pdf';
+                        $attachmentTitle = Text::_('COM_PHOCACART_DELIVERY_NOTE_NR') . '_' . $documentNumber;
+
+                    break;
+                }
+
+                if ($documentNumber) {
+                    $document                  = $orderRender->render($order->id, $documentType->value, 'mail', $orderToken);
+                    $mailData['html.document'] = MailHelper::renderOrderBody($order, 'html', $documentType, $mailData);
+                    $mailData['text.document'] = MailHelper::renderOrderBody($order, 'text', $documentType, $mailData);
+                } else {
+                    $mailData['html.document'] = '';
+                    $mailData['text.document'] = '';
+                }
+
+                if ($attachPDF && Pdf::load()) {
+                    $attachmentContent = Pdf::renderPdf([
+                        'title' => $attachmentTitle,
+                        'filename' => $attachmentName,
+                        'output' => $orderRender->render($order->id, $documentType->value, 'pdf', $orderToken),
+                    ]);
+                }
+            } finally {
+                $pLang->setLanguageBack();
             }
         }
 

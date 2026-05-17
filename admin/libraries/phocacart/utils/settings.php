@@ -497,7 +497,7 @@ class PhocacartUtilsSettings
 
         $views = [];
         $views['basetree']  = ['categories', 'items', 'category', 'item'] ;
-        $views['withoutid'] = ['checkout', 'comparison', 'download', 'terms', 'account', 'orders', 'payment', 'info', 'wishlist', 'pos', 'submit'];
+        $views['withoutid'] = ['checkout', 'comparison', 'download', 'terms', 'account', 'orders', 'payment', 'info', 'wishlist', 'pos', 'submit', 'order', 'cancellation'];
         $views['withoutidspec'] = array_merge(['categories'], $views['withoutid']);
         $views['withid']    = ['feed'];
         // ID is not used by question but we need it because of SEF url (id is transformed to suffix "question" and product id replaces the ID in process
@@ -508,6 +508,16 @@ class PhocacartUtilsSettings
 
     public static function getReportLimitDays() {
         return 365;
+    }
+
+    public static function getImageExtensions($format = 1) {
+        $extensions = ['gif', 'jpg', 'png', 'jpeg', 'webp'];
+
+        if ($format == 2) {
+            return $extensions;
+        }
+
+        return implode(',', $extensions);
     }
 
 }

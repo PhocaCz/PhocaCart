@@ -155,6 +155,19 @@ class PhocaCartCpModelPhocaCartEditStatus extends AdminModel
                 PhocacartOrderStatus::setHistory($order->id, $status['id'], (int) $notify, trim($data['comment_history']));
             }
 
+            $arguments = [
+                'context'    => $this->context,
+                'order'      => $order,
+                'status'    => $status
+            ];
+
+
+            $dispatcher = Factory::getApplication()->getDispatcher();
+
+            $event = new \Joomla\Event\Event('onPhocaCartAfterOrderStatusUpdate', $arguments);
+            $dispatcher->dispatch('onPhocaCartAfterOrderStatusUpdate', $event);
+
+
             //Dispatcher::dispatchAfterSave($this->event_after_save, $this->context, $order, $isNew, $data);
         }
 

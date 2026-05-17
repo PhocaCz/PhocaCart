@@ -173,6 +173,8 @@ class PhocaCartViewCategory extends HtmlView
         	$this->t['class_fade_in_action_icons']  = $this->p->get('fade_in_action_icons', 0)  == 1 ? 'b-thumbnail' : '';
         	$this->t['class_lazyload']       		= $this->t['lazy_load_category_items']  == 1 ? 'ph-lazyload' : '';
 
+            $this->t['tag_separator']		    = $this->p->get( 'tag_separator', ' ' );
+
 			$media = PhocacartRenderMedia::getInstance('main');
 			$media->loadBase();
 			$media->loadChosen();

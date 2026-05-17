@@ -18,6 +18,7 @@ use Phoca\PhocaCart\Constants\ProductType;
 use Phoca\PhocaCart\Dispatcher\Dispatcher;
 use Phoca\PhocaCart\Event;
 use Phoca\PhocaCart\I18n\I18nHelper;
+//use PhocacartCalculation;
 
 jimport('joomla.application.component.model');
 
@@ -49,6 +50,9 @@ class PhocaCartModelItem extends BaseDatabaseModel
 				$this->item[0]->taxhide = $registry->toArray();
 			}
 
+			if (isset($this->item[0])) {
+				PhocacartCalculation::changePrice($this->item[0]);
+			}
 		}
 		return $this->item;
 	}
@@ -233,10 +237,11 @@ class PhocaCartModelItem extends BaseDatabaseModel
 			'i.id', 'i.published', 'i.metadata',
 			'i.type', 'i.image', 'i.weight', 'i.height', 'i.width', 'i.length', 'i.min_multiple_quantity', 'i.min_quantity_calculation', 'i.volume',
 			'i.price', 'i.price_original', 'i.stockstatus_a_id', 'i.stockstatus_n_id', 'i.stock_calculation',
-			'i.min_quantity', 'i.min_multiple_quantity', 'i.stock', 'i.sales', 'i.featured', 'i.external_id', 'i.unit_amount', 'i.unit_unit', 'i.video',
+			'i.min_quantity', 'i.min_multiple_quantity', 'i.max_quantity', 'i.max_quantity_calculation', 'i.stock', 'i.sales', 'i.featured', 'i.external_id', 'i.unit_amount', 'i.unit_unit', 'i.video',
 			'i.external_link', 'i.external_text', 'i.external_link2', 'i.external_text2', 'i.public_download_file', 'i.public_download_text', 'i.public_play_file', 'i.public_play_text',
 			'i.sku', 'i.upc', 'i.ean', 'i.jan', 'i.isbn', 'i.mpn', 'i.serial_number', 'i.points_needed', 'i.points_received', 'i.date', 'i.date_update', 'i.delivery_date',
 			'i.gift_types', 'i.redirect_product_id', 'i.redirect_url',
+			'i.subscription_period', 'i.subscription_unit', 'i.subscription_signup_fee', 'i.subscription_renewal_discount', 'i.subscription_renewal_discount_calculation_type', 'i.subscription_grace_period_days',
 			'pc.ordering', 'c.id AS catid', 'i.catid AS preferred_catid',
 			'm.id as manufacturerid', 'm.image as manufacturerimage',
 		];

@@ -7,7 +7,14 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL
  */
 defined('_JEXEC') or die();
+
+
+use Joomla\CMS\Date\Date;
+use Joomla\CMS\Factory;
+use Joomla\Registry\Registry;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\PluginHelper;
+
 $paramsC 					= PhocacartUtils::getComponentParameters();
 $zero_price_text			= $paramsC->get( 'zero_price_text', '' );
 $zero_price_label			= $paramsC->get( 'zero_price_label', '' );
@@ -54,6 +61,83 @@ if (isset($d['discount']) && $d['discount']) {
     $displayLabel   = 1;
 
     $displayPriceItems = PhocaCartPrice::displayPriceItems($d['priceitems'], 'price');// Display Netto, Tax, Brutto?
+
+
+    $subscriptionDateInfo = '';
+    if (isset($d['subscription_scenario']) && $d['subscription_scenario']) {
+		$lang = Factory::getLanguage();
+		$lang->load('plg_system_phocacartsubscription', JPATH_ADMINISTRATOR);
+		$scenario = $d['subscription_scenario'];
+		$priceHelper = new PhocacartPrice;
+        $plugin = PluginHelper::getPlugin('system', 'phocacartsubscription');
+        $params = new Registry($plugin->params ?? '');
+
+        if ((isset($scenario['signup_fee']) && $scenario['signup_fee'] > 0) || (isset($scenario['renewal_discount']) && $scenario['renewal_discount'] > 0)) {
+            // Paradoxically, we can have both a signup fee and a discount on renewal (see the Charge Signup Fee After Expiration parameter)
+            // So display the base price only once
+            echo '<div class="ph-price-txt ph-price-netto-txt ph-price-subscription-base-price">'.Text::_('PLG_SYSTEM_PHOCACARTSUBSCRIPTION_BASE_PRICE').'</div>';
+            echo '<div class="ph-price-netto ph-price-subscription-base-price">'.$priceHelper->getPriceFormat($scenario['base_price']).'</div>';
+        }
+        if (isset($scenario['signup_fee']) && $scenario['signup_fee'] > 0) {
+            //echo '<div class="ph-price-txt ph-price-netto-txt ph-price-subscription-base-price">'.Text::_('PLG_SYSTEM_PHOCACARTSUBSCRIPTION_BASE_PRICE').'</div>';
+            //echo '<div class="ph-price-netto ph-price-subscription-base-price">'.$priceHelper->getPriceFormat($scenario['base_price']).'</div>';
+            echo '<div class="ph-price-txt ph-price-netto-txt ph-price-subscription-signup-fee">'.Text::_('PLG_SYSTEM_PHOCACARTSUBSCRIPTION_SIGNUP_FEE').'</div>';
+            echo '<div class="ph-price-netto ph-price-subscription-signup-fee">'.$priceHelper->getPriceFormat($scenario['signup_fee']).'</div>';
+		}
+		if (isset($scenario['renewal_discount']) && $scenario['renewal_discount'] > 0) {
+            //echo '<div class="ph-price-txt ph-price-netto-txt ph-price-subscription-base-price">'.Text::_('PLG_SYSTEM_PHOCACARTSUBSCRIPTION_BASE_PRICE').'</div>';
+            //echo '<div class="ph-price-netto ph-price-subscription-base-price">'.$priceHelper->getPriceFormat($scenario['base_price']).'</div>';
+            echo '<div class="ph-price-txt ph-price-netto-txt ph-price-subscription-renewal-discount">'.Text::_('PLG_SYSTEM_PHOCACARTSUBSCRIPTION_RENEWAL_DISCOUNT').'</div>';
+            echo '<div class="ph-price-netto ph-price-subscription-renewal-discount">'.$priceHelper->getPriceFormat($scenario['renewal_discount'], 1).'</div>';
+
+
+		}
+
+        $subscription_display_period_price = (int)$params->get('subscription_display_period_price', 0);
+        $subscription_current_display_period_price = (int)$params->get('subscription_current_display_period_price', 0);
+        $subscription_potentional_display_period_price = (int)$params->get('subscription_potentional_display_period_price', 0);
+
+        if ($subscription_display_period_price == 1) {
+
+            $unit                 = $scenario['unit'];
+            $unitTxt              = \PhocacartSubscription::getUnit($unit);
+            $period               = $scenario['period'];
+            //$unitSuffix            = \PhocacartSubscription::getUnitLangSuffix($period);
+
+            $subscriptionDateInfo .= '<div class="ph-subscription-period-header">' . Text::_('PLG_SYSTEM_PHOCACARTSUBSCRIPTION_SUBSCRIPTION_LENGTH') . ': </div>';
+            $subscriptionDateInfo .= '<div class="ph-subscription-period">' . Text::plural('PLG_SYSTEM_PHOCACARTSUBSCRIPTION_SUBSCRIPTION_'.$unitTxt.'_N', (int)$period). '</div>';
+
+        }
+
+
+        // We can even work with $scenario['type'] = "new" | "renewal_expired", ...
+        if (isset($scenario['renewal_discount']) && $scenario['renewal_discount'] > 0) {
+            if (isset($scenario['start_date']) && $scenario['start_date'] != '' && isset($scenario['end_date']) && $scenario['end_date'] != '')  {
+                if ($subscription_current_display_period_price == 1) {
+                    $dateFrom             = new Date($scenario['start_date_default']);
+                    $dateFromFormat       = $dateFrom->format(Text::_('DATE_FORMAT_LC4'));
+                    $dateTo               = new Date($scenario['end_date_default']);
+                    $dateToFormat         = $dateTo->format(Text::_('DATE_FORMAT_LC4'));
+                    $subscriptionDateInfo .= '<div class="ph-active-subscription-period-header">' . Text::_('PLG_SYSTEM_PHOCACARTSUBSCRIPTION_YOUR_ACTIVE_SUBSCRIPTION_PERIOD') . ': </div>';
+                    $subscriptionDateInfo .= '<div class="ph-active-subscription-period">' . $dateFromFormat . ' - ' . $dateToFormat . '</div>';
+                }
+            }
+        } else {
+            if (isset($scenario['start_date']) && $scenario['start_date'] != '' && isset($scenario['end_date']) && $scenario['end_date'] != '')  {
+                if ($subscription_potentional_display_period_price == 1) {
+                    $dateFrom             = new Date($scenario['start_date']);
+                    $dateFromFormat       = $dateFrom->format(Text::_('DATE_FORMAT_LC4'));
+                    $dateTo               = new Date($scenario['end_date']);
+                    $dateToFormat         = $dateTo->format(Text::_('DATE_FORMAT_LC4'));
+                    $subscriptionDateInfo .= '<div class="ph-potentional-subscription-period-header">' . Text::_('PLG_SYSTEM_PHOCACARTSUBSCRIPTION_POTENTIONAL_SUBSCRIPTION_PERIOD') . ': </div>';
+                    $subscriptionDateInfo .= '<div class="ph-potentional-subscription-period">' . $dateFromFormat . ' - ' . $dateToFormat . '</div>';
+                }
+            }
+        }
+
+
+	}
+
 
     if ($displayPriceItems['netto'] == 1) {
 		$labelNetto = '<div class="ph-price-txt ph-price-netto-txt '.$classPS.'-txt">'. $d['priceitems']['nettotxt'].'</div>';
@@ -140,7 +224,6 @@ if (isset($d['discount']) && $d['discount']) {
     echo $labelTax . $priceTax;
     echo $labelBrutto . $priceBrutto;
 
-
 	// PRODUCT DISCOUNT
     $displayPriceItems = PhocaCartPrice::displayPriceItems($d['priceitemsdiscount'], 'pricediscount');// Display Netto, Tax, Brutto?
 	if (isset ($d['discount']) && $d['discount'] && $displayPrice == 1) {
@@ -197,12 +280,17 @@ if (isset($d['discount']) && $d['discount']) {
 
 
 
-	if ($d['priceitems']['baseformat']) { ?>
-		<div class="ph-price-txt"><?php echo Text::_('COM_PHOCACART_UNIT_PRICE') ?></div>
-		<div class="ph-price-base"><?php echo $d['priceitems']['baseformat'] ?></div>
-	<?php } ?>
+	if ($d['priceitems']['baseformat']) {
+		echo '<div class="ph-price-txt">'. Text::_('COM_PHOCACART_UNIT_PRICE') .'</div>';
+		echo '<div class="ph-price-base">'. $d['priceitems']['baseformat'] .'</div>';
+	}
 
-		<div class="ph-cb"></div>
+
+
+    echo '<div class="ph-cb"></div>';
+    echo $subscriptionDateInfo;
+
+    ?>
 	</div>
 </div>
 <div class="ph-cb"></div>

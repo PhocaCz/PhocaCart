@@ -127,7 +127,7 @@ if($this->a->login == 0) {
 
 
 	if ($this->t['guest_checkout'] == 1 && $this->t['guest_checkout_auto_enable'] == 1) {
-		// Automatic guest checkout cannot be cancelled
+		// Automatic guest checkout cannot be canceled
 	} else {
 		echo '<div class="'.$this->s['c']['pull-right'].' ph-checkout-btn-login-box">';
 		echo '<button type="submit" tabindex="0" name="Submit" class="'.$this->s['c']['btn.btn-primary.btn-sm'].' ph-btn ph-checkout-btn-login">'.PhocacartRenderIcon::icon($d['s']['i']['user'], '', ' ') . Text::_('COM_PHOCACART_CANCEL_GUEST_CHECKOUT') .'</button>';

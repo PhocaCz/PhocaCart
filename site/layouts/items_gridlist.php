@@ -41,7 +41,7 @@ echo '<div class="ph-item-content '.$d['lt'].'">';
 echo '<div class="'.$s['c']['row'].' ph-item-content-row '.$d['lt'].'">';
 
 // 1/2
-echo '<div class="'.$s['c']['row-item'].' '.$s['c']['col.xs12.sm6.md6'].' '.$d['lt'].'">';
+echo '<div class="'.$s['c']['row-item'].' ph-category-item-image '.$s['c']['col.xs12.sm6.md6'].' '.$d['lt'].'">';
 // :L: IMAGE
 echo '<a href="'.$d['link'].'">';
 if (!empty($d['layout']['dI'])) { echo $layoutI->render($d['layout']['dI']);}
@@ -51,7 +51,7 @@ echo '</div>';// end category_row_item_gridlist_inner_c1 1/2
 
 
 // 2/2
-echo '<div class="'.$s['c']['row-item'].' '.$s['c']['col.xs12.sm6.md6'].' '.$d['lt'].'">';
+echo '<div class="'.$s['c']['row-item'].' ph-category-item-body '.$s['c']['col.xs12.sm6.md6'].' '.$d['lt'].'">';
 
 // CAPTION, DESCRIPTION BOX
 echo '<div class="ph-item-action-box ph-caption '.$d['lt'].'">';
@@ -81,7 +81,7 @@ if (!empty($d['review'])) { echo $d['review'];}
 if (!empty($d['description'])) { echo  $d['description'];}
 
 // TAGS
-if (!empty($d['tags'])) { echo '<div class="ph-tag-box">'  . '<span class="ph-tag-box-header">'.Text::_('COM_PHOCACART_TAGS'). '</span>: ' .  $d['tags'] . '</div>';}
+if (!empty($d['tags'])) { echo '<div class="ph-tag-box">'  . '<span class="ph-tag-box-header">'.Text::_('COM_PHOCACART_TAGS'). ': </span>' .  $d['tags'] . '</div>';}
 // MANUFACTURER
 if (!empty($d['manufacturer'])) { echo '<div class="ph-manufacturer-box">'  . '<span class="ph-manufacturer-box-header">'.Text::_('COM_PHOCACART_MANUFACTURER'). '</span>: ' .  $d['manufacturer'] . '</div>';}
 

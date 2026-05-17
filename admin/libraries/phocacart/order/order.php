@@ -197,7 +197,7 @@ class PhocacartOrder
        $pos			            = PhocacartPos::isPosView();
         $enable_captcha_checkout    = PhocacartCaptcha::enableCaptchaCheckout();
         if ($enable_captcha_checkout && !$pos) {
-            if (!PhocacartCaptchaRecaptcha::isValid()) {
+            if (!PhocacartCaptcha::isValid()) {
                 if ($order_language == 0) {
                     $pLang->setLanguageBack($defaultLang);
                 }
@@ -256,6 +256,19 @@ class PhocacartOrder
                 $pLang->setLanguageBack($defaultLang);
             }
             $msg = Text::_('COM_PHOCACART_MINIMUM_ORDER_QUANTITY_OF_ONE_OR_MORE_PRODUCTS_NOT_MET_UPDATE_QUANTITY_BEFORE_ORDERING') . $msgSuffix;
+            $app->enqueueMessage($msg, 'error');
+            return false;
+        }
+
+        // --------------------
+        // CHECK MAX QUANTITY
+        // --------------------
+        $maxQuantityValid = $cart->getMaximumQuantityValid();
+        if ($maxQuantityValid == 0) {
+            if ($order_language == 0) {
+                $pLang->setLanguageBack($defaultLang);
+            }
+            $msg = Text::_('COM_PHOCACART_MAXIMUM_ORDER_QUANTITY_OF_ONE_OR_MORE_PRODUCTS_NOT_MET_UPDATE_QUANTITY_BEFORE_ORDERING') . $msgSuffix;
             $app->enqueueMessage($msg, 'error');
             return false;
         }
@@ -667,6 +680,13 @@ class PhocacartOrder
 
                     }
 
+                    if ($orderProductId > 0) {
+                        // SUBSCRIPTION - Check Product Type (6) from the existing item array ($v)
+                        if (isset($v['type']) && (int)$v['type'] == 6) {
+                            $this->saveOrderSubscriptions($orderProductId, $v, $row->id);
+                        }
+                    }
+
 
                     if ($orderProductId > 0) {
                         // UPDATE the number of sales of one product - to save sql queries in frontend
@@ -938,7 +958,6 @@ class PhocacartOrder
                     foreach ($total[0]['tax'] as $k => $v) {
 
                         if (isset($v['taxid']) && $v['taxid'] > 0) {
-
                             $v['taxcalc']      = (int)$d['tax_calculation'];
                             $displayPriceItems = PhocaCartPrice::displayPriceItems($v, 'order');
                             $published = 0;
@@ -1342,6 +1361,7 @@ class PhocacartOrder
                 }
             }
 
+            Dispatcher::dispatch(new Event\AbstractEvent('system', 'onPhocaCartAfterOrderSave', ['row' => $row, 'data' => $data]));
 
             return $row->id;
 
@@ -2023,6 +2043,90 @@ class PhocacartOrder
         return true;
     }
 
+    public function saveOrderSubscriptions($orderProductId, $productObject, $orderId) {
+
+
+
+
+        $app = Factory::getApplication();
+        $db  = Factory::getDbo();
+
+        $productId = $productObject['id'];
+        $catId = $productObject['catid'];
+        $productType = $productObject['type'];
+
+        $product = PhocacartProduct::getProduct((int)$productId, (int)$catId, $this->type);
+
+        if (!$product) {
+            return false;
+        }
+
+        $row = Table::getInstance('PhocacartOrderSubscriptions', 'Table', array());
+
+        $d = array();
+        $d['order_id']         = (int)$orderId;
+        $d['product_id']       = (int)$productId;
+        $d['order_product_id'] = (int)$orderProductId;
+
+        // Initialize attribute columns to 0 (Main product subscription)
+        $d['attribute_id']       = 0;
+        $d['option_id']          = 0;
+        $d['order_attribute_id'] = 0;
+        $d['order_option_id']    = 0;
+
+        $d['title']     = $product->title;
+        $d['alias']     = $product->alias;
+        $d['type']      = (int)$product->type;
+        $d['date']      = gmdate('Y-m-d H:i:s');
+        $d['published'] = 0; // Default to 0, activated via Order Status
+
+        // Copy subscription specific fields from Product table
+        $d['subscription_period']                = isset($product->subscription_period) ? $product->subscription_period : null;
+        $d['subscription_unit']                  = isset($product->subscription_unit) ? $product->subscription_unit : null;
+        $d['subscription_signup_fee']            = isset($product->subscription_signup_fee) ? $product->subscription_signup_fee : null;
+        $d['subscription_renewal_discount']      = isset($product->subscription_renewal_discount) ? $product->subscription_renewal_discount : null;
+        $d['subscription_renewal_discount_calculation_type'] = isset($product->subscription_renewal_discount_calculation_type) ? $product->subscription_renewal_discount_calculation_type : 0;
+        $d['subscription_usergroup_add']         = isset($product->subscription_usergroup_add) ? $product->subscription_usergroup_add : '';
+        $d['subscription_usergroup_remove']      = isset($product->subscription_usergroup_remove) ? $product->subscription_usergroup_remove : '';
+        $d['subscription_trial_enabled']         = isset($product->subscription_trial_enabled) ? $product->subscription_trial_enabled : 0;
+        $d['subscription_trial_period']          = isset($product->subscription_trial_period) ? $product->subscription_trial_period : null;
+        $d['subscription_trial_unit']            = isset($product->subscription_trial_unit) ? $product->subscription_trial_unit : null;
+        $d['subscription_grace_period_days']     = isset($product->subscription_grace_period_days) ? $product->subscription_grace_period_days : 0;
+        $d['subscription_max_renewals']          = isset($product->subscription_max_renewals) ? $product->subscription_max_renewals : null;
+
+        // Real prices while ordering
+        $d['subscription_order_base_price']      = isset($product->subscription_scenario['base_price']) ? $product->subscription_scenario['base_price'] : null;
+        $d['subscription_order_signup_fee']            = isset($product->subscription_scenario['signup_fee']) ? $product->subscription_scenario['signup_fee'] : null;
+        $d['subscription_order_renewal_discount']      = isset($product->subscription_scenario['renewal_discount']) ? $product->subscription_scenario['renewal_discount'] : null;
+        $d['subscription_order_total_price']      = isset($product->subscription_scenario['total_price']) ? $product->subscription_scenario['total_price'] : null;
+
+        // Ordering
+        $db->setQuery('SELECT MAX(ordering) FROM #__phocacart_order_subscriptions');
+        $max           = $db->loadResult();
+        $d['ordering'] = $max + 1;
+
+        if (!$row->bind($d)) {
+            //throw new Exception($row->getError());
+            $msg = Text::_($row->getError());
+            $app->enqueueMessage($msg, 'error');
+            return false;
+        }
+
+        if (!$row->check()) {
+            //throw new Exception($row->getError());
+            $msg = Text::_($row->getError());
+            $app->enqueueMessage($msg, 'error');
+            return false;
+        }
+
+        if (!$row->store()) {
+            //throw new Exception($row->getError());
+            $msg = Text::_($row->getError());
+            $app->enqueueMessage($msg, 'error');
+            return false;
+        }
+        return true;
+    }
 
 
     public function saveOrderGiftCoupons($orderProductId, $v, $orderId, $k, $fullItems) {
@@ -2334,7 +2438,6 @@ class PhocacartOrder
         }
         return true;
     }
-
 
     public function updateNumberOfSalesOfProduct($orderProductId, $productId, $orderId) {
 
@@ -3239,4 +3342,22 @@ class PhocacartOrder
         return $attributes;
 	}
 
+    public static function getOrderStatusHistoryDate($orderId, $statusId) {
+        if ((int)$orderId <= 0 || (int)$statusId <= 0) {
+            return false;
+        }
+
+        $db = Factory::getDbo();
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('date'))
+            ->from($db->quoteName('#__phocacart_order_history'))
+            ->where($db->quoteName('order_id') . ' = ' . (int)$orderId)
+            ->where($db->quoteName('order_status_id') . ' = ' . (int)$statusId)
+            ->order($db->quoteName('date') . ' ASC');
+
+        $db->setQuery($query, 0, 1);
+        $date = $db->loadResult();
+
+        return $date ?: false;
+    }
 }

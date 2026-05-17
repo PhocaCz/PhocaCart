@@ -230,6 +230,14 @@ if ($this->t['display_stock_status'] == 1 || $this->t['display_stock_status'] ==
         $dPOQ['status']				= $this->t['stock_status']['min_multiple_quantity'];
         echo $layoutPOQ->render($dPOQ);
     }
+
+    if($this->t['stock_status']['max_quantity']) {
+        $dPOQ						= array();
+        $dPOQ['s']					= $this->s;
+        $dPOQ['text']				= Text::_('COM_PHOCACART_MAXIMUM_ORDER_QUANTITY');
+        $dPOQ['status']				= $this->t['stock_status']['max_quantity'];
+        echo $layoutPOQ->render($dPOQ);
+    }
 }
 // END STOCK ================================================
 

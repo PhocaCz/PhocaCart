@@ -21,7 +21,7 @@ class PhocacartOrderRender
 	public function render($id, $type = 1, $format = 'html', $token = '', $pos = 0) {
 
 		$paramsC 					= PhocacartUtils::getComponentParameters();
-		$pdf_invoice_qr_code		= $paramsC->get( 'pdf_invoice_qr_code', '' );
+
 
 		// If frontend user orders: user login needed or token
 		// If frontend POS: vendor login needed
@@ -58,7 +58,10 @@ class PhocacartOrderRender
 		$d['common']	= $order->getItemCommon($id);
 		$d['price'] 	= new PhocacartPrice();
 
-		$d['price']->setCurrency($d['common']->currency_id);
+        $pdf_invoice_qr_code = ($d['common']->currency_pdf_invoice_qr_code ?? '') !== '' ? $d['common']->currency_pdf_invoice_qr_code : $paramsC->get( 'pdf_invoice_qr_code', '' );
+        $pdf_invoice_qr_code = PhocacartText::removeQrCodeVariables($pdf_invoice_qr_code);
+
+        $d['price']->setCurrency($d['common']->currency_id);
 
 
 

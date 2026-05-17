@@ -53,7 +53,7 @@ class PhocacartEdit
 			'price', 'price_original', 'title', 'sku', 'hits', 'stock', 'exchange_rate', 'exchange_rate_reverse', 'tax_rate', 'discount', 'cost',
 
 			'upc', 'ean', 'jan', 'isbn', 'mpn', 'serial_number', 'registration_key', 'external_id', 'external_key', 'external_link',
-			'external_text', 'external_link2', 'external_text2', 'min_quantity', 'min_multiple_quantity', 'unit_amount', 'unit_unit',
+			'external_text', 'external_link2', 'external_text2', 'min_quantity', 'min_multiple_quantity', 'max_quantity', 'unit_amount', 'unit_unit',
 			'length', 'width', 'height', 'weight', 'volume', 'points_needed', 'points_received', 'description', 'description_long', 'features',
 			'video', 'type_feed', 'type_category_feed', 'metakey', 'metadesc','metatitle', 'special_parameter'
 		);

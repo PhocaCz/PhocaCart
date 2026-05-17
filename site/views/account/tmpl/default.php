@@ -12,6 +12,7 @@ use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Helper\ModuleHelper;
 use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Router\Route;
 use Joomla\Registry\Registry;
 use Joomla\CMS\Factory;
 use Phoca\PhocaCart\Dispatcher\Dispatcher;
@@ -41,6 +42,60 @@ if ((int)$this->u->id > 0) {
 
 		echo '<div class="'.$this->s['c']['col.xs12.sm8.md8'].'">'. Text::_('COM_PHOCACART_TOTAL_AMOUNT_OF_YOUR_REWARD_POINTS') . ': </div>';
 		echo '<div class="'.$this->s['c']['col.xs12.sm4.md4'].'">'.$this->t['rewardpointstotal'].'</div>';
+
+		//echo '<div class="ph-cb"></div>';
+
+		echo '</div>'."\n";// end box action
+	}
+
+	// Subscriptions
+	if (!empty($this->t['subscriptions'])) {
+		echo '<div class="'.$this->s['c']['row'].' ph-account-box-row" >';
+		echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-account-box-header" id="phaccountsubscriptions"><h3>'.Text::_('COM_PHOCACART_MY_SUBSCRIPTIONS').'</h3></div>';
+		echo '</div>';
+
+		echo '<div class="'.$this->s['c']['row'].' ph-account-box-action">';
+
+        if (!empty($this->t['subscription_description_account_view'])) {
+            echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-account-subscription-description">';
+            echo $this->t['subscription_description_account_view'];
+            echo '</div>';
+        }
+
+		echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].'">';
+        echo '<table class="table table-striped table-hover">';
+        echo '<thead>';
+        echo '<tr>';
+        echo '<th>'.Text::_('COM_PHOCACART_PRODUCT').'</th>';
+        echo '<th>'.Text::_('COM_PHOCACART_STATUS').'</th>';
+        echo '<th>'.Text::_('COM_PHOCACART_START_DATE').'</th>';
+        echo '<th>'.Text::_('COM_PHOCACART_END_DATE').'</th>';
+        echo '<th>'.Text::_('COM_PHOCACART_RENEW_SUBSCRIPTION').'</th>';
+        echo '</tr>';
+        echo '</thead>';
+        echo '<tbody>';
+		foreach ($this->t['subscriptions'] as $subscription) {
+            $statusLabel = PhocacartSubscription::getStatus($subscription->status);
+            $statusStyle = PhocacartSubscription::getStatusStyle($subscription->status);
+             $style = '';
+             if ($statusStyle != '') {
+                 $style = 'class="ph-status-label ph-status-label-'.$statusStyle.'"';
+             }
+
+			$product = PhocacartProduct::getProduct($subscription->product_id);
+            $productLink = Route::_(PhocacartRoute::getItemRoute($product->id, $product->catid, $product->alias, $product->catalias));
+
+			echo '<tr>';
+            echo '<td><a href="'.$productLink.'">'.htmlspecialchars($subscription->product_title).'</a></td>';
+            echo '<td><span '.$style.'>'.Text::_($statusLabel).'</span></td>';
+            echo '<td>'.HTMLHelper::_('date', $subscription->start_date, Text::_('DATE_FORMAT_LC4')).'</td>';
+            echo '<td>'.HTMLHelper::_('date', $subscription->end_date, Text::_('DATE_FORMAT_LC4')).'</td>';
+            echo '<td><a class="btn btn-success btn-small" href="'.$productLink.'" title="'.Text::_('COM_PHOCACART_RENEW_SUBSCRIPTION').'">'.Text::_('COM_PHOCACART_RENEW_SUBSCRIPTION').'</a></td>';
+			echo '</tr>';
+		}
+        echo '</tbody>';
+        echo '</table>';
+		echo '</div>';
 
 		//echo '<div class="ph-cb"></div>';
 

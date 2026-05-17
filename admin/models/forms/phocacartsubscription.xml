@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fieldset name="details">
+        <field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" readonly="true" class="readonly" />
+
+        <field name="user_id" type="phocacartuser" label="COM_PHOCACART_FIELD_USER_LABEL" description="COM_PHOCACART_FIELD_USER_DESC" required="true" />
+        <field name="user_name" type="text" label="COM_PHOCACART_FIELD_USER_NAME_LABEL" readonly="true" class="readonly" />
+
+        <field name="product_id" type="phocacartitem" label="COM_PHOCACART_FIELD_PRODUCT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_DESC" required="true" />
+        <field name="product_title" type="text" label="COM_PHOCACART_FIELD_PRODUCT_TITLE_LABEL" readonly="true" class="readonly" />
+
+        <field name="status" type="list" label="COM_PHOCACART_FIELD_STATUS_LABEL" default="1">
+            <option value="1">COM_PHOCACART_SUBSCRIPTION_STATUS_ACTIVE</option>
+            <option value="2">COM_PHOCACART_SUBSCRIPTION_STATUS_FUTURE</option>
+            <option value="3">COM_PHOCACART_SUBSCRIPTION_STATUS_EXPIRED</option>
+            <option value="4">COM_PHOCACART_SUBSCRIPTION_STATUS_ON_HOLD</option>
+            <option value="5">COM_PHOCACART_SUBSCRIPTION_STATUS_PENDING</option>
+            <option value="6">COM_PHOCACART_SUBSCRIPTION_STATUS_FAILED</option>
+            <option value="7">COM_PHOCACART_SUBSCRIPTION_STATUS_IN_TRIAL</option>
+            <option value="8">COM_PHOCACART_SUBSCRIPTION_STATUS_CARD_EXPIRED</option>
+            <option value="9">COM_PHOCACART_SUBSCRIPTION_STATUS_CANCELED</option>
+        </field>
+
+        <field name="start_date" type="calendar" label="COM_PHOCACART_FIELD_START_DATE_LABEL" description="COM_PHOCACART_FIELD_START_DATE_DESC" format="%Y-%m-%d %H:%M:%S" showtime="true" />
+
+        <field name="end_date" type="calendar" label="COM_PHOCACART_FIELD_END_DATE_LABEL" description="COM_PHOCACART_FIELD_END_DATE_DESC" format="%Y-%m-%d %H:%M:%S" showtime="true" />
+
+        <field name="renewal_count" type="text" label="COM_PHOCACART_FIELD_RENEWAL_COUNT_LABEL" default="0" />
+        
+        <field name="order_id" type="text" label="COM_PHOCACART_FIELD_ORDER_ID_LABEL" readonly="true" class="readonly" />
+
+    </fieldset>
+</form>

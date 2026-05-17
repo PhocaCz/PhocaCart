@@ -522,7 +522,7 @@ class PhocacartFileUpload
         $paramsL = array();
         $group = PhocacartUtilsSettings::getManagerGroup($manager);
         $paramsL['upload_extensions'] = $allowedMimeType['ext'];
-        $paramsL['image_extensions'] = 'gif,jpg,png,jpeg,webp';
+        $paramsL['image_extensions'] = PhocacartUtilsSettings::getImageExtensions();
         $paramsL['upload_mime'] = $allowedMimeType['mime'];
         //$paramsL['upload_mime_illegal']	='application/x-shockwave-flash,application/msword,application/excel,application/pdf,application/powerpoint,text/plain,application/x-zip,text/html';
         //$paramsL['upload_ext_illegal']	= $disallowedMimeType['ext'];

@@ -300,10 +300,10 @@ if (!empty($this->t['products'])) {
         }
 
         // STOCK DELIVERY_DATE (Product edit - Stock Options - Stock Status)
-        if ($this->p['item_delivery_date'] != '' && isset($v->stock) && isset($v->min_quantity) && isset($v->min_multiple_quantity) && isset($v->stockstatus_a_id) && isset($v->stockstatus_n_id) ) {
+        if ($this->p['item_delivery_date'] != '' && isset($v->stock) && isset($v->min_quantity) && isset($v->min_multiple_quantity) && isset($v->stockstatus_a_id) && isset($v->stockstatus_n_id) && isset($v->max_quantity) ) {
 
 
-            $stockStatus 	= PhocacartStock::getStockStatus((int)$v->stock, (int)$v->min_quantity, (int)$v->min_multiple_quantity, (int)$v->stockstatus_a_id,  (int)$v->stockstatus_n_id);
+            $stockStatus 	= PhocacartStock::getStockStatus((int)$v->stock, (int)$v->min_quantity, (int)$v->min_multiple_quantity, (int)$v->stockstatus_a_id,  (int)$v->stockstatus_n_id, (int)$v->max_quantity);
 
             //$stockText		= PhocacartStock::getStockStatusOutput($stockStatus);
             if (isset($stockStatus['stock_status']) && $stockStatus['stock_status'] != '') {
@@ -317,8 +317,8 @@ if (!empty($this->t['products'])) {
         }
 
         // STOCK DELIVERY_DATE FEED (Stock Status Edit - Title (XML Feed))
-        if ($this->p['feed_delivery_date'] != '' && isset($v->stock) && isset($v->min_quantity) && isset($v->min_multiple_quantity) && isset($v->stockstatus_a_id) && isset($v->stockstatus_n_id) ) {
-            $stockStatus 	= PhocacartStock::getStockStatus((int)$v->stock, (int)$v->min_quantity, (int)$v->min_multiple_quantity, (int)$v->stockstatus_a_id,  (int)$v->stockstatus_n_id);
+        if ($this->p['feed_delivery_date'] != '' && isset($v->stock) && isset($v->min_quantity) && isset($v->min_multiple_quantity) && isset($v->stockstatus_a_id) && isset($v->stockstatus_n_id) && isset($v->max_quantity) ) {
+            $stockStatus 	= PhocacartStock::getStockStatus((int)$v->stock, (int)$v->min_quantity, (int)$v->min_multiple_quantity, (int)$v->stockstatus_a_id,  (int)$v->stockstatus_n_id, (int)$v->max_quantity);
 
 
             if (isset($stockStatus['stock_status_feed']) && $stockStatus['stock_status_feed'] != '') {

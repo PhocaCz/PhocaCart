@@ -27,7 +27,6 @@ class PhocaCartCpViewPhocaCartCp extends HtmlView
 	protected $s;
 
 	function display($tpl = null) {
-
 		$this->t	= PhocacartUtils::setVars();
 		$this->s    = PhocacartRenderStyle::getStyles();
 		$this->r	= new PhocacartRenderAdminview();
@@ -80,6 +79,7 @@ class PhocaCartCpViewPhocaCartCp extends HtmlView
 		'sections'		=> array($this->t['l'] . '_SECTIONS', $d.$i .'notification-circle', '#b35900'),
 		'units'			=> array($this->t['l'] . '_UNITS', $d.$i .'menu', '#ff9326'),
 		'bulkprices'	=> array($this->t['l'] . '_BULK_PRICE_EDITOR', $d.$i .'click', '#f310de'),
+		'subscriptions'	=> array($this->t['l'] . '_SUBSCRIPTIONS', $d.$i .'calendar', '#B8860B'),
 
 		'info'			=> array($this->t['l'] . '_INFO', $d.$i .'info-circle', '#3378cc'),
 		);
@@ -178,7 +178,6 @@ class PhocaCartCpViewPhocaCartCp extends HtmlView
 			$autoOpenModal = 1;
 			$linkWizard = Route::_( 'index.php?option=com_phocacart&view=phocacartwizard&tmpl=component&page=1', false );
 		}
-
 
 		$customFooter = '<form action="'.Route::_('index.php?option=com_phocacart').'" method="post" style="display: inline;">'
 		.' <input type="hidden" name="task" value="phocacartwizard.skipwizard">'

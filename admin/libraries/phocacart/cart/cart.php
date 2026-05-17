@@ -49,6 +49,7 @@ class PhocacartCart
 
     protected $stock = array();
     protected $minqty = array();
+    protected $maxqty = [];
     protected $minmultipleqty = array();
     protected $pos = false;
     protected $type = array(0, 1);// 0 all, 1 online shop, 2 pos (category type, payment method type, shipping method type)
@@ -93,6 +94,7 @@ class PhocacartCart
         $this->payment['params_payment']    = array();
         $this->stock['valid']              = 1;// check stock - products, attributes (no matter if stock checking is disabled or enabled)
         $this->minqty['valid']             = 1;// check minimum order quantity
+        $this->maxqty['valid']             = 1;// check maximum order quantity
         $this->minmultipleqty['valid']     = 1;// check minimum multiple order quantity
 
 
@@ -700,7 +702,7 @@ class PhocacartCart
                 // --------------------
                 // 1) Basic Calculation
                 // --------------------
-                $calc->calculateBasicProducts($this->fullitems[1], $this->fullitemsgroup[1], $this->total[1], $this->stock, $this->minqty, $this->minmultipleqty, $this->items);
+                $calc->calculateBasicProducts($this->fullitems[1], $this->fullitemsgroup[1], $this->total[1], $this->stock, $this->minqty, $this->minmultipleqty, $this->items, $this->maxqty);
 
                 $options = PhocaCartUtils::getComponentParameters();
                 if ($options->get('checkout_separate_by_owner')) {
@@ -1060,6 +1062,10 @@ class PhocacartCart
 
     public function getMinimumQuantityValid() {
         return $this->minqty['valid'];
+    }
+
+    public function getMaximumQuantityValid() {
+        return $this->maxqty['valid'];
     }
 
     public function getMinimumMultipleQuantityValid() {
