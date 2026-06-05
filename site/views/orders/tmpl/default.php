@@ -178,6 +178,11 @@ if ((int)$this->u->id > 0 || $this->t['token'] != '') {
                     }
                 }
 
+                // Digital products exclusion
+                if ($cancelEligible && isset($v->digital_waiver) && (int)$v->digital_waiver == 1) {
+                    $cancelEligible = false;
+                }
+
 				// Deadline check
 				if ($cancelEligible) {
 					$orderTimestamp = strtotime($v->date);

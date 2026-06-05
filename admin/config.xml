@@ -1886,6 +1886,7 @@
 
       </field>
 
+
       <field name="terms_conditions_custom_label_text" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control"
              label="COM_PHOCACART_FIELD_MAIN_TERMS_AND_CONDITIONS_CUSTOM_LABEL_TEXT_LABEL" description="COM_PHOCACART_FIELD_MAIN_TERMS_AND_CONDITIONS_CUSTOM_LABEL_TEXT_DESC"
              addfieldpath="/administrator/components/com_content/models/fields"/>
@@ -1897,6 +1898,25 @@
 
       <field name="cofirm_order_text_zero" default="" type="text" label="COM_PHOCACART_FIELD_CONFIRM_ORDER_TEXT_ZERO_LABEL" description="COM_PHOCACART_FIELD_CONFIRM_ORDER_TEXT_ZERO_DESC"/>
 
+
+
+      <field name="display_checkout_digital_waiver_checkbox" type="list" default="0" label="COM_PHOCACART_FIELD_DISPLAY_CHECKOUT_DIGITAL_WAIVER_CHECKBOX_LABEL"
+             description="COM_PHOCACART_FIELD_DISPLAY_CHECKOUT_DIGITAL_WAIVER_CHECKBOX_DESC">
+        <option value="0">COM_PHOCACART_NO</option>
+        <option value="1">COM_PHOCACART_YES</option>
+        <option value="2">COM_PHOCACART_YES_REQUIRED</option>
+
+      </field>
+
+        <field name="display_checkout_digital_waiver_condition" type="list" default="2" label="COM_PHOCACART_FIELD_DISPLAY_CHECKOUT_DIGITAL_WAIVER_CONDITION_LABEL" description="COM_PHOCACART_FIELD_DISPLAY_CHECKOUT_DIGITAL_WAIVER_CONDITION_DESC">
+    <option value="1">COM_PHOCACART_OPTION_DIGITAL_WAIVER_ALWAYS</option>
+    <option value="2">COM_PHOCACART_OPTION_DIGITAL_WAIVER_ALL_DIGITAL</option>
+    <option value="3">COM_PHOCACART_OPTION_DIGITAL_WAIVER_ANY_DIGITAL</option>
+</field>
+
+      <field name="checkout_digital_waiver_checkbox_label_text" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control"
+             label="COM_PHOCACART_FIELD_CHECKOUT_DIGITAL_WAIVER_CHECKBOX_LABEL_TEXT_LABEL" description="COM_PHOCACART_FIELD_CHECKOUT_DIGITAL_WAIVER_CHECKBOX_LABEL_TEXT_DESC"
+             addfieldpath="/administrator/components/com_content/models/fields"/>
 
       <field name="display_checkout_privacy_checkbox" type="list" default="0" label="COM_PHOCACART_FIELD_DISPLAY_CHECKOUT_PRIVACY_CHECKBOX_LABEL"
              description="COM_PHOCACART_FIELD_DISPLAY_CHECKOUT_PRIVACY_CHECKBOX_DESC">
@@ -1938,6 +1958,16 @@
 
     </fieldset>
 
+    <fieldset name="checkout" label="COM_PHOCACART_CONFIG_HEAD_CHECKOUT_LABEL" addruleprefix="Phoca\Component\PhocaCart\Administrator\Rule">
+
+      <field name="checkout_edit_address_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control" label="COM_PHOCACART_FIELD_CHECKOUT_EDIT_ADDRESS_DESCRIPTION_LABEL"
+             description="COM_PHOCACART_FIELD_CHECKOUT_EDIT_ADDRESS_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
+      <field name="checkout_edit_shipping_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control" label="COM_PHOCACART_FIELD_CHECKOUT_EDIT_SHIPPING_OPTIONS_DESCRIPTION_LABEL"
+             description="COM_PHOCACART_FIELD_CHECKOUT_EDIT_SHIPPING_OPTIONS_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
+      <field name="checkout_edit_payment_desc" type="modal_article" select="true" new="true" edit="true" clear="true" class="form-control" label="COM_PHOCACART_FIELD_CHECKOUT_EDIT_PAYMENT_OPTIONS_DESCRIPTION_LABEL"
+             description="COM_PHOCACART_FIELD_CHECKOUT_EDIT_PAYMENT_OPTIONS_DESCRIPTION_DESC" addfieldpath="/administrator/components/com_content/models/fields"/>
+
+    </fieldset>
 
     <fieldset name="billing" label="COM_PHOCACART_CONFIG_HEAD_BILLING_LABEL">
 

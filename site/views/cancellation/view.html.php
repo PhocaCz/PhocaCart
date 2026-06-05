@@ -66,7 +66,6 @@ class PhocaCartViewCancellation extends HtmlView
         $this->t['order']       = $data['order'];
         $this->t['eligibility'] = $data['eligibility'];
         $this->t['token']       = $data['token'];
-
         $paramsC = PhocacartUtils::getComponentParameters();
         $this->t['cancellation_description_article'] = $paramsC->get('cancellation_description_article', 0);
 

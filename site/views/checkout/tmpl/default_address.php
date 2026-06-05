@@ -46,6 +46,13 @@ if ($this->a->addressedit == 1) {
 		echo '</div>';
 	}
 
+	if ($this->t['checkout_edit_address_desc'] > 0) {
+		echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].'">';
+		echo PhocacartRenderFront::renderArticle($this->t['checkout_edit_address_desc']);
+		echo '</div>';
+	}
+
+
 	echo '<div class="'.$this->s['c']['col.xs12.sm6.md6'].' ph-checkout-billing-row" id="phBillingAddress" >';
 
 	if ($this->t['dataaddressform']['b'] != '') {

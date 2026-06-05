@@ -1224,6 +1224,7 @@ CREATE TABLE IF NOT EXISTS `#__phocacart_orders` (
 	`terms` tinyint(1) NOT NULL default '0',
 	`privacy` tinyint(1) NOT NULL default '0',
 	`newsletter` tinyint(1) NOT NULL default '0',
+	`digital_waiver` tinyint(1) NOT NULL default '0',
 	`published` tinyint(1) NOT NULL DEFAULT '0',
 	`checked_out` int unsigned,
 	`checked_out_time` datetime,

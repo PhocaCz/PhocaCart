@@ -236,11 +236,29 @@ class PhocacartSubscriptionEmail
         // Get template key
         $templateKey = self::getTemplateKey($eventType);
 
+
+
+
+
         // Create and send email
         try {
             $mailer = new MailTemplate($templateKey, $userLang);
             $mailer->addTemplateData($mailData);
             $mailer->addRecipient($user->email, $user->name);
+
+
+            // Send emails to admin
+            $plugin = PluginHelper::getPlugin('system', 'phocacartsubscription');
+
+            if ($plugin) {
+                $params = new Registry($plugin->params);
+                $bccEmail = trim($params->get('bcc_email', ''));
+
+                if (!empty($bccEmail) && JoomlaMailHelper::isEmailAddress($bccEmail)) {
+                    $mailer->addRecipient($bccEmail, Text::_('PLG_SYSTEM_PHOCACARTSUBSCRIPTION_EMAIL_STORE_MANAGER'), 'bcc');
+                }
+            }
+
 
             if ($mailer->send()) {
                 PhocacartLog::add(1, 'Subscription Email - Sent', $subscription->id, 'Email sent to: ' . $user->email . ' (Event: ' . $eventType . ')');

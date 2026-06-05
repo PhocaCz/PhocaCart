@@ -77,10 +77,10 @@ if ($articleId > 0) {
         $reasonText = sprintf($reasonText, $deadlineDays);
     }
     echo $layoutAl->render(['type' => 'danger', 'text' => $reasonText]);
-    ?>
+   ?>
     <div class="ph-cancellation-back-box">
         <a href="<?= Route::_($ordersUrl) ?>" class="<?= $this->s['c']['btn.btn-secondary.btn-sm'] ?> ph-btn">
-            <?= PhocacartRenderIcon::icon($this->s['i']['cancel'] . ' ph-icon-back') ?>
+            <?= PhocacartRenderIcon::icon($this->s['i']['prev'] . ' ph-icon-back') ?>
             <?= Text::_('COM_PHOCACART_CANCELLATION_BACK_TO_ORDERS') ?>
         </a>
     </div>

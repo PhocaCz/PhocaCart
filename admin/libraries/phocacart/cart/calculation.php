@@ -83,6 +83,7 @@ class PhocacartCartCalculation
         $total['countallproducts']           = 0;
         $total['countphysicalproducts']      = 0;
         $total['countdigitalproducts']       = 0;
+        $total['countdigitalproductscomplete'] = 0; // All digital products + Mixed products (digital and physical)
         $total['countpriceondemandproducts'] = 0;
 
         // OPTIONS (VARIANTS) QUANTITY
@@ -328,6 +329,7 @@ class PhocacartCartCalculation
                     $total['countphysicalproducts']++;
                 } else if ($itemD->type == 1) {
                     $total['countdigitalproducts']++;
+                    $total['countdigitalproductscomplete']++;
                 } else if ($itemD->type == 2) {
                     // physical and digital
                     // This rule can be changed but for now e.g. we test if the product is digital to ensure that the shipping will be skipped
@@ -335,14 +337,17 @@ class PhocacartCartCalculation
                     // Uncomment if you need to opposite rule
                     //$total['countphysicalproducts']++;
                     //$total['countdigitalproducts']++;
+                    $total['countdigitalproductscomplete']++;
                 } else if ($itemD->type == 3) {
                     $total['countpriceondemandproducts']++;
                 } else if ($itemD->type == 4) {
                     // Gift Vouchers are even digital products
                     $total['countdigitalproducts']++;
+                    $total['countdigitalproductscomplete']++;
                 } else if ($itemD->type == 6) {
                     // Subscriptions are even digital products
                     $total['countdigitalproducts']++;
+                    $total['countdigitalproductscomplete']++;
                 }
 
                 // ==========
