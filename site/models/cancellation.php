@@ -177,6 +177,11 @@ class PhocaCartModelCancellation extends BaseDatabaseModel
             return ['eligible' => false, 'reason' => 'vat', 'days_remaining' => 0];
         }
 
+        // Exclude digital products exclusion
+        if (isset($order->digital_waiver) && (int)$order->digital_waiver == 1) {
+            return ['eligible' => false, 'reason' => 'digital_waiver', 'days_remaining' => 0];
+        }
+
         // Check deadline
         $orderDate = strtotime($order->date);
 

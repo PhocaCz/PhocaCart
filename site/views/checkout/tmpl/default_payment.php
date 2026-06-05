@@ -117,6 +117,12 @@ if ($this->a->paymentnotused == 1) {
 
 	echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-action">';
 
+	if ($this->t['checkout_edit_payment_desc'] > 0) {
+		echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].'">';
+		echo PhocacartRenderFront::renderArticle($this->t['checkout_edit_payment_desc']);
+		echo '</div>';
+	}
+
 	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-checkout-payment-row" id="phPaymentMethods" >';
 	echo '<div class="ph-box-header">'.Text::_('COM_PHOCACART_PAYMENT_METHODS').'</div>';
 	echo '</div>';

@@ -933,11 +933,14 @@ class PhocaCartControllerCheckout extends FormController
         $pC                                = PhocacartUtils::getComponentParameters();
         $display_checkout_privacy_checkbox = $pC->get('display_checkout_privacy_checkbox', 0);
         $display_checkout_toc_checkbox     = $pC->get('display_checkout_toc_checkbox', 2);
+        $display_checkout_digital_waiver_checkbox     = $pC->get('display_checkout_digital_waiver_checkbox', 0);
+        $display_checkout_digital_waiver_condition  = $pC->get('display_checkout_digital_waiver_condition', 2);
 
         $app                   = Factory::getApplication();
         $item                  = array();
         $item['return']        = $this->input->get('return', '', 'string');
         $item['phcheckouttac'] = $this->input->get('phcheckouttac', false, 'string');
+        $item['phcheckoutdw'] = $this->input->get('phcheckoutdw', false, 'string');
         $item['privacy']       = $this->input->get('privacy', false, 'string');
         $item['newsletter']    = $this->input->get('newsletter', false, 'string');
         $item['phcomment']     = $this->input->get('phcomment', '', 'string');
@@ -946,6 +949,7 @@ class PhocaCartControllerCheckout extends FormController
         $item['privacy']       = $item['privacy'] ? 1 : 0;
         $item['phcheckouttac'] = $item['phcheckouttac'] ? 1 : 0;
         $item['newsletter']    = $item['newsletter'] ? 1 : 0;
+        $item['phcheckoutdw']       = $item['phcheckoutdw'] ? 1 : 0;
 
 
         if ($display_checkout_privacy_checkbox == 2 && $item['privacy'] == 0) {
@@ -953,6 +957,52 @@ class PhocaCartControllerCheckout extends FormController
             $app->enqueueMessage($msg . $msgSuffix, 'error');
             $app->redirect(base64_decode($item['return']));
             return false;
+
+        }
+
+        if ($display_checkout_digital_waiver_checkbox == 2 && $item['phcheckoutdw'] == 0) {
+
+            // Digital Waiver
+            $displayCheckoutDigitalWaiverCheckbox = $display_checkout_digital_waiver_checkbox;
+            if($display_checkout_digital_waiver_condition == 1) {
+                // Always display
+                $displayCheckoutDigitalWaiverCheckbox = 1;
+            } else if($display_checkout_digital_waiver_condition == 2) {
+                // All digital
+
+                // We only need partial information from cart
+                $cart = new PhocacartCartRendercheckout();
+                $cart->setFullItems();
+                $total = $cart->getTotal();
+                // Is there even a shipping or payment (or is active based on criterias)
+                if (isset($total[0]['countdigitalproducts']) && (int)$total[0]['countdigitalproducts'] > 0
+                && isset($total[0]['countallproducts']) && (int)$total[0]['countallproducts'] > 0
+                && (int)$total[0]['countdigitalproducts'] == (int)$total[0]['countallproducts']) {
+                    $displayCheckoutDigitalWaiverCheckbox = 1;
+                } else {
+                    $displayCheckoutDigitalWaiverCheckbox = 0;
+                }
+            } else if($display_checkout_digital_waiver_condition == 3) {
+                // Any digital
+
+                // We only need partial information from cart
+                $cart = new PhocacartCartRendercheckout();
+                $cart->setFullItems();
+                $total = $cart->getTotal();
+
+                if (isset($total[0]['countdigitalproductscomplete']) && (int)$total[0]['countdigitalproductscomplete'] > 0) {
+                    $displayCheckoutDigitalWaiverCheckbox = 1;
+                } else {
+                    $displayCheckoutDigitalWaiverCheckbox = 0;
+                }
+            }
+
+            if ($displayCheckoutDigitalWaiverCheckbox > 0) {
+                $msg = Text::_('COM_PHOCACART_ERROR_YOU_NEED_TO_AGREE_TO_DIGITAL_WAIVERxxx');
+                $app->enqueueMessage($msg . $msgSuffix, 'error');
+                $app->redirect(base64_decode($item['return']));
+                return false;
+            }
 
         }
 

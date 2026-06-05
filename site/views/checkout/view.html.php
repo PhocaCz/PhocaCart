@@ -77,6 +77,10 @@ class PhocaCartViewCheckout extends HtmlView
 
         $this->t['tax_calculation']     = $this->p->get('tax_calculation', 0);
 
+        $this->t['checkout_edit_address_desc']		= (int)$this->p->get( 'checkout_edit_address_desc', 0 );// Article ID
+        $this->t['checkout_edit_shipping_desc']		= (int)$this->p->get( 'checkout_edit_shipping_desc', 0 );// Article ID
+        $this->t['checkout_edit_payment_desc']		= (int)$this->p->get( 'checkout_edit_payment_desc', 0 );// Article ID
+
         // Specific CSS for different tax events - tax class indicator
         switch ((int)$this->t['tax_calculation']){
             case 2:
@@ -103,32 +107,7 @@ class PhocaCartViewCheckout extends HtmlView
         }
 
 
-        // Terms and Conditions
-        $this->t['display_checkout_toc_checkbox'] = $this->p->get('display_checkout_toc_checkbox', 2);
-        if ($this->t['display_checkout_toc_checkbox'] > 0) {
-            $this->t['terms_conditions_custom_label_text'] = $this->p->get('terms_conditions_custom_label_text', 0);
-            $linkTerms                                     = Route::_(PhocacartRoute::getTermsRoute(0, 0, 'tmpl=component'));
-            $defaultText                                   = Text::_('COM_PHOCACART_I_HAVE_READ_AND_AGREE_TO_THE') . ' <a href="' . $linkTerms . '" onclick="phWindowPopup(this.href, \'phWindowPopupTerms\', 2, 1.6);return false;" >' . Text::_('COM_PHOCACART_TERMS_AND_CONDITIONS') . '</a>';
-            $this->t['terms_conditions_label_text']        = PhocacartRenderFront::renderArticle((int)$this->t['terms_conditions_custom_label_text'], 'html', $defaultText);
-        }
 
-        // Checkout Privacy checkbox
-        $this->t['display_checkout_privacy_checkbox'] = $this->p->get('display_checkout_privacy_checkbox', 0);
-        if ($this->t['display_checkout_privacy_checkbox'] > 0) {
-            $this->t['checkout_privacy_checkbox_label_text'] = $this->p->get('checkout_privacy_checkbox_label_text', 0);
-            $this->t['checkout_privacy_checkbox_label_text'] = PhocacartRenderFront::renderArticle((int)$this->t['checkout_privacy_checkbox_label_text'], 'html', '');
-        }
-
-        // Newsletter
-        $this->t['display_checkout_newsletter_checkbox'] = $this->p->get('display_checkout_newsletter_checkbox', 0);
-        if ($this->t['display_checkout_newsletter_checkbox'] > 0) {
-            $this->t['checkout_newsletter_checkbox_label_text'] = $this->p->get('checkout_newsletter_checkbox_label_text', 0);
-            $this->t['checkout_newsletter_checkbox_label_text'] = PhocacartRenderFront::renderArticle((int)$this->t['checkout_newsletter_checkbox_label_text'], 'html', '');
-        }
-
-        $this->t['enable_captcha_checkout'] = PhocacartCaptcha::enableCaptchaCheckout();
-
-        $scrollTo = 'phCheckoutCartBox';// = '';
 
 
         // Not ready yet
@@ -156,9 +135,79 @@ class PhocaCartViewCheckout extends HtmlView
         // Is there even a shipping or payment (or is active based on criterias)
         $total = $this->cart->getTotal();
 
+
+        // --- Display checkboxes
+
+        // Terms and Conditions
+        $this->t['display_checkout_toc_checkbox'] = $this->p->get('display_checkout_toc_checkbox', 2);
+        if ($this->t['display_checkout_toc_checkbox'] > 0) {
+            $this->t['terms_conditions_custom_label_text'] = $this->p->get('terms_conditions_custom_label_text', 0);
+            $linkTerms                                     = Route::_(PhocacartRoute::getTermsRoute(0, 0, 'tmpl=component'));
+            $defaultText                                   = Text::_('COM_PHOCACART_I_HAVE_READ_AND_AGREE_TO_THE') . ' <a href="' . $linkTerms . '" onclick="phWindowPopup(this.href, \'phWindowPopupTerms\', 2, 1.6);return false;" >' . Text::_('COM_PHOCACART_TERMS_AND_CONDITIONS') . '</a>';
+            $this->t['terms_conditions_label_text']        = PhocacartRenderFront::renderArticle((int)$this->t['terms_conditions_custom_label_text'], 'html', $defaultText);
+        }
+
+        // Digital Waiver
+        $this->t['display_checkout_digital_waiver_checkbox'] = $this->p->get('display_checkout_digital_waiver_checkbox', 0);
+        if ($this->t['display_checkout_digital_waiver_checkbox'] > 0) {
+            $this->t['checkout_digital_waiver_checkbox_label_text'] = $this->p->get('checkout_digital_waiver_checkbox_label_text', 0);
+            $defaultDigitalText = Text::_('COM_PHOCACART_DIGITAL_WITHDRAWAL_WAIVER_CHECKBOX_TEXT');
+            $this->t['checkout_digital_waiver_checkbox_label_text'] = PhocacartRenderFront::renderArticle((int)$this->t['checkout_digital_waiver_checkbox_label_text'], 'html', $defaultDigitalText);
+
+            // Conditions:
+            $this->t['display_checkout_digital_waiver_condition'] = $this->p->get('display_checkout_digital_waiver_condition', 2);
+
+            $displayCheckoutDigitalWaiverCheckbox = $this->t['display_checkout_digital_waiver_checkbox'];
+            if($this->t['display_checkout_digital_waiver_condition'] == 1) {
+                // Always display
+                $displayCheckoutDigitalWaiverCheckbox = 1;
+            } else if($this->t['display_checkout_digital_waiver_condition'] == 2) {
+                // All digital
+                if (isset($total[0]['countdigitalproducts']) && (int)$total[0]['countdigitalproducts'] > 0
+                && isset($total[0]['countallproducts']) && (int)$total[0]['countallproducts'] > 0
+                && (int)$total[0]['countdigitalproducts'] == (int)$total[0]['countallproducts']) {
+                    $displayCheckoutDigitalWaiverCheckbox = 1;
+                } else {
+                    $displayCheckoutDigitalWaiverCheckbox = 0;
+                }
+            } else if($this->t['display_checkout_digital_waiver_condition'] == 3) {
+                // Any digital
+                if (isset($total[0]['countdigitalproductscomplete']) && (int)$total[0]['countdigitalproductscomplete'] > 0) {
+                    $displayCheckoutDigitalWaiverCheckbox = 1;
+                } else {
+                    $displayCheckoutDigitalWaiverCheckbox = 0;
+                }
+            }
+            $this->t['display_checkout_digital_waiver_checkbox'] = $displayCheckoutDigitalWaiverCheckbox;
+
+        }
+
+        // Checkout Privacy checkbox
+        $this->t['display_checkout_privacy_checkbox'] = $this->p->get('display_checkout_privacy_checkbox', 0);
+        if ($this->t['display_checkout_privacy_checkbox'] > 0) {
+            $this->t['checkout_privacy_checkbox_label_text'] = $this->p->get('checkout_privacy_checkbox_label_text', 0);
+            $this->t['checkout_privacy_checkbox_label_text'] = PhocacartRenderFront::renderArticle((int)$this->t['checkout_privacy_checkbox_label_text'], 'html', '');
+        }
+
+        // Newsletter
+        $this->t['display_checkout_newsletter_checkbox'] = $this->p->get('display_checkout_newsletter_checkbox', 0);
+        if ($this->t['display_checkout_newsletter_checkbox'] > 0) {
+            $this->t['checkout_newsletter_checkbox_label_text'] = $this->p->get('checkout_newsletter_checkbox_label_text', 0);
+            $this->t['checkout_newsletter_checkbox_label_text'] = PhocacartRenderFront::renderArticle((int)$this->t['checkout_newsletter_checkbox_label_text'], 'html', '');
+        }
+
+        $this->t['enable_captcha_checkout'] = PhocacartCaptcha::enableCaptchaCheckout();
+
+        $scrollTo = 'phCheckoutCartBox';// = '';
+
+        // ---
+
+
+
         $sOCh  = array();// Shipping Options Checkout
         // PRODUCTTYPE
         $sOCh['all_digital_products'] = isset($total[0]['countdigitalproducts']) && isset($total[0]['countallproducts']) && (int)$total[0]['countdigitalproducts'] == $total[0]['countallproducts'] ? 1 : 0;
+        $sOCh['all_digital_products_complete'] = isset($total[0]['countdigitalproductscomplete']) && isset($total[0]['countdigitalproductscomplete']) && (int)$total[0]['countdigitalproductscomplete'] == $total[0]['countdigitalproductscomplete'] ? 1 : 0;
         $pOCh                         = array();// Payment Options Checkout
 
         $pOCh['order_amount_zero'] = 1;
@@ -343,6 +392,7 @@ class PhocaCartViewCheckout extends HtmlView
                         $sOCh = array();// Shipping Options Checkout
                         // PRODUCTTYPE - Digital products are even gift vouchers
                         $sOCh['all_digital_products'] = isset($total[0]['countdigitalproducts']) && isset($total[0]['countallproducts']) && (int)$total[0]['countdigitalproducts'] == $total[0]['countallproducts'] ? 1 : 0;
+                        $sOCh['all_digital_products_complete'] = isset($total[0]['countdigitalproductscomplete']) && isset($total[0]['countdigitalproductscomplete']) && (int)$total[0]['countdigitalproductscomplete'] == $total[0]['countdigitalproductscomplete'] ? 1 : 0;
                         $shippingNotUsed              = PhocacartShipping::isShippingNotUsed($sOCh);// REVERSE
 
                         if ($shippingNotUsed) {

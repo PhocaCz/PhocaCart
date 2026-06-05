@@ -24,23 +24,28 @@
         <field name="id" type="text" default="0" required="true" readonly="true" label="COM_PHOCACART_ORDER_ID_LABEL" description="COM_PHOCACART_ORDER_ID_DESC" />
 
         <field name="terms" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_TERMS_AND_CONDITIONS_AGREED_LABEL" description="COM_PHOCACART_FIELD_TERMS_AND_CONDITIONS_AGREED_DESC">
-            <option value="1">COM_PHOCACART_YES</option>
             <option value="0">COM_PHOCACART_NO</option>
+            <option value="1">COM_PHOCACART_YES</option>
+        </field>
+
+        <field name="digital_waiver" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_DIGITAL_WAIVER_AGREED_LABEL" description="COM_PHOCACART_FIELD_DIGITAL_WAIVER_AGREED_DESC">
+            <option value="0">COM_PHOCACART_NO</option>
+            <option value="1">COM_PHOCACART_YES</option>
         </field>
 
         <field name="privacy" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_PRIVACY_AGREED_LABEL" description="COM_PHOCACART_FIELD_PRIVACY_AGREED_DESC">
-            <option value="1">COM_PHOCACART_YES</option>
             <option value="0">COM_PHOCACART_NO</option>
+            <option value="1">COM_PHOCACART_YES</option>
         </field>
 
         <field name="newsletter" type="radio" layout="joomla.form.field.radio.switcher" default="0" label="COM_PHOCACART_FIELD_NEWSLETTER_SUBSCRIBED_LABEL" description="COM_PHOCACART_FIELD_NEWSLETTER_SUBSCRIBED_DESC">
-            <option value="1">COM_PHOCACART_YES</option>
             <option value="0">COM_PHOCACART_NO</option>
+            <option value="1">COM_PHOCACART_YES</option>
         </field>
 
         <field name="published" type="list" default="1" label="COM_PHOCACART_FIELD_PUBLISHED_LABEL" description="COM_PHOCACART_FIELD_PUBLISHED_DESC">
-            <option value="1">JPUBLISHED</option>
             <option value="0">JUNPUBLISHED</option>
+            <option value="1">JPUBLISHED</option>
         </field>
     </fieldset>
 

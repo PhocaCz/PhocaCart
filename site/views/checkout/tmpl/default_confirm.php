@@ -13,6 +13,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 
 $layoutPC 	= new FileLayout('form_privacy_checkbox', null, array('component' => 'com_phocacart'));
 $layoutNC 	= new FileLayout('form_newsletter_checkbox', null, array('component' => 'com_phocacart'));
+$layoutDW 	= new FileLayout('form_digital_waiver_checkbox', null, array('component' => 'com_phocacart'));
 $layoutAl 	= new FileLayout('alert', null, array('component' => 'com_phocacart'));
 
 if ($this->a->confirm == 1) {
@@ -91,11 +92,25 @@ if ($this->a->confirm == 1) {
 			$d['label_text']	= $this->t['terms_conditions_label_text'];
 			$d['id']			= 'phCheckoutConfirmTermsConditions';
 			$d['name']			= 'phcheckouttac';
-			$d['class']			= 'ph-pull-right checkbox ph-checkout-checkbox-confirm';
+			$d['class']			= 'checkbox ph-checkout-checkbox-confirm';
 			$d['display']		= $this->t['display_checkout_toc_checkbox'];
 
 			echo '<div class="ph-cb"></div>';
 			echo $layoutPC->render($d);
+		}
+
+		if ($this->t['display_checkout_digital_waiver_checkbox'] > 0) {
+
+			$d					= array();
+			$d['s']			    = $this->s;
+			$d['label_text']	= $this->t['checkout_digital_waiver_checkbox_label_text'];
+			$d['id']			= 'phCheckoutConfirmDigitalWaiver';
+			$d['name']			= 'phcheckoutdw';
+			$d['class']			= 'checkbox ph-checkout-checkbox-confirm';
+			$d['display']		= $this->t['display_checkout_digital_waiver_checkbox'];
+
+			echo '<div class="ph-cb"></div>';
+			echo $layoutDW->render($d);
 		}
 
 
@@ -106,7 +121,7 @@ if ($this->a->confirm == 1) {
 			$d['label_text']	= $this->t['checkout_privacy_checkbox_label_text'];
 			$d['id']			= 'phCheckoutPrivacyCheckbox';
 			$d['name']			= 'privacy';
-			$d['class']			= 'ph-pull-right checkbox ph-checkout-checkbox-confirm';
+			$d['class']			= 'checkbox ph-checkout-checkbox-confirm';
 			$d['display']		= $this->t['display_checkout_privacy_checkbox'];
 
 			echo '<div class="ph-cb"></div>';
@@ -120,7 +135,7 @@ if ($this->a->confirm == 1) {
 			$d['label_text']	= $this->t['checkout_newsletter_checkbox_label_text'];
 			$d['id']			= 'phCheckoutNewsletterCheckbox';
 			$d['name']			= 'newsletter';
-			$d['class']			= 'ph-pull-right checkbox ph-checkout-checkbox-confirm';
+			$d['class']			= 'checkbox ph-checkout-checkbox-confirm';
 			$d['display']		= $this->t['display_checkout_newsletter_checkbox'];
 
 			echo '<div class="ph-cb"></div>';

@@ -327,6 +327,7 @@ class PhocacartOrder
         // Free Download
         // 1) All products are digital
         // 2) Order is zero price
+        // Possible TO DO: add ['countdigitalproductscomplete'] (mixed products - digital and physical)
         if (isset($total[0]['countdigitalproducts']) && isset($total[0]['countallproducts'])
             && (int)$total[0]['countdigitalproducts'] == $total[0]['countallproducts']
             && $total[0]['brutto'] == 0 && $total[0]['netto'] == 0) {
@@ -351,6 +352,7 @@ class PhocacartOrder
         $d['privacy']    = isset($data['privacy']) ? (int)$data['privacy'] : '';
         $d['terms']      = isset($data['phcheckouttac']) ? (int)$data['phcheckouttac'] : '';
         $d['newsletter'] = isset($data['newsletter']) ? (int)$data['newsletter'] : 0;
+        $d['digital_waiver']      = isset($data['phcheckoutdw']) ? (int)$data['phcheckoutdw'] : '';
 
         // Data POS
         $d['amount_pay']      = isset($data['amount_pay']) ? $data['amount_pay'] : 0;
@@ -468,6 +470,7 @@ class PhocacartOrder
         $sOCh = array();// Shipping Options Checkout
         // PRODUCTTYPE - Digital products are even gift vouchers
         $sOCh['all_digital_products'] = isset($total[0]['countdigitalproducts']) && isset($total[0]['countallproducts']) && (int)$total[0]['countdigitalproducts'] == $total[0]['countallproducts'] ? 1 : 0;
+        $sOCh['all_digital_products_complete'] = isset($total[0]['countdigitalproductscomplete']) && isset($total[0]['countdigitalproductscomplete']) && (int)$total[0]['countdigitalproductscomplete'] == $total[0]['countdigitalproductscomplete'] ? 1 : 0;
         $shippingNotUsed              = PhocacartShipping::isShippingNotUsed($sOCh);// REVERSE
 
 

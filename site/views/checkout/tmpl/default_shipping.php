@@ -194,6 +194,12 @@ if ($this->a->shippingnotused == 1) {
 
 	echo '<div class="'.$this->s['c']['row'].' ph-checkout-box-action">';
 
+	if ($this->t['checkout_edit_shipping_desc'] > 0) {
+		echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].'">';
+		echo PhocacartRenderFront::renderArticle($this->t['checkout_edit_shipping_desc']);
+		echo '</div>';
+	}
+
 	echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-checkout-shipping-row" id="phShippingMethods" >';
 	echo '<div class="ph-box-header">'.Text::_('COM_PHOCACART_SHIPPING_METHODS').'</div>';
 	echo '</div>';
