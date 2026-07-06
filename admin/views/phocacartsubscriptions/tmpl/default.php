@@ -8,7 +8,7 @@ use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Plugin\PluginHelper;
 require_once JPATH_ADMINISTRATOR . '/components/com_phocacart/libraries/phocacart/subscription/subscription.php';
-$isProEnabled = PluginHelper::isEnabled('system', 'phocacartsubscription');
+$isSubEnabled = PluginHelper::isEnabled('system', 'phocacartsubscription');
 
 $wa = $this->document->getWebAssetManager();
 $wa->useScript('table.columns')
@@ -18,7 +18,7 @@ $user      = Factory::getUser();
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
 
-if ($isProEnabled) {
+if ($isSubEnabled) {
 ?><form action="<?php echo Route::_('index.php?option=com_phocacart&view=phocacartsubscriptions'); ?>" method="post" name="adminForm" id="adminForm">
     <div class="row">
         <div class="col-md-12">
@@ -72,7 +72,7 @@ if ($isProEnabled) {
                                         <?php echo $this->escape($item->product_title); ?>
                                     </td>
                                     <td class="text-center">
-                                        <?php 
+                                        <?php
                                         $class = 'badge bg-secondary';
                                         if ((int)$item->status === \PhocacartSubscription::STATUS_ACTIVE) $class = 'badge bg-success';
                                         if ((int)$item->status === \PhocacartSubscription::STATUS_FUTURE) $class = 'badge bg-info';
@@ -110,6 +110,6 @@ if ($isProEnabled) {
 </form>
 <?php
 } else {
-    echo '<div class="ph-pro-box">'.Text::_('COM_PHOCACART_ADVANCED_FEATURE_PRO'). '</div>';
+    echo '<div class="ph-pro-box">'.Text::_('COM_PHOCACART_SUBSCRIPTION_PLUGIN_REQUIRED'). '</div>';
 }
 
