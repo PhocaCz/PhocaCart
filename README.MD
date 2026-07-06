@@ -8,7 +8,17 @@
 
 
 
-Phoca Cart is e-commerce extension - powerful shopping cart for Joomla! CMS. Phoca Cart is based on Joomla! framework and it is designed by modern responsive Bootstrap library.
+## Phoca Cart — Community-Driven E-Commerce for Joomla CMS
+
+Phoca Cart is a powerful, fully-featured e-commerce solution built natively for Joomla. This repository represents the purely open-source, community-maintained core of the project.
+
+**Important FOSS Declaration:** This project is developed, distributed, and maintained as non-commercial Free and Open Source Software (FOSS). It is run entirely by volunteer independent contributors and community enthusiasts.
+
+### Why Phoca Cart is True Open Source:
+* **No Commercial Backing:** This repository is not operated by a commercial entity, nor is it part of a paid corporate product line.
+* **Volunteer Maintenance:** Bug fixes, feature implementations, and security patches are provided on a voluntary basis by the global Joomla community.
+* **Zero Monetization Here:** Access to this source code, its forks, and its releases via GitHub is completely free of charge and always will be.
+* **GNU GPL Licensed:** Distributed under the GNU General Public License. You have the total freedom to use, modify, and redistribute the code.
 
 
 

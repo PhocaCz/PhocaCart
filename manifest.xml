@@ -2,7 +2,17 @@
 <updates>
 	<update>
 		<name><![CDATA[ Phoca Cart ]]></name>
-		<description><![CDATA[ Phoca Cart is e-commerce extension - powerful shopping cart for Joomla! CMS. Phoca Cart is based on Joomla! framework and it is designed by modern responsive Bootstrap library. ]]></description>
+		<description><![CDATA[ ## Phoca Cart — Community-Driven E-Commerce for Joomla CMS
+
+Phoca Cart is a powerful, fully-featured e-commerce solution built natively for Joomla. This repository represents the purely open-source, community-maintained core of the project.
+
+**Important FOSS Declaration:** This project is developed, distributed, and maintained as non-commercial Free and Open Source Software (FOSS). It is run entirely by volunteer independent contributors and community enthusiasts.
+
+### Why Phoca Cart is True Open Source:
+* **No Commercial Backing:** This repository is not operated by a commercial entity, nor is it part of a paid corporate product line.
+* **Volunteer Maintenance:** Bug fixes, feature implementations, and security patches are provided on a voluntary basis by the global Joomla community.
+* **Zero Monetization Here:** Access to this source code, its forks, and its releases via GitHub is completely free of charge and always will be.
+* **GNU GPL Licensed:** Distributed under the GNU General Public License. You have the total freedom to use, modify, and redistribute the code. ]]></description>
 		<element>com_phocacart</element>
 		<type>component</type>
 		<version>3.5.8</version>
@@ -21,7 +31,17 @@
 	</update>
 	<update>
 		<name><![CDATA[ Phoca Cart ]]></name>
-		<description><![CDATA[ Phoca Cart is e-commerce extension - powerful shopping cart for Joomla! CMS. Phoca Cart is based on Joomla! framework and it is designed by modern responsive Bootstrap library. ]]></description>
+		<description><![CDATA[ ## Phoca Cart — Community-Driven E-Commerce for Joomla CMS
+
+Phoca Cart is a powerful, fully-featured e-commerce solution built natively for Joomla. This repository represents the purely open-source, community-maintained core of the project.
+
+**Important FOSS Declaration:** This project is developed, distributed, and maintained as non-commercial Free and Open Source Software (FOSS). It is run entirely by volunteer independent contributors and community enthusiasts.
+
+### Why Phoca Cart is True Open Source:
+* **No Commercial Backing:** This repository is not operated by a commercial entity, nor is it part of a paid corporate product line.
+* **Volunteer Maintenance:** Bug fixes, feature implementations, and security patches are provided on a voluntary basis by the global Joomla community.
+* **Zero Monetization Here:** Access to this source code, its forks, and its releases via GitHub is completely free of charge and always will be.
+* **GNU GPL Licensed:** Distributed under the GNU General Public License. You have the total freedom to use, modify, and redistribute the code. ]]></description>
 		<element>com_phocacart</element>
 		<type>component</type>
 		<version>4.0.12</version>
@@ -41,7 +61,17 @@
 	</update>
 	<update>
 		<name><![CDATA[ Phoca Cart ]]></name>
-		<description><![CDATA[ Phoca Cart is e-commerce extension - powerful shopping cart for Joomla! CMS. Phoca Cart is based on Joomla! framework and it is designed by modern responsive Bootstrap library. ]]></description>
+		<description><![CDATA[ ## Phoca Cart — Community-Driven E-Commerce for Joomla CMS
+
+Phoca Cart is a powerful, fully-featured e-commerce solution built natively for Joomla. This repository represents the purely open-source, community-maintained core of the project.
+
+**Important FOSS Declaration:** This project is developed, distributed, and maintained as non-commercial Free and Open Source Software (FOSS). It is run entirely by volunteer independent contributors and community enthusiasts.
+
+### Why Phoca Cart is True Open Source:
+* **No Commercial Backing:** This repository is not operated by a commercial entity, nor is it part of a paid corporate product line.
+* **Volunteer Maintenance:** Bug fixes, feature implementations, and security patches are provided on a voluntary basis by the global Joomla community.
+* **Zero Monetization Here:** Access to this source code, its forks, and its releases via GitHub is completely free of charge and always will be.
+* **GNU GPL Licensed:** Distributed under the GNU General Public License. You have the total freedom to use, modify, and redistribute the code. ]]></description>
 		<element>com_phocacart</element>
 		<type>component</type>
 		<version>5.2.3</version>
@@ -61,7 +91,17 @@
 	</update>
 	<update>
 		<name><![CDATA[ Phoca Cart ]]></name>
-		<description><![CDATA[ Phoca Cart is e-commerce extension - powerful shopping cart for Joomla! CMS. Phoca Cart is based on Joomla! framework and it is designed by modern responsive Bootstrap library. ]]></description>
+		<description><![CDATA[ ## Phoca Cart — Community-Driven E-Commerce for Joomla CMS
+
+Phoca Cart is a powerful, fully-featured e-commerce solution built natively for Joomla. This repository represents the purely open-source, community-maintained core of the project.
+
+**Important FOSS Declaration:** This project is developed, distributed, and maintained as non-commercial Free and Open Source Software (FOSS). It is run entirely by volunteer independent contributors and community enthusiasts.
+
+### Why Phoca Cart is True Open Source:
+* **No Commercial Backing:** This repository is not operated by a commercial entity, nor is it part of a paid corporate product line.
+* **Volunteer Maintenance:** Bug fixes, feature implementations, and security patches are provided on a voluntary basis by the global Joomla community.
+* **Zero Monetization Here:** Access to this source code, its forks, and its releases via GitHub is completely free of charge and always will be.
+* **GNU GPL Licensed:** Distributed under the GNU General Public License. You have the total freedom to use, modify, and redistribute the code. ]]></description>
 		<element>com_phocacart</element>
 		<type>component</type>
 		<version>6.1.2</version>
@@ -69,7 +109,7 @@
 		<downloads>
 			<downloadurl type="full" format="zip">https://github.com/PhocaCz/PhocaCart/releases/download/6.1.2/com_phocacart_v6.1.2.zip</downloadurl>
 		</downloads>
-		<sha512>16c5b11376078e01d24fbea6d3af0a9d4b282c4795179148164b6b597eede83a1ce7895bbbde419de17b3f9a4a8a5518240546878497486c06ed5e05ec37882d</sha512>
+		<sha512>cafb4baaaef1cfaef71b83a40f469a876fdcdaab2b6fa9202607221e2ea6bdeabfff270143c280b26f2956a536ec072cb2fe7e4c0ee19778de767e155c6d96a5</sha512>
 		<tags>
 			<tag>stable</tag>
 		</tags>
