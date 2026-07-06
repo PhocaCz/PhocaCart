@@ -71,10 +71,12 @@ class PhocaCartCpModelPhocaCartEditStatus extends AdminModel
             return false;
         }
 
+        $oldStatus = (int)($order->status_id ?? 0);
         $statusChanged = $data['status_id'] !== '';
         $commentChanged = !!trim($data['comment_history']);
         $trackingChanged = !!trim($data['tracking_number']);
         $trackingDateChanged = !!trim($data['tracking_date_shipped']);
+
 
         $trackingLinkChanged = !!trim($data['tracking_link_custom']);
         //$trackingDescChanged = !!trim($data['tracking_description_custom']);
@@ -85,6 +87,8 @@ class PhocaCartCpModelPhocaCartEditStatus extends AdminModel
             } else {
                 $status = PhocacartOrderStatus::getStatus($order->status_id);
             }
+
+            $status['old_status_id'] = $oldStatus;
 
             $orderData = [];
             if ($statusChanged || $commentChanged) {

@@ -388,7 +388,7 @@ if (!empty($subscriptionFieldset)) {
         echo '</div></div>';
     }
 } else {
-    echo '<div class="ph-pro-box">'.Text::_('COM_PHOCACART_ADVANCED_FEATURE_PRO'). '</div>';
+    echo '<div class="ph-pro-box">'.Text::_('COM_PHOCACART_SUBSCRIPTION_PLUGIN_REQUIRED'). '</div>';
 }
 echo $r->endTab();
 

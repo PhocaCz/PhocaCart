@@ -14,12 +14,12 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Phoca\PhocaCart\Event\Calculation\CalculationPrice;
 use Joomla\CMS\Plugin\PluginHelper;
-$isProEnabled = PluginHelper::isEnabled('system', 'phocacartsubscription');
+$isSubEnabled = PluginHelper::isEnabled('system', 'phocacartsubscription');
 
 HTMLHelper::_('behavior.formvalidator');
 HTMLHelper::_('behavior.keepalive');
 
-if ($isProEnabled) {
+if ($isSubEnabled) {
 
     ?><form action="<?php echo Route::_('index.php?option=com_phocacart&view=phocacartsubscription&layout=edit&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm" class="form-validate">
 
@@ -220,5 +220,5 @@ if ($isProEnabled) {
 </form>
 <?php
 } else {
-    echo '<div class="ph-pro-box">'.Text::_('COM_PHOCACART_ADVANCED_FEATURE_PRO'). '</div>';
+    echo '<div class="ph-pro-box">'.Text::_('COM_PHOCACART_SUBSCRIPTION_PLUGIN_REQUIRED'). '</div>';
 }
