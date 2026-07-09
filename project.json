@@ -7,7 +7,7 @@
 	"extensionName": "Phoca Cart",
 	"nameSpace": "Phoca\\Component\\PhocaCart",
 	"projectInitials" : "PC",				  
-	"description": "## Phoca Cart — Community-Driven E-Commerce for Joomla CMS\n\nPhoca Cart is a powerful, fully-featured e-commerce solution built natively for Joomla. This repository represents the purely open-source, community-maintained core of the project.\n\n**Important FOSS Declaration:** This project is developed, distributed, and maintained as non-commercial Free and Open Source Software (FOSS). It is run entirely by volunteer independent contributors and community enthusiasts.\n\n### Why Phoca Cart is True Open Source:\n* **No Commercial Backing:** This repository is not operated by a commercial entity, nor is it part of a paid corporate product line.\n* **Volunteer Maintenance:** Bug fixes, feature implementations, and security patches are provided on a voluntary basis by the global Joomla community.\n* **Zero Monetization Here:** Access to this source code, its forks, and its releases via GitHub is completely free of charge and always will be.\n* **GNU GPL Licensed:** Distributed under the GNU General Public License. You have the total freedom to use, modify, and redistribute the code.",
+	"description": "Phoca Cart is a powerful, fully-featured e-commerce solution built natively for Joomla.",
 	"projectUrl": "https://www.phoca.cz/phocacart",
 	"projectDocumentationUrl": "https://www.phoca.cz/documentation/category/116-phoca-cart-component",
 	"projectMainComponent": "Phoca Cart",

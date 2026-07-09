@@ -263,14 +263,6 @@ class com_phocacartInstallerScript
 
             $o .= '<div class="upBox">';
 
-            $o .=  '<div class="upItem upItemD">';
-            $o .=  '<div class="upItemText">'.Text::_('COM_PHOCACART_ADMIN_PROJECT_INFO1'). '</div>';
-            $o .=  '<form action="https://www.paypal.com/donate" method="post" target="_top">';
-            $o .=  '<input type="hidden" name="hosted_button_id" value="ZVPH25SQ2DDBY" />';
-            $o .=  '<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />';
-            $o .=  '<img alt="" border="0" src="https://www.paypal.com/en_CZ/i/scr/pixel.gif" width="1" height="1" />';
-            $o .=  '</form>';
-            $o .=  '</div>';
 
             $o .=  '<div class="upItem upItemJ">';
             $o .=  '<div class="upItemText">'.Text::_('COM_PHOCACART_ADMIN_PROJECT_INFO2'). '</div>';
@@ -285,10 +277,6 @@ class com_phocacartInstallerScript
             $o .=  '<a class="upItemLink" target="_blank" href="https://www.phoca.cz/forum">Phoca forum '.Text::_('COM_PHOCACART_WEBSITE').'</a>';
             $o .=  '</div>';
 
-            $o .=  '<div class="upItem upItemPh">';
-            $o .=  '<div class="upItemText">'.Text::_('COM_PHOCACART_ADMIN_PROJECT_INFO4'). '</div>';
-            $o .=  '<a class="upItemLink" target="_blank" href="https://www.phoca.cz">Phoca '.Text::_('COM_PHOCACART_WEBSITE').'</a>';
-            $o .=  '</div>';
 
             $o .=  '</div>';
 
