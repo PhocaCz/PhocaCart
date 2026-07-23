@@ -2857,3 +2857,12 @@ ul.ph-filter-module-category-tree {
         display: inline-block;
     }
 }
+
+.ph-qr-code {
+    margin: 1em;
+    display: inline-block;
+}
+.ph-qr-code svg {
+    min-width: 150px;
+    height: auto;
+}

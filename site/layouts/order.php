@@ -315,9 +315,28 @@ $o[] = '<tr><td colspan="5">';
 if ($store_title != '') {
 	$o[] = '<div><h1>'.$store_title.'</h1></div>';
 }
+/*if ($store_logo != '') {
+	$o[] = '<div><img class="ph-idnr-header-img" src="'.URI::root(false) . $store_logo.'" /></div>';
+}*/
 if ($store_logo != '') {
-	$o[] = '<div><img class="ph-idnr-header-img" src="'.Uri::root(false). ''.$store_logo.'" /></div>';
+	if ($d['format'] == 'pdf') {
+		$storeLogoAbs = JPATH_ROOT . '/' . ltrim($store_logo, '/');
+
+		if (file_exists($storeLogoAbs)) {
+			$logoSize = @getimagesize($storeLogoAbs);
+			$mime = $logoSize['mime'] ?? 'image/png';
+			$logoAttr = $logoSize ? ' ' . $logoSize[3] : '';
+
+			// Převod na Base64
+			$base64Logo = 'data:' . $mime . ';base64,' . base64_encode(file_get_contents($storeLogoAbs));
+
+			$o[] = '<div><img class="ph-idnr-header-img" src="' . $base64Logo . '"' . $logoAttr . ' /></div>';
+		}
+	} else {
+		$o[] = '<div><img class="ph-idnr-header-img" src="'.URI::root(false) . $store_logo.'" /></div>';
+	}
 }
+
 if ($store_info != '') {
 	$o[] = '<div>'.$store_info.'</div>';
 }
@@ -1063,9 +1082,29 @@ if ($d['format'] == 'pdf' && $d['type'] == 2 && ($d['qrcode'] != '' || $pdf_invo
 		$o[] = '{phocapdfqrcode|'.urlencode($d['qrcode']).'}';
 	}
 	$o[] = '</td><td>';
-	if ($pdf_invoice_signature_image != '') {
+	/*if ($pdf_invoice_signature_image != '') {
 		$o[] = '<img src="'.Uri::root().''.$pdf_invoice_signature_image.'" style="width:80"/>';
+	}*/
+    if ($pdf_invoice_signature_image != '') {
+		if ($d['format'] == 'pdf') {
+
+            $sigAbs = JPATH_ROOT . '/' . ltrim($pdf_invoice_signature_image, '/');
+
+            if (file_exists($sigAbs)) {
+                $sigSize = @getimagesize($sigAbs);
+                $sigMime = $sigSize['mime'] ?? 'image/png';
+                $sigAttr = $sigSize ? ' ' . $sigSize[3] : '';
+                $base64Sig = 'data:' . $sigMime . ';base64,' . base64_encode(file_get_contents($sigAbs));
+
+                $o[] = '<img src="' . $base64Sig . '"' . $sigAttr . ' />';
+            }
+
+
+        } else {
+            $o[] = '<img src="'.Uri::root().''.$pdf_invoice_signature_image.'" style="width:80"/>';
+        }
 	}
+
 	$o[] = '</td></tr>';
 	$o[] = '</table>';
 }
