@@ -38,22 +38,12 @@ $document->setTitle(Text::_($p['printed_catalog_document_title']));
 
 
 $s = '<style>';
-/*echo '.ph-catalog-doc {line-height:0.8;}
-.ph-catalog-header {line-height:0.5;}
-.ph-catalog-img {height: auto;width: auto;}
-.ph-catalog-col1 {width: 10%;padding-right:3px;}
-.ph-catalog-col2 {width: 90%;padding-left:3px;}
-.ph-catalog-price {text-align: right;font-weight: bold;}
-.ph-catalog-sep {border-bottom: 1px solid #f0f0f0;}
-.ph-catalog-sep-margin {font-size: 8px;}
-.ph-catalog-ean {line-height:0.1;}
-.ph-catalog-table, .ph-catalog-table-in {width: 100%;}
-.ph-catalog-title {font-weight:bold;font-size:160%;color:blue;line-height:0.8;}
-.ph-catalog-desc-long {font-size: 85%;line-height:1;}
-.ph-catalog-price {line-height: 1;font-size: 90%;text-align:right;}
-.ph-catalog-price-table {width: 200pt;}
-.ph-catalog-price-item {text-align:right; font-weight: bold;}
-.ph-catalog-price-item-txt {text-align:left;}';*/
+$s .= '.ph-catalog-category-header { font-size: 130%; font-weight: bold; border-bottom: 1px solid #000; margin-bottom: 8px; }';
+$s .= '.ph-catalog-item-table { width: 100%; }';
+$s .= '.ph-catalog-title { font-weight: bold; font-size: 110%; }';
+$s .= '.ph-catalog-desc-long, .ph-catalog-desc, .ph-catalog-features { font-size: 85%; }';
+$s .= '.ph-catalog-sku, .ph-catalog-ean { font-size: 80%; }';
+$s .= '.ph-catalog-sep { border-bottom: 1px solid #e0e0e0; margin-top: 5px; margin-bottom: 5px; }';
 $s .= trim(strip_tags($p['printed_catalog_css']));
 $s .= '</style>';
 
@@ -78,42 +68,64 @@ if ($header != '') {
     echo '</div>';
 }
 
-echo '<table class="ph-catalog-table" cellspacing="0" cellpadding="0" >';
-
-
 // ITEMS
+// Order items based on category
+uasort($d['items'], function($a, $b) {
+    $cmp = strcmp($a['category_title'], $b['category_title']);
+    if ($cmp === 0) {
+        // order by product title
+       // $cmp = strcmp($a['title'], $b['title']);
+    }
+    return $cmp;
+});
+
 $previousCatid = 0;
+
+
+
 foreach($d['items'] as $k => $v) {
+
 
 
     // Category Title
     if ($p['printed_catalog_display_category_title'] == 1 && $v['category_title'] != '' && $v['category_id'] != $previousCatid) {
-        echo '<tr nobr="true"><td style="width:100%">';
         echo '<div class="ph-catalog-category-header">'.$v['category_title']. '</div>';
         $previousCatid = $v['category_id'];
-        echo '</td></tr>';
     }
 
 
-    echo '<tr nobr="true"><td style="width:100%">';
-
-
-    echo '<table class="ph-catalog-table-in" cellspacing="0" cellpadding="1">';
-
-
+    echo '<table class="ph-catalog-item-table" width="100%" cellspacing="0" cellpadding="2" border="0" nobr="true">';
     echo '<tr>';
 
 	// 1) COLUMN - Image
-	echo '<td class="ph-catalog-col1">';
+	echo '<td width="20%" valign="top" align="center" class="ph-catalog-col1">';
 	if ($v['image'] != '') {
 
 	    $image 	= PhocacartImage::getThumbnailName($pathItem, $v['image'], 'small');
-	    echo '<img class="ph-catalog-img" src="'. Uri::root(true) . '/' . $image->rel.'" alt="'.PhocacartText::filterValue($v['title'], 'text').'" />';
+
+        if ($d['format'] == 'pdf') {
+
+            $sigAbs = JPATH_ROOT . '/' . ltrim($image->rel, '/');
+
+            if (file_exists($sigAbs)) {
+                $sigSize = @getimagesize($sigAbs);
+                $sigMime = $sigSize['mime'] ?? 'image/png';
+                $sigAttr = $sigSize ? ' ' . $sigSize[3] : '';
+                $base64Sig = 'data:' . $sigMime . ';base64,' . base64_encode(file_get_contents($sigAbs));
+                echo '<img class="ph-catalog-img" src="' . $base64Sig . '"' . $sigAttr . ' alt="'.PhocacartText::filterValue($v['title'], 'text').'" />';
+            } else {
+                echo '&nbsp;';
+            }
+        } else {
+            echo '<img class="ph-catalog-img" src="'. Uri::root(true) . '/' . $image->rel.'" alt="'.PhocacartText::filterValue($v['title'], 'text').'" />';
+        }
+    } else {
+        echo '&nbsp;';
     }
 	echo '</td>';
 
 	// 2) COLUMN - Text
-	echo '<td class="ph-catalog-col2">';
+	echo '<td width="55%" valign="top" class="ph-catalog-col2">';
 	echo '<div class="ph-catalog-title">'. $v['title'].'</div>';
 
 	if ($v['description_long'] != '') {
@@ -124,39 +136,27 @@ foreach($d['items'] as $k => $v) {
 	    echo '<div class="ph-catalog-features">'. $v['features'].'</div>';
     }
 
-
-	echo '<table><tr><td>';
-
 	// 2)1) SUBCLUMN SKU EAN
 	// SKU
 	if ($v['sku'] != '') {
-
-	     echo '<div class="ph-catalog-sku">'.$v['sku'].'</div>';
-
+	     echo '<div class="ph-catalog-sku">SKU: '.$v['sku'].'</div>';
     }
 
 	// EAN
 	if ($v['ean'] != '') {
-
-	    if ($d['format'] == 'pdf') {
-            echo '<div class="ph-catalog-ean">{phocapdfeancode|'.urlencode((int)$v['ean']).'}</div>';
-	    } else {
-	        echo '<div class="ph-catalog-ean">'.(int)$v['ean'].'</div>';
+        if ($d['format'] == 'pdf') {
+            echo '<div class="ph-catalog-ean">{phocapdfeancode|'.$v['ean'].'}</div>';
+        } else {
+             echo '<div class="ph-catalog-ean">EAN: '.$v['ean'].'</div>';
         }
-
     }
 
 	echo '</td>';
 
-	echo '<td>';
-
-    // 2)2) SUBCOLUMN PRICE
+	// 2)2) SUBCOLUMN PRICE
+	echo '<td width="25%" valign="top" align="right" class="ph-catalog-col3">';
     $priceItems	= $price->getPriceItems($v['price'], $v['taxid'], $v['taxrate'], $v['taxcalculationtype'], $v['taxtitle'], $v['unit_amount'], $v['unit_unit'], 1, 1, NULL, $v['taxhide']);
 
-
-	//echo '<div class="ph-catalog-price">'. $price->getPriceFormat($v['price']).'</div>';
-
-    echo '<div class="ph-catalog-price"><br />';
 
     if (!empty($priceItems)) {
 
@@ -171,38 +171,20 @@ foreach($d['items'] as $k => $v) {
         }
 
 
-        echo '<table class="ph-catalog-price-table">';
-
-
-        $displayPriceItems = PhocaCartPrice::displayPriceItems($priceItems, 'catalog');// Display Netto, Tax, Brutto?
+        $displayPriceItems = PhocaCartPrice::displayPriceItems($priceItems, 'catalog');
 
         if ($displayPriceItems['netto'] == 1) {
-        //if ($priceItems['netto'] != 0 && $priceItems['netto'] != $priceItems['brutto']) {
-            echo '<tr><td class="ph-catalog-price-item-txt">' . $priceItems['nettotxt'] . ' </td><td class="ph-catalog-price-item">' . $priceItems['nettoformat'] . '</td></tr>';
-        } else {
-            echo '<tr><td>&nbsp;</td><td>&nbsp;</td></tr>';
+            echo '<span class="ph-catalog-price-item-txt">' . $priceItems['nettotxt'] . '</span> <span class="ph-catalog-price-item">' . $priceItems['nettoformat'] . '</span><br />';
         }
 
         if ($displayPriceItems['tax'] == 1) {
-        //if ($priceItems['tax'] != 0 && $priceItems['netto'] != $priceItems['brutto']) {
-            echo '<tr><td class="ph-catalog-price-item-txt">' . $priceItems['taxtxt'] . ' </td><td class="ph-catalog-price-item">' . $priceItems['taxformat'] . '</td></tr>';
-        } else {
-            echo '<tr><td>&nbsp;</td><td>&nbsp;</td></tr>';
+            echo '<span class="ph-catalog-price-item-txt">' . $priceItems['taxtxt'] . '</span> <span class="ph-catalog-price-item">' . $priceItems['taxformat'] . '</span><br />';
         }
 
         if ($displayPriceItems['brutto'] == 1) {
-        //if ($priceItems['brutto'] != 0) {
-            echo '<tr><td class="ph-catalog-price-item-txt">' . $priceItems['bruttotxt'] . ' </td><td class="ph-catalog-price-item">' . $priceItems['bruttoformat'] . '</td></tr>';
-        } else {
-            echo '<tr><td>&nbsp;</td><td>&nbsp;</td></tr>';
+            echo '<b><span class="ph-catalog-price-item-txt">' . $priceItems['bruttotxt'] . '</span> <span class="ph-catalog-price-item">' . $priceItems['bruttoformat'] . '</span></b>';
         }
-
-        echo '</table>';
     }
-
-    echo '</div>';
-
-    echo '</td></tr></table>';
 
 
 	echo '</td>';
@@ -212,21 +194,13 @@ foreach($d['items'] as $k => $v) {
 
 
 	echo '<div class="ph-catalog-sep"></div>';
-	echo '<div class="ph-catalog-sep-margin">&nbsp;</div>';
-	echo '</td></tr>';
 
 }
 
 
-echo '</table>';
-
 echo '</div>';// end doc
-
-echo '<p>&nbsp;</p>';
 
 
 if ($d['format'] == 'raw') {
     echo '</body></html>';
 }
-
-
