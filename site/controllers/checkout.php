@@ -930,6 +930,23 @@ class PhocaCartControllerCheckout extends FormController
     public function order() {
 
         Session::checkToken() or jexit('Invalid Token');
+        $app_ = Factory::getApplication();
+        $msgSuffix_ = '<span id="ph-msg-ns" class="ph-hidden"></span>';
+        // Defense in depth: also block final order placement for a guest with
+        // a subscription product in the cart, in case guest status was set via
+        // 'guest_checkout_auto_enable' rather than the explicit setguest() task.
+        if (PhocacartUserGuestuser::getGuestUser()) {
+            $cart_ = new PhocacartCart();
+            $cart_->setFullItems();
+            if ($cart_->hasSubscriptionProduct()) {
+                $app_->enqueueMessage(
+                    Text::_('COM_PHOCACART_ERROR_GUEST_CHECKOUT_NOT_ALLOWED_SUBSCRIPTION') . $msgSuffix_,
+                    'error'
+                );
+                $app_->redirect(base64_decode($this->input->get('return', '', 'string')));
+                return false;
+            }
+        }
         $pC                                = PhocacartUtils::getComponentParameters();
         $display_checkout_privacy_checkbox = $pC->get('display_checkout_privacy_checkbox', 0);
         $display_checkout_toc_checkbox     = $pC->get('display_checkout_toc_checkbox', 2);
@@ -1096,6 +1113,20 @@ class PhocaCartControllerCheckout extends FormController
         $item['return'] = $this->input->get('return', '', 'string');
         $msgSuffix      = '<span id="ph-msg-ns" class="ph-hidden"></span>';
 
+           // Block enabling guest checkout if the cart contains a subscription
+        // product - a subscription must be tied to a registered user account.
+        if ((int)$item['id'] == 1) {
+            $cart = new PhocacartCart();
+            $cart->setFullItems();
+            if ($cart->hasSubscriptionProduct()) {
+                $app->enqueueMessage(
+                    Text::_('COM_PHOCACART_ERROR_GUEST_CHECKOUT_NOT_ALLOWED_SUBSCRIPTION') . $msgSuffix,
+                    'error'
+                );
+                $app->redirect(base64_decode($item['return']));
+                return false;
+            }
+        }
 
         //$guest = new PhocacartUserGuestuser();
         //$set = $guest->setGuestUser((int)$item['id']);
