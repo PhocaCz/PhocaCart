@@ -105,7 +105,7 @@ If you need additional information beyond this GitHub repository, further docume
 ### Version (Joomla! 5.x - no longer supported)
 5.2.3
 ### Version (Joomla! 6.x)
-6.1.5
+6.1.6
 
 ### License
 

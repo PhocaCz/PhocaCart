@@ -62,19 +62,19 @@
 		<description><![CDATA[ Phoca Cart is e-commerce extension - powerful shopping cart for Joomla! CMS. Phoca Cart is based on Joomla! framework and it is designed by modern responsive Bootstrap library. ]]></description>
 		<element>com_phocacart</element>
 		<type>component</type>
-		<version>6.1.5</version>
-		<infourl title="Phoca Cart 6.1.5">http://www.phoca.cz/version/index.php?phocacart=6.1.5</infourl>
+		<version>6.1.6</version>
+		<infourl title="Phoca Cart 6.1.6">http://www.phoca.cz/version/index.php?phocacart=6.1.6</infourl>
 		<downloads>
-			<downloadurl type="full" format="zip">https://github.com/PhocaCz/PhocaCart/releases/download/6.1.5/com_phocacart_v6.1.5.zip</downloadurl>
+			<downloadurl type="full" format="zip">https://github.com/PhocaCz/PhocaCart/releases/download/6.1.6/com_phocacart_v6.1.6.zip</downloadurl>
 		</downloads>
-		<sha512>ac345ce1f83a99f3e0100e70aa7315a369d516984e675423efdad33a8a5e3fda65988265ffb34feb954330b680a3b125d3c6f8f90232c308d2fa49332dca1889</sha512>
+		<sha512>b905d361dbf9082f8f58c7a044cdef92d1a1aeb90714d766e5768de28feb68bc28a8526100a041670399ea8240960939c699c68d3e600ea16a4e6741411ebb04</sha512>
 		<tags>
 			<tag>stable</tag>
 		</tags>
 		<maintainer><![CDATA[ Phoca.cz ]]></maintainer>
 		<maintainerurl>https://www.phoca.cz/</maintainerurl>
 		<section>Updates</section>
-		<targetplatform name="joomla" version="(5|6)\.*"/>
+		<targetplatform name="joomla" version="6\.*"/>
 		<client>administrator</client>
 	</update>
 </updates>

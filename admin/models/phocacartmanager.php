@@ -159,7 +159,7 @@ class PhocaCartCpModelPhocaCartManager extends AdminModel
 		//file - abc.img, file_no - folder/abc.img
 		if ($file_list !== false) {
 			foreach ($file_list as $file) {
-				if (is_file($orig_path.'/'.$file) && substr($file, 0, 1) != '.' && strtolower($file) !== 'index.html') {
+				if (is_file($orig_path.'/'.$file) && substr($file, 0, 1) != '.' && strtolower($file) !== 'index.html' && strtolower($file) !== 'web.config') {
 						$tmp 							= new CMSObject();
 						$tmp->name 						= basename($file);
 						$tmp->path_with_name 			= str_replace('\\', '/', Path::clean($orig_path . '/' .  $file));

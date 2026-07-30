@@ -25,7 +25,7 @@ class JFormFieldPhocacartFile extends FormField
 
         $app = Factory::getApplication();
 		$wa  = $app->getDocument()->getWebAssetManager();
-		$wa->registerAndUseStyle('com_phocacart.tower-file-input', $this->t['bootstrap'] . 'media/com_phocacart/js/tower/tower-file-input.min.js', array('version' => 'auto'));
+		$wa->registerAndUseStyle('com_phocacart.tower-file-input',  'media/com_phocacart/js/tower/tower-file-input.min.js', array('version' => 'auto'));
         $wa->registerAndUseScript('com_phocacart.tower-file-input.js', 'media/com_phocacart/js/tower/tower-file-input.min.js', ['version' => 'auto']);
 
 		//$document->addScript(Uri::root(true) . '/media/com_phocacart/js/tower/tower-file-input.min.js');

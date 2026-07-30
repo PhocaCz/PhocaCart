@@ -208,8 +208,7 @@ class PhocacartFile
 		$path = PhocacartPath::getPath('productfile');
 		if (!Folder::exists($path['orig_abs_ds'] . $folder )) {
 			if (Folder::create( $path['orig_abs_ds'] . $folder, 0755 )) {
-				$data = "<html>\n<body bgcolor=\"#FFFFFF\">\n</body>\n</html>";
-				File::write($path['orig_abs_ds'] . $folder.'/index.html', $data);
+				self::hardenFolder($path['orig_abs_ds'] . $folder, 'download');
 				return true;
 			} else {
 				return false;
@@ -222,13 +221,37 @@ class PhocacartFile
 		$path = PhocacartPath::getPath('submititem');
 		if (!Folder::exists($path['orig_abs_ds'] . $folder )) {
 			if (Folder::create( $path['orig_abs_ds'] . $folder, 0755 )) {
-				$data = "<html>\n<body bgcolor=\"#FFFFFF\">\n</body>\n</html>";
-				File::write($path['orig_abs_ds'] . $folder.'/index.html', $data);
+				self::hardenFolder($path['orig_abs_ds'] . $folder, 'upload');
 				return true;
 			} else {
 				return false;
 			}
 		}
+		return true;
+	}
+
+	public static function hardenFolder($path, $type = 'upload') {
+		$data = "<html>\n<body bgcolor=\"#FFFFFF\">\n</body>\n</html>";
+		File::write($path . '/index.html', $data);
+
+		if ($type === 'download') {
+			// Prevent any access to download folders directly
+			$htaccess = "<IfModule mod_authz_core.c>\nRequire all denied\n</IfModule>";
+			$webconfig = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<configuration>\n  <system.webServer>\n    <security>\n      <requestFiltering>\n        <hiddenSegments>\n          <add segment=\".\" />\n        </hiddenSegments>\n      </requestFiltering>\n    </security>\n  </system.webServer>\n</configuration>";
+		} else {
+			// Prevent script execution in upload (image) directories
+			$htaccess = "<FilesMatch \"\\.(?:php[0-9]?|phtml|shtml|cgi|pl|py|jsp|asp|aspx|sh)$\">\n";
+			$htaccess .= "  <IfModule mod_authz_core.c>\n    Require all denied\n  </IfModule>\n";
+			$htaccess .= "</FilesMatch>\n";
+			$htaccess .= "RemoveHandler .php .phtml .php3 .php4 .php5 .shtml\n";
+			$htaccess .= "RemoveType .php .phtml .php3 .php4 .php5 .shtml\n";
+			
+			$webconfig = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<configuration>\n  <system.webServer>\n    <security>\n      <requestFiltering>\n        <fileExtensions>\n          <add fileExtension=\".php\" allowed=\"false\" />\n          <add fileExtension=\".shtml\" allowed=\"false\" />\n        </fileExtensions>\n      </requestFiltering>\n    </security>\n  </system.webServer>\n</configuration>";
+		}
+
+		File::write($path . '/.htaccess', $htaccess);
+		File::write($path . '/web.config', $webconfig);
+		
 		return true;
 	}
 
