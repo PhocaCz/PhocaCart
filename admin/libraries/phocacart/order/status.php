@@ -25,6 +25,7 @@ use Phoca\PhocaCart\Exception\PhocaCartException;
 use Phoca\PhocaCart\Extension\Pdf;
 use Phoca\PhocaCart\Mail\MailHelper;
 use Phoca\PhocaCart\Mail\MailTemplate;
+use Phoca\PhocaCart\Event;
 
 class PhocacartOrderStatus
 {
@@ -840,6 +841,12 @@ class PhocacartOrderStatus
 	public static function changeStatusInOrderTable($orderId, $statusId)
     {
         $db = Container::getDbo();
+
+        // Get old status for idempotency check and event payload
+        $queryOld = 'SELECT status_id FROM #__phocacart_orders WHERE id = ' . (int)$orderId;
+        $db->setQuery($queryOld);
+        $oldStatusId = (int)$db->loadResult();
+
 		$query = ' UPDATE #__phocacart_orders SET status_id = '.(int)$statusId
             .' WHERE id = '.(int)$orderId;
 		$db->setQuery($query);
@@ -847,6 +854,19 @@ class PhocacartOrderStatus
 
 		// Set invoice data in case status can set invoice ID
 		PhocacartOrder::storeOrderReceiptInvoiceId((int)$orderId, false, (int)$statusId, array('I'));
+
+        if ($oldStatusId !== (int)$statusId) {
+            $orderView = new \PhocacartOrderView();
+            $order = $orderView->getItemCommon((int)$orderId);
+            if ($order) {
+                Dispatcher::dispatch(new Event\AbstractEvent('system', 'onPhocaCartOrderStatusChange', [
+                    'orderId'     => (int)$orderId,
+                    'oldStatusId' => $oldStatusId,
+                    'newStatusId' => (int)$statusId,
+                    'order'       => $order
+                ]));
+            }
+        }
 
 		return true;
 	}

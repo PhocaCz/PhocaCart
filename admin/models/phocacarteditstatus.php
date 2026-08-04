@@ -171,6 +171,19 @@ class PhocaCartCpModelPhocaCartEditStatus extends AdminModel
             $event = new \Joomla\Event\Event('onPhocaCartAfterOrderStatusUpdate', $arguments);
             $dispatcher->dispatch('onPhocaCartAfterOrderStatusUpdate', $event);
 
+            if ($oldStatus !== (int)$status['id']) {
+                $orderView = new \PhocacartOrderView();
+                $orderCommon = $orderView->getItemCommon((int)$order->id);
+                if ($orderCommon) {
+                    Dispatcher::dispatch(new Event\AbstractEvent('system', 'onPhocaCartOrderStatusChange', [
+                        'orderId'     => (int)$order->id,
+                        'oldStatusId' => $oldStatus,
+                        'newStatusId' => (int)$status['id'],
+                        'order'       => $orderCommon
+                    ]));
+                }
+            }
+
 
             //Dispatcher::dispatchAfterSave($this->event_after_save, $this->context, $order, $isNew, $data);
         }

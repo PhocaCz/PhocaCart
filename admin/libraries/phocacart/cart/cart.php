@@ -939,6 +939,33 @@ class PhocacartCart
         return $this->fullitems;
     }
 
+    /**
+     * Check whether the cart currently contains at least one subscription
+     * product (product type = 6).
+     *
+     * Used to prevent guest checkout for subscription purchases, since a
+     * subscription must be tied to a registered user account.
+     *
+     * @return bool
+     *
+     * @since 6.2.0
+     */
+    public function hasSubscriptionProduct(): bool {
+
+        if (empty($this->fullitems[0])) {
+            return false;
+        }
+
+        foreach ($this->fullitems[0] as $item) {
+            // Items are stored as plain arrays (idkey => array), not objects
+            if (isset($item['type']) && (int) $item['type'] === 6) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function getCoupon() {
 
         $coupon          = array();

@@ -624,18 +624,23 @@ class PhocacartFileUpload
         $imginfo = null;
         $images = explode(',', $paramsL['image_extensions']);
 
-        if (in_array($format, $images)) { // if its an image run it through getimagesize
+        if (in_array($format, $images)) { // if its an image run it through decode and re-encode
 
             if ($group['i'] == 1) {
                 if ($chunkEnabled != 1) {
-                    if (($imginfo = getimagesize($file['tmp_name'])) === FALSE) {
+                    $decoded = self::decodeAndValidateImage($file['tmp_name']);
+                    if (!$decoded) {
                         $err = 'COM_PHOCACART_WARNINVALIDIMG';
-
-                        if (isset($imginfo[0]) && $imginfo[0] != '') {
-                            $err = $imginfo[0];
-                        }
                         return false;
                     }
+
+                    // Re-encode and save over the temp file to strip any polyglot payloads
+                    if (!self::encodeAndSaveImage($decoded['image'], $file['tmp_name'], $decoded['mime'])) {
+                        imagedestroy($decoded['image']);
+                        $err = 'COM_PHOCACART_WARNINVALIDIMG';
+                        return false;
+                    }
+                    imagedestroy($decoded['image']);
                 }
             }
         } else if (!in_array($format, $images)) { // if its not an image...and we're not ignoring it
@@ -741,7 +746,7 @@ class PhocacartFileUpload
 
 
                     $errUploadMsg = '';
-                    if (!PhocacartFileUpload::canUpload( $v, $errUploadMsg, 'submitimage', 1 )) {
+                    if (!PhocacartFileUpload::canUpload( $v, $errUploadMsg, 'submititem', 1 )) {
 
                         if ($errUploadMsg == 'COM_PHOCACART_WARNFILETOOLARGE') {
                             $errUploadMsg 	= Text::_($errUploadMsg) . ' ('.PhocacartFile::getFileSizeReadable($v['size']).')';
@@ -819,6 +824,73 @@ class PhocacartFileUpload
             }
         }
         return true;
+    }
+
+    /**
+     * Strictly validate and decode an image to prevent polyglots
+     */
+    public static function decodeAndValidateImage($path) {
+        if (!is_file($path)) {
+            return false;
+        }
+
+        if (function_exists('finfo_open')) {
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            $mimeType = finfo_file($finfo, $path);
+            finfo_close($finfo);
+        } else {
+            $mimeType = mime_content_type($path);
+        }
+
+        $handlers = [
+            'image/jpeg' => 'imagecreatefromjpeg',
+            'image/png'  => 'imagecreatefrompng',
+            'image/gif'  => 'imagecreatefromgif',
+            'image/webp' => 'imagecreatefromwebp',
+            'image/avif' => 'imagecreatefromavif',
+        ];
+
+        if (!isset($handlers[$mimeType]) || !function_exists($handlers[$mimeType])) {
+            return false;
+        }
+
+        $handler = $handlers[$mimeType];
+        $image = @$handler($path);
+
+        if (!$image) {
+            return false;
+        }
+
+        $width  = imagesx($image);
+        $height = imagesy($image);
+
+        if ($width < 1 || $height < 1 || $width > 20000 || $height > 20000) {
+            imagedestroy($image);
+            return false;
+        }
+
+        return ['mime' => $mimeType, 'image' => $image];
+    }
+
+    /**
+     * Re-encode and save a decoded GD image resource to disk in its own format.
+     */
+    public static function encodeAndSaveImage($image, $path, $mimeType) {
+        $quality = 90;
+        
+        if ($mimeType === 'image/png' || $mimeType === 'image/webp') {
+            imagealphablending($image, false);
+            imagesavealpha($image, true);
+        }
+
+        switch ($mimeType) {
+            case 'image/jpeg': return imagejpeg($image, $path, $quality);
+            case 'image/png': return imagepng($image, $path, 9);
+            case 'image/gif': return imagegif($image, $path);
+            case 'image/webp': return imagewebp($image, $path, $quality);
+            case 'image/avif': return function_exists('imageavif') ? imageavif($image, $path, $quality) : false;
+        }
+        return false;
     }
 }
 ?>

@@ -1365,6 +1365,18 @@ class PhocacartOrder
             }
 
             Dispatcher::dispatch(new Event\AbstractEvent('system', 'onPhocaCartAfterOrderSave', ['row' => $row, 'data' => $data]));
+            
+            $orderView = new \PhocacartOrderView();
+            $orderCommon = $orderView->getItemCommon((int)$row->id);
+            if ($orderCommon) {
+                Dispatcher::dispatch(new Event\AbstractEvent('system', 'onPhocaCartOrderStatusChange', [
+                    'orderId'     => (int)$row->id,
+                    'oldStatusId' => 0,
+                    'newStatusId' => (int)$row->status_id,
+                    'order'       => $orderCommon
+                ]));
+            }
+
 
             return $row->id;
 

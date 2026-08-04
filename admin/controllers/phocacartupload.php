@@ -89,8 +89,8 @@ class PhocaCartCpControllerPhocaCartUpload extends PhocaCartCpController
 					break;
 				}
 				if (isset($folder)) {
-					$data = "<html>\n<body bgcolor=\"#FFFFFF\">\n</body>\n</html>";
-					File::write($folder."/index.html", $data);
+					$hardenType = (isset($group['i']) && $group['i'] == 1) ? 'upload' : 'download';
+					PhocacartFile::hardenFolder($folder, $hardenType);
 				} else {
                     $app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_FOLDER_CREATING'), 'error');
 					$app->redirect($link);
