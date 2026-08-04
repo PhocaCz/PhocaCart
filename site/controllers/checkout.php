@@ -930,13 +930,15 @@ class PhocaCartControllerCheckout extends FormController
     public function order() {
 
         Session::checkToken() or jexit('Invalid Token');
+
+        $app = Factory::getApplication();
         $pC                                = PhocacartUtils::getComponentParameters();
         $display_checkout_privacy_checkbox = $pC->get('display_checkout_privacy_checkbox', 0);
         $display_checkout_toc_checkbox     = $pC->get('display_checkout_toc_checkbox', 2);
         $display_checkout_digital_waiver_checkbox     = $pC->get('display_checkout_digital_waiver_checkbox', 0);
         $display_checkout_digital_waiver_condition  = $pC->get('display_checkout_digital_waiver_condition', 2);
 
-        $app                   = Factory::getApplication();
+
         $item                  = array();
         $item['return']        = $this->input->get('return', '', 'string');
         $item['phcheckouttac'] = $this->input->get('phcheckouttac', false, 'string');
@@ -950,6 +952,23 @@ class PhocaCartControllerCheckout extends FormController
         $item['phcheckouttac'] = $item['phcheckouttac'] ? 1 : 0;
         $item['newsletter']    = $item['newsletter'] ? 1 : 0;
         $item['phcheckoutdw']       = $item['phcheckoutdw'] ? 1 : 0;
+
+        // Defense in depth: also block final order placement for a guest with
+        // a subscription product in the cart, in case guest status was set via
+        // 'guest_checkout_auto_enable' rather than the explicit setguest() task.
+        if (PhocacartUserGuestuser::getGuestUser()) {
+            $cartCheck = new PhocacartCart();
+            $cartCheck->setFullItems();
+            if ($cartCheck->hasSubscriptionProduct()) {
+                $app->enqueueMessage(
+                    Text::_('COM_PHOCACART_ERROR_GUEST_CHECKOUT_NOT_ALLOWED_SUBSCRIPTION') . $msgSuffix,
+                    'error'
+                );
+                $app->redirect(base64_decode($item['return']));
+                return false;
+            }
+            unset($cartCheck);
+        }
 
 
         if ($display_checkout_privacy_checkbox == 2 && $item['privacy'] == 0) {
@@ -1097,6 +1116,22 @@ class PhocaCartControllerCheckout extends FormController
         $msgSuffix      = '<span id="ph-msg-ns" class="ph-hidden"></span>';
 
 
+        // Block enabling guest checkout if the cart contains a subscription
+        // product - a subscription must be tied to a registered user account.
+        if ((int)$item['id'] == 1) {
+            $cart = new PhocacartCart();
+            $cart->setFullItems();
+            if ($cart->hasSubscriptionProduct()) {
+                $app->enqueueMessage(
+                    Text::_('COM_PHOCACART_ERROR_GUEST_CHECKOUT_NOT_ALLOWED_SUBSCRIPTION') . $msgSuffix,
+                    'error'
+                );
+                $app->redirect(base64_decode($item['return']));
+                return false;
+            }
+        }
+
+
         //$guest = new PhocacartUserGuestuser();
         //$set = $guest->setGuestUser((int)$item['id']);
         $set = PhocacartUserGuestuser::setGuestUser((int)$item['id']);
@@ -1115,6 +1150,7 @@ class PhocaCartControllerCheckout extends FormController
         }
         //$app->redirect(Route::_('index.php?option=com_phocacart&view=checkout'));
         $app->redirect(base64_decode($item['return']));
+
     }
     /*
     public function compareadd() {
