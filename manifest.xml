@@ -44,12 +44,11 @@
 		<description><![CDATA[ Phoca Cart is a powerful, fully-featured e-commerce solution built natively for Joomla. ]]></description>
 		<element>com_phocacart</element>
 		<type>component</type>
-		<version>5.2.3</version>
-		<infourl title="Phoca Cart 5.2.3">http://www.phoca.cz/version/index.php?phocacart=5.2.3</infourl>
+		<version>5.2.4</version>
+		<infourl title="Phoca Cart 5.2.4">http://www.phoca.cz/version/index.php?phocacart=5.2.4</infourl>
 		<downloads>
-			<downloadurl type="full" format="zip">https://github.com/PhocaCz/PhocaCart/releases/download/5.2.3/com_phocacart_v5.2.3.zip</downloadurl>
+			<downloadurl type="full" format="zip">https://github.com/PhocaCz/PhocaCart/releases/download/5.2.4/com_phocacart_v5.2.4.zip</downloadurl>
 		</downloads>
-		<sha512>500dac23a93c6d63a26adb3e0811d43a016012961e820d01885e505e9daf4a64e9b734120225caa1c0cddc63591c1a23db94c13c3389bf3691d76708569a7964</sha512>
 		<tags>
 			<tag>stable</tag>
 		</tags>
@@ -64,12 +63,12 @@
 		<description><![CDATA[ Phoca Cart is a powerful, fully-featured e-commerce solution built natively for Joomla. ]]></description>
 		<element>com_phocacart</element>
 		<type>component</type>
-		<version>6.1.6</version>
-		<infourl title="Phoca Cart 6.1.6">http://www.phoca.cz/version/index.php?phocacart=6.1.6</infourl>
+		<version>6.1.7</version>
+		<infourl title="Phoca Cart 6.1.7">http://www.phoca.cz/version/index.php?phocacart=6.1.7</infourl>
 		<downloads>
-			<downloadurl type="full" format="zip">https://github.com/PhocaCz/PhocaCart/releases/download/6.1.6/com_phocacart_v6.1.6.zip</downloadurl>
+			<downloadurl type="full" format="zip">https://github.com/PhocaCz/PhocaCart/releases/download/6.1.7/com_phocacart_v6.1.7.zip</downloadurl>
 		</downloads>
-		<sha512>b37689202c925a82a6aeb6ad8642346030676605f1b56031b95663db54c1da90512d81008d6952321244cadb9e32f3a9eef9c33441bcb15ee74bd3fd421c9688</sha512>
+		<sha512>fd8b16059dbfa9a3b457834a0a0bd95bf8b7bb10021ae82b470559d9d7cbc2ed30fc948df4aa75a494a4c5730168c3534cfcacbc3822b126b78f63412810c8d7</sha512>
 		<tags>
 			<tag>stable</tag>
 		</tags>
