@@ -24,12 +24,11 @@
 		<description><![CDATA[ Phoca Cart is a powerful, fully-featured e-commerce solution built natively for Joomla. ]]></description>
 		<element>com_phocacart</element>
 		<type>component</type>
-		<version>4.0.12</version>
+		<version>4.0.13</version>
 		<infourl title="Phoca Cart 4.0.13">http://www.phoca.cz/version/index.php?phocacart=4.0.13</infourl>
 		<downloads>
 			<downloadurl type="full" format="zip">https://github.com/PhocaCz/PhocaCart/releases/download/4.0.13/com_phocacart_v4.0.13.zip</downloadurl>
 		</downloads>
-		<sha512>ea2963f7d1c6ed24e12319b80fc4a0c639754b8ac31ec8fadfa574551b0614e732736dd8eb7070d4ecc3e568c23ba2a853422e837dc2e3ac583eaac246ec6406</sha512>
 		<tags>
 			<tag>stable</tag>
 		</tags>
@@ -49,7 +48,6 @@
 		<downloads>
 			<downloadurl type="full" format="zip">https://github.com/PhocaCz/PhocaCart/releases/download/5.2.4/com_phocacart_v5.2.4.zip</downloadurl>
 		</downloads>
-		<sha512>329376b7c96975790cce7d3138ebf30ce1f18c11fa4e2d28f19b5c07e68d54648b32d28d096bab6cc0bb6f2833d0e2d1417eb1ba4e6df98dc5c542d326be6a47</sha512>
 		<tags>
 			<tag>stable</tag>
 		</tags>
@@ -69,7 +67,7 @@
 		<downloads>
 			<downloadurl type="full" format="zip">https://github.com/PhocaCz/PhocaCart/releases/download/6.1.7/com_phocacart_v6.1.7.zip</downloadurl>
 		</downloads>
-		<sha512>fd8b16059dbfa9a3b457834a0a0bd95bf8b7bb10021ae82b470559d9d7cbc2ed30fc948df4aa75a494a4c5730168c3534cfcacbc3822b126b78f63412810c8d7</sha512>
+		<sha512>9f6563fc78bbfa35345b2f07afcfc3d7b1738667506e5038a559ce7d662316e1c7e8a277c52ffcbe7e810f38fdde1d20cd0f78c192848f868485ad3556dfe0b7</sha512>
 		<tags>
 			<tag>stable</tag>
 		</tags>

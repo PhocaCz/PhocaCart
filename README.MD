@@ -101,7 +101,7 @@ If you need additional information beyond this GitHub repository, further docume
 ### Version (Joomla! 3.x - no longer supported)
 3.5.8
 ### Version (Joomla! 4.x - no longer supported)
-4.0.12
+4.0.13
 ### Version (Joomla! 5.x - no longer supported)
 5.2.4
 ### Version (Joomla! 6.x)
