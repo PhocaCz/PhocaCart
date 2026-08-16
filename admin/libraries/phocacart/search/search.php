@@ -318,14 +318,24 @@ class PhocacartSearch
             foreach ($value as $k => $v) {
                 $a = explode(',', $v);
                 $a = array_unique($a);
+
+                $aQuoted = [];
+                foreach ($a as $vQ) {
+                    $aQuoted[] = $db->quote($vQ);
+                }
+
                 if ($k && $v) {
                     if ($searchArea == 'a') {
+
+
                         // Attributes
                         // QUERY METHOD ANY (product to display must include one of selected attributes)
                         if (I18nHelper::useI18n()) {
-                            $inA[] = '(coalesce(i18n_at2.alias, at2.alias) = ' . $db->quote($k) . ' AND coalesce(i18n_v2.alias, v2.alias) IN (' . '\'' . implode('\',\'', $a) . '\'' . '))';
+                            ///$inA[] = '(coalesce(i18n_at2.alias, at2.alias) = ' . $db->quote($k) . ' AND coalesce(i18n_v2.alias, v2.alias) IN (' . '\'' . implode('\',\'', $a) . '\'' . '))';
+                            $inA[] = '(coalesce(i18n_at2.alias, at2.alias) = ' . $db->quote($k) . ' AND coalesce(i18n_v2.alias, v2.alias) IN (' . implode(',', $aQuoted) . '))';
                         } else {
-                            $inA[] = '(at2.alias = ' . $db->quote($k) . ' AND v2.alias IN (' . '\'' . implode('\',\'', $a) . '\'' . '))';
+                            ///$inA[] = '(at2.alias = ' . $db->quote($k) . ' AND v2.alias IN (' . '\'' . implode('\',\'', $a) . '\'' . '))';
+                            $inA[] = '(at2.alias = ' . $db->quote($k) . ' AND v2.alias IN (' . implode(',', $aQuoted) . '))';
                         }
 
 
@@ -334,9 +344,11 @@ class PhocacartSearch
                         foreach ($a as $v2) {
 
                             if (I18nHelper::useI18n()) {
-                                $inAS[$iA] = 'coalesce(i18n_at2.alias, at2.alias) = ' . $db->quote($k) . ' AND coalesce(i18n_v2x'.$iA.'.alias, v2x'.$iA.'.alias) = "' . $v2 . '"';
+                                ///$inAS[$iA] = 'coalesce(i18n_at2.alias, at2.alias) = ' . $db->quote($k) . ' AND coalesce(i18n_v2x'.$iA.'.alias, v2x'.$iA.'.alias) = "' . $v2 . '"';
+                                $inAS[$iA] = 'coalesce(i18n_at2.alias, at2.alias) = ' . $db->quote($k) . ' AND coalesce(i18n_v2x'.$iA.'.alias, v2x'.$iA.'.alias) = ' . $db->quote($v2);
                             } else {
-                                $inAS[$iA] = 'at2.alias = ' . $db->quote($k) . ' AND v2x' . $iA . '.alias = "' . $v2 . '"';
+                                ///$inAS[$iA] = 'at2.alias = ' . $db->quote($k) . ' AND v2x' . $iA . '.alias = "' . $v2 . '"';
+                                $inAS[$iA] = 'at2.alias = ' . $db->quote($k) . ' AND v2x' . $iA . '.alias = ' . $db->quote($v2);
                             }
 
                             $i++;
@@ -347,9 +359,11 @@ class PhocacartSearch
                         // Specifications
                         // QUERY METHOD ANY (product to display must include one of selected specifications)
                         if (I18nHelper::useI18n()) {
-                            $inA[] = '(coalesce(i18n_s2.alias, s2.alias) = ' . $db->quote($k) . ' AND coalesce(i18n_s2.alias_value, s2.alias_value) IN (' . '\'' . implode('\',\'', $a) . '\'' . '))';
+                            ///$inA[] = '(coalesce(i18n_s2.alias, s2.alias) = ' . $db->quote($k) . ' AND coalesce(i18n_s2.alias_value, s2.alias_value) IN (' . '\'' . implode('\',\'', $a) . '\'' . '))';
+                            $inA[] = '(coalesce(i18n_s2.alias, s2.alias) = ' . $db->quote($k) . ' AND coalesce(i18n_s2.alias_value, s2.alias_value) IN (' . implode(',', $aQuoted) . '))';
                         } else {
-                            $inA[] = '(s2.alias = ' . $db->quote($k) . ' AND s2.alias_value IN (' . '\'' . implode('\',\'', $a) . '\'' . '))';
+                            ///$inA[] = '(s2.alias = ' . $db->quote($k) . ' AND s2.alias_value IN (' . '\'' . implode('\',\'', $a) . '\'' . '))';
+                            $inA[] = '(s2.alias = ' . $db->quote($k) . ' AND s2.alias_value IN (' . implode(',', $aQuoted) . '))';
                         }
 
                         // QUERY METHOD ALL (product to display must include all specifications togehter)
@@ -358,9 +372,11 @@ class PhocacartSearch
                             //$inAS[$i] = 's2x' . $i . '.alias = ' . $db->quote($k) . ' AND s2x' . $i . '.alias_value = "' . $v2 . '"';
 
                             if (I18nHelper::useI18n()) {
-                                $inAS[$iS] = 'coalesce(i18n_s2x'.$iS.'.alias, s2x'.$iS.'.alias) = ' . $db->quote($k) . ' AND coalesce(i18n_s2x'.$iS.'.alias_value, s2x'.$iS.'.alias_value) = "' . $v2 . '"';
+                                ///$inAS[$iS] = 'coalesce(i18n_s2x'.$iS.'.alias, s2x'.$iS.'.alias) = ' . $db->quote($k) . ' AND coalesce(i18n_s2x'.$iS.'.alias_value, s2x'.$iS.'.alias_value) = "' . $v2 . '"';
+                                $inAS[$iS] = 'coalesce(i18n_s2x'.$iS.'.alias, s2x'.$iS.'.alias) = ' . $db->quote($k) . ' AND coalesce(i18n_s2x'.$iS.'.alias_value, s2x'.$iS.'.alias_value) = ' . $db->quote($v2);
                             } else {
-                                $inAS[$iS] = 's2x' . $iS . '.alias = ' . $db->quote($k) . ' AND s2x' . $iS . '.alias_value = "' . $v2 . '"';
+                                ///$inAS[$iS] = 's2x' . $iS . '.alias = ' . $db->quote($k) . ' AND s2x' . $iS . '.alias_value = "' . $v2 . '"';
+                                $inAS[$iS] = 's2x' . $iS . '.alias = ' . $db->quote($k) . ' AND s2x' . $iS . '.alias_value = ' . $db->quote($v2);
                             }
 
                             $i++;

@@ -103,9 +103,9 @@ If you need additional information beyond this GitHub repository, further docume
 ### Version (Joomla! 4.x - no longer supported)
 4.0.12
 ### Version (Joomla! 5.x - no longer supported)
-5.2.3
+5.2.4
 ### Version (Joomla! 6.x)
-6.1.6
+6.1.7
 
 ### License
 
