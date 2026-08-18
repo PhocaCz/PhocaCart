@@ -379,7 +379,7 @@ class Adminview
 		$o = '';
 		$o .= '<div class="control-group ph-par-ph-text-'.$name.' ph-control-group-text">'."\n";
 		$o .= '<div class="control-label"><label>'. $label . '</label></div>'."\n"
-		. '<div class="controls '.$class.'">' . $item.'</div>'."\n"
+		. '<div class="controls '.$class.'">' . htmlspecialchars($item, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8').'</div>'."\n"
 		. '</div>' . "\n";
 		return $o;
 	}

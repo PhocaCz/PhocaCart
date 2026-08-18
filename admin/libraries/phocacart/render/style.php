@@ -84,8 +84,8 @@ class PhocacartRenderStyle
         $s['c']['row-item'] = 'row-item';
 
         // mobile - one column
-        $s['c']['col.xs12.sm1.md1']   = 'col-12 col-sm-1 col-md-2';
-        $s['c']['col.xs12.sm2.md2']   = 'col-12 col-sm-1 col-md-2';
+        $s['c']['col.xs12.sm1.md1']   = 'col-12 col-sm-1 col-md-1';
+        $s['c']['col.xs12.sm2.md2']   = 'col-12 col-sm-2 col-md-2';
         $s['c']['col.xs12.sm3.md3']   = 'col-sm-12 col-md-3 col-lg-3 col-xl-3';
         $s['c']['col.xs12.sm4.md4']   = 'col-sm-12 col-md-4 col-lg-4 col-xl-4';
         $s['c']['col.xs12.sm5.md5']   = 'col-12 col-sm-5 col-md-5';
@@ -97,8 +97,8 @@ class PhocacartRenderStyle
         $s['c']['col.xs12.sm12.md12'] = 'col-12 col-sm-12 col-md-12';
 
         // mobile - two column
-        $s['c']['col.xs6.sm1.md1']   = 'col-6 col-sm-1 col-md-2';
-        $s['c']['col.xs6.sm2.md2']   = 'col-6 col-sm-1 col-md-2';
+        $s['c']['col.xs6.sm1.md1']   = 'col-6 col-sm-1 col-md-1';
+        $s['c']['col.xs6.sm2.md2']   = 'col-6 col-sm-2 col-md-2';
         $s['c']['col.xs6.sm3.md3']   = 'col-6 col-sm-6 col-md-3 col-lg-3 col-xl-3';
         $s['c']['col.xs6.sm4.md4']   = 'col-6 col-sm-6 col-md-4 col-lg-4 col-xl-4';
         $s['c']['col.xs6.sm5.md5']   = 'col-6 col-sm-5 col-md-5';
