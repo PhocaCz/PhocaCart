@@ -166,9 +166,10 @@ li.plupload_droptext {
 	color: #d0d0d0;
 	text-transform: uppercase;
 	font-weight: bold;
+	line-height: 1;
 
 }
-
+/*
 li.plupload_droptext:before {
 	font-family: 'JoomlaFont' !important;
 	color: #d0d0d0;
@@ -176,8 +177,20 @@ li.plupload_droptext:before {
 	font-size: 200%;
 	text-align: center;
 	margin: 0px auto;
-	/*display: block-inline;*/
 	float:none;
+}*/
+
+li.plupload_droptext::before {
+  content: "";
+  display: block;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 10px auto;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d0d0d0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/%3E%3Cpolyline points='17 8 12 3 7 8'/%3E%3Cline x1='12' y1='3' x2='12' y2='15'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  float: none;
 }
 
 .ph-red {
