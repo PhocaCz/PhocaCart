@@ -94,8 +94,11 @@ If you need additional information beyond this GitHub repository, further docume
 
 - [Phoca Cart Demo](https://www.phoca.cz/phocacartdemo/)
 - [Phoca Cart - Phoca Premiere Template Demo](https://www.phoca.cz/phocacartdemo/premiere/)
-- [Phoca Cart Demo - Phoca Stock Photo](https://www.phoca.cz/stockphoto/)
 - [Phoca Cart - Astroid Framework Demo](https://www.phoca.cz/phocacartdemo/astroid/)
+- [Phoca Cart - YOOtheme Framework Demo](https://www.phoca.cz/phocacartdemo/yootheme/)
+- [Phoca Cart Demo - Phoca Stock Photo](https://www.phoca.cz/stockphoto/)
+- [Phoca Cart (Joomla 5)](https://www.phoca.cz/phocacart5demo/)
+- [Phoca Cart (Joomla 4)](https://www.phoca.cz/phocacart4demo/)
 - [Joomla! Templates Directory](https://www.phoca.cz/jtd/)
 
 ### Version (Joomla! 3.x - no longer supported)
@@ -105,7 +108,7 @@ If you need additional information beyond this GitHub repository, further docume
 ### Version (Joomla! 5.x - no longer supported)
 5.2.4
 ### Version (Joomla! 6.x)
-6.1.8
+6.1.9
 
 ### License
 

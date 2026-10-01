@@ -157,6 +157,19 @@ class PhocacartDownload
 			return false;
 		}
 
+        // CHECK USER AND TOKEN
+        $isOwner = ((int)$user->id > 0 && isset($file->userid) && (int)$user->id === (int)$file->userid);
+
+        if (!$isOwner) {
+            // Guest or non-owner must supply BOTH tokens, and they must match the stored values
+            if ($tokenDownload === '' || $tokenOrder === ''
+                || !isset($file->download_token) || !isset($file->order_token)
+                || !hash_equals((string)$file->download_token, (string)$tokenDownload)
+                || !hash_equals((string)$file->order_token, (string)$tokenOrder)) {
+                return false;
+            }
+        }
+
 
 
 		// CHECK COUNT

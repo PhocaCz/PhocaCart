@@ -777,7 +777,7 @@ class PhocacartOrderStatus
             $emailSend = $status['email_send'];
         }
 
-        if ($emailSendFormat === 99) {
+        if ($emailSendFormat == '99') {
             $emailSendFormat = $status['email_send_format'];
         }
 
