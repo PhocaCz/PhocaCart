@@ -60,16 +60,32 @@ if (!empty($parentclass)) {
     $class .= ' ' . $parentclass;
 }
 
+$inlineHelpEnabled = false;
+
+if (isset($options['inlineHelp'])) {
+    $inlineHelpEnabled = (bool) $options['inlineHelp'];
+} elseif (is_object($field) && method_exists($field, 'getForm')) {
+    $form = $field->getForm();
+    if ($form && method_exists($form, 'getXml')) {
+        $xml = $form->getXml();
+        if (isset($xml->config->inlinehelp['button'])) {
+            $inlineHelpEnabled = ((string) $xml->config->inlinehelp['button'] === 'show');
+        }
+    }
+}
+
+
+
 ?>
 <div class="control-group<?php echo $class; ?>"<?php echo $rel; ?>>
     <?php if ($hideLabel) : ?>
         <div class="visually-hidden"><?php echo $label; ?></div>
     <?php else : ?>
-        <div class="control-label"><?php echo $label; ?></div>
+        <div class="control-label"><?php echo $label; ?> <?php if (!$hideDescription && !empty($description)) { echo '<div role="tooltip">'. $description.'</div>';} ?></div>
     <?php endif; ?>
     <div class="controls">
         <?php echo $input; ?>
-        <?php if (!$hideDescription && !empty($description)) : ?>
+        <?php if (!$hideDescription && !empty($description && $inlineHelpEnabled)) : ?>
             <div id="<?php echo $id; ?>" class="<?php echo $descClass ?>">
                 <small class="form-text">
                     <?php echo $description; ?>

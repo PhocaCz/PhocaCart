@@ -208,6 +208,8 @@ class PhocaCartViewCheckout extends HtmlView
         // PRODUCTTYPE
         $sOCh['all_digital_products'] = isset($total[0]['countdigitalproducts']) && isset($total[0]['countallproducts']) && (int)$total[0]['countdigitalproducts'] == $total[0]['countallproducts'] ? 1 : 0;
         $sOCh['all_digital_products_complete'] = isset($total[0]['countdigitalproductscomplete']) && isset($total[0]['countdigitalproductscomplete']) && (int)$total[0]['countdigitalproductscomplete'] == $total[0]['countdigitalproductscomplete'] ? 1 : 0;
+        $sOCh['all_booking_products'] = isset($total[0]['countbookingproducts']) && isset($total[0]['countallproducts']) && (int)$total[0]['countbookingproducts'] == $total[0]['countallproducts'] ? 1 : 0;
+        $sOCh['all_subscription_products'] = isset($total[0]['countsubscriptionproducts']) && isset($total[0]['countallproducts']) && (int)$total[0]['countsubscriptionproducts'] == $total[0]['countallproducts'] ? 1 : 0;
         $pOCh                         = array();// Payment Options Checkout
 
         $pOCh['order_amount_zero'] = 1;
@@ -393,6 +395,8 @@ class PhocaCartViewCheckout extends HtmlView
                         // PRODUCTTYPE - Digital products are even gift vouchers
                         $sOCh['all_digital_products'] = isset($total[0]['countdigitalproducts']) && isset($total[0]['countallproducts']) && (int)$total[0]['countdigitalproducts'] == $total[0]['countallproducts'] ? 1 : 0;
                         $sOCh['all_digital_products_complete'] = isset($total[0]['countdigitalproductscomplete']) && isset($total[0]['countdigitalproductscomplete']) && (int)$total[0]['countdigitalproductscomplete'] == $total[0]['countdigitalproductscomplete'] ? 1 : 0;
+                        $sOCh['all_booking_products'] = isset($total[0]['countbookingproducts']) && isset($total[0]['countallproducts']) && (int)$total[0]['countbookingproducts'] == $total[0]['countallproducts'] ? 1 : 0;
+                        $sOCh['all_subscription_products'] = isset($total[0]['countsubscriptionproducts']) && isset($total[0]['countallproducts']) && (int)$total[0]['countsubscriptionproducts'] == $total[0]['countallproducts'] ? 1 : 0;
                         $shippingNotUsed              = PhocacartShipping::isShippingNotUsed($sOCh);// REVERSE
 
                         if ($shippingNotUsed) {

@@ -85,6 +85,8 @@ class PhocacartCartCalculation
         $total['countdigitalproducts']       = 0;
         $total['countdigitalproductscomplete'] = 0; // All digital products + Mixed products (digital and physical)
         $total['countpriceondemandproducts'] = 0;
+        $total['countbookingproducts']       = 0;
+        $total['countsubscriptionproducts']       = 0;
 
         // OPTIONS (VARIANTS) QUANTITY
         // The same option can be in different items
@@ -215,6 +217,16 @@ class PhocacartCartCalculation
 
                 if (isset($itemD->subscription_scenario)) {
                     $fullItems[$k]['subscription_scenario'] = $itemD->subscription_scenario;
+                }
+
+                if (isset($v['booking']) && !empty($v['booking'])) {
+                    $fullItems[$k]['booking']            = $v['booking'];
+                    $fullItems[$k]['booking_date_start'] = $v['booking']['booking_date_start'] ?? null;
+                    $fullItems[$k]['booking_date_end']   = $v['booking']['booking_date_end'] ?? null;
+                    $fullItems[$k]['booking_time_start'] = $v['booking']['booking_time_start'] ?? null;
+                    $fullItems[$k]['booking_time_end']   = $v['booking']['booking_time_end'] ?? null;
+                    $fullItems[$k]['slot_id']            = $v['booking']['slot_id'] ?? null;
+                    $fullItems[$k]['booking_mode']       = $v['booking']['booking_mode'] ?? null;
                 }
 
                 $fullItems[$k]['default_price'] = $itemD->price;
@@ -348,6 +360,12 @@ class PhocacartCartCalculation
                     // Subscriptions are even digital products
                     $total['countdigitalproducts']++;
                     $total['countdigitalproductscomplete']++;
+                    $total['countsubscriptionproducts']++;
+                } else if ($itemD->type == 7) {
+                    // Bookings are virtual services/products
+                    $total['countdigitalproducts']++;
+                    $total['countdigitalproductscomplete']++;
+                    $total['countbookingproducts']++;
                 }
 
                 // ==========

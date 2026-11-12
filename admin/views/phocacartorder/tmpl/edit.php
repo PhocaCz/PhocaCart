@@ -210,6 +210,37 @@ if (!empty($this->itemproducts)) {
 			}
 
 		}
+
+		if (!empty($v->bookings)) {
+			foreach ($v->bookings as $kB => $vB) {
+				echo '<tr>';
+				echo '<td align="left" colspan="7">';
+				echo '<div class="alert alert-info py-1 px-2 my-1 d-inline-block">';
+				echo '<strong>' . Text::_('COM_PHOCACART_BOOKING') . ':</strong> ';
+				if (!empty($vB->booking_date_start)) {
+					if (!empty($vB->booking_date_end) && $vB->booking_date_end !== $vB->booking_date_start) {
+						$nights = (int)round((strtotime($vB->booking_date_end) - strtotime($vB->booking_date_start)) / 86400);
+						$nightW = $nights === 1 ? Text::_('COM_PHOCACART_BOOKING_NIGHT') : Text::_('COM_PHOCACART_BOOKING_NIGHTS');
+						echo htmlspecialchars($vB->booking_date_start);
+						if (!empty($vB->booking_time_start)) echo ' (' . htmlspecialchars(substr($vB->booking_time_start, 0, 5)) . ')';
+						echo ' → ' . htmlspecialchars($vB->booking_date_end);
+						if (!empty($vB->booking_time_end)) echo ' (' . htmlspecialchars(substr($vB->booking_time_end, 0, 5)) . ')';
+						echo ' — <span class="badge bg-primary text-white">' . $nights . ' ' . $nightW . '</span>';
+					} else {
+						echo htmlspecialchars($vB->booking_date_start);
+						if (!empty($vB->booking_time_start)) {
+							echo ' ' . htmlspecialchars(substr($vB->booking_time_start, 0, 5));
+							if (!empty($vB->booking_time_end)) {
+								echo ' – ' . htmlspecialchars(substr($vB->booking_time_end, 0, 5));
+							}
+						}
+					}
+				}
+				echo '</div>';
+				echo '</td>';
+				echo '</tr>';
+			}
+		}
 	}
 }
 

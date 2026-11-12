@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fieldset name="details">
+        <field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" readonly="true" class="readonly" />
+
+        <field name="user_id" type="phocacartuser" label="COM_PHOCACART_FIELD_USER_LABEL" description="COM_PHOCACART_FIELD_USER_DESC" required="true" />
+        <field name="user_name" type="text" label="COM_PHOCACART_FIELD_USER_NAME_LABEL" readonly="true" class="readonly" />
+
+        <field name="product_id" type="phocacartitem" label="COM_PHOCACART_FIELD_PRODUCT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_DESC" required="true" />
+        <field name="product_title" type="text" label="COM_PHOCACART_FIELD_PRODUCT_TITLE_LABEL" readonly="true" class="readonly" />
+
+        <field name="booking_mode" type="list" label="COM_PHOCACART_FIELD_BOOKING_MODE" default="1">
+            <option value="1">COM_PHOCACART_BOOKING_MODE_TIME_SLOT</option>
+            <option value="2">COM_PHOCACART_BOOKING_MODE_DATE_RANGE</option>
+        </field>
+
+        <field name="status" type="list" label="COM_PHOCACART_FIELD_STATUS_LABEL" default="2">
+            <option value="1">COM_PHOCACART_BOOKING_STATUS_CONFIRMED</option>
+            <option value="2">COM_PHOCACART_BOOKING_STATUS_PENDING</option>
+            <option value="3">COM_PHOCACART_BOOKING_STATUS_CANCELLED</option>
+            <option value="4">COM_PHOCACART_BOOKING_STATUS_COMPLETED</option>
+            <option value="5">COM_PHOCACART_BOOKING_STATUS_NO_SHOW</option>
+            <option value="6">COM_PHOCACART_BOOKING_STATUS_PENDING_PAYMENT</option>
+            <option value="7">COM_PHOCACART_BOOKING_STATUS_REFUNDED</option>
+        </field>
+
+        <field name="booking_date_start" type="calendar" label="COM_PHOCACART_BOOKING_DATE_START" format="%Y-%m-%d" />
+        <field name="booking_date_end" type="calendar" label="COM_PHOCACART_BOOKING_DATE_END" format="%Y-%m-%d" />
+
+        <field name="booking_time_start" type="time" label="COM_PHOCACART_BOOKING_TIME_START" showon="booking_mode:1" />
+        <field name="booking_time_end" type="time" label="COM_PHOCACART_BOOKING_TIME_END" showon="booking_mode:1" />
+
+        <field name="quantity" type="number" label="COM_PHOCACART_FIELD_QUANTITY_LABEL" min="1" default="1" />
+
+        <field name="slot_id" type="number" label="COM_PHOCACART_BOOKING_SLOT_ID" description="COM_PHOCACART_BOOKING_SLOT_ID_DESC" min="1" showon="booking_mode:1" />
+
+        <field name="order_id" type="text" label="COM_PHOCACART_FIELD_ORDER_ID_LABEL" readonly="true" class="readonly" />
+
+        <field name="cancellation_reason" type="text" label="COM_PHOCACART_FIELD_CANCELLATION_REASON" showon="status:3" />
+
+        <field name="notes" type="textarea" label="COM_PHOCACART_FIELD_NOTES_LABEL" rows="3" cols="30" />
+    </fieldset>
+</form>

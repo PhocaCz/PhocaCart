@@ -43,6 +43,10 @@ class PhocacartRenderAdminmedia
 		///HTMLHelper::_('script', 'media/com_phocacart/js/administrator/phocacart.js', array('version' => 'auto'));
 		$wa->registerAndUseScript('com_phocacart.phocacart', 'media/com_phocacart/js/administrator/phocacart.js', ['version' => 'auto']);
 
+		if ($this->view === 'phocacartbookings' || $this->view === 'phocacartbooking') {
+			$this->loadBooking();
+		}
+
 		// FORM
 		// Lang starting with "PHOCA_" - general phoca string used e.g. in general JS libraries
 		$this->document->addScriptOptions('phLang', array(
@@ -183,6 +187,48 @@ class PhocacartRenderAdminmedia
 			$wa 				= $app->getDocument()->getWebAssetManager();
 			$wa->registerAndUseStyle('com_phocacart.phocacartoptions', 'media/com_phocacart/css/administrator/phocacartoptions.css', ['version' => 'auto']);
 		}
+	}
+
+	public function loadBooking() {
+		$app = Factory::getApplication();
+		$wa  = $app->getDocument()->getWebAssetManager();
+
+		$phBookingStrings = [
+                'COM_PHOCACART_BOOKING_NIGHT',
+                'COM_PHOCACART_BOOKING_NIGHTS',
+                'COM_PHOCACART_BOOKING_OCCUPIED',
+                'COM_PHOCACART_BOOKING_PREV_MONTH',
+                'COM_PHOCACART_BOOKING_NEXT_MONTH',
+                'COM_PHOCACART_BOOKING_TODAY',
+                'COM_PHOCACART_BOOKING_DEPARTURE',
+                'COM_PHOCACART_BOOKING_ARRIVAL',
+                'COM_PHOCACART_BOOKING_TURNOVER',
+                'COM_PHOCACART_BOOKING_TURNOVER_DAY_DESC',
+                'COM_PHOCACART_BOOKING_DATES',
+                'COM_PHOCACART_BOOKING_CLEAR_SELECTED_DATES',
+                'COM_PHOCACART_BOOKING_SELECTED_CHECKIN_DESELECT',
+                'COM_PHOCACART_BOOKING_SELECTED_CHECKOUT_DESELECT',
+                'COM_PHOCACART_BOOKING_RANGE_CONTAINS_BOOKED',
+                'COM_PHOCACART_RESET',
+                'COM_PHOCACART_GUEST',
+				'COM_PHOCACART_ORDER_NR'
+            ];
+
+            $phCoreStrings = [
+                'JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE',
+                'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER',
+                'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY',
+                'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN',
+            ];
+
+            $wa->useScript('core');
+
+            foreach (array_merge($phBookingStrings, $phCoreStrings) as $string) {
+                Text::script($string);
+            }
+
+		$wa->registerAndUseStyle('com_phocacart.main', 'media/com_phocacart/css/main.css', ['version' => 'auto']);
+		$wa->registerAndUseScript('com_phocacart.booking', 'media/com_phocacart/js/phoca/phocacartbooking.js', ['version' => 'auto']);
 	}
 }
 ?>

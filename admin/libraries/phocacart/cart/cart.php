@@ -289,7 +289,7 @@ class PhocacartCart
      * Catid is only for information from which place the product was added to the cart
      * When making order, this will be recheck
      */
-    public function addItems($id = 0, $catid = 0, $quantity = 0, $attributes = array(), $idKey = '') {
+    public function addItems($id = 0, $catid = 0, $quantity = 0, $attributes = array(), $idKey = '', $booking = array()) {
 
         $app = Factory::getApplication();
 
@@ -347,15 +347,71 @@ class PhocacartCart
 
             $k = PhocacartProduct::getProductKey($id, $attributes);
 
+            if (empty($booking)) {
+                $input = Factory::getApplication()->getInput();
+                $bStart = $input->get('booking_date_start', '', 'string');
+                $bSlot  = $input->get('booking_slot_id', 0, 'int');
+                if ($bStart != '' || $bSlot > 0) {
+                    $booking = [
+                        'booking_date_start' => $bStart,
+                        'booking_date_end'   => $input->get('booking_date_end', $bStart, 'string'),
+                        'booking_time_start' => $input->get('booking_time_start', '', 'string'),
+                        'booking_time_end'   => $input->get('booking_time_end', '', 'string'),
+                        'slot_id'            => $bSlot,
+                        'booking_mode'       => $input->get('booking_mode', 1, 'int'),
+                    ];
+                }
+            }
+
+            if (!empty($booking)) {
+                // In Date Range mode, quantity is automatically the number of nights
+                if ((int)($booking['booking_mode'] ?? 1) === 2) {
+                    if (!class_exists('PhocacartBooking')) {
+                        require_once JPATH_ADMINISTRATOR . '/components/com_phocacart/libraries/phocacart/booking/booking.php';
+                    }
+                    $nights = PhocacartBooking::calculateNights($booking['booking_date_start'], $booking['booking_date_end']);
+                    if ($nights <= 0) {
+                        $app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_BOOKING_INVALID_DATES'), 'error');
+                        return false;
+                    }
+                    $quantity = $nights;
+                }
+
+                // Check conflicts against items already in the user's cart and DB
+                if (class_exists('PhocacartBooking')) {
+                    $conflict = PhocacartBooking::checkCartConflict((int)$id, $booking, $this->items, (int)$quantity);
+                    if ($conflict['conflict']) {
+                        if ($conflict['reason'] === 'exact_duplicate') {
+                            $app->enqueueMessage(Text::_('COM_PHOCACART_BOOKING_DATES_ALREADY_IN_CART'), 'error');
+                        } elseif ($conflict['reason'] === 'slot_capacity_exceeded') {
+                            $app->enqueueMessage(Text::_('COM_PHOCACART_BOOKING_SLOT_CAPACITY_EXCEEDED'), 'error');
+                        } elseif ($conflict['reason'] === 'invalid_dates') {
+                            $app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_BOOKING_INVALID_DATES'), 'error');
+                        } else {
+                            $app->enqueueMessage(Text::_('COM_PHOCACART_BOOKING_DATES_OVERLAPPING_CART_CONFLICT'), 'error');
+                        }
+                        return false;
+                    }
+                }
+
+                $k .= base64_encode(serialize($booking)) . ':';
+            }
 
         }
 
         if ($k != '' && (int)$catid > 0) {
             $this->items[$k]['catid'] = (int)$catid;
+            if (!empty($booking)) {
+                $this->items[$k]['booking'] = $booking;
+            }
         }
 
         if ($k != '' && (int)$quantity > 0) {
             if (isset($this->items[$k]['quantity']) && (int)$this->items[$k]['quantity'] > 0) {
+                if (!empty($booking)) {
+                    $app->enqueueMessage(Text::_('COM_PHOCACART_BOOKING_DATES_ALREADY_IN_CART'), 'error');
+                    return false;
+                }
                 $oldQuantity = $this->items[$k]['quantity'];
                 $this->items[$k]['quantity'] = $this->items[$k]['quantity'] + (int)$quantity;
             } else {
@@ -384,6 +440,11 @@ class PhocacartCart
             if (isset($this->items[$idKey])) {
 
                 $oldQuantity = $this->items[$idKey]['quantity'];
+
+                if (!empty($this->items[$idKey]['booking']) && (int)$quantity > 0 && (int)$quantity !== (int)$oldQuantity) {
+                    // Do not allow manual quantity change for booking products in checkout
+                    return false;
+                }
 
                 if ((int)$quantity > 0) {
                     $this->items[$idKey]['quantity'] = (int)$quantity;

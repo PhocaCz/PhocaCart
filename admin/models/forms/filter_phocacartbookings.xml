@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fields name="filter">
+        <field name="search" type="text" label="COM_PHOCACART_FILTER_SEARCH_DESC" hint="JSEARCH_FILTER" />
+        <field name="status" type="list" onchange="this.form.submit();">
+            <option value="">COM_PHOCACART_SELECT_STATUS</option>
+            <option value="1">COM_PHOCACART_BOOKING_STATUS_CONFIRMED</option>
+            <option value="2">COM_PHOCACART_BOOKING_STATUS_PENDING</option>
+            <option value="3">COM_PHOCACART_BOOKING_STATUS_CANCELLED</option>
+            <option value="4">COM_PHOCACART_BOOKING_STATUS_COMPLETED</option>
+            <option value="5">COM_PHOCACART_BOOKING_STATUS_NO_SHOW</option>
+            <option value="6">COM_PHOCACART_BOOKING_STATUS_PENDING_PAYMENT</option>
+            <option value="7">COM_PHOCACART_BOOKING_STATUS_REFUNDED</option>
+        </field>
+        <field name="booking_mode" type="list" onchange="this.form.submit();">
+            <option value="">COM_PHOCACART_SELECT_BOOKING_MODE</option>
+            <option value="1">COM_PHOCACART_BOOKING_MODE_TIME_SLOT</option>
+            <option value="2">COM_PHOCACART_BOOKING_MODE_DATE_RANGE</option>
+        </field>
+    </fields>
+    <fields name="list">
+        <field name="fullordering" type="list" class="form-select" onchange="this.form.submit();" default="a.id DESC">
+            <option value="">JGLOBAL_SORT_BY</option>
+            <option value="a.id ASC">JGRID_HEADING_ID_ASC</option>
+            <option value="a.id DESC">JGRID_HEADING_ID_DESC</option>
+            <option value="u.name ASC">COM_PHOCACART_USER_ASC</option>
+            <option value="u.name DESC">COM_PHOCACART_USER_DESC</option>
+            <option value="p.title ASC">COM_PHOCACART_PRODUCT_ASC</option>
+            <option value="p.title DESC">COM_PHOCACART_PRODUCT_DESC</option>
+            <option value="a.status ASC">COM_PHOCACART_STATUS_ASC</option>
+            <option value="a.status DESC">COM_PHOCACART_STATUS_DESC</option>
+            <option value="a.booking_date_start ASC">COM_PHOCACART_BOOKING_DATE_START_ASC</option>
+            <option value="a.booking_date_start DESC">COM_PHOCACART_BOOKING_DATE_START_DESC</option>
+        </field>
+        <field name="limit" type="limitbox" onchange="this.form.submit();" />
+    </fields>
+</form>

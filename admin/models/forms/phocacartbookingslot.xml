@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fieldset name="details">
+        <field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" readonly="true" class="readonly" />
+
+        <field name="product_id" type="phocacartitem" label="COM_PHOCACART_FIELD_PRODUCT_LABEL" description="COM_PHOCACART_FIELD_PRODUCT_DESC" required="true" />
+
+        <field name="slot_date" type="calendar" label="COM_PHOCACART_BOOKING_DATE" format="%Y-%m-%d" required="true" />
+
+        <field name="slot_time_start" type="time" label="COM_PHOCACART_BOOKING_TIME_START" required="true" default="09:00" />
+
+        <field name="slot_time_end" type="time" label="COM_PHOCACART_BOOKING_TIME_END" required="true" default="10:00" />
+
+        <field name="capacity" type="number" label="COM_PHOCACART_FIELD_BOOKING_CAPACITY" min="1" default="1" required="true" />
+
+        <field name="booked" type="number" label="COM_PHOCACART_BOOKED_COUNT" min="0" default="0" readonly="true" class="readonly" />
+
+        <field name="published" type="list" label="JSTATUS" default="1">
+            <option value="1">JPUBLISHED</option>
+            <option value="0">JUNPUBLISHED</option>
+        </field>
+    </fieldset>
+</form>

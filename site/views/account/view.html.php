@@ -132,6 +132,14 @@ class PhocaCartViewAccount extends HtmlView
                 $this->t['subscription_description_account_view'] = $params->get('subscription_description_account_view', '');
                 $this->t['subscription_description_account_view'] = HTMLHelper::_('content.prepare', $this->t['subscription_description_account_view']);
             }
+
+			// BOOKINGS
+			if (file_exists(JPATH_ADMINISTRATOR . '/components/com_phocacart/libraries/phocacart/booking/booking.php')) {
+				require_once JPATH_ADMINISTRATOR . '/components/com_phocacart/libraries/phocacart/booking/booking.php';
+				$this->t['bookings'] = PhocacartBooking::getBookings((int)$this->u->id);
+			} else {
+				$this->t['bookings'] = [];
+			}
 		}
 
 		$media = PhocacartRenderMedia::getInstance('main');

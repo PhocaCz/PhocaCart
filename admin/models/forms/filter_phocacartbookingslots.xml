@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fields name="filter">
+        <field name="search" type="text" label="COM_PHOCACART_FILTER_SEARCH_DESC" hint="JSEARCH_FILTER" />
+        <field name="published" type="status" label="COM_PHOCACART_FILTER_PUBLISHED" onchange="this.form.submit();">
+            <option value="">JOPTION_SELECT_PUBLISHED</option>
+        </field>
+    </fields>
+    <fields name="list">
+        <field name="fullordering" type="list" class="form-select" onchange="this.form.submit();" default="a.slot_date DESC, a.slot_time_start ASC">
+            <option value="">JGLOBAL_SORT_BY</option>
+            <option value="a.id ASC">JGRID_HEADING_ID_ASC</option>
+            <option value="a.id DESC">JGRID_HEADING_ID_DESC</option>
+            <option value="p.title ASC">COM_PHOCACART_PRODUCT_ASC</option>
+            <option value="p.title DESC">COM_PHOCACART_PRODUCT_DESC</option>
+            <option value="a.slot_date ASC">COM_PHOCACART_DATE_ASC</option>
+            <option value="a.slot_date DESC">COM_PHOCACART_DATE_DESC</option>
+            <option value="a.slot_time_start ASC">COM_PHOCACART_TIME_ASC</option>
+            <option value="a.slot_time_start DESC">COM_PHOCACART_TIME_DESC</option>
+        </field>
+        <field name="limit" type="limitbox" onchange="this.form.submit();" />
+    </fields>
+</form>

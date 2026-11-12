@@ -750,6 +750,37 @@ if (!empty($d['products'])) {
 			$p[] = '</tr>';
 		}
 
+		if (!empty($v->bookings)) {
+			$p[] = '<tr>';
+			$p[] = '<td></td>';
+			$p[] = '<td colspan="'.$cTitle.'" align="left"><ul class="ph-idnr-ul">';
+			foreach ($v->bookings as $kB => $vB) {
+				if (!empty($vB->booking_date_start)) {
+					$bookingStr = Text::_('COM_PHOCACART_BOOKING') . ': ' . htmlspecialchars($vB->booking_date_start);
+					if (!empty($vB->booking_date_end) && $vB->booking_date_end !== $vB->booking_date_start) {
+						$nights = (int)round((strtotime($vB->booking_date_end) - strtotime($vB->booking_date_start)) / 86400);
+						$nightW = $nights === 1 ? Text::_('COM_PHOCACART_BOOKING_NIGHT') : Text::_('COM_PHOCACART_BOOKING_NIGHTS');
+						if (!empty($vB->booking_time_start)) $bookingStr .= ' (' . htmlspecialchars(substr($vB->booking_time_start, 0, 5)) . ')';
+						$bookingStr .= ' → ' . htmlspecialchars($vB->booking_date_end);
+						if (!empty($vB->booking_time_end)) $bookingStr .= ' (' . htmlspecialchars(substr($vB->booking_time_end, 0, 5)) . ')';
+						$bookingStr .= ' (' . $nights . ' ' . $nightW . ')';
+					} else {
+						if (!empty($vB->booking_time_start)) {
+							$bookingStr .= ' ' . htmlspecialchars(substr($vB->booking_time_start, 0, 5));
+							if (!empty($vB->booking_time_end)) {
+								$bookingStr .= ' – ' . htmlspecialchars(substr($vB->booking_time_end, 0, 5));
+							}
+						}
+					}
+					$p[] = '<li><span class="ph-small ph-cart-small-attribute ph-idnr-li">📅 ' . $bookingStr . '</span></li>';
+					if ($pR) { $oPr[] = $pP->printLineColumns(array(' - ' . $bookingStr)); }
+				}
+			}
+			$p[] = '</ul></td>';
+			$p[] = '<td colspan="8"></td>';
+			$p[] = '</tr>';
+		}
+
 		if ($pR) {
 			$brutto = (int)$v->quantity * $v->brutto;
 			$oPr[] = $pP->printLineColumns(array((int)$v->quantity . ' x ' . $d['price']->getPriceFormat($v->brutto), $d['price']->getPriceFormat($brutto)));

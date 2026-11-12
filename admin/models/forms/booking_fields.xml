@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fieldset name="booking" label="COM_PHOCACART_FIELDSET_BOOKING">
+
+        <field
+            name="booking_mode"
+            type="list"
+            label="COM_PHOCACART_FIELD_BOOKING_MODE"
+            description="COM_PHOCACART_FIELD_BOOKING_MODE_DESC"
+            default="1">
+            <option value="1">COM_PHOCACART_BOOKING_MODE_TIME_SLOT</option>
+            <option value="2">COM_PHOCACART_BOOKING_MODE_DATE_RANGE</option>
+        </field>
+
+        <field
+            name="booking_capacity"
+            type="number"
+            label="COM_PHOCACART_FIELD_BOOKING_CAPACITY"
+            description="COM_PHOCACART_FIELD_BOOKING_CAPACITY_DESC"
+            min="1"
+            default="1"
+            filter="integer"
+        />
+
+        <field
+            name="booking_min_advance_hours"
+            type="number"
+            label="COM_PHOCACART_FIELD_BOOKING_MIN_ADVANCE_HOURS"
+            description="COM_PHOCACART_FIELD_BOOKING_MIN_ADVANCE_HOURS_DESC"
+            min="0"
+            default="0"
+            filter="integer"
+        />
+
+        <field
+            name="booking_max_advance_days"
+            type="number"
+            label="COM_PHOCACART_FIELD_BOOKING_MAX_ADVANCE_DAYS"
+            description="COM_PHOCACART_FIELD_BOOKING_MAX_ADVANCE_DAYS_DESC"
+            min="1"
+            default="365"
+            filter="integer"
+        />
+
+        <field
+            name="booking_checkin_time"
+            type="time"
+            label="COM_PHOCACART_FIELD_BOOKING_CHECKIN_TIME"
+            description="COM_PHOCACART_FIELD_BOOKING_CHECKIN_TIME_DESC"
+            default="14:00"
+            showon="booking_mode:2"
+        />
+
+        <field
+            name="booking_checkout_time"
+            type="time"
+            label="COM_PHOCACART_FIELD_BOOKING_CHECKOUT_TIME"
+            description="COM_PHOCACART_FIELD_BOOKING_CHECKOUT_TIME_DESC"
+            default="10:00"
+            showon="booking_mode:2"
+        />
+
+        <field
+            name="booking_button_text"
+            type="phocatext" i18n="true"
+            label="COM_PHOCACART_FIELD_BOOKING_BUTTON_TEXT_LABEL"
+            description="COM_PHOCACART_FIELD_BOOKING_BUTTON_TEXT_DESC"
+            default=""
+        />
+
+        <field
+            name="booking_usergroup_confirm"
+            type="usergrouplist"
+            label="COM_PHOCACART_FIELD_BOOKING_USERGROUP_CONFIRM"
+            description="COM_PHOCACART_FIELD_BOOKING_USERGROUP_CONFIRM_DESC"
+            multiple="true"
+            layout="joomla.form.field.list-fancy-select"
+            checksuperusergroup="0"
+            default="0"
+        />
+
+    </fieldset>
+</form>

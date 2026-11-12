@@ -2,7 +2,7 @@
 <updates>
 	<update>
 		<name><![CDATA[ Phoca Cart ]]></name>
-		<description><![CDATA[ Phoca Cart is e-commerce extension - powerful shopping cart for Joomla! CMS. Phoca Cart is based on Joomla! framework and it is designed by modern responsive Bootstrap library. ]]></description>
+		<description><![CDATA[ Phoca Cart is a powerful, fully-featured e-commerce solution built natively for Joomla. ]]></description>
 		<element>com_phocacart</element>
 		<type>component</type>
 		<version>3.5.8</version>
@@ -21,7 +21,7 @@
 	</update>
 	<update>
 		<name><![CDATA[ Phoca Cart ]]></name>
-		<description><![CDATA[ Phoca Cart is e-commerce extension - powerful shopping cart for Joomla! CMS. Phoca Cart is based on Joomla! framework and it is designed by modern responsive Bootstrap library. ]]></description>
+		<description><![CDATA[ Phoca Cart is a powerful, fully-featured e-commerce solution built natively for Joomla. ]]></description>
 		<element>com_phocacart</element>
 		<type>component</type>
 		<version>4.0.13</version>
@@ -40,7 +40,7 @@
 	</update>
 	<update>
 		<name><![CDATA[ Phoca Cart ]]></name>
-		<description><![CDATA[ Phoca Cart is e-commerce extension - powerful shopping cart for Joomla! CMS. Phoca Cart is based on Joomla! framework and it is designed by modern responsive Bootstrap library. ]]></description>
+		<description><![CDATA[ Phoca Cart is a powerful, fully-featured e-commerce solution built natively for Joomla. ]]></description>
 		<element>com_phocacart</element>
 		<type>component</type>
 		<version>5.2.4</version>
@@ -59,15 +59,15 @@
 	</update>
 	<update>
 		<name><![CDATA[ Phoca Cart ]]></name>
-		<description><![CDATA[ Phoca Cart is e-commerce extension - powerful shopping cart for Joomla! CMS. Phoca Cart is based on Joomla! framework and it is designed by modern responsive Bootstrap library. ]]></description>
+		<description><![CDATA[ Phoca Cart is a powerful, fully-featured e-commerce solution built natively for Joomla. ]]></description>
 		<element>com_phocacart</element>
 		<type>component</type>
-		<version>6.1.9</version>
-		<infourl title="Phoca Cart 6.1.9">http://www.phoca.cz/version/index.php?phocacart=6.1.9</infourl>
+		<version>6.2.0Beta</version>
+		<infourl title="Phoca Cart 6.2.0Beta">http://www.phoca.cz/version/index.php?phocacart=6.2.0Beta</infourl>
 		<downloads>
-			<downloadurl type="full" format="zip">https://github.com/PhocaCz/PhocaCart/releases/download/6.1.9/com_phocacart_v6.1.9.zip</downloadurl>
+			<downloadurl type="full" format="zip">https://github.com/PhocaCz/PhocaCart/releases/download/6.2.0Beta/com_phocacart_v6.2.0Beta.zip</downloadurl>
 		</downloads>
-		<sha512>755b7d08cdf6abc69383b56bff7a5f7b7a6d6069182c25e36d5f0be47b0bab57265dd9b2388558fe39f15fd141942dc0350f6cefbefbf3dfc4bb59f022d4b163</sha512>
+		<sha512>2710bb041340f1bed4bc147c945cb889c2454fd1a60ba72b0440e62a32fbaaac4bc43a6bb91e0f5cbf5a9de18ad0208c2c8bdae2e28b0370f7922db4c7758363</sha512>
 		<tags>
 			<tag>stable</tag>
 		</tags>

@@ -37,6 +37,9 @@ $layoutI	= new FileLayout('image', null, array('component' => 'com_phocacart'));
 $layoutAAQ	= new FileLayout('popup_container_iframe', null, array('component' => 'com_phocacart'));
 $layoutAl 	= new FileLayout('alert', null, array('component' => 'com_phocacart'));
 $layoutWatchdog	= new FileLayout('product_watchdog', null, ['component' => 'com_phocacart']);
+// Booking picker layouts (product type 7)
+$layoutBSlot  = new FileLayout('booking_slot_picker',      null, ['component' => 'com_phocacart']);
+$layoutBRange = new FileLayout('booking_daterange_picker',  null, ['component' => 'com_phocacart']);
 
 echo '<div id="ph-pc-item-box" class="pc-view pc-item-view'.$this->p->get( 'pageclass_sfx' ).'">';
 
@@ -493,6 +496,25 @@ if (!empty($x) && isset($x->id) && (int)$x->id > 0) {
 		$d['typeview']		= 'Item';
 		$d['class_btn']		= $class_btn;
 		$d['class_icon']	= $class_icon;
+		$d['type']          = (int)$x->type;
+		$d['booking_mode']  = isset($x->booking_mode) ? (int)$x->booking_mode : 1;
+		$d['booking_button_text'] = isset($x->booking_button_text) ? $x->booking_button_text : '';
+
+		// --- Booking picker (product type 7) ---
+		if ((int)$x->type === 7) {
+			$bookingMode = isset($x->booking_mode) ? (int)$x->booking_mode : 1;
+			if ($bookingMode === 1) {
+				// Time Slot Mode
+				$bSlots = PhocacartBooking::getAvailableSlotsForProduct((int)$x->id);
+				echo $layoutBSlot->render(['slots' => $bSlots, 'product' => $x, 's' => $this->s]);
+			} else {
+				// Date Range Mode
+				$bDates = PhocacartBooking::getBookedDatesForProduct((int)$x->id);
+				echo $layoutBRange->render(['booked_dates' => $bDates, 'product' => $x, 's' => $this->s]);
+			}
+		}
+		// --- End booking picker ---
+
 		echo $layoutA->render($d);
 
 

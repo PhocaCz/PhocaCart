@@ -38,15 +38,27 @@ $d = $displayData;
 	<input type="hidden" name="tmpl" value="component" />
 	<input type="hidden" name="option" value="com_phocacart" />
 	<input type="hidden" name="return" value="<?php echo $d['return']; ?>" />
+<?php if (isset($d['type']) && (int)$d['type'] === 7): ?>
+	<input class="ph-input-quantity" type="hidden" name="quantity" value="1" />
+<?php else: ?>
 	<div class="<?php echo $d['s']['c']['form-group'] ?> ph-form-quantity phProductAddToCart<?php echo $d['typeview']. (int)$d['id'] .' '.$d['class_btn']; ?>">
 	<label><?php echo Text::_('COM_PHOCACART_QTY'); ?>: </label>
 	<input class="<?php echo $d['s']['c']['form-control'] ?> ph-input-quantity" type="text" name="quantity" value="1" />
 	</div>
+<?php endif; ?>
 	 <div class="<?php echo $d['s']['c']['form-group'] ?> ph-form-button"><?php
+    $btnText = Text::_('COM_PHOCACART_ADD_TO_CART');
+    $btnIcon = $d['s']['i']['shopping-cart'];
+    if (isset($d['type']) && (int)$d['type'] === 7) {
+        $btnText = !empty($d['booking_button_text']) ? $d['booking_button_text'] : Text::_('COM_PHOCACART_BOOK_NOW');
+        if (isset($d['s']['i']['calendar-check'])) {
+            $btnIcon = $d['s']['i']['calendar-check'];
+        }
+    }
 	if ($d['addtocart'] == 1) {
-		?><button type="submit" class="<?php echo $d['s']['c']['btn.btn-primary'] ?> ph-btn phProductAddToCart<?php echo $d['typeview'] . (int)$d['id'] .' '.$d['class_btn']; ?>"><?php echo PhocacartRenderIcon::icon($d['s']['i']['shopping-cart'], '', ' ') . Text::_('COM_PHOCACART_ADD_TO_CART'); ?></button><?php
+		?><button type="submit" class="<?php echo $d['s']['c']['btn.btn-primary'] ?> ph-btn phProductAddToCart<?php echo $d['typeview'] . (int)$d['id'] .' '.$d['class_btn']; ?>"><?php echo PhocacartRenderIcon::icon($btnIcon, '', ' ') . $btnText; ?></button><?php
 	} else if ($d['addtocart'] == 4) {
-		?><button type="submit" class="<?php echo $d['s']['c']['btn.btn-primary'] ?> ph-btn phProductAddToCart<?php echo $d['typeview']. (int)$d['id'] .' '.$d['class_btn']; ?>" title="<?php echo Text::_('COM_PHOCACART_ADD_TO_CART'); ?>"><?php echo PhocacartRenderIcon::icon($d['s']['i']['shopping-cart']) ?></button><?php
+		?><button type="submit" class="<?php echo $d['s']['c']['btn.btn-primary'] ?> ph-btn phProductAddToCart<?php echo $d['typeview']. (int)$d['id'] .' '.$d['class_btn']; ?>" title="<?php echo $btnText; ?>"><?php echo PhocacartRenderIcon::icon($btnIcon) ?></button><?php
 	} ?>
 	<?php /* <input type="submit" value="submit" name="submit" role="button" /> */ ?>
 	</div>

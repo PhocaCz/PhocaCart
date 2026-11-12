@@ -44,6 +44,8 @@ class PhocaCartCpViewPhocaCartSubscriptions extends HtmlView
             throw new \Exception(implode("\n", $errors), 500);
         }
 
+        $media = new PhocacartRenderAdminmedia();
+
         $this->addToolbar();
 
         parent::display($tpl);

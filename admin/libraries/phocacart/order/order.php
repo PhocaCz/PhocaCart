@@ -471,6 +471,8 @@ class PhocacartOrder
         // PRODUCTTYPE - Digital products are even gift vouchers
         $sOCh['all_digital_products'] = isset($total[0]['countdigitalproducts']) && isset($total[0]['countallproducts']) && (int)$total[0]['countdigitalproducts'] == $total[0]['countallproducts'] ? 1 : 0;
         $sOCh['all_digital_products_complete'] = isset($total[0]['countdigitalproductscomplete']) && isset($total[0]['countdigitalproductscomplete']) && (int)$total[0]['countdigitalproductscomplete'] == $total[0]['countdigitalproductscomplete'] ? 1 : 0;
+        $sOCh['all_booking_products'] = isset($total[0]['countbookingproducts']) && isset($total[0]['countallproducts']) && (int)$total[0]['countbookingproducts'] == $total[0]['countallproducts'] ? 1 : 0;
+        $sOCh['all_subscription_products'] = isset($total[0]['countsubscriptionproducts']) && isset($total[0]['countallproducts']) && (int)$total[0]['countsubscriptionproducts'] == $total[0]['countallproducts'] ? 1 : 0;
         $shippingNotUsed              = PhocacartShipping::isShippingNotUsed($sOCh);// REVERSE
 
 
@@ -687,6 +689,10 @@ class PhocacartOrder
                         // SUBSCRIPTION - Check Product Type (6) from the existing item array ($v)
                         if (isset($v['type']) && (int)$v['type'] == 6) {
                             $this->saveOrderSubscriptions($orderProductId, $v, $row->id);
+                        }
+                        // BOOKING - Check Product Type (7) from the existing item array ($v)
+                        if (isset($v['type']) && (int)$v['type'] == 7) {
+                            $this->saveOrderBookings($orderProductId, $v, $row->id);
                         }
                     }
 
@@ -1365,7 +1371,7 @@ class PhocacartOrder
             }
 
             Dispatcher::dispatch(new Event\AbstractEvent('system', 'onPhocaCartAfterOrderSave', ['row' => $row, 'data' => $data]));
-            
+
             $orderView = new \PhocacartOrderView();
             $orderCommon = $orderView->getItemCommon((int)$row->id);
             if ($orderCommon) {
@@ -2136,6 +2142,115 @@ class PhocacartOrder
 
         if (!$row->store()) {
             //throw new Exception($row->getError());
+            $msg = Text::_($row->getError());
+            $app->enqueueMessage($msg, 'error');
+            return false;
+        }
+        return true;
+    }
+
+    public function saveOrderBookings($orderProductId, $productObject, $orderId) {
+        $app = Factory::getApplication();
+        $db  = Factory::getDbo();
+
+        $productId = $productObject['id'] ?? 0;
+        $catId     = $productObject['catid'] ?? 0;
+
+        $product = PhocacartProduct::getProduct((int)$productId, (int)$catId, $this->type);
+
+        if (!$product) {
+            return false;
+        }
+
+        $row = Table::getInstance('PhocacartOrderBookings', 'Table', array());
+
+        $d = array();
+        $d['order_id']         = (int)$orderId;
+        $d['product_id']       = (int)$productId;
+        $d['order_product_id'] = (int)$orderProductId;
+        $d['title']            = $product->title;
+        $d['alias']            = $product->alias;
+        $d['type']             = (int)$product->type;
+        $d['date']             = gmdate('Y-m-d H:i:s');
+        $d['published']        = 0;
+
+        $d['booking_mode']              = isset($product->booking_mode) ? (int)$product->booking_mode : 1;
+        $d['booking_capacity']          = isset($product->booking_capacity) ? (int)$product->booking_capacity : 1;
+        $d['booking_quantity']          = isset($productObject['quantity']) ? (int)$productObject['quantity'] : 1;
+        $d['booking_usergroup_confirm'] = isset($product->booking_usergroup_confirm) ? $product->booking_usergroup_confirm : '';
+
+        // Slot ID if Time Slot Mode
+        $d['slot_id']            = isset($productObject['slot_id']) ? (int)$productObject['slot_id'] : (isset($productObject['booking_slot_id']) ? (int)$productObject['booking_slot_id'] : null);
+        $d['booking_date_start'] = $productObject['booking_date_start'] ?? null;
+        $d['booking_date_end']   = $productObject['booking_date_end'] ?? null;
+        $d['booking_time_start'] = $productObject['booking_time_start'] ?? null;
+        $d['booking_time_end']   = $productObject['booking_time_end'] ?? null;
+
+        // If time slot mode and slot_id is present, populate date and times from slot if not in item
+        if ($d['booking_mode'] == 1 && !empty($d['slot_id'])) {
+            $query = $db->getQuery(true)
+                ->select('*')
+                ->from($db->quoteName('#__phocacart_booking_slots'))
+                ->where($db->quoteName('id') . ' = ' . (int)$d['slot_id']);
+            $db->setQuery($query);
+            $slot = $db->loadObject();
+            if ($slot) {
+                if (empty($d['booking_date_start'])) {
+                    $d['booking_date_start'] = $slot->slot_date;
+                }
+                if (empty($d['booking_date_end'])) {
+                    $d['booking_date_end'] = $slot->slot_date;
+                }
+                if (empty($d['booking_time_start'])) {
+                    $d['booking_time_start'] = $slot->slot_time_start;
+                }
+                if (empty($d['booking_time_end'])) {
+                    $d['booking_time_end'] = $slot->slot_time_end;
+                }
+            }
+        }
+
+        if (!class_exists('PhocacartBooking')) {
+            require_once JPATH_ADMINISTRATOR . '/components/com_phocacart/libraries/phocacart/booking/booking.php';
+        }
+
+        if ($d['booking_mode'] == 2) {
+            $nights = PhocacartBooking::calculateNights($d['booking_date_start'], $d['booking_date_end']);
+            if ($nights <= 0 || (int)$d['booking_quantity'] !== $nights) {
+                $app->enqueueMessage(Text::_('COM_PHOCACART_BOOKING_QUANTITY_INVALID'), 'error');
+                return false;
+            }
+            $avail = PhocacartBooking::checkDateRangeAvailability((int)$productId, $d['booking_date_start'], $d['booking_date_end'], 1);
+            if (!$avail['available']) {
+                $app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_BOOKING_DATE_RANGE_FULL'), 'error');
+                return false;
+            }
+        } elseif ($d['booking_mode'] == 1 && !empty($d['slot_id'])) {
+            $slotCheck = PhocacartBooking::checkSlotAvailability((int)$productId, (int)$d['slot_id'], (int)$d['booking_quantity']);
+            if (!$slotCheck['available']) {
+                $app->enqueueMessage(Text::_('COM_PHOCACART_ERROR_BOOKING_SLOT_FULL'), 'error');
+                return false;
+            }
+        }
+
+        // Ordering
+        $db->setQuery('SELECT MAX(ordering) FROM #__phocacart_order_bookings');
+        $max           = (int)$db->loadResult();
+        $d['ordering'] = $max + 1;
+
+        if (!$row->bind($d)) {
+            $msg = Text::_($row->getError());
+            $app->enqueueMessage($msg, 'error');
+            return false;
+        }
+
+        if (!$row->check()) {
+            $msg = Text::_($row->getError());
+            $app->enqueueMessage($msg, 'error');
+            return false;
+        }
+
+        if (!$row->store()) {
             $msg = Text::_($row->getError());
             $app->enqueueMessage($msg, 'error');
             return false;

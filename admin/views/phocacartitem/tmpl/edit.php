@@ -99,6 +99,7 @@ $tabs['publishing']     = Text::_($this->t['l'] . '_PUBLISHING_OPTIONS');
 $tabs['feed']           = Text::_($this->t['l'] . '_FEED_OPTIONS');
 $tabs['metadata']       = Text::_($this->t['l'] . '_METADATA_OPTIONS');
 $tabs['subscription']   = Text::_('COM_PHOCACART_FIELDSET_SUBSCRIPTION');
+$tabs['booking']        = Text::_('COM_PHOCACART_FIELDSET_BOOKING');
 $tabs['aidata']       = Text::_($this->t['l'] . '_AI_TASKS');
 //$tabs['fields']       = T ext::_($this->t['l'] . '_FIELDS');
 if (!$isModal && $assoc) {
@@ -392,6 +393,31 @@ if (!empty($subscriptionFieldset)) {
 }
 echo $r->endTab();
 
+echo $r->startTab('booking', $tabs['booking']);
+// Render the booking fieldset
+$bookingFieldset = $this->form->getFieldset('booking');
+
+if (!empty($bookingFieldset)) {
+    foreach ($bookingFieldset as $field) {
+        $description = Text::_($field->description);
+        $descriptionOutput = '';
+        if ($description != '') {
+            $descriptionOutput = '<div role="tooltip">'.$description.'</div>';
+        }
+
+        echo '<div class="control-group ph-par-'.$field->fieldname.'">';
+        if (!$field->hidden) {
+             echo '<div class="control-label">' . $field->label . $descriptionOutput . '</div>';
+        }
+        echo '<div class="controls">';
+        echo $field->input;
+        echo '</div></div>';
+    }
+} else {
+    echo '<div class="ph-pro-box">'.Text::_('COM_PHOCACART_BOOKING_PLUGIN_REQUIRED'). '</div>';
+}
+echo $r->endTab();
+
 echo $r->startTab('aidata', $tabs['aidata']);
 echo $this->loadTemplate('aidata');
 echo $r->endTab();
@@ -417,6 +443,7 @@ $ignoreField[] = 'publish';
 $ignoreField[] = 'item_associations';
 $ignoreField[] = 'items_parameter';
 $ignoreField[] = 'subscription';
+$ignoreField[] = 'booking';
 $currentFields = $this->form->getFieldsets();
 if (!empty($currentFields)) {
     foreach ($currentFields as $k => $v) {

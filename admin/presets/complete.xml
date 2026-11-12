@@ -475,6 +475,27 @@
     />
 
     <menuitem
+        title="COM_PHOCACART_SUBSCRIPTIONS"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartsubscriptions"
+      />
+
+      <menuitem
+        title="COM_PHOCACART_BOOKINGS"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartbookings"
+      />
+
+      <menuitem
+        title="COM_PHOCACART_BOOKING_SLOTS"
+        type="component"
+        element="com_phocacart"
+        link="index.php?option=com_phocacart&amp;view=phocacartbookingslots"
+      />
+
+    <menuitem
       title="COM_PHOCACART_INFO"
       type="component"
       element="com_phocacart"

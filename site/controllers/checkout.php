@@ -34,6 +34,12 @@ class PhocaCartControllerCheckout extends FormController
         $item['quantity']  = $this->input->get('quantity', 0, 'int');
         $item['return']    = $this->input->get('return', '', 'string');
         $item['attribute'] = $this->input->get('attribute', array(), 'array');
+        $item['booking_date_start'] = $this->input->get('booking_date_start', '', 'string');
+        $item['booking_date_end']   = $this->input->get('booking_date_end', '', 'string');
+        $item['booking_time_start'] = $this->input->get('booking_time_start', '', 'string');
+        $item['booking_time_end']   = $this->input->get('booking_time_end', '', 'string');
+        $item['booking_slot_id']    = $this->input->get('booking_slot_id', 0, 'int');
+        $item['booking_mode']       = $this->input->get('booking_mode', 0, 'int');
 
 
         if ((int)$item['id'] > 0) {
@@ -77,9 +83,20 @@ class PhocaCartControllerCheckout extends FormController
                     $app->redirect(base64_decode($item['return']));
                 }
 
+                $booking = [];
+                if (!empty($item['booking_date_start']) || !empty($item['booking_slot_id'])) {
+                    $booking = [
+                        'booking_date_start' => $item['booking_date_start'],
+                        'booking_date_end'   => !empty($item['booking_date_end']) ? $item['booking_date_end'] : $item['booking_date_start'],
+                        'booking_time_start' => $item['booking_time_start'],
+                        'booking_time_end'   => $item['booking_time_end'],
+                        'slot_id'            => (int)$item['booking_slot_id'],
+                        'booking_mode'       => (int)$item['booking_mode'],
+                    ];
+                }
 
                 $cart = new PhocacartCart();
-                $added = $cart->addItems((int)$item['id'], (int)$item['catid'], (int)$item['quantity'], $item['attribute']);
+                $added = $cart->addItems((int)$item['id'], (int)$item['catid'], (int)$item['quantity'], $item['attribute'], '', $booking);
 
                 if ($added) {
                     $app->enqueueMessage(Text::_('COM_PHOCACART_PRODUCT_ADDED_TO_SHOPPING_CART'), 'message');

@@ -2260,6 +2260,112 @@ ph-action-row-e-invoice {
 	margin-bottom: 2px;
 }
 
+
+
+
+/* ---- Admin Calendar ---- */
+:root {
+    --ph-card-border: #dcdcdc;
+    --ph-cell-hover-bg: #f8fafc;
+    --ph-today-bg: #eff6ff;
+    --ph-today-border: #3b82f6;
+    --ph-daynum-color: #495057;
+    --ph-turnover-bg: linear-gradient(135deg, rgba(254, 243, 199, 0.45) 0%, rgba(224, 242, 254, 0.45) 100%);
+    --ph-turnover-border: #eab308;
+    --ph-badge-bg: #d97706;
+    --ph-badge-color: #ffffff;
+    --ph-pill-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+[data-bs-theme="dark"] {
+    --ph-card-border: #495057;
+    --ph-cell-hover-bg: #1e293b;
+    --ph-today-bg: rgba(59, 130, 246, 0.2);
+    --ph-today-border: #60a5fa;
+    --ph-daynum-color: #ced4da;
+    --ph-turnover-bg: linear-gradient(135deg, rgba(202, 138, 4, 0.25) 0%, rgba(29, 78, 216, 0.3) 100%);
+    --ph-turnover-border: #eab308;
+    --ph-badge-bg: #d97706;
+    --ph-badge-color: #ffffff;
+    --ph-pill-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.ph-admin-calendar-card {
+    border-radius: 8px;
+    border: 1px solid var(--ph-card-border);
+    margin-top: 1.5rem;
+}
+
+.ph-admin-calendar-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.ph-admin-cal-weekdays,
+.ph-admin-cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    min-width: 750px;
+}
+
+.ph-admin-cal-cell {
+    min-height: 110px;
+    transition: background-color 0.15s;
+    overflow: hidden;
+}
+
+.ph-admin-cal-cell:hover {
+    background-color: var(--ph-cell-hover-bg);
+}
+
+.ph-admin-cal-today {
+    background-color: var(--ph-today-bg) !important;
+    border-color: var(--ph-today-border) !important;
+}
+
+.ph-admin-cal-daynum {
+    color: var(--ph-daynum-color);
+}
+
+.ph-admin-turnover-day {
+    background: var(--ph-turnover-bg) !important;
+    border: 1px solid var(--ph-turnover-border) !important;
+}
+
+.ph-turnover-badge {
+    background-color: var(--ph-badge-bg) !important;
+    color: var(--ph-badge-color) !important;
+    font-size: 0.65rem;
+    padding: 0.2rem 0.35rem;
+}
+
+.ph-badge-turnover {
+    background-color: var(--ph-badge-bg) !important;
+    color: var(--ph-badge-color) !important;
+}
+
+.ph-admin-booking-pill {
+    font-size: 0.72rem;
+    line-height: 1.25;
+    font-weight: 600;
+    box-shadow: var(--ph-pill-shadow);
+    transition: transform 0.1s, opacity 0.1s;
+}
+
+.ph-admin-booking-pill:hover {
+    transform: translateY(-1px);
+    opacity: 0.92;
+    text-decoration: none;
+}
+
+.ph-pill-departure {
+    border-radius: 4px 0 0 4px;
+}
+
+.ph-pill-arrival {
+    border-radius: 0 4px 4px 0;
+}
 /* Hide objects in edit - administration - Product edit example */
 
 /* Entire tab *//*
@@ -2346,3 +2452,12 @@ ph-action-row-e-invoice {
     display: block;
 }
 */
+
+
+/* Booking Admin Calendar - Modal Trigger Pills */
+.ph-admin-booking-pill-wrapper {
+	margin-bottom: 2px;
+}
+.ph-admin-booking-pill {
+	cursor: pointer;
+}

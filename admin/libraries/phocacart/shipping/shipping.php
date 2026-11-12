@@ -903,9 +903,16 @@ class PhocacartShipping
 			return true;
 		}
 
-		// 2) TEST IF SHIPPING METHOD IS NOT DISABLED FOR ALL DOWNLOADABLE PRODUCTS
+		// 2) TEST IF SHIPPING METHOD IS NOT DISABLED FOR ALL DOWNLOADABLE PRODUCTS (DOWNLOADABLE, GIFT VOUCHERS, SUBSCRIPTIONS, BOOKINGS)
 		// PRODUCTTYPE tested
 		if (isset($options['all_digital_products']) &&  $options['all_digital_products'] == 1 && $skip_shipping_method == 1) {
+			return true;
+		}
+
+		if (isset($options['all_booking_products']) && $options['all_booking_products'] == 1 && $skip_shipping_method == 1) {
+			return true;
+		}
+		if (isset($options['all_subscription_products']) && $options['all_subscription_products'] == 1 && $skip_shipping_method == 1) {
 			return true;
 		}
 

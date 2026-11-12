@@ -242,6 +242,7 @@ class PhocaCartModelItem extends BaseDatabaseModel
 			'i.sku', 'i.upc', 'i.ean', 'i.jan', 'i.isbn', 'i.mpn', 'i.serial_number', 'i.points_needed', 'i.points_received', 'i.date', 'i.date_update', 'i.delivery_date',
 			'i.gift_types', 'i.redirect_product_id', 'i.redirect_url',
 			'i.subscription_period', 'i.subscription_unit', 'i.subscription_signup_fee', 'i.subscription_renewal_discount', 'i.subscription_renewal_discount_calculation_type', 'i.subscription_grace_period_days',
+			'i.booking_mode', 'i.booking_capacity', 'i.booking_min_advance_hours', 'i.booking_max_advance_days', 'i.booking_checkin_time', 'i.booking_checkout_time', 'i.booking_usergroup_confirm, i.booking_button_text',
 			'pc.ordering', 'c.id AS catid', 'i.catid AS preferred_catid',
 			'm.id as manufacturerid', 'm.image as manufacturerimage',
 		];
@@ -266,6 +267,7 @@ class PhocaCartModelItem extends BaseDatabaseModel
             I18nHelper::sqlCoalesce(['title_long'], 'i'),
             I18nHelper::sqlCoalesce(['description'], 'i'),
             I18nHelper::sqlCoalesce(['description_long'], 'i'),
+            I18nHelper::sqlCoalesce(['booking_button_text'], 'i'),
             I18nHelper::sqlCoalesce(['features'], 'i'),
             I18nHelper::sqlCoalesce(['metatitle'], 'i'),
             I18nHelper::sqlCoalesce(['metadesc'], 'i'),

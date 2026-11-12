@@ -101,6 +101,7 @@ class PhocaCartCpModelPhocaCartItem extends AdminModel
             'title_long',
             'description',
             'description_long',
+            'booking_button_text',
             'features',
             'metatitle',
             'metakey',

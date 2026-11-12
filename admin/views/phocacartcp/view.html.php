@@ -80,6 +80,8 @@ class PhocaCartCpViewPhocaCartCp extends HtmlView
 		'units'			=> array($this->t['l'] . '_UNITS', $d.$i .'menu', '#ff9326'),
 		'bulkprices'	=> array($this->t['l'] . '_BULK_PRICE_EDITOR', $d.$i .'click', '#f310de'),
 		'subscriptions'	=> array($this->t['l'] . '_SUBSCRIPTIONS', $d.$i .'calendar', '#B8860B'),
+		'bookings'	=> array($this->t['l'] . '_BOOKINGS', $d.$i .'calendar', '#55aa00'),
+		'bookingslots'	=> array($this->t['l'] . '_BOOKING_SLOTS', $d.$i .'calendar', '#55aa7f'),
 
 		'info'			=> array($this->t['l'] . '_INFO', $d.$i .'info-circle', '#3378cc'),
 		);

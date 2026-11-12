@@ -67,10 +67,10 @@ if ((int)$this->u->id > 0) {
         echo '<thead>';
         echo '<tr>';
         echo '<th>'.Text::_('COM_PHOCACART_PRODUCT').'</th>';
-        echo '<th>'.Text::_('COM_PHOCACART_STATUS').'</th>';
         echo '<th>'.Text::_('COM_PHOCACART_START_DATE').'</th>';
         echo '<th>'.Text::_('COM_PHOCACART_END_DATE').'</th>';
         echo '<th>'.Text::_('COM_PHOCACART_RENEW_SUBSCRIPTION').'</th>';
+		echo '<th>'.Text::_('COM_PHOCACART_STATUS').'</th>';
         echo '</tr>';
         echo '</thead>';
         echo '<tbody>';
@@ -87,10 +87,10 @@ if ((int)$this->u->id > 0) {
 
 			echo '<tr>';
             echo '<td><a href="'.$productLink.'">'.htmlspecialchars($subscription->product_title).'</a></td>';
-            echo '<td><span '.$style.'>'.Text::_($statusLabel).'</span></td>';
             echo '<td>'.HTMLHelper::_('date', $subscription->start_date, Text::_('DATE_FORMAT_LC4')).'</td>';
             echo '<td>'.HTMLHelper::_('date', $subscription->end_date, Text::_('DATE_FORMAT_LC4')).'</td>';
             echo '<td><a class="btn btn-success btn-small" href="'.$productLink.'" title="'.Text::_('COM_PHOCACART_RENEW_SUBSCRIPTION').'">'.Text::_('COM_PHOCACART_RENEW_SUBSCRIPTION').'</a></td>';
+			echo '<td><span '.$style.'>'.Text::_($statusLabel).'</span></td>';
 			echo '</tr>';
 		}
         echo '</tbody>';
@@ -99,6 +99,53 @@ if ((int)$this->u->id > 0) {
 
 		//echo '<div class="ph-cb"></div>';
 
+		echo '</div>'."\n";// end box action
+	}
+
+	// Bookings
+	if (!empty($this->t['bookings'])) {
+		echo '<div class="'.$this->s['c']['row'].' ph-account-box-row">';
+		echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].' ph-account-box-header" id="phaccountbookings"><h3>'.Text::_('COM_PHOCACART_MY_BOOKINGS').'</h3></div>';
+		echo '</div>';
+
+		echo '<div class="'.$this->s['c']['row'].' ph-account-box-action">';
+		echo '<div class="'.$this->s['c']['col.xs12.sm12.md12'].'">';
+		echo '<table class="table table-striped table-hover">';
+		echo '<thead><tr>';
+		echo '<th>'.Text::_('COM_PHOCACART_PRODUCT').'</th>';
+		echo '<th>'.Text::_('COM_PHOCACART_BOOKING_DATE_START').'</th>';
+		echo '<th>'.Text::_('COM_PHOCACART_BOOKING_DATE_END').'</th>';
+		echo '<th>'.Text::_('COM_PHOCACART_BOOKING_MODE').'</th>';
+		echo '<th>'.Text::_('COM_PHOCACART_STATUS').'</th>';
+		echo '</tr></thead>';
+		echo '<tbody>';
+		foreach ($this->t['bookings'] as $booking) {
+			$statusLabel = PhocacartBooking::getStatus((int)$booking->status);
+			$statusStyle = PhocacartBooking::getStatusStyle((int)$booking->status);
+			$bStyle = $statusStyle ? 'class="ph-status-label ph-status-label-'.$statusStyle.'"' : '';
+			$modeLabel   = PhocacartBooking::getMode((int)$booking->booking_mode);
+			/*$productLink = '';
+			if (!empty($booking->product_alias) && !empty($booking->catid)) {
+				$productLink = Route::_(PhocacartRoute::getItemRoute(
+					(int)$booking->product_id, (int)$booking->catid,
+					$booking->product_alias, $booking->category_alias ?? ''
+				));
+			}*/
+
+			$product = PhocacartProduct::getProduct($booking->product_id);
+            $productLink = Route::_(PhocacartRoute::getItemRoute($product->id, $product->catid, $product->alias, $product->catalias));
+
+			$productTitle = htmlspecialchars($booking->product_title ?? '');
+			echo '<tr>';
+			echo '<td>'.($productLink ? '<a href="'.htmlspecialchars($productLink).'">'.$productTitle.'</a>' : $productTitle).'</td>';
+			echo '<td>'.HTMLHelper::_('date', $booking->booking_date_start, Text::_('DATE_FORMAT_LC4')).'</td>';
+			echo '<td>'.HTMLHelper::_('date', $booking->booking_date_end,   Text::_('DATE_FORMAT_LC4')).'</td>';
+			echo '<td>'.Text::_($modeLabel).'</td>';
+			echo '<td><span '.$bStyle.'>'.Text::_($statusLabel).'</span></td>';
+			echo '</tr>';
+		}
+		echo '</tbody></table>';
+		echo '</div>';
 		echo '</div>'."\n";// end box action
 	}
 

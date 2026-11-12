@@ -213,10 +213,32 @@ class PhocacartOrderView
 					}
 				}
 
+				$bookings = $this->getItemBookings($orderId, $v->id);
+
+				if (!empty($bookings)) {
+					$v->bookings = array();
+					foreach ($bookings as $k2 => $v2) {
+						if (isset($v2->id) && $v2->id > 0) {
+							$v->bookings[$k2] = $v2;
+						}
+					}
+				}
+
 			}
 		}
 
 		return $items;
+	}
+
+	public function getItemBookings($orderId, $orderProductId) {
+		$db = Factory::getDBO();
+		$query = 'SELECT b.*'
+			. ' FROM #__phocacart_order_bookings AS b'
+			. ' WHERE b.order_product_id = ' . (int)$orderProductId
+			. ' AND b.order_id = ' . (int)$orderId
+			. ' ORDER BY b.id';
+		$db->setQuery($query);
+		return $db->loadObjectList();
 	}
 
 	public function getItemDownloads($orderId, $orderProductId) {

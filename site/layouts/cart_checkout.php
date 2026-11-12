@@ -197,6 +197,31 @@ if (!empty($d['fullitems'][1])) {
 			echo $layoutSC->render($dSC);
 		}
 
+		if (isset($v['booking']) && !empty($v['booking'])) {
+			$b = $v['booking'];
+			echo '<div class="ph-booking-cart-info">';
+			if (!empty($b['booking_date_start'])) {
+				if (!empty($b['booking_date_end']) && $b['booking_date_end'] !== $b['booking_date_start']) {
+					$n = (int)round((strtotime($b['booking_date_end']) - strtotime($b['booking_date_start'])) / 86400);
+					$nw = $n === 1 ? Text::_('COM_PHOCACART_BOOKING_NIGHT') : Text::_('COM_PHOCACART_BOOKING_NIGHTS');
+					echo '<span class="ph-booking-icon">📅</span> ' . htmlspecialchars($b['booking_date_start']);
+					if (!empty($b['booking_time_start'])) echo ' (' . htmlspecialchars(substr($b['booking_time_start'], 0, 5)) . ')';
+					echo ' → ' . htmlspecialchars($b['booking_date_end']);
+					if (!empty($b['booking_time_end'])) echo ' (' . htmlspecialchars(substr($b['booking_time_end'], 0, 5)) . ')';
+					echo ' <span class="badge bg-primary text-white">' . $n . ' ' . $nw . '</span>';
+				} else {
+					echo '<span class="ph-booking-icon">📅</span> ' . htmlspecialchars($b['booking_date_start']);
+					if (!empty($b['booking_time_start'])) {
+						echo ' <span class="ph-booking-icon">⏰</span> ' . htmlspecialchars(substr($b['booking_time_start'], 0, 5));
+						if (!empty($b['booking_time_end'])) {
+							echo ' – ' . htmlspecialchars(substr($b['booking_time_end'], 0, 5));
+						}
+					}
+				}
+			}
+			echo '</div>';
+		}
+
 		echo '</div>';
 
 
@@ -214,15 +239,27 @@ if (!empty($d['fullitems'][1])) {
 		echo '<input type="hidden" name="ticketid" value="'.(int)$d['ticketid'].'">';
 		echo '<input type="hidden" name="unitid" value="'.(int)$d['unitid'].'">';
 		echo '<input type="hidden" name="sectionid" value="'.(int)$d['sectionid'].'">';
-		echo '<input type="'.$inputNumber.'" class="'.$d['s']['c']['inputbox.form-control'].' ph-input-quantity '.$d['s']['c']['input-xsmall'].'" name="quantity" value="'.$v['quantity'].'">';
-		echo '<input type="hidden" name="task" value="'.$task.'">';
-		echo '<input type="hidden" name="tmpl" value="component" />';
-		echo '<input type="hidden" name="option" value="com_phocacart" />';
-		echo '<input type="hidden" name="return" value="'.$d['actionbase64'].'" />';
-		//UPDATE
-		echo ' <button class="'.$d['s']['c']['btn.btn-success.btn-sm'].' ph-btn" type="submit" name="action" value="update">'.PhocacartRenderIcon::icon($d['s']['i']['refresh'], 'title="'.Text::_('COM_PHOCACART_UPDATE_QUANTITY_IN_CART').'"').'</button>';
-		//DELETE
-		echo ' <button class="'.$d['s']['c']['btn.btn-danger.btn-sm'].' ph-btn" type="submit" name="action" value="delete">'.PhocacartRenderIcon::icon($d['s']['i']['trash'], 'title="'.Text::_('COM_PHOCACART_REMOVE_PRODUCT_FROM_CART').'"').'</button>';
+		$isBookingCartItem = !empty($v['booking']) || (isset($v['type']) && (int)$v['type'] === 7);
+		if ($isBookingCartItem) {
+			echo '<span class="'.$d['s']['c']['inputbox.form-control'].' ph-input-quantity '.$d['s']['c']['input-xsmall'].' ph-booking-quantity-readonly">'.(int)$v['quantity'].'</span>';
+			echo '<input type="hidden" name="quantity" value="'.(int)$v['quantity'].'">';
+			echo '<input type="hidden" name="task" value="'.$task.'">';
+			echo '<input type="hidden" name="tmpl" value="component" />';
+			echo '<input type="hidden" name="option" value="com_phocacart" />';
+			echo '<input type="hidden" name="return" value="'.$d['actionbase64'].'" />';
+			//DELETE ONLY
+			echo ' <button class="'.$d['s']['c']['btn.btn-danger.btn-sm'].' ph-btn" type="submit" name="action" value="delete">'.PhocacartRenderIcon::icon($d['s']['i']['trash'], 'title="'.Text::_('COM_PHOCACART_REMOVE_PRODUCT_FROM_CART').'"').'</button>';
+		} else {
+			echo '<input type="'.$inputNumber.'" class="'.$d['s']['c']['inputbox.form-control'].' ph-input-quantity '.$d['s']['c']['input-xsmall'].'" name="quantity" value="'.$v['quantity'].'">';
+			echo '<input type="hidden" name="task" value="'.$task.'">';
+			echo '<input type="hidden" name="tmpl" value="component" />';
+			echo '<input type="hidden" name="option" value="com_phocacart" />';
+			echo '<input type="hidden" name="return" value="'.$d['actionbase64'].'" />';
+			//UPDATE
+			echo ' <button class="'.$d['s']['c']['btn.btn-success.btn-sm'].' ph-btn" type="submit" name="action" value="update">'.PhocacartRenderIcon::icon($d['s']['i']['refresh'], 'title="'.Text::_('COM_PHOCACART_UPDATE_QUANTITY_IN_CART').'"').'</button>';
+			//DELETE
+			echo ' <button class="'.$d['s']['c']['btn.btn-danger.btn-sm'].' ph-btn" type="submit" name="action" value="delete">'.PhocacartRenderIcon::icon($d['s']['i']['trash'], 'title="'.Text::_('COM_PHOCACART_REMOVE_PRODUCT_FROM_CART').'"').'</button>';
+		}
 		echo HTMLHelper::_('form.token');
 		echo '</div>';
 		echo '</form>';

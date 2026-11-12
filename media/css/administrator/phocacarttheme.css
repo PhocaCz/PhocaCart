@@ -697,6 +697,14 @@ a.ph-submenu:before {
 	color: #f310de;
     content: "\13c20";/*click*/
 }
+.nav a.ph-submenu.ph-submenu-bookings:before {
+	color: #55aa00;
+    content: "\13c0f";/*click*/
+}
+.nav a.ph-submenu.ph-submenu-bookingslots:before {
+	color: #55aa7f;
+    content: "\13c0f";/*click*/
+}
 
 
 

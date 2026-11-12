@@ -74,6 +74,126 @@ class PhocacartMail extends MailTemplate
                     'cancellation_reason',
                     'site_name'
                 ]
+            ],
+            'com_phocacart.booking.created' => [
+                'title' => Text::_('COM_PHOCACART_MAIL_BOOKING_CREATED_TITLE'),
+                'subject' => Text::_('COM_PHOCACART_MAIL_BOOKING_CREATED_SUBJECT'),
+                'body' => Text::_('COM_PHOCACART_MAIL_BOOKING_CREATED_BODY'),
+                'tags' => [
+                    'user_name',
+                    'product_name',
+                    'booking_id',
+                    'booking_status',
+                    'booking_date_start',
+                    'booking_date_end',
+                    'booking_time_start',
+                    'booking_time_end',
+                    'booking_nights',
+                    'order_number',
+                    'account_url',
+                    'site_name',
+                    'site_url'
+                ]
+            ],
+            'com_phocacart.booking.confirmed' => [
+                'title' => Text::_('COM_PHOCACART_MAIL_BOOKING_CONFIRMED_TITLE'),
+                'subject' => Text::_('COM_PHOCACART_MAIL_BOOKING_CONFIRMED_SUBJECT'),
+                'body' => Text::_('COM_PHOCACART_MAIL_BOOKING_CONFIRMED_BODY'),
+                'tags' => [
+                    'user_name',
+                    'product_name',
+                    'booking_id',
+                    'booking_status',
+                    'booking_date_start',
+                    'booking_date_end',
+                    'booking_time_start',
+                    'booking_time_end',
+                    'booking_nights',
+                    'order_number',
+                    'account_url',
+                    'site_name',
+                    'site_url'
+                ]
+            ],
+            'com_phocacart.booking.cancelled' => [
+                'title' => Text::_('COM_PHOCACART_MAIL_BOOKING_CANCELLED_TITLE'),
+                'subject' => Text::_('COM_PHOCACART_MAIL_BOOKING_CANCELLED_SUBJECT'),
+                'body' => Text::_('COM_PHOCACART_MAIL_BOOKING_CANCELLED_BODY'),
+                'tags' => [
+                    'user_name',
+                    'product_name',
+                    'booking_id',
+                    'booking_status',
+                    'booking_date_start',
+                    'booking_date_end',
+                    'booking_time_start',
+                    'booking_time_end',
+                    'booking_nights',
+                    'order_number',
+                    'account_url',
+                    'site_name',
+                    'site_url'
+                ]
+            ],
+            'com_phocacart.booking.completed' => [
+                'title' => Text::_('COM_PHOCACART_MAIL_BOOKING_COMPLETED_TITLE'),
+                'subject' => Text::_('COM_PHOCACART_MAIL_BOOKING_COMPLETED_SUBJECT'),
+                'body' => Text::_('COM_PHOCACART_MAIL_BOOKING_COMPLETED_BODY'),
+                'tags' => [
+                    'user_name',
+                    'product_name',
+                    'booking_id',
+                    'booking_status',
+                    'booking_date_start',
+                    'booking_date_end',
+                    'booking_time_start',
+                    'booking_time_end',
+                    'booking_nights',
+                    'order_number',
+                    'account_url',
+                    'site_name',
+                    'site_url'
+                ]
+            ],
+            'com_phocacart.booking.reminder' => [
+                'title' => Text::_('COM_PHOCACART_MAIL_BOOKING_REMINDER_TITLE'),
+                'subject' => Text::_('COM_PHOCACART_MAIL_BOOKING_REMINDER_SUBJECT'),
+                'body' => Text::_('COM_PHOCACART_MAIL_BOOKING_REMINDER_BODY'),
+                'tags' => [
+                    'user_name',
+                    'product_name',
+                    'booking_id',
+                    'booking_status',
+                    'booking_date_start',
+                    'booking_date_end',
+                    'booking_time_start',
+                    'booking_time_end',
+                    'booking_nights',
+                    'order_number',
+                    'account_url',
+                    'site_name',
+                    'site_url'
+                ]
+            ],
+            'com_phocacart.booking.status_changed' => [
+                'title' => Text::_('COM_PHOCACART_MAIL_BOOKING_STATUS_CHANGED_TITLE'),
+                'subject' => Text::_('COM_PHOCACART_MAIL_BOOKING_STATUS_CHANGED_SUBJECT'),
+                'body' => Text::_('COM_PHOCACART_MAIL_BOOKING_STATUS_CHANGED_BODY'),
+                'tags' => [
+                    'user_name',
+                    'product_name',
+                    'booking_id',
+                    'booking_status',
+                    'booking_date_start',
+                    'booking_date_end',
+                    'booking_time_start',
+                    'booking_time_end',
+                    'booking_nights',
+                    'order_number',
+                    'account_url',
+                    'site_name',
+                    'site_url'
+                ]
             ]
         ];
     }

@@ -88,9 +88,20 @@ class PhocacartProduct
             'i.subscription_max_renewals'
         ];
 
+        $columnsBooking = [
+            'i.booking_mode',
+            'i.booking_capacity',
+            'i.booking_min_advance_hours',
+            'i.booking_max_advance_days',
+            'i.booking_checkin_time',
+            'i.booking_checkout_time',
+            'i.booking_usergroup_confirm'
+        ];
+
         //if ($productType == 6) {
             $columns = array_merge($columns, $columnsSubscription);
         //}
+        $columns = array_merge($columns, $columnsBooking);
 
        /* if (I18nHelper::useI18n()) {
             $columns = array_merge($columns, [
@@ -116,6 +127,7 @@ class PhocacartProduct
             I18nHelper::sqlCoalesce(['metatitle'], 'i'),
             I18nHelper::sqlCoalesce(['metadesc'], 'i'),
             I18nHelper::sqlCoalesce(['metakey'], 'i'),
+            I18nHelper::sqlCoalesce(['booking_button_text'], 'i'),
             I18nHelper::sqlCoalesce(['title'], 'c', 'cat'),
             I18nHelper::sqlCoalesce(['alias'], 'c', 'cat'),
             I18nHelper::sqlCoalesce(['title'], 'm', 'manufacturer'),
@@ -697,7 +709,8 @@ class PhocacartProduct
 		}
 
         $baseColumns = array('a.id', 'a.image', 'a.video', 'a.sku', 'a.ean', 'a.stockstatus_a_id', 'a.stockstatus_n_id', 'a.min_quantity', 'a.min_multiple_quantity', 'a.max_quantity', 'a.stock', 'a.unit_amount', 'a.unit_unit', 'a.price', 'a.price_original', 'a.date', 'a.date_update', 'a.sales', 'a.featured', 'a.external_id', 'a.condition', 'a.points_received', 'a.points_needed', 'a.delivery_date', 'a.type', 'a.type_feed', 'a.type_category_feed', 'a.params_feed', 'a.gift_types',
-            'a.subscription_period', 'a.subscription_unit', 'a.subscription_signup_fee', 'a.subscription_renewal_discount', 'a.subscription_renewal_discount_calculation_type', 'a.subscription_grace_period_days');
+            'a.subscription_period', 'a.subscription_unit', 'a.subscription_signup_fee', 'a.subscription_renewal_discount', 'a.subscription_renewal_discount_calculation_type', 'a.subscription_grace_period_days',
+            'a.booking_mode', 'a.booking_capacity', 'a.booking_min_advance_hours', 'a.booking_max_advance_days', 'a.booking_checkin_time', 'a.booking_checkout_time', 'a.booking_usergroup_confirm', 'a.booking_button_text');
 
 
        /* if (I18nHelper::isI18n()) {
@@ -716,6 +729,7 @@ class PhocacartProduct
             I18nHelper::sqlCoalesce(['title_long']),
             I18nHelper::sqlCoalesce(['description']),
             I18nHelper::sqlCoalesce(['description_long']),
+            I18nHelper::sqlCoalesce(['booking_button_text']),
             I18nHelper::sqlCoalesce(['features']),
             I18nHelper::sqlCoalesce(['metatitle']),
             I18nHelper::sqlCoalesce(['metadesc']),

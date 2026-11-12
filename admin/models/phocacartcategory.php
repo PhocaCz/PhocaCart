@@ -57,6 +57,7 @@ class PhocaCartCpModelPhocacartCategory extends AdminModel
 			'title_feed',
             'description',
 			'description_bottom',
+            'booking_button_text',
             'metatitle',
             'metakey',
             'metadesc',

@@ -44,6 +44,7 @@ class PhocaCartCpModelPhocacartManufacturer extends AdminModel
             'title_long',
             'link',
             'description',
+            'booking_button_text',
             'metatitle',
             'metakey',
             'metadesc',

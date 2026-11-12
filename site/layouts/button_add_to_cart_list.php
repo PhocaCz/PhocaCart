@@ -19,24 +19,31 @@ $d = $displayData;
 // THIS LAYOUT can be display twice for item - first for ICON, second for BUTTON - so only ICON have ID to run AJAX, etc.
 
 
-if ($d['selectoptions'] == 1) {
-	// ATTRIBUTE REQUIRED - One of the attributes is required, cannot add to cart when we don't display attributes in category/items view
+$isBookingProduct = (isset($d['type']) && (int)$d['type'] === 7);
+if ($d['selectoptions'] == 1 || $isBookingProduct) {
+	// ATTRIBUTE REQUIRED OR BOOKING PRODUCT - cannot add directly from list without picking dates/slots
 	echo '<div class="'.$d['s']['c']['pull-right'].' ph-button-choose-variant-box">';
 
+	$btnListText = Text::_('COM_PHOCACART_CHOOSE_VARIANT');
+	$btnListIcon = $d['s']['i']['shopping-cart'];
+	if ($isBookingProduct) {
+		$btnListText = !empty($d['booking_button_text']) ? $d['booking_button_text'] : Text::_('COM_PHOCACART_BOOK_NOW');
+		if (isset($d['s']['i']['calendar-check'])) {
+			$btnListIcon = $d['s']['i']['calendar-check'];
+		}
+	}
 
 	if ($d['addtocart'] == 1) {
 
 		echo '<a href="'.$d['link'].'" class="'.$d['s']['c']['btn.btn-primary.btn-sm'].' ph-btn phProductAddToCart'.$d['typeview'].$d['id'].' '.$d['class_btn'].'" role="button">';
-		//echo '<span class="'.$d['s']['i']['shopping-cart'].'"></span> ';
-		echo PhocacartRenderIcon::icon($d['s']['i']['shopping-cart'], '', ' ');
-		echo Text::_('COM_PHOCACART_CHOOSE_VARIANT'); // Text::_('COM_PHOCACART_SELECT_OPTIONS');
+		echo PhocacartRenderIcon::icon($btnListIcon, '', ' ');
+		echo $btnListText;
 		echo '</a>';
 
 	} else if ($d['addtocart'] == 4) {
 
-		echo '<a href="'.$d['link'].'" class="'.$d['s']['c']['btn.btn-primary.btn-sm'].' ph-btn phProductAddToCart'.$d['typeview'].$d['id'].' '.$d['class_btn'].'" role="button" title="'.Text::_('COM_PHOCACART_CHOOSE_VARIANT') /* Text::_('COM_PHOCACART_SELECT_OPTIONS') */.'" data-bs-toggle="tooltip" data-placement="top">';
-		//echo '<span class="'.$d['s']['i']['shopping-cart'].'"></span>';
-		echo PhocacartRenderIcon::icon($d['s']['i']['shopping-cart']);
+		echo '<a href="'.$d['link'].'" class="'.$d['s']['c']['btn.btn-primary.btn-sm'].' ph-btn phProductAddToCart'.$d['typeview'].$d['id'].' '.$d['class_btn'].'" role="button" title="'.$btnListText.'" data-bs-toggle="tooltip" data-placement="top">';
+		echo PhocacartRenderIcon::icon($btnListIcon);
 		echo '</a>';
 	}
 
